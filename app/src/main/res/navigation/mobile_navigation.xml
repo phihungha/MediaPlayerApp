@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_playlist">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.example.mediaplayerapp.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:id="@+id/navigation_playlist"
+        android:name="com.example.mediaplayerapp.ui.playlist.PlaylistFragment"
+        android:label="@string/title_playlist"
+        tools:layout="@layout/fragment_playlist" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.example.mediaplayerapp.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_video_library"
+        android:name="com.example.mediaplayerapp.ui.video_library.VideoLibraryFragment"
+        android:label="@string/title_video"
+        tools:layout="@layout/fragment_video_library" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.example.mediaplayerapp.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_music_library"
+        android:name="com.example.mediaplayerapp.ui.music_library.MusicLibraryFragment"
+        android:label="@string/title_music"
+        tools:layout="@layout/fragment_music_library" />
 </navigation>

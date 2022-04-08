@@ -1,16 +1,16 @@
-package com.example.mediaplayerapp.ui.home;
+package com.example.mediaplayerapp.ui.video_library;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class HomeViewModel extends ViewModel {
+public class VideoLibraryViewModel extends ViewModel {
 
     private final MutableLiveData<String> mText;
 
-    public HomeViewModel() {
+    public VideoLibraryViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is home fragment");
+        mText.setValue("This is video library fragment");
     }
 
     public LiveData<String> getText() {
