@@ -13,6 +13,15 @@
         <entry key="..\:/Dev/Learn/Android/MediaPlayerApp/app/src/main/res/layout/fragment_video_library.xml" value="0.25" />
         <entry key="..\:/Dev/Learn/Android/MediaPlayerApp/app/src/main/res/layout/fragment_video_player.xml" value="0.25" />
         <entry key="..\:/Dev/Learn/Android/MediaPlayerApp/app/src/main/res/layout/music_library_fragment.xml" value="0.25" />
+        <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.1" />
+        <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.1" />
+        <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_icon_video.xml" value="0.1" />
+        <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_music.xml" value="0.1" />
+        <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_playlist.xml" value="0.1" />
+        <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_video.xml" value="0.1" />
+        <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/layout/activity_main.xml" value="0.1259259259259259" />
+        <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/layout/fragment_playlist.xml" value="0.1" />
+        <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.21" />
       </map>
     </option>
   </component>
