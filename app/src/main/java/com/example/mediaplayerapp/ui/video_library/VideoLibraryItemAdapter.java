@@ -7,10 +7,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mediaplayerapp.data.Video;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryGridBinding;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.util.List;
+
 public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryItemAdapter.ViewHolder> {
+
+    private final List<Video> mVideos;
+    public VideoLibraryItemAdapter(List<Video> videos){
+        mVideos = videos;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -19,13 +27,13 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mVideoName.setText("Video-name-" + position);
-        holder.mVideoDuration.setText("Video-duration-" + position);
+        holder.mVideoName.setText(mVideos.get(position).name);
+        holder.mVideoDuration.setText(String.valueOf(mVideos.get(position).duration));
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mVideos.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
