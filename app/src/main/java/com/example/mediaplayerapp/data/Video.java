@@ -3,15 +3,13 @@ package com.example.mediaplayerapp.data;
 import android.net.Uri;
 
 public class Video {
-    private final Uri uri;
-    private final String name;
-    private final int duration;
-    private final int size;
+    public final Uri uri;
+    public final String name;
+    public final int duration;
 
-    public Video(Uri uri, String name, int duration, int size) {
+    public Video(Uri uri, String name, int duration) {
         this.uri = uri;
         this.name = name;
         this.duration = duration;
-        this.size = size;
     }
 }
