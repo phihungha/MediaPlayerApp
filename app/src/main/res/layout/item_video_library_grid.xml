@@ -6,12 +6,14 @@
     android:orientation="vertical">
 
     <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/video_thumbnail_shapeableimageview"
         android:layout_width="112dp"
         android:layout_height="104dp"
         android:src="@drawable/ic_home_black_24dp"
         app:shapeAppearanceOverlay="@style/roundedCornerImageView" />
 
     <TextView
+        android:id="@+id/video_name_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="REACT.MP4"
@@ -20,6 +22,7 @@
         android:textStyle="bold" />
 
     <TextView
+        android:id="@+id/video_duration_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="03:01"
