@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.data.Video;
@@ -23,13 +24,16 @@ public class VideoLibraryFragment extends Fragment {
     private FragmentVideoLibraryBinding binding;
     VideoLibraryViewModel videoLibraryViewModel;
 
+    private int mColumnCount = 1;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         videoLibraryViewModel = new ViewModelProvider(this).get(VideoLibraryViewModel.class);
 
         binding = FragmentVideoLibraryBinding.inflate(inflater, container, false);
+        View rootView = binding.getRoot();
 
-        RecyclerView recyclerViewAllVideos = binding.allVideosRecyclerview;
+
         List<Video> videos = new ArrayList<>();
         videos.add(new Video(null, "video 1", 343));
         videos.add(new Video(null, "video 2", 343));
@@ -37,11 +41,17 @@ public class VideoLibraryFragment extends Fragment {
         videos.add(new Video(null, "video 4", 343));
         videos.add(new Video(null, "video 5", 343));
 
+        RecyclerView recyclerViewAllVideos = binding.allVideosRecyclerview;
+        if (mColumnCount <= 1) {
+            recyclerViewAllVideos.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
+        } else {
+            recyclerViewAllVideos.setLayoutManager(new GridLayoutManager(rootView.getContext(), 2));
+        }
         recyclerViewAllVideos.setAdapter(new VideoLibraryItemAdapter(videos));
-        recyclerViewAllVideos.setLayoutManager(new GridLayoutManager(binding.getRoot().getContext(), 2));
+
 //        final TextView textView = binding.textVideoLibrary;
 //        videoLibraryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        return binding.getRoot();
+        return rootView;
     }
 
     @Override
