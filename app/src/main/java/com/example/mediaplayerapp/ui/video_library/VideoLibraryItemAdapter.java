@@ -11,12 +11,18 @@ import com.example.mediaplayerapp.data.Video;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryGridBinding;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryItemAdapter.ViewHolder> {
 
-    private final List<Video> mVideos;
-    public VideoLibraryItemAdapter(List<Video> videos){
+    private List<Video> mVideos;
+
+    public VideoLibraryItemAdapter() {
+        mVideos = new ArrayList<>();
+    }
+
+    public VideoLibraryItemAdapter(List<Video> videos) {
         mVideos = videos;
     }
 
@@ -34,6 +40,12 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
     @Override
     public int getItemCount() {
         return mVideos.size();
+    }
+
+    public void updateVideoList(final List<Video> updatedVideoList) {
+        this.mVideos.clear();
+        this.mVideos = updatedVideoList;
+        //notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
