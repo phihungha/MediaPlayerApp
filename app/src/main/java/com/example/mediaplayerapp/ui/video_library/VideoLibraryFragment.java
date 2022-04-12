@@ -8,12 +8,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.data.Video;
+import com.example.mediaplayerapp.data.VideoLibraryRepository;
 import com.example.mediaplayerapp.databinding.FragmentVideoLibraryBinding;
 
 import java.util.ArrayList;
@@ -33,13 +35,13 @@ public class VideoLibraryFragment extends Fragment {
         binding = FragmentVideoLibraryBinding.inflate(inflater, container, false);
         View rootView = binding.getRoot();
 
-
-        List<Video> videos = new ArrayList<>();
-        videos.add(new Video(null, "video 1", 343));
-        videos.add(new Video(null, "video 2", 343));
-        videos.add(new Video(null, "video 3", 343));
-        videos.add(new Video(null, "video 4", 343));
-        videos.add(new Video(null, "video 5", 343));
+        VideoLibraryRepository videoLibraryRepository = new VideoLibraryRepository(getActivity());
+        List<Video> videos = videoLibraryRepository.getAllVideos();
+//        videos.add(new Video(null, "video 1", 343));
+//        videos.add(new Video(null, "video 2", 343));
+//        videos.add(new Video(null, "video 3", 343));
+//        videos.add(new Video(null, "video 4", 343));
+//        videos.add(new Video(null, "video 5", 343));
 
         RecyclerView recyclerViewAllVideos = binding.allVideosRecyclerview;
         if (mColumnCount <= 1) {
