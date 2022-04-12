@@ -3,4 +3,9 @@
     <string name="title_music">Music</string>
     <string name="title_video">Video</string>
     <string name="title_playlist">Playlist</string>
+    <string name="image_for_thumbnail">Image for thumbnail</string>
+    <string name="navigate_next">Navigate next</string>
+    <string name="new_playlist">Create Playlist</string>
+    <string name="add_more">Add more</string>
+    <string name="play_all">Play All</string>
 </resources>

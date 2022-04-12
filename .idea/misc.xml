@@ -13,6 +13,22 @@
         <entry key="..\:/Dev/Learn/Android/MediaPlayerApp/app/src/main/res/layout/fragment_video_library.xml" value="0.25" />
         <entry key="..\:/Dev/Learn/Android/MediaPlayerApp/app/src/main/res/layout/fragment_video_player.xml" value="0.25" />
         <entry key="..\:/Dev/Learn/Android/MediaPlayerApp/app/src/main/res/layout/music_library_fragment.xml" value="0.25" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/background_gradient_playlist_details.xml" value="0.1915" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_baseline_add_24.xml" value="0.12" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_baseline_add_circle_outline_24.xml" value="0.1915" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.1725" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_baseline_navigate_next_24.xml" value="0.2215" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_baseline_play_circle_outline_24.xml" value="0.1915" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_baseline_playlist_add_24.xml" value="0.1" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.1725" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_playlist.xml" value="0.2215" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/activity_main.xml" value="0.20108695652173914" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/fragment_playlist.xml" value="0.264" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/fragment_playlist_details.xml" value="0.264" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/item_playlist.xml" value="0.22826086956521738" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/item_playlist_add.xml" value="0.2" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/test_layout.xml" value="0.15172101449275363" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.25" />
         <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.1" />
         <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.1" />
         <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_icon_video.xml" value="0.1" />
