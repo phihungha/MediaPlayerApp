@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VideoDataSource {
-    public static List<Video> getAllVideos(Context context) {
+
+    public static MutableLiveData<List<Video>> getAllVideos(Context context) {
         List<Video> videoList = new ArrayList<>();
 
         String[] projection = new String[]{
@@ -51,6 +52,6 @@ public class VideoDataSource {
             } while (cursor.moveToNext());
             cursor.close();
         }
-        return videoList;
+        return new MutableLiveData<>(videoList);
     }
 }
