@@ -1,5 +1,6 @@
 package com.example.mediaplayerapp.ui.video_library;
 
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -33,6 +34,7 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.mVideoThumbnail.setImageBitmap(mVideos.get(position).thumbNail);
         holder.mVideoName.setText(mVideos.get(position).name);
         holder.mVideoDuration.setText(String.valueOf(mVideos.get(position).duration));
     }

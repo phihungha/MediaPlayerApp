@@ -3,18 +3,21 @@ package com.example.mediaplayerapp.data;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Size;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class VideoDataSource {
 
-    public static MutableLiveData<List<Video>> getAllVideos(Context context) {
+    public static MutableLiveData<List<Video>> getAllVideos(Context context) throws IOException {
         List<Video> videoList = new ArrayList<>();
 
         String[] projection = new String[]{
@@ -36,7 +39,6 @@ public class VideoDataSource {
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
-
             int idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
             int nameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
             int durationColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
@@ -45,13 +47,21 @@ public class VideoDataSource {
                 long videoId = cursor.getLong(idColumnIndex);
                 Uri videoUri = ContentUris.withAppendedId(
                         MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoId);
+
+                Bitmap videoThumbnail = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                    videoThumbnail = context.getContentResolver().loadThumbnail(
+                            videoUri, new Size(145, 80), null);
+                }
+
                 String videoName = cursor.getString(nameColumnIndex);
                 int videoDuration = cursor.getInt(durationColumnIndex);
 
-                videoList.add(new Video(videoUri, videoName, videoDuration));
+                videoList.add(new Video(videoUri, videoThumbnail, videoName, videoDuration));
             } while (cursor.moveToNext());
             cursor.close();
         }
+
         return new MutableLiveData<>(videoList);
     }
 }
