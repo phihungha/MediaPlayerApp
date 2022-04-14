@@ -16,7 +16,7 @@ public class VideoLibraryViewModel extends AndroidViewModel {
     private VideoLibraryRepository mVideoLibraryRepository;
     private final MutableLiveData<List<Video>> mAllVideos;
 
-    public VideoLibraryViewModel(Application application) throws IOException {
+    public VideoLibraryViewModel(Application application) {
         super(application);
         mVideoLibraryRepository = new VideoLibraryRepository(application);
         mAllVideos = mVideoLibraryRepository.getAllVideos();

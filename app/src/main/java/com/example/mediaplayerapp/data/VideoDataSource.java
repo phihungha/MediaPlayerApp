@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Size;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.io.IOException;
@@ -17,7 +16,7 @@ import java.util.List;
 
 public class VideoDataSource {
 
-    public static MutableLiveData<List<Video>> getAllVideos(Context context) throws IOException {
+    public static MutableLiveData<List<Video>> getAllVideos(Context context) {
         List<Video> videoList = new ArrayList<>();
 
         String[] projection = new String[]{
@@ -50,8 +49,12 @@ public class VideoDataSource {
 
                 Bitmap videoThumbnail = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                    videoThumbnail = context.getContentResolver().loadThumbnail(
-                            videoUri, new Size(145, 80), null);
+                    try {
+                        videoThumbnail = context.getContentResolver().loadThumbnail(
+                                videoUri, new Size(145, 80), null);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 String videoName = cursor.getString(nameColumnIndex);
