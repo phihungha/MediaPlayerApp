@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mediaplayerapp">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -10,10 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MediaPlayerApp">
         <activity
-            android:name=".ui.video_player.VideoPlayer"
+            android:name=".ui.video_player.VideoPlayerActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.music_player.MusicPlayer"
+            android:name=".ui.music_player.MusicPlayerActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"

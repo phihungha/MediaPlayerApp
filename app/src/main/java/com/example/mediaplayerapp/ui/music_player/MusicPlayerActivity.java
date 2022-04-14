@@ -6,7 +6,7 @@ import android.os.Bundle;
 
 import com.example.mediaplayerapp.R;
 
-public class MusicPlayer extends AppCompatActivity {
+public class MusicPlayerActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
