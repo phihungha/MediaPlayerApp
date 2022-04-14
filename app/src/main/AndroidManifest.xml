@@ -10,6 +10,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MediaPlayerApp">
         <activity
+            android:name=".ui.video_player.VideoPlayer"
+            android:exported="false" />
+        <activity
+            android:name=".ui.music_player.MusicPlayer"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
