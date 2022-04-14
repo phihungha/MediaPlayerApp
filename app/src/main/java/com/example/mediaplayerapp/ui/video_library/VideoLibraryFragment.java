@@ -1,6 +1,9 @@
 package com.example.mediaplayerapp.ui.video_library;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +14,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.databinding.FragmentVideoLibraryBinding;
+import com.example.mediaplayerapp.ui.video_player.VideoPlayer;
+
+import java.io.File;
 
 public class VideoLibraryFragment extends Fragment {
 
@@ -25,6 +31,13 @@ public class VideoLibraryFragment extends Fragment {
 
         final TextView textView = binding.textVideoLibrary;
         videoLibraryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
+        String path = Environment.getExternalStorageDirectory().getPath();
+        binding.videoPlayButton.setOnClickListener(view -> {
+            Intent startPlayback = new Intent(requireActivity(), VideoPlayer.class);
+            startPlayback.setData(Uri.fromFile(new File(path + "/Download/Sample-MP4-Video-File-Download.mp4")));
+            startActivity(startPlayback);
+        });
         return binding.getRoot();
     }
 
