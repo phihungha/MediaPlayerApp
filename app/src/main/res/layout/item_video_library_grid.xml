@@ -10,6 +10,7 @@
         android:layout_width="140dp"
         android:layout_height="90dp"
         android:src="@drawable/ic_home_black_24dp"
+        android:scaleType="centerCrop"
         app:shapeAppearanceOverlay="@style/roundedCornerImageView" />
 
     <TextView
