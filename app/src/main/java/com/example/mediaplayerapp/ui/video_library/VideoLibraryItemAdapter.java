@@ -14,6 +14,8 @@ import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryItemAdapter.ViewHolder> {
 
@@ -36,7 +38,15 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.mVideoThumbnail.setImageBitmap(mVideos.get(position).thumbNail);
         holder.mVideoName.setText(mVideos.get(position).name);
-        holder.mVideoDuration.setText(String.valueOf(mVideos.get(position).duration));
+
+        int duration = mVideos.get(position).duration;
+        String durationFormatted = String.format(
+                Locale.US,
+                "%02d:%02d",
+                TimeUnit.MILLISECONDS.toMinutes(duration),
+                TimeUnit.MILLISECONDS.toSeconds(duration)
+        );
+        holder.mVideoDuration.setText(durationFormatted);
     }
 
     @Override
