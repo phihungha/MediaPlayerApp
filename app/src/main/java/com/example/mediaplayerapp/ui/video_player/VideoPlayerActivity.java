@@ -1,6 +1,8 @@
 package com.example.mediaplayerapp.ui.video_player;
 
+import android.app.PictureInPictureParams;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.session.MediaSessionCompat;
@@ -23,13 +25,15 @@ public class VideoPlayerActivity extends AppCompatActivity {
     public final static String VIDEO_URI_LIST = "VideoPlayerActivity.VIDEO_URI_LIST";
     private final static String LOG_TAG = VideoPlayerActivity.class.getSimpleName();
 
+    ActivityVideoPlayerBinding binding;
+
     private ExoPlayer player;
     private MediaSessionCompat mediaSession;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityVideoPlayerBinding binding = ActivityVideoPlayerBinding.inflate(getLayoutInflater());
+        binding = ActivityVideoPlayerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         enterFullScreenMode();
@@ -46,13 +50,13 @@ public class VideoPlayerActivity extends AppCompatActivity {
         MediaSessionConnector mediaSessionConnector = new MediaSessionConnector(mediaSession);
         mediaSessionConnector.setPlayer(player);
 
-        startPlayback();
+        playVideo();
     }
 
     /**
      * Begin video playback from intent's video URI(s).
      */
-    private void startPlayback() {
+    private void playVideo() {
         Intent intent = getIntent();
         List<String> videoUris = intent.getStringArrayListExtra(VIDEO_URI_LIST);
         if (videoUris != null)
@@ -82,14 +86,30 @@ public class VideoPlayerActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        if (player.isPlaying())
+            enterPictureInPictureMode(new PictureInPictureParams.Builder().build());
+    }
+
+    @Override
+    public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
+        super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
+        if (isInPictureInPictureMode)
+            binding.videoPlayer.hideController();
+        else
+            binding.videoPlayer.showController();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         mediaSession.setActive(true);
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onStop() {
+        super.onStop();
         mediaSession.setActive(false);
         player.pause();
     }

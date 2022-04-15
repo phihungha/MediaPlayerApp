@@ -40,7 +40,6 @@ public class VideoLibraryFragment extends Fragment {
             videoUris.add(Uri.fromFile(new File(path + "/Download/video_sample.mp4")).toString());
             videoUris.add(Uri.fromFile(new File(path + "/Download/video_sample_2.mp4")).toString());
             videoUris.add(Uri.fromFile(new File(path + "/Download/video_sample_3.mp4")).toString());
-            videoUris.add(Uri.fromFile(new File(path + "/Download/video_sample_4.mp4")).toString());
             startPlayback.putStringArrayListExtra(VideoPlayerActivity.VIDEO_URI_LIST, videoUris);
             startActivity(startPlayback);
         });
