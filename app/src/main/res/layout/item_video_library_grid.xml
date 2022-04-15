@@ -5,13 +5,25 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/video_thumbnail_shapeableimageview"
-        android:layout_width="140dp"
-        android:layout_height="90dp"
-        android:src="@drawable/ic_home_black_24dp"
-        android:scaleType="centerCrop"
-        app:shapeAppearanceOverlay="@style/roundedCornerImageView" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/video_thumbnail_shapeableimageview"
+            android:layout_width="140dp"
+            android:layout_height="90dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_home_black_24dp"
+            app:shapeAppearanceOverlay="@style/roundedCornerImageView"
+            android:layout_centerInParent="true"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_music"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/video_name_textview"
