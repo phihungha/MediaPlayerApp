@@ -2,14 +2,18 @@ package com.example.mediaplayerapp.ui.video_library;
 
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Video;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryGridBinding;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
@@ -47,6 +51,20 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
                 TimeUnit.MILLISECONDS.toSeconds(duration)
         );
         holder.mVideoDuration.setText(durationFormatted);
+
+        holder.mVideoOptions.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext());
+                bottomSheetDialog.setContentView(R.layout.dialog_bottom_sheet);
+
+                TextView videoNameTextview =
+                        bottomSheetDialog.findViewById(R.id.video_name_bottom_sheet_textview);
+                videoNameTextview.setText(holder.mVideoName.getText());
+
+                bottomSheetDialog.show();
+            }
+        });
     }
 
     @Override
@@ -64,12 +82,14 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
         public final ShapeableImageView mVideoThumbnail;
         public final TextView mVideoName;
         public final TextView mVideoDuration;
+        public final ImageView mVideoOptions;
 
         public ViewHolder(ItemVideoLibraryGridBinding binding) {
             super(binding.getRoot());
             mVideoThumbnail = binding.videoThumbnailShapeableimageview;
             mVideoName = binding.videoNameTextview;
             mVideoDuration = binding.videoDurationTextview;
+            mVideoOptions = binding.videoOptionsImageview;
         }
     }
 }
