@@ -8,4 +8,5 @@
     <string name="new_playlist">Create Playlist</string>
     <string name="add_more">Add more</string>
     <string name="play_all">Play All</string>
+    <string name="shuffle_all">Shuffle All</string>
 </resources>

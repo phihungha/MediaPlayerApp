@@ -162,7 +162,7 @@
         android:layout_height="wrap_content"
 
         android:fontFamily="@font/poppins_thin"
-        android:text="@string/play_all"
+        android:text="@string/shuffle_all"
 
         android:textColor="@color/colorPlaylist_textColor"
         android:textSize="16sp"
