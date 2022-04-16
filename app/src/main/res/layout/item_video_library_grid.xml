@@ -31,7 +31,9 @@
         android:layout_height="wrap_content"
         android:text="REACT.MP4"
         android:textColor="#474646"
-        android:textSize="11sp"
+        android:textSize="13sp"
+        android:singleLine="true"
+        android:ellipsize="end"
         android:textStyle="bold" />
 
     <TextView
@@ -40,5 +42,5 @@
         android:layout_height="wrap_content"
         android:text="03:01"
         android:textColor="#474646"
-        android:textSize="9sp" />
+        android:textSize="11sp" />
 </LinearLayout>
