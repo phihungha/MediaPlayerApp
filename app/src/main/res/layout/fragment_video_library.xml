@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:text="Playback"
-        app:layout_constraintBottom_toTopOf="@+id/text_video_library"
-        app:layout_constraintEnd_toEndOf="@+id/text_video_library"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

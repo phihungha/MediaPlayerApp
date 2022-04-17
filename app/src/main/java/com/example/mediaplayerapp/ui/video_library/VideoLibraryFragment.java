@@ -12,6 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.databinding.FragmentVideoLibraryBinding;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
@@ -42,31 +45,16 @@ public class VideoLibraryFragment extends Fragment {
 
         videoLibraryViewModel =
                 new ViewModelProvider(getActivity()).get(VideoLibraryViewModel.class);
-        videoLibraryViewModel.getAllVideos().observe(getActivity(),videoList -> {
+        videoLibraryViewModel.getAllVideos().observe(getActivity(), videoList -> {
             videoLibraryItemAdapter.updateVideoList(videoList);
         });
-//        VideoLibraryRepository videoLibraryRepository = new VideoLibraryRepository(getActivity());
-//        List<Video> videos = videoLibraryRepository.getAllVideos();
-//        videos.add(new Video(null, "video 1", 343));
-//        videos.add(new Video(null, "video 2", 343));
-//        videos.add(new Video(null, "video 3", 343));
-//        videos.add(new Video(null, "video 4", 343));
-//        videos.add(new Video(null, "video 5", 343));
-
-
-//        final TextView textView = binding.textVideoLibrary;
-//        videoLibraryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-        return rootView;
-        final TextView textView = binding.textVideoLibrary;
-        videoLibraryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-
         String path = Environment.getExternalStorageDirectory().getPath();
         binding.videoPlayButton.setOnClickListener(view -> {
             Intent startPlayback = new Intent(requireActivity(), VideoPlayerActivity.class);
             ArrayList<String> videoUris = new ArrayList<>();
-            videoUris.add(Uri.fromFile(new File(path + "/Download/video_sample.mp4")).toString());
-            videoUris.add(Uri.fromFile(new File(path + "/Download/video_sample_2.mp4")).toString());
-            videoUris.add(Uri.fromFile(new File(path + "/Download/video_sample_3.mp4")).toString());
+//            videoUris.add(Uri.fromFile(new File(path + "/Download/video_sample.mp4")).toString());
+//            videoUris.add(Uri.fromFile(new File(path + "/Download/video_sample_2.mp4")).toString());
+//            videoUris.add(Uri.fromFile(new File(path + "/Download/video_sample_3.mp4")).toString());
             startPlayback.putStringArrayListExtra(VideoPlayerActivity.VIDEO_URI_LIST, videoUris);
             startActivity(startPlayback);
         });
