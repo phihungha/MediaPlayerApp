@@ -1,6 +1,6 @@
 package com.example.mediaplayerapp.ui.video_library;
 
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Video;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryGridBinding;
+import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -41,6 +42,22 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.mVideoThumbnail.setImageBitmap(mVideos.get(position).thumbNail);
+
+        holder.mVideoThumbnail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<String> videoUris = new ArrayList<>();
+                videoUris.add(mVideos.get(position).uri.toString());
+
+                Intent startPlaybackIntent = new Intent(
+                        view.getContext(), VideoPlayerActivity.class);
+                startPlaybackIntent.putStringArrayListExtra(
+                        VideoPlayerActivity.VIDEO_URI_LIST, videoUris);
+
+                view.getContext().startActivity(startPlaybackIntent);
+            }
+        });
+
         holder.mVideoName.setText(mVideos.get(position).name);
 
         int duration = mVideos.get(position).duration;
