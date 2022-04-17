@@ -3,11 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.music_player.MusicPlayerFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/black"
+    tools:context=".ui.video_player.VideoPlayerActivity">
 
-    <TextView
+    <com.google.android.exoplayer2.ui.StyledPlayerView
+        android:id="@+id/video_player"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Hello" />
+        app:repeat_toggle_modes="none|all|one"
+        app:show_shuffle_button="true" />
 
 </FrameLayout>
