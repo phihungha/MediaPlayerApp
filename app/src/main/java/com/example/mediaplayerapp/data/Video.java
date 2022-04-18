@@ -3,16 +3,34 @@ package com.example.mediaplayerapp.data;
 import android.graphics.Bitmap;
 import android.net.Uri;
 
+import java.util.Comparator;
+
 public class Video {
-    public final Uri uri;
-    public final Bitmap thumbNail;
-    public final String name;
-    public final int duration;
+    private final Uri uri;
+    private final Bitmap thumbNail;
+    private final String name;
+    private final int duration;
 
     public Video(Uri uri, Bitmap thumbNail, String name, int duration) {
         this.uri = uri;
         this.thumbNail = thumbNail;
         this.name = name;
         this.duration = duration;
+    }
+
+    public Uri getUri() {
+        return uri;
+    }
+
+    public Bitmap getThumbNail() {
+        return thumbNail;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getDuration() {
+        return duration;
     }
 }
