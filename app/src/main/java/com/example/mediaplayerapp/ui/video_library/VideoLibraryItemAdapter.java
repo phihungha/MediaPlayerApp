@@ -8,7 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.UiThread;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
@@ -19,21 +18,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryItemAdapter.ViewHolder> {
 
-    private List<Video> mVideos;
+    private final List<Video> mVideos;
 
     public VideoLibraryItemAdapter() {
         mVideos = new ArrayList<>();
-    }
-
-    public VideoLibraryItemAdapter(List<Video> videos) {
-        mVideos = videos;
     }
 
     @Override
