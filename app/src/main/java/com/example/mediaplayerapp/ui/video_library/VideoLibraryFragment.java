@@ -1,9 +1,6 @@
 package com.example.mediaplayerapp.ui.video_library;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,11 +16,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.Video;
 import com.example.mediaplayerapp.databinding.FragmentVideoLibraryBinding;
-import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
+
 
 public class VideoLibraryFragment extends Fragment {
 
@@ -32,8 +29,9 @@ public class VideoLibraryFragment extends Fragment {
     RecyclerView recyclerViewAllVideos;
     VideoLibraryItemAdapter videoLibraryItemAdapter;
     private int mColumnCount = 1;
-    private SortArgs sortArgs = SortArgs.NONE;
-    private SortOrder sortOrder = SortOrder.NONE;
+    private SortArgs sortArgs = SortArgs.VIDEO_DURATION;
+    private SortOrder sortOrder = SortOrder.ASC;
+    private List<Video> currentVideosList;
 
     enum SortArgs {
         NONE,
@@ -70,21 +68,22 @@ public class VideoLibraryFragment extends Fragment {
                     mColumnCount = 1;
                     recyclerViewAllVideos.setLayoutManager(new LinearLayoutManager((binding.getRoot().getContext())));
                 }
-                // navigate to settings screen
-                return true;
-            }
-            case R.id.sort_by_length_menu_item: {
-                sortArgs = SortArgs.VIDEO_NAME;
-                sortOrder = SortOrder.ASC;
-                videoLibraryItemAdapter.notifyDataSetChanged();
-                // save profile changes
                 return true;
             }
             case R.id.sort_by_name_menu_item: {
+                sortArgs = SortArgs.VIDEO_NAME;
+                sortOrder = SortOrder.ASC;
+
+                videoLibraryItemAdapter.updateVideoList(currentVideosList, sortArgs, sortOrder);
+                videoLibraryItemAdapter.notifyDataSetChanged();
+                return true;
+            }
+            case R.id.sort_by_length_menu_item: {
                 sortArgs = SortArgs.VIDEO_DURATION;
                 sortOrder = SortOrder.DESC;
+
+                videoLibraryItemAdapter.updateVideoList(currentVideosList, sortArgs, sortOrder);
                 videoLibraryItemAdapter.notifyDataSetChanged();
-                // save profile changes
                 return true;
             }
             default:
@@ -104,13 +103,14 @@ public class VideoLibraryFragment extends Fragment {
         } else {
             recyclerViewAllVideos.setLayoutManager(new GridLayoutManager(rootView.getContext(), 2));
         }
-         videoLibraryItemAdapter = new VideoLibraryItemAdapter();
+        videoLibraryItemAdapter = new VideoLibraryItemAdapter();
         recyclerViewAllVideos.setAdapter(videoLibraryItemAdapter);
 
         videoLibraryViewModel =
                 new ViewModelProvider(getActivity()).get(VideoLibraryViewModel.class);
+
         videoLibraryViewModel.getAllVideos().observe(getActivity(), videoList -> {
-                videoLibraryItemAdapter.updateVideoList(videoList,sortArgs,sortOrder);
+            videoLibraryItemAdapter.updateVideoList(videoList, sortArgs, sortOrder);
         });
 
         return binding.getRoot();
