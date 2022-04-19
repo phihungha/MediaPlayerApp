@@ -18,6 +18,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -41,13 +42,13 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mVideoThumbnail.setImageBitmap(mVideos.get(position).thumbNail);
+        holder.mVideoThumbnail.setImageBitmap(mVideos.get(position).getThumbNail());
 
         holder.mVideoThumbnail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ArrayList<String> videoUris = new ArrayList<>();
-                videoUris.add(mVideos.get(position).uri.toString());
+                videoUris.add(mVideos.get(position).getUri().toString());
 
                 Intent startPlaybackIntent = new Intent(
                         view.getContext(), VideoPlayerActivity.class);
@@ -58,9 +59,9 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
             }
         });
 
-        holder.mVideoName.setText(mVideos.get(position).name);
+        holder.mVideoName.setText(mVideos.get(position).getName());
 
-        int duration = mVideos.get(position).duration;
+        int duration = mVideos.get(position).getDuration();
         String durationFormatted = String.format(
                 Locale.US,
                 "%02d:%02d",
@@ -89,7 +90,25 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
         return mVideos.size();
     }
 
-    public void updateVideoList(final List<Video> updatedVideoList) {
+    public void updateVideoList(final List<Video> updatedVideoList, VideoLibraryFragment.SortArgs sortArgs, VideoLibraryFragment.SortOrder sortOrder) {
+
+        switch (sortArgs) {
+            case VIDEO_NAME:
+                if (sortOrder == VideoLibraryFragment.SortOrder.ASC)
+                    updatedVideoList.sort(Video.VideoNameAZComparator);
+                else
+                    updatedVideoList.sort(Video.VideoNameZAComparator);
+                break;
+
+            case VIDEO_DURATION:
+                if (sortOrder == VideoLibraryFragment.SortOrder.ASC)
+                    updatedVideoList.sort(Video.VideoDurationAscendingComparator);
+                    updatedVideoList.sort(Video.VideoDurationDescendingComparator);
+                break;
+
+            default:
+                break;
+        }
         this.mVideos.clear();
         this.mVideos = updatedVideoList;
         //notifyDataSetChanged();
