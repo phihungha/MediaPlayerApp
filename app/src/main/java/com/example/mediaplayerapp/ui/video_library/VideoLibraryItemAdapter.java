@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
@@ -103,6 +104,7 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
             case VIDEO_DURATION:
                 if (sortOrder == VideoLibraryFragment.SortOrder.ASC)
                     updatedVideoList.sort(Video.VideoDurationAscendingComparator);
+                else
                     updatedVideoList.sort(Video.VideoDurationDescendingComparator);
                 break;
 
@@ -110,7 +112,7 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
                 break;
         }
         this.mVideos.clear();
-        this.mVideos = updatedVideoList;
+        this.mVideos.addAll(updatedVideoList);
         //notifyDataSetChanged();
     }
 
