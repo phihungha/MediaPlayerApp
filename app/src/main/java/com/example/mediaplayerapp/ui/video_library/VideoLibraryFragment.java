@@ -24,26 +24,14 @@ import java.util.List;
 
 public class VideoLibraryFragment extends Fragment {
 
-    private FragmentVideoLibraryBinding binding;
     VideoLibraryViewModel videoLibraryViewModel;
     RecyclerView recyclerViewAllVideos;
     VideoLibraryItemAdapter videoLibraryItemAdapter;
+    private FragmentVideoLibraryBinding binding;
     private int mColumnCount = 1;
     private SortArgs sortArgs = SortArgs.VIDEO_DURATION;
     private SortOrder sortOrder = SortOrder.ASC;
     private List<Video> currentVideosList;
-
-    enum SortArgs {
-        NONE,
-        VIDEO_NAME,
-        VIDEO_DURATION
-    }
-
-    enum SortOrder {
-        NONE,
-        ASC,
-        DESC
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,20 +77,21 @@ public class VideoLibraryFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
-
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         binding = FragmentVideoLibraryBinding.inflate(inflater, container, false);
-        View rootView = binding.getRoot();
 
         recyclerViewAllVideos = binding.allVideosRecyclerview;
         if (mColumnCount <= 1) {
-            recyclerViewAllVideos.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
+            recyclerViewAllVideos.setLayoutManager(
+                    new LinearLayoutManager(binding.getRoot().getContext()));
         } else {
-            recyclerViewAllVideos.setLayoutManager(new GridLayoutManager(rootView.getContext(), 2));
+            recyclerViewAllVideos.setLayoutManager(
+                    new GridLayoutManager(binding.getRoot().getContext(), 2));
         }
+
         videoLibraryItemAdapter = new VideoLibraryItemAdapter();
         recyclerViewAllVideos.setAdapter(videoLibraryItemAdapter);
 
@@ -111,8 +100,8 @@ public class VideoLibraryFragment extends Fragment {
 
         videoLibraryViewModel.getAllVideos().observe(getActivity(), videoList -> {
             videoLibraryItemAdapter.updateVideoList(videoList, sortArgs, sortOrder);
+            currentVideosList = videoList;
         });
-
         return binding.getRoot();
     }
 
@@ -120,5 +109,17 @@ public class VideoLibraryFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    enum SortArgs {
+        NONE,
+        VIDEO_NAME,
+        VIDEO_DURATION
+    }
+
+    enum SortOrder {
+        NONE,
+        ASC,
+        DESC
     }
 }
