@@ -1,35 +1,43 @@
-<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.mediaplayerapp">
+<?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android"
+package="com.example.mediaplayerapp">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.MediaPlayerApp">
-        <activity
-            android:name=".ui.video_player.VideoPlayerActivity"
-            android:supportsPictureInPicture="true"
-            android:configChanges="orientation|screenSize|layoutDirection|screenLayout"
-            android:launchMode="singleTask"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:exported="false" />
-        <activity
-            android:name=".ui.music_player.MusicPlayerActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+<application
+    android:allowBackup="true"
+    android:icon="@mipmap/ic_launcher"
+    android:label="@string/app_name"
+    android:roundIcon="@mipmap/ic_launcher_round"
+    android:supportsRtl="true"
+    android:theme="@style/Theme.MediaPlayerApp">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-    </application>
+    <activity
+        android:name=".ui.video_player.VideoPlayerActivity"
+        android:supportsPictureInPicture="true"
+        android:configChanges="orientation|screenSize|layoutDirection|screenLayout"
+        android:launchMode="singleTask"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:exported="false" />
+    <activity
+        android:name=".ui.music_player.MusicPlayerActivity"
+        android:exported="false" />
+    <activity
+        android:name=".MainActivity"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+
+    <service
+        android:name="com.example.mediaplayerapp.services.BackgroundMusicService"
+        android:exported="false">
+        <intent-filter>
+            <action android:name="android.media.browse.MediaBrowserService" />
+        </intent-filter>
+    </service>
+</application>
 
 </manifest>
