@@ -45,7 +45,7 @@
 
                         android:contentDescription="@string/image_for_thumbnail"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_baseline_playlist_add_24" />
+                        android:src="@drawable/ic_round_playlist_add_24" />
                 </androidx.cardview.widget.CardView>
 
                 <TextView

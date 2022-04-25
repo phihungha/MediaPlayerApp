@@ -75,7 +75,7 @@
         android:id="@+id/btn_addMore"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:background="@drawable/ic_baseline_add_circle_outline_24"
+        android:background="@drawable/ic_outline_add_circle_outline_24"
         android:backgroundTint="@color/white"
 
         android:layout_marginEnd="20dp"
@@ -106,13 +106,14 @@
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="@id/view_background"
         app:layout_constraintTop_toBottomOf="@id/view_background"
+        app:layout_constraintEnd_toStartOf="@id/layout_shuffleAll"
         >
         <ImageView
             android:id="@+id/img_playAll"
             android:layout_width="40dp"
             android:layout_height="40dp"
 
-            android:src="@drawable/ic_baseline_play_circle_outline_24"
+            android:src="@drawable/ic_round_play_circle_outline_24"
             android:backgroundTint="@color/black"
 
             android:layout_gravity="center"
@@ -143,6 +144,7 @@
         app:layout_constraintTop_toTopOf="@id/layout_playAll"
         app:layout_constraintBottom_toBottomOf="@id/layout_playAll"
         app:layout_constraintStart_toEndOf="@id/layout_playAll"
+        app:layout_constraintEnd_toEndOf="@id/view_background"
         >
     <ImageView
         android:id="@+id/img_shuffleAll"
@@ -150,7 +152,7 @@
         android:layout_height="40dp"
 
         android:backgroundTint="@color/black"
-        android:src="@drawable/ic_shuffle_all"
+        android:src="@drawable/ic_round_shuffle_24"
 
         android:layout_gravity="center"
         android:layout_marginStart="20dp"
