@@ -128,7 +128,7 @@
             android:text="@string/play_all"
 
             android:textColor="@color/colorPlaylist_textColor"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:layout_gravity="center"
 
@@ -167,7 +167,7 @@
         android:text="@string/shuffle_all"
 
         android:textColor="@color/colorPlaylist_textColor"
-        android:textSize="16sp"
+        android:textSize="20sp"
         android:textStyle="bold"
 
         android:layout_gravity="center"
