@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <item android:id="@+id/action_search"
+        android:title="@string/search"
+        android:icon="@drawable/ic_baseline_search_24"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="android.widget.SearchView" />
+
+    <item android:title="Title 1"
+        android:id="@+id/item_1"/>
+
+    <item android:title="Title 2"
+        android:id="@+id/item_2" />
+
+    <item android:title="Title 3"
+        android:id="@+id/item_3"/>
+
+</menu>

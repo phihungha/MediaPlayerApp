@@ -3,6 +3,8 @@ package com.example.mediaplayerapp.ui.playlist;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.mediaplayerapp.data.Playlist;
+
 /** Share data between Fragment Playlist and Fragment Playlist Details
  * */
 public class SharedViewModel extends ViewModel {

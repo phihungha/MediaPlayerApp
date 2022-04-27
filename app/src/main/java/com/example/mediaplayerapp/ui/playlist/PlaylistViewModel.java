@@ -1,57 +1,34 @@
 package com.example.mediaplayerapp.ui.playlist;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.Playlist;
+import com.example.mediaplayerapp.data.PlaylistRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/*public class PlaylistViewModel extends ViewModel {
+public class PlaylistViewModel extends AndroidViewModel {
+    private PlaylistRepository mRepository;
+    private final LiveData<List<Playlist>> mAllPlaylists;
 
-    private final MutableLiveData<String> mText;
-
-    public PlaylistViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is playlist fragment");
+    public PlaylistViewModel(@NonNull Application application) {
+        super(application);
+        mRepository=new PlaylistRepository(application);
+        mAllPlaylists= mRepository.getAllPlaylists();
     }
 
-    public LiveData<String> getText() {
-        return mText;
-    }
-}*/
-
-public class PlaylistViewModel extends ViewModel {
-
-    private MutableLiveData<List<Playlist>> mPlaylistsLiveData;
-    private List<Playlist> mPlaylists;
-
-    public PlaylistViewModel() {
-        mPlaylistsLiveData = new MutableLiveData<>();
-        init();
+    LiveData<List<Playlist>> getAllPlaylists(){
+        return mAllPlaylists;
     }
 
-    private void init(){
-        mPlaylists=new ArrayList<>();
-     /*   mPlaylists.add(new Playlist(R.drawable.ic_launcher_background,"New playlist...",""));
-        mPlaylists.add(new Playlist(R.drawable.ic_launcher_background,"Name 1","1 video"));
-        mPlaylists.add(new Playlist(R.drawable.ic_launcher_background,"Name 2","2 videos"));
-        mPlaylists.add(new Playlist(R.drawable.ic_launcher_background,"Name 3","3 videos"));
-        mPlaylists.add(new Playlist(R.drawable.ic_launcher_background,"Name 4","4 videos"));
-        mPlaylists.add(new Playlist(R.drawable.ic_launcher_background,"Name 5","5 videos"));
-        mPlaylists.add(new Playlist(R.drawable.ic_launcher_background,"Name 6","6 videos"));
-        mPlaylists.add(new Playlist(R.drawable.ic_launcher_background,"Name 7","7 videos"));
-        mPlaylists.add(new Playlist(R.drawable.ic_launcher_background,"Name 8","8 videos"));
-        mPlaylists.add(new Playlist(R.drawable.ic_launcher_background,"Name 9","9 videos"));
-        mPlaylists.add(new Playlist(R.drawable.ic_launcher_background,"Name 10","10 videos"));*/
-
-        mPlaylistsLiveData.setValue(mPlaylists);
+    public void insert(Playlist playlist){
+        mRepository.insert(playlist);
     }
-
-    public MutableLiveData<List<Playlist>> getPlaylistsLiveData() {
-        return mPlaylistsLiveData;
-    }
-
 }

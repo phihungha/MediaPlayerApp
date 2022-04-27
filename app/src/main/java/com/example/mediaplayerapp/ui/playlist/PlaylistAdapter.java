@@ -5,14 +5,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mediaplayerapp.data.Playlist;
 import com.example.mediaplayerapp.databinding.ItemPlaylistBinding;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder> {
     private List<Playlist> mPlaylists;
+    private List<Playlist> listFilter=new ArrayList<>();
     private OnPlaylistItemClickListener listener;
 
     public interface OnPlaylistItemClickListener{
@@ -51,7 +56,7 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
         }
         holder.binding.imgThumbnail.setImageResource(playlist.getIdResource());
         holder.binding.tvPlaylistName.setText(playlist.getName());
-        holder.binding.tvPlaylistNumbers.setText(playlist.getNumbers());
+        holder.binding.tvPlaylistNumbers.setText(String.valueOf(playlist.getNumbers()));
     }
 
     @Override
@@ -60,6 +65,19 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
             return mPlaylists.size();
         }
         return 0;
+    }
+
+    static class PlaylistDiff extends DiffUtil.ItemCallback<Playlist> {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull Playlist oldItem, @NonNull Playlist newItem) {
+            return oldItem == newItem;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Playlist oldItem, @NonNull Playlist newItem) {
+            return oldItem.getId() == newItem.getId();
+        }
     }
 
     public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -75,6 +93,29 @@ public class PlaylistAdapter extends RecyclerView.Adapter<PlaylistAdapter.Playli
             listener.onClick(view,getBindingAdapterPosition());
         }
 
+    }
+
+    public void filter(String queryText)
+    {
+        listFilter.clear();
+
+        if(queryText.isEmpty())
+        {
+            listFilter.addAll(mPlaylists);
+        }
+        else
+        {
+
+            for(Playlist playlist: mPlaylists)
+            {
+                if(playlist.getName().toLowerCase().contains(queryText.toLowerCase()))
+                {
+                    listFilter.add(playlist);
+                }
+            }
+        }
+
+        notifyDataSetChanged();
     }
 
 }

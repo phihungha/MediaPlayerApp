@@ -9,9 +9,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.Playlist;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
 
 import java.util.ArrayList;
@@ -21,10 +23,20 @@ public class PlaylistFragment extends Fragment {
     private FragmentPlaylistBinding binding;
     private PlaylistDetailsFragment detailsFragment=new PlaylistDetailsFragment();
     private PlaylistAdapter adapter;
+    private PlaylistViewModel playlistViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentPlaylistBinding.inflate(inflater, container, false);
+        playlistViewModel=new ViewModelProvider(this).get(PlaylistViewModel.class);
+
+        playlistViewModel.getAllPlaylists().observe(getViewLifecycleOwner(), new Observer<List<Playlist>>() {
+            @Override
+            public void onChanged(List<Playlist> playlists) {
+                Toast.makeText(getActivity(), "onChanged", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return binding.getRoot();
     }
 
@@ -34,19 +46,21 @@ public class PlaylistFragment extends Fragment {
 
         SharedViewModel viewModel=new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         List<Playlist> mPlaylists =new ArrayList<>();
-        mPlaylists.add(new Playlist(1,R.drawable.img_for_test,"Name 1","1 video"));
-        mPlaylists.add(new Playlist(2,R.drawable.img_for_test,"Name 2","2 videos"));
-        mPlaylists.add(new Playlist(3,R.drawable.img_for_test,"Name 3","3 videos"));
-        mPlaylists.add(new Playlist(4,R.drawable.img_for_test,"Name 4","4 videos"));
-        mPlaylists.add(new Playlist(5,R.drawable.img_for_test,"Name 5","5 videos"));
-        mPlaylists.add(new Playlist(6,R.drawable.img_for_test,"Name 6","6 videos"));
-        mPlaylists.add(new Playlist(7,R.drawable.img_for_test,"Name 7","7 videos"));
-        mPlaylists.add(new Playlist(8,R.drawable.img_for_test,"Name 8","8 videos"));
-        mPlaylists.add(new Playlist(9,R.drawable.img_for_test,"Name 9","9 videos"));
-        mPlaylists.add(new Playlist(10,R.drawable.img_for_test,"Name 10","10 videos"));
+/*
+        mPlaylists.add(new Playlist(1,R.drawable.img_for_test,"Name 1",1,true,10,11));
+        mPlaylists.add(new Playlist(2,R.drawable.img_for_test,"Name 2",1,true,10,11));
+        mPlaylists.add(new Playlist(3,R.drawable.img_for_test,"Name 3",1,true,10,11));
+        mPlaylists.add(new Playlist(4,R.drawable.img_for_test,"Name 4",1,true,10,11));
+        mPlaylists.add(new Playlist(5,R.drawable.img_for_test,"Name 5",1,true,10,11));
+        mPlaylists.add(new Playlist(6,R.drawable.img_for_test,"Name 6",1,true,10,11));
+        mPlaylists.add(new Playlist(7,R.drawable.img_for_test,"Name 7",1,true,10,11));
+        mPlaylists.add(new Playlist(8,R.drawable.img_for_test,"Name 8",1,true,10,11));
+        mPlaylists.add(new Playlist(9,R.drawable.img_for_test,"Name 9",1,true,10,11));
+*/
 
         adapter=new PlaylistAdapter(mPlaylists);
         binding.rcvPlaylists.setAdapter(adapter);
+        binding.rcvPlaylists.setHasFixedSize(true);
         adapter.setListener((v, position) -> {
             viewModel.setSelected(adapter.getPlaylistItemAt(position));
             getParentFragmentManager().beginTransaction()
