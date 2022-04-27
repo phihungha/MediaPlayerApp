@@ -36,7 +36,6 @@ public class PlaylistFragment extends Fragment {
                 Toast.makeText(getActivity(), "onChanged", Toast.LENGTH_SHORT).show();
             }
         });
-
         return binding.getRoot();
     }
 
@@ -44,8 +43,8 @@ public class PlaylistFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        SharedViewModel viewModel=new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        List<Playlist> mPlaylists =new ArrayList<>();
+      /*  SharedViewModel viewModel=new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        List<Playlist> mPlaylists =new ArrayList<>();*/
 /*
         mPlaylists.add(new Playlist(1,R.drawable.img_for_test,"Name 1",1,true,10,11));
         mPlaylists.add(new Playlist(2,R.drawable.img_for_test,"Name 2",1,true,10,11));
@@ -58,16 +57,19 @@ public class PlaylistFragment extends Fragment {
         mPlaylists.add(new Playlist(9,R.drawable.img_for_test,"Name 9",1,true,10,11));
 */
 
-        adapter=new PlaylistAdapter(mPlaylists);
+        final PlaylistAdapter adapter = new PlaylistAdapter(new PlaylistAdapter.PlaylistDiff());
         binding.rcvPlaylists.setAdapter(adapter);
-        binding.rcvPlaylists.setHasFixedSize(true);
-        adapter.setListener((v, position) -> {
+
+      /*  adapter=new PlaylistAdapter();
+        binding.rcvPlaylists.setAdapter(adapter);
+        binding.rcvPlaylists.setHasFixedSize(true);*/
+        /*adapter.setListener((v, position) -> {
             viewModel.setSelected(adapter.getPlaylistItemAt(position));
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment_activity_main,detailsFragment)
                     .addToBackStack(null)
                     .commit();
-        });
+        });*/
 
         binding.layoutItemAddPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
