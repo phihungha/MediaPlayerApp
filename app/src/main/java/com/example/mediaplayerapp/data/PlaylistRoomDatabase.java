@@ -28,7 +28,7 @@ public abstract class PlaylistRoomDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             PlaylistRoomDatabase.class, "playlist_database")
-                            .addCallback(sRoomDatabaseCallBack)
+                            //.addCallback(sRoomDatabaseCallBack)
                             .build();
                 }
             }
@@ -37,7 +37,7 @@ public abstract class PlaylistRoomDatabase extends RoomDatabase {
     }
 
 
-    private static RoomDatabase.Callback sRoomDatabaseCallBack= new RoomDatabase.Callback(){
+ /*   private static RoomDatabase.Callback sRoomDatabaseCallBack= new RoomDatabase.Callback(){
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
@@ -55,5 +55,5 @@ public abstract class PlaylistRoomDatabase extends RoomDatabase {
                 dao.insert(playlist);
             });
         }
-    };
+    };*/
 }

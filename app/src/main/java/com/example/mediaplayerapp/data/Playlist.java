@@ -29,8 +29,7 @@ public class Playlist {
     @ColumnInfo(name = "VideoID")
     private int videoID;
 
-    public Playlist(int id, int idResource, String name, int numbers, boolean isVideo, int songID, int videoID) {
-        this.id = id;
+    public Playlist(int idResource, String name, int numbers, boolean isVideo, int songID, int videoID) {
         this.idResource = idResource;
         this.name = name;
         this.numbers = numbers;

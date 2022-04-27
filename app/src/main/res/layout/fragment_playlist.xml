@@ -26,7 +26,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="8dp">
+                android:padding="8dp"
+                >
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardView_thumbnail"
@@ -63,6 +64,13 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_deleteALl"
+                android:text="Delete All"
+                android:textColor="@color/white"
+                />
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rcv_playlists"
                 android:layout_width="match_parent"

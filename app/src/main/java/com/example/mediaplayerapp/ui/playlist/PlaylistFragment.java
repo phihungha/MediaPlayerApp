@@ -1,5 +1,6 @@
 package com.example.mediaplayerapp.ui.playlist;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.transform.Result;
 
 public class PlaylistFragment extends Fragment {
     private FragmentPlaylistBinding binding;
@@ -57,12 +60,12 @@ public class PlaylistFragment extends Fragment {
         mPlaylists.add(new Playlist(9,R.drawable.img_for_test,"Name 9",1,true,10,11));
 */
 
-        final PlaylistAdapter adapter = new PlaylistAdapter(new PlaylistAdapter.PlaylistDiff());
+        adapter=new PlaylistAdapter(new PlaylistAdapter.PlaylistDiff());
         binding.rcvPlaylists.setAdapter(adapter);
-
-      /*  adapter=new PlaylistAdapter();
-        binding.rcvPlaylists.setAdapter(adapter);
-        binding.rcvPlaylists.setHasFixedSize(true);*/
+        playlistViewModel.getAllPlaylists().observe(getViewLifecycleOwner(), playlists -> {
+            // Update the cached copy of the words in the adapter.
+            adapter.submitList(playlists);
+        });
         /*adapter.setListener((v, position) -> {
             viewModel.setSelected(adapter.getPlaylistItemAt(position));
             getParentFragmentManager().beginTransaction()
@@ -70,6 +73,13 @@ public class PlaylistFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });*/
+
+        binding.btnDeleteALl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                playlistViewModel.deleteAll();
+            }
+        });
 
         binding.layoutItemAddPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,12 +89,17 @@ public class PlaylistFragment extends Fragment {
         });
     }
 
+
     private void makeToast(String mess){
         Toast.makeText(getActivity(), mess, Toast.LENGTH_SHORT).show();
     }
 
     private void addPlaylist(){
-        makeToast("ADD Playlist");
+        Playlist playlist = new Playlist(R.drawable.img_for_test,
+                "Name 23",100,true,10,11);
+        playlistViewModel.insert(playlist);
+
+       // makeToast("ADD Playlist");
     }
 
     @Override

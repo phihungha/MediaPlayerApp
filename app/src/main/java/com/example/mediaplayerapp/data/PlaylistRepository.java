@@ -20,6 +20,12 @@ public class PlaylistRepository {
         });
     }
 
+    public void deleteAll() {
+        PlaylistRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mPlaylistDao.deleteAll();
+        });
+    }
+
     public LiveData<List<Playlist>> getAllPlaylists() {
         return mAllPlaylists;
     }

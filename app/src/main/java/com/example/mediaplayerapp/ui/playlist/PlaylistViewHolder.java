@@ -19,9 +19,10 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder {
         //this.binding.getRoot().setOnClickListener(this);
     }
 
-
-    public void bind(String text) {
-        binding.tvPlaylistName.setText(text);
+    public void setBinding(int idResource, String name, int numbers){
+        binding.imgThumbnail.setImageResource(idResource);
+        binding.tvPlaylistName.setText(name);
+        binding.tvPlaylistNumbers.setText(String.valueOf(numbers));
     }
 
     static PlaylistViewHolder create(ViewGroup parent) {

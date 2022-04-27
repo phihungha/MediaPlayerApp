@@ -21,6 +21,9 @@ public interface PlaylistDao {
     @Delete
     void delete(Playlist playlist);
 
+    @Query("DELETE FROM playlist_table")
+    void deleteAll();
+
     @Query("SELECT * FROM playlist_table ORDER BY PlaylistID ASC")
     LiveData<List<Playlist>> getAllPlaylists();
 
