@@ -64,19 +64,20 @@
         app:layout_constraintTop_toBottomOf="@id/tv_playlistName" />
 
 
-    <ImageView
-        android:id="@+id/img_navigateNext"
+    <ImageButton
+        android:id="@+id/imgBtn_more"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:contentDescription="@string/navigate_next"
+        android:contentDescription="@string/add_more"
+        android:background="?attr/selectableItemBackground"
 
         android:layout_marginEnd="10dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_round_navigate_next_24"
+        android:src="@drawable/ic_round_more_vert_24"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:tint="@color/black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

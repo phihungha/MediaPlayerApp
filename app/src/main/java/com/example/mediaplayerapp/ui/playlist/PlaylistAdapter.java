@@ -18,16 +18,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
-    private List<Playlist> mPlaylists;
-    private List<Playlist> listFilter=new ArrayList<>();
+    private IOnPlaylistItemClickListener mListener;
 
     protected PlaylistAdapter(@NonNull DiffUtil.ItemCallback<Playlist> diffCallback) {
         super(diffCallback);
     }
+
     @NonNull
     @Override
     public PlaylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return PlaylistViewHolder.create(parent);
+        return PlaylistViewHolder.create(parent, mListener);
     }
 
     @Override
@@ -47,6 +47,14 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
             return oldItem.getId() == newItem.getId();
         }
     }
+
+    public void setListener(IOnPlaylistItemClickListener listener){
+        mListener=listener;
+    }
+
+    public Playlist getPlaylistItemAt(int position){
+        return getItem(position);
+    }
 /*
     public void setData(List<Playlist> list){
         this.mPlaylists=list;
@@ -54,9 +62,7 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     }
 */
 
-   /* public Playlist getPlaylistItemAt(int position){
-        return mPlaylists.get(position);
-    }*/
+
 
 
 /*

@@ -181,7 +181,7 @@
         android:layout_gravity="center"
         android:text="List song - Playlist details"
         android:textColor="@color/black"
-        android:textSize="26sp"
+        android:textSize="24sp"
         android:textStyle="bold"
 
         app:layout_constraintTop_toBottomOf="@id/layout_playAll"

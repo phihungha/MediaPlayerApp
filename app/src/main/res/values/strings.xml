@@ -10,4 +10,7 @@
     <string name="play_all">Play All</string>
     <string name="shuffle_all">Shuffle All</string>
     <string name="search">Search</string>
+    <string name="delete">Delete</string>
+    <string name="rename">Rename</string>
+    <string name="play_next">Play next</string>
 </resources>
