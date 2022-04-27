@@ -4,11 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/bottom_sheet"
+    android:id="@+id/bs_playlist"
     android:padding="10dp"
     android:background="@drawable/playlist_bs_background"
     >
-
     <TextView
         android:id="@+id/tv_playlist_name"
         android:layout_width="wrap_content"

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
+
 import com.example.mediaplayerapp.databinding.ItemPlaylistBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -22,6 +23,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         this.binding=binding;
         this.binding.imgBtnMore.setOnClickListener(this);
         this.binding.getRoot().setOnClickListener(this);
+        this.binding.layoutItemPlaylist.setOnClickListener(this);
     }
 
     /*  @Override
@@ -48,6 +50,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
             case R.id.layoutItem_playlist:
                 OnClickItem();
                 break;
+
         }
     }
 
@@ -56,7 +59,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
     private void openBottomSheetDialog(){
         bottomSheetDialog=new BottomSheetDialog(itemView.getContext(),R.style.BottomSheetTheme);
         View bsView=LayoutInflater.from(itemView.getContext()).inflate(R.layout.playlist_bs_layout,
-                itemView.findViewById(R.id.bottom_sheet));
+                itemView.findViewById(R.id.bs_playlist));
 
         TextView tv_name = bsView.findViewById(R.id.tv_playlist_name);
         tv_name.setText(binding.tvPlaylistName.getText().toString());

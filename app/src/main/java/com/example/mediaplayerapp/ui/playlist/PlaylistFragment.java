@@ -15,6 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Playlist;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.List;
 
@@ -23,6 +24,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
     private PlaylistDetailsFragment detailsFragment=new PlaylistDetailsFragment();
     private PlaylistAdapter adapter;
     private PlaylistViewModel playlistViewModel;
+    BottomSheetDialog bottomSheetDialog;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -70,7 +72,8 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                 playlistViewModel.deleteAll();
                 break;
             case R.id.layoutItem_addPlaylist:
-                addPlaylist();
+                openBottomSheetDialogAddPlaylist();
+                //addPlaylist();
                 break;
         }
     }
@@ -91,5 +94,19 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    /** Open BottomSheet Dialog Add playlist
+     * */
+    private void openBottomSheetDialogAddPlaylist(){
+        bottomSheetDialog=new BottomSheetDialog(getContext(),R.style.BottomSheetTheme);
+        View bsAddView=LayoutInflater.from(getContext()).inflate(R.layout.playlist_create_bs_layout,
+                getActivity().findViewById(R.id.bs_playlist_create));
+
+        //set click event here
+
+
+        bottomSheetDialog.setContentView(bsAddView);
+        bottomSheetDialog.show();
     }
 }

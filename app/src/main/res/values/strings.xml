@@ -13,4 +13,7 @@
     <string name="delete">Delete</string>
     <string name="rename">Rename</string>
     <string name="play_next">Play next</string>
+    <string name="create_new_playlist">Create new playlist</string>
+    <string name="enter_playlist_name">Enter playlist name</string>
+    <string name="create">Create</string>
 </resources>
