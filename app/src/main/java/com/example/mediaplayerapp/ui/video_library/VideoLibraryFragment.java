@@ -24,6 +24,8 @@ import java.util.List;
 
 public class VideoLibraryFragment extends Fragment {
 
+    private static final String ARG_COLUMN_COUNT = "recycler_column_count";
+
     VideoLibraryViewModel videoLibraryViewModel;
     RecyclerView recyclerViewAllVideos;
     VideoLibraryItemAdapter videoLibraryItemAdapter;
@@ -81,6 +83,9 @@ public class VideoLibraryFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        if (savedInstanceState != null) {
+            mColumnCount = savedInstanceState.getInt(ARG_COLUMN_COUNT);
+        }
         binding = FragmentVideoLibraryBinding.inflate(inflater, container, false);
 
         recyclerViewAllVideos = binding.allVideosRecyclerview;
@@ -109,6 +114,12 @@ public class VideoLibraryFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(ARG_COLUMN_COUNT,mColumnCount);
     }
 
     enum SortArgs {
