@@ -56,14 +56,18 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
 
         SharedViewModel viewModel=new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-        //List<Playlist> mPlaylists =new ArrayList<>();
-
+        //set click item listener
         adapter.setListener((v, position) -> {
             viewModel.setSelected(adapter.getPlaylistItemAt(position));
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment_activity_main,detailsFragment)
                     .addToBackStack(null)
                     .commit();
+        });
+        //click bottom sheet rename
+        adapter.setBSListener(()->{
+            PlaylistRenameDialog dialog=new PlaylistRenameDialog();
+            dialog.show(getParentFragmentManager(),"bsRenameDialog");
         });
 
         binding.btnDeleteALl.setOnClickListener(this);

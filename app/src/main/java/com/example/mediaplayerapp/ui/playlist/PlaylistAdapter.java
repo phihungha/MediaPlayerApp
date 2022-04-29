@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.AsyncDifferConfig;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     private IOnPlaylistItemClickListener mListener;
-
+    private IOnBottomSheetClick mBSListener;
     protected PlaylistAdapter(@NonNull DiffUtil.ItemCallback<Playlist> diffCallback) {
         super(diffCallback);
     }
@@ -27,7 +28,7 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     @NonNull
     @Override
     public PlaylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return PlaylistViewHolder.create(parent, mListener);
+        return PlaylistViewHolder.create(parent, mListener,mBSListener);
     }
 
     @Override
@@ -46,6 +47,9 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
         public boolean areContentsTheSame(@NonNull Playlist oldItem, @NonNull Playlist newItem) {
             return oldItem.getId() == newItem.getId();
         }
+    }
+    public void setBSListener(IOnBottomSheetClick listener){
+        mBSListener=listener;
     }
 
     public void setListener(IOnPlaylistItemClickListener listener){

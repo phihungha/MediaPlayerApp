@@ -35,7 +35,12 @@ public class PlaylistDetailsFragment extends Fragment {
 
         SharedViewModel viewModel=new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         viewModel.getSelected().observe(getViewLifecycleOwner(),item -> {
-            binding.tvIdPlaylist.setText("Playlist id: " + item.getId());
+            binding.tvIdPlaylist.setText("Playlist id: " + item.getId() +"\n" +
+                    "Name: " + item.getName() + "\n"+
+                    "Number: " + item.getNumbers() + "\n"+
+                    "Song: " + item.getSongID() + "\n"+
+                    "Video: " + item.getVideoID() + "\n"+
+                    "IsVideo: " + item.isVideo() + "\n");
         });
     }
 }

@@ -17,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     BottomSheetDialog bottomSheetDialog;
     private ItemPlaylistBinding binding;
+    private static IOnBottomSheetClick bsListener;
     private static IOnPlaylistItemClickListener listener;
     public PlaylistViewHolder(@NonNull ItemPlaylistBinding binding) {
         super(binding.getRoot());
@@ -26,12 +27,6 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         this.binding.layoutItemPlaylist.setOnClickListener(this);
     }
 
-    /*  @Override
-      public void onClick(View view) {
-          if (listener != null && getBindingAdapterPosition() != RecyclerView.NO_POSITION) {
-              listener.onClick(itemView.getRootView(), getBindingAdapterPosition());
-          }
-      }*/
     @Override
     public void onClick(View view) {
         switch (view.getId()){
@@ -78,10 +73,12 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         binding.tvPlaylistNumbers.setText(String.valueOf(numbers));
     }
 
-    static PlaylistViewHolder create(ViewGroup parent, IOnPlaylistItemClickListener l) {
+    static PlaylistViewHolder create(ViewGroup parent, IOnPlaylistItemClickListener l,
+                                     IOnBottomSheetClick bsL) {
         LayoutInflater inflater=LayoutInflater.from(parent.getContext());
         ItemPlaylistBinding binding=ItemPlaylistBinding.inflate(inflater,parent,false);
         listener=l;
+        bsListener=bsL;
         return new PlaylistViewHolder(binding);
     }
 
@@ -91,7 +88,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     private void RenamePlaylist(){
-        makeToast("Rename Playlist");
+        bsListener.onItemBSClick();
         bottomSheetDialog.dismiss();
     }
 

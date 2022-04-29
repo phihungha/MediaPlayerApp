@@ -16,4 +16,6 @@
     <string name="create_new_playlist">Create new playlist</string>
     <string name="enter_playlist_name">Enter playlist name</string>
     <string name="create">Create</string>
+    <string name="rename_playlist">Rename playlist</string>
+    <string name="new_playlist_name">New playlist name</string>
 </resources>
