@@ -1,5 +1,6 @@
 package com.example.mediaplayerapp.data;
 
+import androidx.annotation.Nullable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -24,12 +25,12 @@ public class Playlist {
     private boolean isVideo;
 
     @ColumnInfo(name = "SongID")
-    private int songID;
+    private String songID;
 
     @ColumnInfo(name = "VideoID")
-    private int videoID;
+    private String videoID;
 
-    public Playlist(int idResource, String name, int numbers, boolean isVideo, int songID, int videoID) {
+    public Playlist(int idResource, String name, int numbers, boolean isVideo, String songID, String videoID) {
         this.idResource = idResource;
         this.name = name;
         this.numbers = numbers;
@@ -78,19 +79,19 @@ public class Playlist {
         isVideo = video;
     }
 
-    public int getSongID() {
+    public String getSongID() {
         return songID;
     }
 
-    public void setSongID(int songID) {
+    public void setSongID(String songID) {
         this.songID = songID;
     }
 
-    public int getVideoID() {
+    public String getVideoID() {
         return videoID;
     }
 
-    public void setVideoID(int videoID) {
+    public void setVideoID(String videoID) {
         this.videoID = videoID;
     }
 }

@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -52,7 +55,9 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         });
 
         SharedViewModel viewModel=new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
         //List<Playlist> mPlaylists =new ArrayList<>();
+
         adapter.setListener((v, position) -> {
             viewModel.setSelected(adapter.getPlaylistItemAt(position));
             getParentFragmentManager().beginTransaction()
@@ -78,16 +83,17 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+
     private void makeToast(String mess){
         Toast.makeText(getActivity(), mess, Toast.LENGTH_SHORT).show();
     }
 
     private void addPlaylist(){
-        Playlist playlist = new Playlist(R.drawable.img_for_test,
-                "Name 23",100,true,10,11);
+       /* Playlist playlist = new Playlist(R.drawable.img_for_test,
+                "Name 23",100,true,"10","11");
         playlistViewModel.insert(playlist);
 
-        makeToast("ADD Playlist");
+        makeToast("ADD Playlist");*/
     }
 
     @Override
@@ -104,7 +110,30 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                 getActivity().findViewById(R.id.bs_playlist_create));
 
         //set click event here
+        EditText edtName = bsAddView.findViewById(R.id.edt_playlistNameCreate);
+        Button btnCreate = bsAddView.findViewById(R.id.btn_createPlaylist);
+        RadioButton radioAudio = bsAddView.findViewById(R.id.radio_audio);
+        RadioButton radioVideo = bsAddView.findViewById(R.id.radio_video);
+        btnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
+                if (edtName.getText().toString().trim().isEmpty()){
+                    makeToast("Name is empty!");
+                }
+                else if (!radioAudio.isChecked() && !radioVideo.isChecked()){
+                    makeToast("Please check type for playlist!");
+                } else {
+                    Playlist playlist = new Playlist(R.drawable.img_for_test,
+                            edtName.getText().toString().trim(),0,radioVideo.isChecked(),null,null);
+                    playlistViewModel.insert(playlist);
+
+                    bottomSheetDialog.dismiss();
+                    makeToast("Create Playlist Success!");
+                }
+
+            }
+        });
 
         bottomSheetDialog.setContentView(bsAddView);
         bottomSheetDialog.show();
