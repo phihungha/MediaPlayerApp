@@ -77,22 +77,17 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
             dialog.show(getParentFragmentManager(),"bsRenameDialog");
         }));
 
-        binding.btnDeleteALl.setOnClickListener(this);
         binding.layoutItemAddPlaylist.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.btn_deleteALl:
-                playlistViewModel.deleteAll();
-                break;
             case R.id.layoutItem_addPlaylist:
                 openBottomSheetDialogAddPlaylist();
                 break;
         }
     }
-
 
     private void makeToast(String mess){
         Toast.makeText(getActivity(), mess, Toast.LENGTH_SHORT).show();

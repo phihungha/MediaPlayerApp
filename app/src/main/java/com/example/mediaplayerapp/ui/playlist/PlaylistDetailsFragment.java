@@ -1,5 +1,6 @@
 package com.example.mediaplayerapp.ui.playlist;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,10 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.mediaplayerapp.data.Playlist;
+
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
 
 public class PlaylistDetailsFragment extends Fragment {
 
+    private Playlist playlist;
     private FragmentPlaylistDetailsBinding binding;
 
     public PlaylistDetailsFragment() {
@@ -24,7 +28,7 @@ public class PlaylistDetailsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding=FragmentPlaylistDetailsBinding.inflate(inflater,container,false);
+        binding= FragmentPlaylistDetailsBinding.inflate(inflater,container,false);
         // Inflate the layout for this fragment
         return binding.getRoot();
     }
@@ -41,6 +45,17 @@ public class PlaylistDetailsFragment extends Fragment {
                     "Song: " + item.getSongID() + "\n"+
                     "Video: " + item.getVideoID() + "\n"+
                     "IsVideo: " + item.isVideo() + "\n");
+
+            playlist=item;
+          /*  binding.tvPlaylistDetailsName.setText(item.getName().toString());
+            binding.tvPlaylistDetailsNumbers.setText("Play list " + String.valueOf(item.getNumbers()));*/
+            init();
         });
+
+    }
+
+    private void init(){
+        binding.tvPlaylistDetailsName.setText(playlist.getName().toString());
+        binding.tvPlaylistDetailsNumbers.setText("Play list " + String.valueOf(playlist.getNumbers()));
     }
 }
