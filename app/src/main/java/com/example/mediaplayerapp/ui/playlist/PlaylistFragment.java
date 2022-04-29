@@ -37,7 +37,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         playlistViewModel.getAllPlaylists().observe(getViewLifecycleOwner(), new Observer<List<Playlist>>() {
             @Override
             public void onChanged(List<Playlist> playlists) {
-                makeToast("onChanged");
+                //makeToast("onChanged");
             }
         });
         return binding.getRoot();
@@ -56,7 +56,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
 
         SharedViewModel viewModel=new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-        //set click item listener
+        //set click item listener for recyclerview
         adapter.setListener((v, position) -> {
             viewModel.setSelected(adapter.getPlaylistItemAt(position));
             getParentFragmentManager().beginTransaction()
@@ -64,11 +64,18 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                     .addToBackStack(null)
                     .commit();
         });
-        //click bottom sheet rename
-        adapter.setBSListener(()->{
-            PlaylistRenameDialog dialog=new PlaylistRenameDialog();
+        //click bottom sheet rename item recyclerview
+        adapter.setBSRenameListener((position)->{
+            Playlist playlist=adapter.getPlaylistItemAt(position);
+            PlaylistRenameDialog dialog= PlaylistRenameDialog.newInstance(playlist);
             dialog.show(getParentFragmentManager(),"bsRenameDialog");
         });
+        //click bottom sheet delete item recyclerview
+        adapter.setBSDeleteListener((position -> {
+            Playlist playlist=adapter.getPlaylistItemAt(position);
+            PlaylistDeleteDialog dialog= PlaylistDeleteDialog.newInstance(playlist);
+            dialog.show(getParentFragmentManager(),"bsRenameDialog");
+        }));
 
         binding.btnDeleteALl.setOnClickListener(this);
         binding.layoutItemAddPlaylist.setOnClickListener(this);
@@ -82,7 +89,6 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.layoutItem_addPlaylist:
                 openBottomSheetDialogAddPlaylist();
-                //addPlaylist();
                 break;
         }
     }
@@ -90,14 +96,6 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
 
     private void makeToast(String mess){
         Toast.makeText(getActivity(), mess, Toast.LENGTH_SHORT).show();
-    }
-
-    private void addPlaylist(){
-       /* Playlist playlist = new Playlist(R.drawable.img_for_test,
-                "Name 23",100,true,"10","11");
-        playlistViewModel.insert(playlist);
-
-        makeToast("ADD Playlist");*/
     }
 
     @Override

@@ -32,6 +32,13 @@ public class PlaylistViewModel extends AndroidViewModel {
         mRepository.insert(playlist);
     }
 
+    public void update(Playlist playlist){
+        mRepository.update(playlist);
+    }
+    public void delete(Playlist playlist){
+        mRepository.delete(playlist);
+    }
+
     public void deleteAll(){
         mRepository.deleteAll();
     }

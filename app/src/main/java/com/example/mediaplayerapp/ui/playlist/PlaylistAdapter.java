@@ -1,26 +1,18 @@
 package com.example.mediaplayerapp.ui.playlist;
 
-import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.AsyncDifferConfig;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.data.Playlist;
-import com.example.mediaplayerapp.databinding.ItemPlaylistBinding;
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     private IOnPlaylistItemClickListener mListener;
-    private IOnBottomSheetClick mBSListener;
+    private IOnBottomSheetRenameClick mBSRenameListener;
+    private IOnBottomSheetDeleteClick mBSDeleteListener;
+
     protected PlaylistAdapter(@NonNull DiffUtil.ItemCallback<Playlist> diffCallback) {
         super(diffCallback);
     }
@@ -28,7 +20,7 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     @NonNull
     @Override
     public PlaylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return PlaylistViewHolder.create(parent, mListener,mBSListener);
+        return PlaylistViewHolder.create(parent, mListener,mBSRenameListener,mBSDeleteListener);
     }
 
     @Override
@@ -48,8 +40,13 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
             return oldItem.getId() == newItem.getId();
         }
     }
-    public void setBSListener(IOnBottomSheetClick listener){
-        mBSListener=listener;
+
+    public void setBSDeleteListener(IOnBottomSheetDeleteClick listener){
+        mBSDeleteListener=listener;
+    }
+
+    public void setBSRenameListener(IOnBottomSheetRenameClick listener){
+        mBSRenameListener=listener;
     }
 
     public void setListener(IOnPlaylistItemClickListener listener){

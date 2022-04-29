@@ -3,25 +3,25 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
-
+    android:padding="16dp"
+    >
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
-        android:text="@string/rename_playlist"
+        android:text="@string/delete_playlist_from_device"
         android:textSize="24sp"
         android:textColor="@color/black"
         android:textStyle="bold"
         />
 
-    <EditText
+    <TextView
         android:id="@+id/edt_renamePlaylist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
         android:layout_marginTop="12dp"
-        android:hint="@string/new_playlist_name"
+        android:hint="@string/message_delete"
         android:textSize="20sp"
         android:textColor="@color/black"
         />
