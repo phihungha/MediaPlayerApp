@@ -74,7 +74,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         adapter.setBSDeleteListener((position -> {
             Playlist playlist=adapter.getPlaylistItemAt(position);
             PlaylistDeleteDialog dialog= PlaylistDeleteDialog.newInstance(playlist);
-            dialog.show(getParentFragmentManager(),"bsRenameDialog");
+            dialog.show(getParentFragmentManager(),"bsDeleteDialog");
         }));
 
         binding.layoutItemAddPlaylist.setOnClickListener(this);
@@ -128,7 +128,6 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                     bottomSheetDialog.dismiss();
                     makeToast("Create Playlist Success!");
                 }
-
             }
         });
 
