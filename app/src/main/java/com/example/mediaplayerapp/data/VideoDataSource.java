@@ -52,20 +52,10 @@ public class VideoDataSource {
                 Uri videoUri = ContentUris.withAppendedId(
                         MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoId);
 
-                Bitmap videoThumbnail = null;
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                    try {
-                        videoThumbnail = context.getContentResolver().loadThumbnail(
-                                videoUri, new Size(145, 80), null);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-
                 String videoName = cursor.getString(nameColumnIndex);
                 int videoDuration = cursor.getInt(durationColumnIndex);
 
-                videoList.add(new Video(videoUri, videoThumbnail, videoName, videoDuration));
+                videoList.add(new Video(videoUri, videoName, videoDuration));
             } while (cursor.moveToNext());
             cursor.close();
         }

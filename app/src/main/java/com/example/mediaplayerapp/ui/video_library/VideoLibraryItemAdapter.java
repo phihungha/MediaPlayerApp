@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Video;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryGridBinding;
@@ -37,7 +39,14 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.videoThumbnail.setImageBitmap(videos.get(position).getThumbNail());
+
+        Glide
+                .with(holder.videoThumbnail.getContext())
+                .load(videos.get(position).getUri())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .override(holder.videoThumbnail.getWidth(),holder.videoThumbnail.getHeight())
+                .centerCrop()
+                .into(holder.videoThumbnail);
 
         holder.videoThumbnail.setOnClickListener(view -> {
             ArrayList<String> videoUris = new ArrayList<>();
