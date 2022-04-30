@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.util.Size;
 
 import androidx.lifecycle.MutableLiveData;
+import androidx.loader.content.CursorLoader;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -28,13 +29,16 @@ public class VideoDataSource {
         String[] selectionArgs = null;
         String sortOrder = null;
 
-        Cursor cursor = context.getContentResolver().query(
+        //Using a cursorLoader with loadInBackground() method to do the loading in a worker thread,
+        //this reduces freezing when loading videos from MediaStore
+        CursorLoader cursorLoader = new CursorLoader(
+                context,
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
                 projection,
                 selection,
                 selectionArgs,
-                sortOrder
-        );
+                sortOrder);
+        Cursor cursor = cursorLoader.loadInBackground();
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
