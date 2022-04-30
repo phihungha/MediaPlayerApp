@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:contentDescription="@string/album_artwork"
         android:scaleType="centerCrop"
-        android:src="@drawable/test_image" />
+        android:background="#00A3BF" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -30,7 +30,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:srcCompat="@drawable/ic_play_white_24dp" />
+            app:srcCompat="@drawable/levellist_play_pause_button" />
 
         <ImageButton
             android:id="@+id/music_skip_forward_btn"
@@ -88,7 +88,7 @@
             android:id="@+id/music_seekbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="40dp"
             android:contentDescription="@string/seekbar"
             app:buffered_color="#A6F4F4F4"
             app:layout_constraintBottom_toTopOf="@+id/music_play_pause_btn"
@@ -105,6 +105,7 @@
             android:layout_marginStart="16dp"
             android:text="@string/default_playback_time"
             android:textColor="@color/white"
+            android:textSize="19sp"
             app:layout_constraintStart_toStartOf="@+id/music_seekbar"
             app:layout_constraintTop_toBottomOf="@+id/music_seekbar" />
 
@@ -115,8 +116,10 @@
             android:layout_marginEnd="16dp"
             android:text="@string/default_playback_time"
             android:textColor="@color/white"
+            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@+id/music_seekbar"
-            app:layout_constraintTop_toBottomOf="@+id/music_seekbar" />
+            app:layout_constraintTop_toBottomOf="@+id/music_seekbar"
+            tools:ignore="TextContrastCheck" />
 
         <TextView
             android:id="@+id/music_title"
@@ -125,7 +128,7 @@
             android:layout_marginBottom="50dp"
             android:text="@string/default_song_name"
             android:textColor="@color/white"
-            android:textSize="25sp"
+            android:textSize="28sp"
             app:layout_constraintBottom_toTopOf="@+id/music_seekbar"
             app:layout_constraintStart_toStartOf="@+id/music_current_time" />
 
@@ -149,7 +152,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/default_artist_name"
             android:textColor="@color/white"
-            android:textSize="15sp"
+            android:textSize="19sp"
             app:layout_constraintStart_toStartOf="@+id/music_current_time"
             app:layout_constraintTop_toBottomOf="@+id/music_title" />
 
@@ -181,6 +184,22 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_arrow_down_white_24dp"
             tools:ignore="ImageContrastCheck,ImageContrastCheck,TouchTargetSizeCheck" />
+
+        <ImageView
+            android:id="@+id/default_album_art"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toTopOf="@+id/music_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/music_player_title"
+            app:srcCompat="@drawable/ic_album_white_24dp"
+            android:contentDescription="@string/default_album_art" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

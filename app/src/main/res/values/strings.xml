@@ -16,4 +16,6 @@
     <string name="more_features_btn">Music more features</string>
     <string name="close">Close</string>
     <string name="now_playing">Now playing</string>
+    <string name="default_album_art">Default album art</string>
+    <string name="playback">Playback</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.mediaplayerapp.ui.music_library;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.databinding.FragmentMusicLibraryBinding;
+import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 
 public class MusicLibraryFragment extends Fragment {
 
@@ -30,6 +32,8 @@ public class MusicLibraryFragment extends Fragment {
 
         final TextView textView = binding.textMusicLibrary;
         viewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
+        binding.playMusicBtn.setOnClickListener(view -> startActivity(new Intent(requireActivity(), MusicPlayerActivity.class)));
 
         return binding.getRoot();
     }

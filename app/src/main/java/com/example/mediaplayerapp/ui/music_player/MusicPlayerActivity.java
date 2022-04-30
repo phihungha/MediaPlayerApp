@@ -1,16 +1,25 @@
 package com.example.mediaplayerapp.ui.music_player;
 
+import android.os.Bundle;
+import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.os.Bundle;
-
-import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.databinding.ActivityMusicPlayerBinding;
 
 public class MusicPlayerActivity extends AppCompatActivity {
+
+    ActivityMusicPlayerBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_music_player);
+        binding = ActivityMusicPlayerBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        binding.musicCloseBtn.setOnClickListener(view -> finish());
+
+        binding.musicPlayPauseBtn.setOnClickListener(view -> binding.musicPlayPauseBtn.setImageLevel(1));
+
     }
 }
