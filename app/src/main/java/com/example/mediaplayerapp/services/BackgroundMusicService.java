@@ -17,6 +17,7 @@ public class BackgroundMusicService extends MediaBrowserServiceCompat {
 
     private MediaSessionCompat mediaSession;
 
+    ExoPlayer player;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -24,20 +25,22 @@ public class BackgroundMusicService extends MediaBrowserServiceCompat {
         ExoPlayer player = new ExoPlayer.Builder(this).build();
 
         mediaSession = new MediaSessionCompat(this, "BackgroundMusicService");
-        setSessionToken(mediaSession.getSessionToken());
         PlaybackStateCompat.Builder playbackState = new PlaybackStateCompat.Builder()
-                .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE);
+                .setActions(PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PLAY_PAUSE
+                            | PlaybackStateCompat.ACTION_PLAY_FROM_URI);
         mediaSession.setPlaybackState(playbackState.build());
+        setSessionToken(mediaSession.getSessionToken());
+
         MediaSessionConnector mediaSessionConnector = new MediaSessionConnector(mediaSession);
         mediaSessionConnector.setPlayer(player);
 
-        setSessionToken(mediaSession.getSessionToken());
         mediaSession.setActive(true);
     }
 
     @Override
     public void onDestroy() {
         mediaSession.release();
+        player.release();
     }
 
     @Override
