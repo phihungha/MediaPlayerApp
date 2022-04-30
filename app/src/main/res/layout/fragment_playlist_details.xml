@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="60dp"
     tools:context=".ui.playlist.PlaylistDetailsFragment">
 
     <View
         android:id="@+id/view_background"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:padding="8dp"
-
         android:background="@drawable/background_gradient_playlist_details"
+
+        android:padding="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -62,10 +63,10 @@
         android:id="@+id/tv_playlistDetailsNumbers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/poppins_thin"
-        android:text="@string/app_name"
-
         android:layout_marginStart="20dp"
+        android:fontFamily="@font/poppins_thin"
+
+        android:text="@string/app_name"
         android:textColor="@color/colorPlaylist_textColor"
         android:textSize="14sp"
 
@@ -77,29 +78,27 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
 
+        android:layout_marginEnd="20dp"
         android:background="?attr/selectableItemBackground"
         android:backgroundTint="@color/white"
         android:clickable="true"
-        android:src="@drawable/ic_outline_add_circle_outline_24"
 
-        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_outline_add_circle_outline_24"
         app:layout_constraintBottom_toBottomOf="@+id/view_background"
         app:layout_constraintEnd_toEndOf="@id/view_background"
-        app:layout_constraintTop_toTopOf="@+id/view_background"
-        />
+        app:layout_constraintTop_toTopOf="@+id/view_background" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
+        android:layout_marginEnd="20dp"
         android:text="@string/add_more"
-        android:textSize="14sp"
         android:textColor="@color/white"
 
-        android:layout_marginEnd="20dp"
-        app:layout_constraintTop_toBottomOf="@id/btn_addMore"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="@id/view_background"
-        />
+        app:layout_constraintTop_toBottomOf="@id/btn_addMore" />
 
     <LinearLayout
         android:id="@+id/layout_playAll"
@@ -112,34 +111,34 @@
         android:clickable="true"
 
         android:padding="8dp"
+        app:layout_constraintEnd_toStartOf="@id/layout_shuffleAll"
         app:layout_constraintStart_toStartOf="@id/view_background"
         app:layout_constraintTop_toBottomOf="@id/view_background"
-        app:layout_constraintEnd_toStartOf="@id/layout_shuffleAll"
         >
+
         <ImageView
             android:id="@+id/img_playAll"
             android:layout_width="40dp"
             android:layout_height="40dp"
 
-            android:src="@drawable/ic_round_play_circle_outline_24"
-            android:backgroundTint="@color/black"
             android:layout_gravity="center"
-            />
+            android:backgroundTint="@color/black"
+            android:src="@drawable/ic_round_play_circle_outline_24" />
 
         <TextView
             android:id="@+id/tv_playAll"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+
             android:fontFamily="@font/poppins_thin"
             android:text="@string/play_all"
-
             android:textColor="@color/colorPlaylist_textColor"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_gravity="center"
 
-            android:layout_marginStart="10dp"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
@@ -147,59 +146,55 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
+        android:layout_marginStart="20dp"
         android:background="?attr/selectableItemBackground"
+
         android:clickable="true"
-
         android:padding="8dp"
-        android:layout_marginStart="20dp"
-        app:layout_constraintTop_toTopOf="@id/layout_playAll"
         app:layout_constraintBottom_toBottomOf="@id/layout_playAll"
-        app:layout_constraintStart_toEndOf="@id/layout_playAll"
         app:layout_constraintEnd_toEndOf="@id/view_background"
-        >
-    <ImageView
-        android:id="@+id/img_shuffleAll"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        app:layout_constraintStart_toEndOf="@id/layout_playAll"
+        app:layout_constraintTop_toTopOf="@id/layout_playAll">
 
-        android:backgroundTint="@color/black"
-        android:src="@drawable/ic_round_shuffle_24"
+        <ImageView
+            android:id="@+id/img_shuffleAll"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
 
-        android:layout_gravity="center"
-        android:layout_marginStart="20dp"
-        />
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
 
-    <TextView
-        android:id="@+id/tv_shuffleAll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+            android:backgroundTint="@color/black"
+            android:src="@drawable/ic_round_shuffle_24" />
 
-        android:fontFamily="@font/poppins_thin"
-        android:text="@string/shuffle_all"
+        <TextView
+            android:id="@+id/tv_shuffleAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
 
-        android:textColor="@color/colorPlaylist_textColor"
-        android:textSize="20sp"
-        android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
 
-        android:layout_gravity="center"
-        android:layout_marginStart="10dp"/>
+            android:fontFamily="@font/poppins_thin"
+            android:text="@string/shuffle_all"
+            android:textColor="@color/colorPlaylist_textColor"
+
+            android:textSize="20sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_idPlaylist"
-        android:layout_width="wrap_content"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_playlistsDetails"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="List song - Playlist details"
-        android:textColor="@color/black"
-        android:textSize="24sp"
-        android:textStyle="bold"
 
+        android:clipToPadding="true"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+
+        app:layout_constraintEnd_toEndOf="@id/view_background"
+        app:layout_constraintStart_toStartOf="@id/view_background"
         app:layout_constraintTop_toBottomOf="@id/layout_playAll"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
