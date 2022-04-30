@@ -2,7 +2,6 @@ package com.example.mediaplayerapp.ui.video_library;
 
 import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,68 +23,66 @@ import java.util.concurrent.TimeUnit;
 
 public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryItemAdapter.ViewHolder> {
 
-    private final List<Video> mVideos;
+    private final List<Video> videos;
 
     public VideoLibraryItemAdapter() {
-        mVideos = new ArrayList<>();
+        videos = new ArrayList<>();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(ItemVideoLibraryGridBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new ViewHolder(ItemVideoLibraryGridBinding.inflate
+                (LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.mVideoThumbnail.setImageBitmap(mVideos.get(position).getThumbNail());
+        holder.videoThumbnail.setImageBitmap(videos.get(position).getThumbNail());
 
-        holder.mVideoThumbnail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ArrayList<String> videoUris = new ArrayList<>();
-                videoUris.add(mVideos.get(position).getUri().toString());
+        holder.videoThumbnail.setOnClickListener(view -> {
+            ArrayList<String> videoUris = new ArrayList<>();
+            videoUris.add(videos.get(position).getUri().toString());
 
-                Intent startPlaybackIntent = new Intent(
-                        view.getContext(), VideoPlayerActivity.class);
-                startPlaybackIntent.putStringArrayListExtra(
-                        VideoPlayerActivity.VIDEO_URI_LIST, videoUris);
+            Intent startPlaybackIntent = new Intent(
+                    view.getContext(), VideoPlayerActivity.class);
+            startPlaybackIntent.putStringArrayListExtra(
+                    VideoPlayerActivity.VIDEO_URI_LIST, videoUris);
 
-                view.getContext().startActivity(startPlaybackIntent);
-            }
+            view.getContext().startActivity(startPlaybackIntent);
         });
 
-        holder.mVideoName.setText(mVideos.get(position).getName());
+        holder.videoName.setText(videos.get(position).getName());
 
-        int duration = mVideos.get(position).getDuration();
+        int duration = videos.get(position).getDuration();
         String durationFormatted = String.format(
                 Locale.US,
                 "%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(duration),
                 TimeUnit.MILLISECONDS.toSeconds(duration)
         );
-        holder.mVideoDuration.setText(durationFormatted);
+        holder.videoDuration.setText(durationFormatted);
 
-        holder.mVideoOptions.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext());
-                bottomSheetDialog.setContentView(R.layout.dialog_bottom_sheet);
+        holder.videoOptions.setOnClickListener(view -> {
+            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext());
+            bottomSheetDialog.setContentView(R.layout.dialog_bottom_sheet);
 
-                TextView videoNameTextview =
-                        bottomSheetDialog.findViewById(R.id.video_name_bottom_sheet_textview);
-                videoNameTextview.setText(holder.mVideoName.getText());
+            TextView videoNameTextview =
+                    bottomSheetDialog.findViewById(R.id.video_name_bottom_sheet_textview);
+            videoNameTextview.setText(holder.videoName.getText());
 
-                bottomSheetDialog.show();
-            }
+            bottomSheetDialog.show();
         });
     }
 
     @Override
     public int getItemCount() {
-        return mVideos.size();
+        return videos.size();
     }
 
-    public void updateVideoList(final List<Video> updatedVideoList, VideoLibraryFragment.SortArgs sortArgs, VideoLibraryFragment.SortOrder sortOrder) {
+    public void updateVideoList(
+            final List<Video> updatedVideoList
+            , VideoLibraryFragment.SortArgs sortArgs
+            , VideoLibraryFragment.SortOrder sortOrder) {
 
         switch (sortArgs) {
             case VIDEO_NAME:
@@ -105,23 +102,23 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
             default:
                 break;
         }
-        this.mVideos.clear();
-        this.mVideos.addAll(updatedVideoList);
-        //notifyDataSetChanged();
+        this.videos.clear();
+        this.videos.addAll(updatedVideoList);
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final ShapeableImageView mVideoThumbnail;
-        public final TextView mVideoName;
-        public final TextView mVideoDuration;
-        public final ImageView mVideoOptions;
+        public final ShapeableImageView videoThumbnail;
+        public final TextView videoName;
+        public final TextView videoDuration;
+        public final ImageView videoOptions;
 
         public ViewHolder(ItemVideoLibraryGridBinding binding) {
             super(binding.getRoot());
-            mVideoThumbnail = binding.videoThumbnailShapeableimageview;
-            mVideoName = binding.videoNameTextview;
-            mVideoDuration = binding.videoDurationTextview;
-            mVideoOptions = binding.videoOptionsImageview;
+            videoThumbnail = binding.videoThumbnailShapeableimageview;
+            videoName = binding.videoNameTextview;
+            videoDuration = binding.videoDurationTextview;
+            videoOptions = binding.videoOptionsImageview;
         }
     }
 }

@@ -38,6 +38,7 @@ public class VideoDataSource {
 
         if (cursor != null && cursor.getCount() > 0) {
             cursor.moveToFirst();
+
             int idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
             int nameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
             int durationColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
