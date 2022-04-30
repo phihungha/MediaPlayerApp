@@ -102,6 +102,7 @@ public class VideoLibraryFragment extends Fragment {
 
         videoLibraryItemAdapter = new VideoLibraryItemAdapter();
         recyclerViewAllVideos.setAdapter(videoLibraryItemAdapter);
+        recyclerViewAllVideos.setHasFixedSize(true);
 
         videoLibraryViewModel = new ViewModelProvider
                 (getActivity()).get(VideoLibraryViewModel.class);
