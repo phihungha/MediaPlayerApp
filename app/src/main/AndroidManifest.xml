@@ -18,9 +18,11 @@ package="com.example.mediaplayerapp">
         android:launchMode="singleTask"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:exported="false" />
+
     <activity
         android:name=".ui.music_player.MusicPlayerActivity"
         android:exported="false" />
+
     <activity
         android:name=".MainActivity"
         android:exported="true">

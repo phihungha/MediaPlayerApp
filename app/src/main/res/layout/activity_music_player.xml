@@ -68,7 +68,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/music_play_pause_btn"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/music_play_pause_btn"
-            app:srcCompat="@drawable/ic_repeat_white_24dp"
+            app:srcCompat="@drawable/levellist_repeat_btn"
             tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
@@ -88,6 +88,8 @@
             android:id="@+id/music_seekbar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="40dp"
             android:contentDescription="@string/seekbar"
             app:buffered_color="#A6F4F4F4"
@@ -102,7 +104,7 @@
             android:id="@+id/music_current_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_marginStart="8dp"
             android:text="@string/default_playback_time"
             android:textColor="@color/white"
             android:textSize="19sp"
@@ -113,7 +115,7 @@
             android:id="@+id/music_total_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:text="@string/default_playback_time"
             android:textColor="@color/white"
             android:textSize="18sp"
