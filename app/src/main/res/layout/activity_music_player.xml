@@ -7,80 +7,181 @@
     android:background="#939393"
     tools:context=".ui.music_player.MusicPlayerActivity">
 
+    <ImageView
+        android:id="@+id/album_art"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:contentDescription="@string/album_artwork"
+        android:scaleType="centerCrop"
+        android:src="@drawable/test_image" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <ImageButton
-            android:id="@+id/imageButton"
-            android:layout_width="80dp"
-            android:layout_height="80sp"
-            android:layout_marginBottom="90dp"
-            android:adjustViewBounds="true"
-            android:background="#00FFFFFF"
-            android:scaleType="fitCenter"
+            android:id="@+id/music_play_pause_btn"
+            style="@style/MusicControlBtn"
+            android:layout_width="@dimen/music_play_pause_btn_size"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="84dp"
+            android:contentDescription="@string/play_pause_btn"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:srcCompat="@drawable/ic_music_player_play" />
 
         <ImageButton
-            android:id="@+id/imageButton2"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:id="@+id/music_skip_forward_btn"
+            style="@style/MusicControlBtn"
+            android:layout_width="@dimen/music_small_control_btn_size"
+            android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
-            android:adjustViewBounds="true"
-            android:background="#00FFFFFF"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButton"
-            app:layout_constraintStart_toEndOf="@+id/imageButton"
-            app:layout_constraintTop_toTopOf="@+id/imageButton"
-            app:srcCompat="@drawable/ic_music_player_skip_next" />
+            android:contentDescription="@string/skip_forward_btn"
+            app:layout_constraintBottom_toBottomOf="@+id/music_play_pause_btn"
+            app:layout_constraintStart_toEndOf="@+id/music_play_pause_btn"
+            app:layout_constraintTop_toTopOf="@+id/music_play_pause_btn"
+            app:srcCompat="@drawable/ic_music_player_skip_next"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
-            android:id="@+id/imageButton3"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:id="@+id/music_skip_prev_btn"
+            style="@style/MusicControlBtn"
+            android:layout_width="@dimen/music_small_control_btn_size"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
-            android:adjustViewBounds="true"
-            android:background="#00FFFFFF"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButton"
-            app:layout_constraintEnd_toStartOf="@+id/imageButton"
-            app:layout_constraintTop_toTopOf="@+id/imageButton"
-            app:srcCompat="@drawable/ic_music_player_skip_prev" />
+            android:contentDescription="@string/skip_backward_btn"
+            app:layout_constraintBottom_toBottomOf="@+id/music_play_pause_btn"
+            app:layout_constraintEnd_toStartOf="@+id/music_play_pause_btn"
+            app:layout_constraintTop_toTopOf="@+id/music_play_pause_btn"
+            app:srcCompat="@drawable/ic_music_player_skip_prev"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
-            android:id="@+id/imageButton4"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:id="@+id/repeat_btn"
+            style="@style/MusicControlBtn"
+            android:layout_width="@dimen/music_small_control_btn_size"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:adjustViewBounds="true"
-            android:background="#00FFFFFF"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButton"
+            android:contentDescription="@string/repeat_btn"
+            app:layout_constraintBottom_toBottomOf="@+id/music_play_pause_btn"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageButton"
-            app:srcCompat="@drawable/ic_music_player_repeat" />
+            app:layout_constraintTop_toTopOf="@+id/music_play_pause_btn"
+            app:srcCompat="@drawable/ic_music_player_repeat"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <ImageButton
-            android:id="@+id/imageButton5"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:id="@+id/shuffle_btn"
+            style="@style/MusicControlBtn"
+            android:layout_width="@dimen/music_small_control_btn_size"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:adjustViewBounds="true"
-            android:background="#00FFFFFF"
-            android:scaleType="fitCenter"
-            app:layout_constraintBottom_toBottomOf="@+id/imageButton"
+            android:contentDescription="@string/shuffle_btn"
+            app:layout_constraintBottom_toBottomOf="@+id/music_play_pause_btn"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/imageButton"
-            app:srcCompat="@drawable/ic_music_player_shuffle" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toTopOf="@+id/music_play_pause_btn"
+            app:srcCompat="@drawable/ic_music_player_shuffle"
+            tools:ignore="TouchTargetSizeCheck" />
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_video"
-        android:layout_gravity="center" />
+        <com.google.android.exoplayer2.ui.DefaultTimeBar
+            android:id="@+id/music_seekbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:contentDescription="@string/seekbar"
+            app:buffered_color="#A6F4F4F4"
+            app:layout_constraintBottom_toTopOf="@+id/music_play_pause_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:played_color="@color/white"
+            app:scrubber_color="@color/white"
+            app:unplayed_color="#66F4F4F4" />
+
+        <TextView
+            android:id="@+id/music_current_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/default_playback_time"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="@+id/music_seekbar"
+            app:layout_constraintTop_toBottomOf="@+id/music_seekbar" />
+
+        <TextView
+            android:id="@+id/music_total_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@string/default_playback_time"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@+id/music_seekbar"
+            app:layout_constraintTop_toBottomOf="@+id/music_seekbar" />
+
+        <TextView
+            android:id="@+id/music_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:text="@string/default_song_name"
+            android:textColor="@color/white"
+            android:textSize="25sp"
+            app:layout_constraintBottom_toTopOf="@+id/music_seekbar"
+            app:layout_constraintStart_toStartOf="@+id/music_current_time" />
+
+        <TextView
+            android:id="@+id/music_player_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/now_playing"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="TextContrastCheck" />
+
+        <TextView
+            android:id="@+id/music_artist"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/default_artist_name"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="@+id/music_current_time"
+            app:layout_constraintTop_toBottomOf="@+id/music_title" />
+
+        <ImageButton
+            android:id="@+id/music_more_btn"
+            style="@style/MusicControlBtn"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="50dp"
+            android:contentDescription="@string/more_features_btn"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            app:layout_constraintBottom_toTopOf="@+id/music_seekbar"
+            app:layout_constraintEnd_toEndOf="@+id/music_total_time"
+            app:srcCompat="@drawable/ic_music_player_more"
+            tools:ignore="TouchTargetSizeCheck" />
+
+        <ImageButton
+            android:id="@+id/music_close_btn"
+            style="@style/MusicControlBtn"
+            android:layout_width="28dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/close"
+            android:minWidth="48dp"
+            android:minHeight="48dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_music_player_close"
+            tools:ignore="ImageContrastCheck,ImageContrastCheck,TouchTargetSizeCheck" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>
