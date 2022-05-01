@@ -68,13 +68,13 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         adapter.setBSRenameListener((position)->{
             Playlist playlist=adapter.getPlaylistItemAt(position);
             PlaylistRenameDialog dialog= PlaylistRenameDialog.newInstance(playlist);
-            dialog.show(getParentFragmentManager(),"bsRenameDialog");
+            dialog.show(getParentFragmentManager(),PlaylistConstants.TAG_BS_RENAME_DIALOG);
         });
         //click bottom sheet delete item recyclerview
         adapter.setBSDeleteListener((position -> {
             Playlist playlist=adapter.getPlaylistItemAt(position);
             PlaylistDeleteDialog dialog= PlaylistDeleteDialog.newInstance(playlist);
-            dialog.show(getParentFragmentManager(),"bsDeleteDialog");
+            dialog.show(getParentFragmentManager(),PlaylistConstants.TAG_BS_DELETE_DIALOG);
         }));
 
         binding.layoutItemAddPlaylist.setOnClickListener(this);

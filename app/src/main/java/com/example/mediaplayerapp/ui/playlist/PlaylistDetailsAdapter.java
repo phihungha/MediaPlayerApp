@@ -1,54 +1,81 @@
 package com.example.mediaplayerapp.ui.playlist;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mediaplayerapp.R;
+import com.bumptech.glide.Glide;
+import com.example.mediaplayerapp.data.Playlist;
+import com.example.mediaplayerapp.databinding.ItemPlaylistBinding;
 import com.example.mediaplayerapp.databinding.ItemPlaylistDetailsBinding;
+import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PlaylistDetailsAdapter extends RecyclerView.Adapter<PlaylistDetailsAdapter.PlaylistDetailsViewHolder>{
-    private ArrayList<Uri> uriArrayList;
+    private Context mContext;
+    private ArrayList<PlaylistVideoModel> mArrayListVideos;
+    private Activity mActivity;
 
-    public PlaylistDetailsAdapter(ArrayList<Uri> uriArrayList) {
-        this.uriArrayList = uriArrayList;
+    public void setArrayListVideos(ArrayList<PlaylistVideoModel> mArrayListVideos) {
+        this.mArrayListVideos = mArrayListVideos;
+        notifyDataSetChanged();
     }
 
     @NonNull
     @Override
     public PlaylistDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-      /*  View view= LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_playlist_details,parent,false);
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        ItemPlaylistDetailsBinding binding = ItemPlaylistDetailsBinding.inflate(inflater, parent, false);
 
-        ItemPlaylistDetailsBinding binding= ItemPlaylistDetailsBinding.bind(view);*/
-        return new PlaylistDetailsViewHolder(ItemPlaylistDetailsBinding.inflate(
+        return new PlaylistDetailsViewHolder(binding);
+        /*return new PlaylistDetailsViewHolder(ItemPlaylistDetailsBinding.inflate(
                 LayoutInflater.from(parent.getContext()),
                 parent,
                 false
-        ));
+        ));*/
     }
 
     @Override
     public void onBindViewHolder(@NonNull PlaylistDetailsViewHolder holder, int position) {
-        Uri uri=uriArrayList.get(position);
-        if (uri==null){
+        PlaylistVideoModel video = mArrayListVideos.get(position);
+        if (video==null){
             return;
         }
+       /* Glide.with(mContext)
+                .load("file://"+ video.getThumb())
+                .skipMemoryCache(false)
+                .into(holder.binding.imgThumbnailPlaylistDetails);*/
+        holder.binding.tvPlaylistNamePlaylistDetails.setText(video.getName());
 
+        holder.binding.layoutItemPlaylistDetails.setBackgroundColor(Color.parseColor(PlaylistConstants.COLOR_WHITE));
+        holder.binding.layoutItemPlaylistDetails.setAlpha(0);
 
-        holder.binding.imgThumbnailPlaylistDetails.setImageURI(uri);
+        holder.binding.layoutItemPlaylistDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                /*Intent i =new Intent(mContext, VideoPlayerActivity.class);
+                i.putExtra(PlaylistConstants.EXTRA_VIDEO,video.getPath());
+                mActivity.startActivity(i);*/
+
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        if (uriArrayList!=null){
-            return uriArrayList.size();
+        if (mArrayListVideos!=null){
+            return mArrayListVideos.size();
         }
         return 0;
     }
