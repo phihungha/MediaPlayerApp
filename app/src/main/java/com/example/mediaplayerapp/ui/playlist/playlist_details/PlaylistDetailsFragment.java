@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -25,8 +23,6 @@ import com.example.mediaplayerapp.data.Playlist;
 import com.example.mediaplayerapp.data.Video;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
 import com.example.mediaplayerapp.ui.playlist.SharedViewModel;
-
-
 import java.util.ArrayList;
 
 public class PlaylistDetailsFragment extends Fragment implements View.OnClickListener {
@@ -71,11 +67,8 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         binding.btnAddMore.setOnClickListener(this);
 
         arrayListMedias = new ArrayList<>();
-        arrayListMedias.add(new Video(Uri.parse("/storage/emulated/0/Download/video_sample_1.mp4"),
-                "NAMEEEEE1",0));
         arrayListMedias.add(new Video(Uri.parse("/storage/emulated/0/Download/video_sample_2.mp4"),
                 "NAMEEEEE2",0));
-
 
         adapter = new PlaylistDetailsAdapter(new PlaylistDetailsAdapter.PlaylistMediaDiff());
         adapter.submitList(arrayListMedias);
@@ -89,94 +82,30 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         binding.tvPlaylistDetailsNumbers.setText("Play list " + String.valueOf(playlist.getNumbers()));
     }
 
-/*    ActivityResultLauncher<Intent> pickerLauncher = registerForActivityResult(
+    ActivityResultLauncher<Intent> pickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
                     if (result.getResultCode() == Activity.RESULT_OK) {
-                        Intent data = result.getData();
-
+                        //Intent data = result.getData();
                         try {
-                            if (data.getClipData() != null) {
+                            if (result.getData().getClipData() != null) {
                                 //pick multiple media file
-                                int count = data.getClipData().getItemCount();
+                                int count = result.getData().getClipData().getItemCount();
                                 for (int i = 0; i < count; i++) {
-                                    Uri uri = data.getClipData().getItemAt(i).getUri();
-                                    String path = MediaUtils.getRealPathFromURI(getContext(), uri);
-                                    String thumb = MediaUtils.getThumbFromURI(getContext(), uri);
-                                    String name = MediaUtils.getNameFromURI(getContext(), uri);
-
-                                    Video video = new Video(path, thumb, name);
+                                    Uri uri = result.getData().getClipData().getItemAt(i).getUri();
+                                    Video video=MediaUtils.getVideoFromURI(getContext(),
+                                            uri);
                                     arrayListMedias.add(video);
                                 }
-                               *//* int count = data.getClipData().getItemCount();
-
-                                for (int i = 0; i < count; i++) {
-                                    Uri uri = data.getClipData().getItemAt(i).getUri();
-                                    Cursor cursor=null;
-                                    int column_index_data, thumb, name;
-                                    String absolutePath = null;
-
-                                    String[] projection = {MediaStore.MediaColumns.DATA,
-                                            MediaStore.Video.Media.DISPLAY_NAME,
-                                            MediaStore.Video.Media._ID,
-                                            MediaStore.Video.Thumbnails.DATA
-                                    };
-                                    cursor = getActivity().getContentResolver()
-                                            .query(uri, projection, null, null, null);
-                                    cursor.moveToFirst();
-
-                                    column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-                                    thumb = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
-                                    name = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.BUCKET_DISPLAY_NAME);
-                                    absolutePath = cursor.getString(column_index_data);
-
-                                    PlaylistVideoModel video = new PlaylistVideoModel(absolutePath,
-                                            cursor.getString(thumb),
-                                            cursor.getString(name));
-                                    arrayListVideos.add(video);
-
-                                    cursor.close();
-                                }*//*
-                                //set image
-
                             } else {
                                 //pick single media file
-                                Uri uri = data.getData();
-                                String path = MediaUtils.getRealPathFromURI(getActivity().getApplicationContext(), uri);
-                                String thumb = MediaUtils.getThumbFromURI(getActivity().getApplicationContext(), uri);
-                                String name = MediaUtils.getNameFromURI(getActivity().getApplicationContext(), uri);
+                                Uri uri = result.getData().getData();
+                                Video video=MediaUtils.getVideoFromURI(getContext(),
+                                    uri);
 
-                                Video video = new Video(path, thumb, name);
                                 arrayListMedias.add(video);
-
-                                *//*Uri uri = data.getData();
-                                Cursor cursor;
-                                int column_index_data, thumb, name;
-                                String absolutePath = null;
-
-                                String[] projection = {MediaStore.MediaColumns.DATA,
-                                        MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
-                                        MediaStore.Video.Media._ID,
-                                        MediaStore.Video.Thumbnails.DATA,
-                                        MediaStore.Video.Media.DISPLAY_NAME
-                                };
-                                cursor = getActivity().getApplicationContext().getContentResolver()
-                                        .query(uri, projection, null, null, null);
-                                cursor.moveToFirst();
-
-                                column_index_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-                                thumb = cursor.getColumnIndexOrThrow(MediaStore.Video.Thumbnails.DATA);
-                                name = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
-                                absolutePath = cursor.getString(column_index_data);
-
-                                PlaylistVideoModel video = new PlaylistVideoModel(absolutePath,
-                                        cursor.getString(thumb),
-                                        cursor.getString(name));
-                                arrayListVideos.add(video);
-
-                                cursor.close();*//*
                             }
 
                         } finally {
@@ -186,7 +115,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                     }
                 }
             }
-    );*/
+    );
 
     @Override
     public void onClick(View view) {
@@ -195,7 +124,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 AddMoreMedia();
                 break;
         }
-
     }
 
     private void AddMoreMedia() {
@@ -204,7 +132,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         // intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        //pickerLauncher.launch(Intent.createChooser(intent, "Select Video(s)"));
+        pickerLauncher.launch(Intent.createChooser(intent, "Select Video(s)"));
         //pickerLauncher.launch(intent);
 
     }
