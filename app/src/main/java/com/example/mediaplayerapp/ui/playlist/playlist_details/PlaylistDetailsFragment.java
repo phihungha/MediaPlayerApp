@@ -1,13 +1,10 @@
-package com.example.mediaplayerapp.ui.playlist;
+package com.example.mediaplayerapp.ui.playlist.playlist_details;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,16 +22,16 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Playlist;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
+import com.example.mediaplayerapp.ui.playlist.SharedViewModel;
 
 
 import java.util.ArrayList;
 
 public class PlaylistDetailsFragment extends Fragment implements View.OnClickListener {
-
     private Playlist playlist;
     private FragmentPlaylistDetailsBinding binding;
     private PlaylistDetailsAdapter adapter;
-    private ArrayList<PlaylistVideoModel> arrayListVideos;
+    private ArrayList<PlaylistMediaModel> arrayListMedias;
 
     public PlaylistDetailsFragment() {
         // Required empty public constructor
@@ -69,13 +66,16 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             init();
         });
 
-       // binding.btnAddMore.setOnClickListener(this);
+        binding.btnAddMore.setOnClickListener(this);
 
-        arrayListVideos = new ArrayList<>();
-        arrayListVideos.add(new PlaylistVideoModel("path","thumb","NAMEEEEE"));
+        arrayListMedias = new ArrayList<>();
+        arrayListMedias.add(new PlaylistMediaModel("path","thumb","NAMEEEEE1"));
+        arrayListMedias.add(new PlaylistMediaModel("path","thumb","NAMEEEEE2"));
 
-        adapter = new PlaylistDetailsAdapter();
-        adapter.setArrayListVideos(arrayListVideos);
+
+        adapter = new PlaylistDetailsAdapter(new PlaylistDetailsAdapter.PlaylistMediaDiff());
+        adapter.submitList(arrayListMedias);
+        adapter.setContext(getActivity().getApplicationContext());
 
         binding.rcvPlaylistsDetails.setAdapter(adapter);
     }
@@ -83,57 +83,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     private void init() {
         binding.tvPlaylistDetailsName.setText(playlist.getName());
         binding.tvPlaylistDetailsNumbers.setText("Play list " + String.valueOf(playlist.getNumbers()));
-    }
-
-    public String getRealPathFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            final String orderBy=MediaStore.Video.Media.DATE_TAKEN;
-
-            String[] proj = { MediaStore.Images.Media.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, orderBy + " DESC");
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
-    public String getNameFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            final String orderBy=MediaStore.Video.Media.DATE_TAKEN;
-
-            String[] proj = { MediaStore.Images.Media.DISPLAY_NAME };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, orderBy + " DESC");
-            int name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
-            cursor.moveToFirst();
-            return cursor.getString(name);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
-    public String getThumbFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            final String orderBy=MediaStore.Video.Media.DATE_TAKEN;
-
-            String[] proj = { MediaStore.Images.Thumbnails.DATA };
-            cursor = context.getContentResolver().query(contentUri,  proj, null, null, orderBy + " DESC");
-            int thumb = cursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(thumb);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
     }
 
     ActivityResultLauncher<Intent> pickerLauncher = registerForActivityResult(
@@ -182,20 +131,13 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                             }
                             else {
                                 //pick single media file
-                                //Uri uri=data.getData();
-                                //String path=getRealPathFromURI(getContext(),uri);
-                                //String thumb=getThumbFromURI(getContext(),uri);
+                                Uri uri=data.getData();
+                                String path=MediaUtils.getRealPathFromURI(getContext(),uri);
+                                String thumb=MediaUtils.getThumbFromURI(getContext(),uri);
+                                String name=MediaUtils.getNameFromURI(getContext(),uri);
 
-                              /*  String name=getNameFromURI(getContext(),uri);
-
-                                Log.d("TAG name: ", name);
-
-                                PlaylistVideoModel video=new PlaylistVideoModel("path","thumb",name);
-                                arrayListVideos.add(video);
-                                adapter.setArrayListVideos(arrayListVideos);*/
-
-
-
+                                PlaylistMediaModel video=new PlaylistMediaModel(path,thumb,name);
+                                arrayListMedias.add(video);
 
                                 /*Uri uri = data.getData();
                                 Cursor cursor;
@@ -227,7 +169,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
                         }
                         finally {
-                            //adapter.notifyDataSetChanged();
+                            adapter.notifyDataSetChanged();
                         }
 
                     }
@@ -246,11 +188,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     }
 
     private void AddMoreMedia() {
-
-    }
-
-
-   /* private void AddMoreMedia() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT,
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         // intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -259,7 +196,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         pickerLauncher.launch(Intent.createChooser(intent, "Select Video(s)"));
         //pickerLauncher.launch(intent);
 
-    }*/
+    }
 
    /* private void fetchVideo() {
         Uri uri;

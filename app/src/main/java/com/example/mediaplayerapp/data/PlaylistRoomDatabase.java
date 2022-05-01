@@ -9,6 +9,7 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,7 +28,7 @@ public abstract class PlaylistRoomDatabase extends RoomDatabase {
             synchronized (PlaylistRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            PlaylistRoomDatabase.class, "playlist_database")
+                            PlaylistRoomDatabase.class, PlaylistConstants.DB_NAME)
                             //.addCallback(sRoomDatabaseCallBack)
                             .build();
                 }
