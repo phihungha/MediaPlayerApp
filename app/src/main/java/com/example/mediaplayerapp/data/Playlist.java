@@ -5,6 +5,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.net.URI;
 
 @Entity(tableName = "playlist_table")
 public class Playlist implements Serializable {
@@ -19,25 +20,21 @@ public class Playlist implements Serializable {
     @ColumnInfo(name = "Name")
     private String name;
 
-    @ColumnInfo(name = "Numbers")
+    @ColumnInfo(name = "Numbers", defaultValue = "0")
     private int numbers;
 
     @ColumnInfo(name = "IsVideo")
     private boolean isVideo;
 
-    @ColumnInfo(name = "SongID")
-    private String songID;
+    @ColumnInfo(name = "MediaUri")
+    private String mediaUri;
 
-    @ColumnInfo(name = "VideoID")
-    private String videoID;
-
-    public Playlist(int idResource, String name, int numbers, boolean isVideo, String songID, String videoID) {
+    public Playlist(int idResource, String name, int numbers, boolean isVideo, String mediaUri) {
         this.idResource = idResource;
         this.name = name;
         this.numbers = numbers;
         this.isVideo = isVideo;
-        this.songID = songID;
-        this.videoID = videoID;
+        this.mediaUri = mediaUri;
     }
 
     public int getId() {
@@ -80,19 +77,11 @@ public class Playlist implements Serializable {
         isVideo = video;
     }
 
-    public String getSongID() {
-        return songID;
+    public String getMediaUri() {
+        return mediaUri;
     }
 
-    public void setSongID(String songID) {
-        this.songID = songID;
-    }
-
-    public String getVideoID() {
-        return videoID;
-    }
-
-    public void setVideoID(String videoID) {
-        this.videoID = videoID;
+    public void setMediaUri(String mediaUri) {
+        this.mediaUri = mediaUri;
     }
 }

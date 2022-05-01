@@ -36,7 +36,9 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         binding = FragmentPlaylistBinding.inflate(inflater, container, false);
         playlistViewModel=new ViewModelProvider(this).get(PlaylistViewModel.class);
 
-        playlistViewModel.getAllPlaylists().observe(getViewLifecycleOwner(), new Observer<List<Playlist>>() {
+        playlistViewModel.getAllPlaylists().observe(
+                getViewLifecycleOwner(),
+                new Observer<List<Playlist>>() {
             @Override
             public void onChanged(List<Playlist> playlists) {
                 //makeToast("onChanged");
@@ -51,12 +53,15 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
 
         adapter=new PlaylistAdapter(new PlaylistAdapter.PlaylistDiff());
         binding.rcvPlaylists.setAdapter(adapter);
-        playlistViewModel.getAllPlaylists().observe(getViewLifecycleOwner(), playlists -> {
+        playlistViewModel.getAllPlaylists().observe(
+                getViewLifecycleOwner(),
+                playlists -> {
             // Update the cached copy of the playlist in the adapter.
             adapter.submitList(playlists);
         });
 
-        SharedViewModel viewModel=new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        SharedViewModel viewModel=new ViewModelProvider(requireActivity())
+                .get(SharedViewModel.class);
 
         //set click item listener for recyclerview
         adapter.setListener((v, position) -> {
@@ -105,9 +110,10 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
      * */
     private void openBottomSheetDialogAddPlaylist(){
         bottomSheetDialog=new BottomSheetDialog(getContext(),R.style.BottomSheetTheme);
-        View bsAddView=LayoutInflater.from(getContext()).inflate(R.layout.playlist_create_bs_layout,
-                getActivity().findViewById(R.id.bs_playlist_create));
-
+        View bsAddView=LayoutInflater.from(getContext()).inflate(
+                R.layout.playlist_create_bs_layout,
+                getActivity().findViewById(R.id.bs_playlist_create)
+        );
         //set click event here
         EditText edtName = bsAddView.findViewById(R.id.edt_playlistNameCreate);
         Button btnCreate = bsAddView.findViewById(R.id.btn_createPlaylist);
@@ -124,7 +130,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                     makeToast("Please check type for playlist!");
                 } else {
                     Playlist playlist = new Playlist(R.drawable.img_for_test,
-                            edtName.getText().toString().trim(),0,radioVideo.isChecked(),null,null);
+                            edtName.getText().toString().trim(),0,radioVideo.isChecked(),null);
                     playlistViewModel.insert(playlist);
 
                     bottomSheetDialog.dismiss();
