@@ -24,7 +24,7 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMediaModel,Playl
     @NonNull
     @Override
     public PlaylistDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return PlaylistDetailsViewHolder.create(parent);
+        return PlaylistDetailsViewHolder.create(parent,mContext);
     }
 
     @Override

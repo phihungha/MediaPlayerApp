@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,8 +70,8 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         binding.btnAddMore.setOnClickListener(this);
 
         arrayListMedias = new ArrayList<>();
-        arrayListMedias.add(new PlaylistMediaModel("path","thumb","NAMEEEEE1"));
-        arrayListMedias.add(new PlaylistMediaModel("path","thumb","NAMEEEEE2"));
+        arrayListMedias.add(new PlaylistMediaModel("path", "thumb", "NAMEEEEE1"));
+        arrayListMedias.add(new PlaylistMediaModel("path", "thumb", "NAMEEEEE2"));
 
 
         adapter = new PlaylistDetailsAdapter(new PlaylistDetailsAdapter.PlaylistMediaDiff());
@@ -96,7 +97,16 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                         try {
                             if (data.getClipData() != null) {
                                 //pick multiple media file
-                                Toast.makeText(getContext(),"Multiple",Toast.LENGTH_SHORT).show();
+                                int count = data.getClipData().getItemCount();
+                                for (int i = 0; i < count; i++) {
+                                    Uri uri = data.getClipData().getItemAt(i).getUri();
+                                    String path = MediaUtils.getRealPathFromURI(getContext(), uri);
+                                    String thumb = MediaUtils.getThumbFromURI(getContext(), uri);
+                                    String name = MediaUtils.getNameFromURI(getContext(), uri);
+
+                                    PlaylistMediaModel video = new PlaylistMediaModel(path, thumb, name);
+                                    arrayListMedias.add(video);
+                                }
                                /* int count = data.getClipData().getItemCount();
 
                                 for (int i = 0; i < count; i++) {
@@ -128,15 +138,14 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                                 }*/
                                 //set image
 
-                            }
-                            else {
+                            } else {
                                 //pick single media file
-                                Uri uri=data.getData();
-                                String path=MediaUtils.getRealPathFromURI(getContext(),uri);
-                                String thumb=MediaUtils.getThumbFromURI(getContext(),uri);
-                                String name=MediaUtils.getNameFromURI(getContext(),uri);
+                                Uri uri = data.getData();
+                                String path = MediaUtils.getRealPathFromURI(getActivity().getApplicationContext(), uri);
+                                String thumb = MediaUtils.getThumbFromURI(getActivity().getApplicationContext(), uri);
+                                String name = MediaUtils.getNameFromURI(getActivity().getApplicationContext(), uri);
 
-                                PlaylistMediaModel video=new PlaylistMediaModel(path,thumb,name);
+                                PlaylistMediaModel video = new PlaylistMediaModel(path, thumb, name);
                                 arrayListMedias.add(video);
 
                                 /*Uri uri = data.getData();
@@ -167,8 +176,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                                 cursor.close();*/
                             }
 
-                        }
-                        finally {
+                        } finally {
                             adapter.notifyDataSetChanged();
                         }
 
