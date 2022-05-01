@@ -48,10 +48,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         mediaSession = new MediaSessionCompat(this, LOG_TAG);
         mediaSession.setMediaButtonReceiver(null);
-        PlaybackStateCompat.Builder playbackStateBuilder = new PlaybackStateCompat.Builder()
-                .setActions(PlaybackStateCompat.ACTION_PLAY |
-                            PlaybackStateCompat.ACTION_PLAY_PAUSE);
-        mediaSession.setPlaybackState(playbackStateBuilder.build());
         MediaSessionConnector mediaSessionConnector = new MediaSessionConnector(mediaSession);
         mediaSessionConnector.setQueueNavigator(new TimelineQueueNavigator(mediaSession) {
             @NonNull
