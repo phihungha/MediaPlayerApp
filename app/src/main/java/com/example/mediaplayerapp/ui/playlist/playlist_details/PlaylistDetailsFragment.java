@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Playlist;
+import com.example.mediaplayerapp.data.Video;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
 import com.example.mediaplayerapp.ui.playlist.SharedViewModel;
 
@@ -32,7 +33,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     private Playlist playlist;
     private FragmentPlaylistDetailsBinding binding;
     private PlaylistDetailsAdapter adapter;
-    private ArrayList<PlaylistMediaModel> arrayListMedias;
+    private ArrayList<Video> arrayListMedias;
 
     public PlaylistDetailsFragment() {
         // Required empty public constructor
@@ -70,8 +71,10 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         binding.btnAddMore.setOnClickListener(this);
 
         arrayListMedias = new ArrayList<>();
-        arrayListMedias.add(new PlaylistMediaModel("path", "thumb", "NAMEEEEE1"));
-        arrayListMedias.add(new PlaylistMediaModel("path", "thumb", "NAMEEEEE2"));
+        arrayListMedias.add(new Video(Uri.parse("/storage/emulated/0/Download/video_sample_1.mp4"),
+                "NAMEEEEE1",0));
+        arrayListMedias.add(new Video(Uri.parse("/storage/emulated/0/Download/video_sample_2.mp4"),
+                "NAMEEEEE2",0));
 
 
         adapter = new PlaylistDetailsAdapter(new PlaylistDetailsAdapter.PlaylistMediaDiff());
@@ -86,7 +89,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         binding.tvPlaylistDetailsNumbers.setText("Play list " + String.valueOf(playlist.getNumbers()));
     }
 
-    ActivityResultLauncher<Intent> pickerLauncher = registerForActivityResult(
+/*    ActivityResultLauncher<Intent> pickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -104,10 +107,10 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                                     String thumb = MediaUtils.getThumbFromURI(getContext(), uri);
                                     String name = MediaUtils.getNameFromURI(getContext(), uri);
 
-                                    PlaylistMediaModel video = new PlaylistMediaModel(path, thumb, name);
+                                    Video video = new Video(path, thumb, name);
                                     arrayListMedias.add(video);
                                 }
-                               /* int count = data.getClipData().getItemCount();
+                               *//* int count = data.getClipData().getItemCount();
 
                                 for (int i = 0; i < count; i++) {
                                     Uri uri = data.getClipData().getItemAt(i).getUri();
@@ -135,7 +138,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                                     arrayListVideos.add(video);
 
                                     cursor.close();
-                                }*/
+                                }*//*
                                 //set image
 
                             } else {
@@ -145,10 +148,10 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                                 String thumb = MediaUtils.getThumbFromURI(getActivity().getApplicationContext(), uri);
                                 String name = MediaUtils.getNameFromURI(getActivity().getApplicationContext(), uri);
 
-                                PlaylistMediaModel video = new PlaylistMediaModel(path, thumb, name);
+                                Video video = new Video(path, thumb, name);
                                 arrayListMedias.add(video);
 
-                                /*Uri uri = data.getData();
+                                *//*Uri uri = data.getData();
                                 Cursor cursor;
                                 int column_index_data, thumb, name;
                                 String absolutePath = null;
@@ -173,7 +176,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                                         cursor.getString(name));
                                 arrayListVideos.add(video);
 
-                                cursor.close();*/
+                                cursor.close();*//*
                             }
 
                         } finally {
@@ -183,7 +186,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                     }
                 }
             }
-    );
+    );*/
 
     @Override
     public void onClick(View view) {
@@ -201,7 +204,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         // intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        pickerLauncher.launch(Intent.createChooser(intent, "Select Video(s)"));
+        //pickerLauncher.launch(Intent.createChooser(intent, "Select Video(s)"));
         //pickerLauncher.launch(intent);
 
     }

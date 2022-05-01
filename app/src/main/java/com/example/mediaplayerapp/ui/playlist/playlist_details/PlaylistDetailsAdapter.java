@@ -8,12 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.bumptech.glide.Glide;
+import com.example.mediaplayerapp.data.Video;
 
-public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMediaModel,PlaylistDetailsViewHolder> {
+public class PlaylistDetailsAdapter extends ListAdapter<Video,PlaylistDetailsViewHolder> {
     private Context mContext;
 
-    protected PlaylistDetailsAdapter(@NonNull DiffUtil.ItemCallback<PlaylistMediaModel> diffCallback) {
+    protected PlaylistDetailsAdapter(@NonNull DiffUtil.ItemCallback<Video> diffCallback) {
         super(diffCallback);
     }
 
@@ -29,25 +29,25 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMediaModel,Playl
 
     @Override
     public void onBindViewHolder(@NonNull PlaylistDetailsViewHolder holder, int position) {
-        PlaylistMediaModel current=getItem(position);
+        Video current=getPlaylistVideoItemAt(position);
 
-        holder.setBinding(current.getName(),current.getThumb());
+        holder.setBinding(current);
 
     }
 
-    static class PlaylistMediaDiff extends DiffUtil.ItemCallback<PlaylistMediaModel> {
+    static class PlaylistMediaDiff extends DiffUtil.ItemCallback<Video> {
         @Override
-        public boolean areItemsTheSame(@NonNull PlaylistMediaModel oldItem, @NonNull PlaylistMediaModel newItem) {
+        public boolean areItemsTheSame(@NonNull Video oldItem, @NonNull Video newItem) {
             return oldItem == newItem;
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull PlaylistMediaModel oldItem, @NonNull PlaylistMediaModel newItem) {
-            return oldItem.getId() == newItem.getId();
+        public boolean areContentsTheSame(@NonNull Video oldItem, @NonNull Video newItem) {
+            return oldItem.getUri().equals(newItem.getUri());
         }
     }
 
-    public PlaylistMediaModel getPlaylistMediaItemAt(int position){
+    public Video getPlaylistVideoItemAt(int position){
         return getItem(position);
     }
 }
