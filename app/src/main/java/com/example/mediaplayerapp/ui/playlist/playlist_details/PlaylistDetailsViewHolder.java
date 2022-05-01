@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.ItemPlaylistDetailsBinding;
 
@@ -30,6 +31,14 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder {
                 .skipMemoryCache(false)
                 .error(R.drawable.ic_round_error_24)
                 .into(binding.imgThumbnailPlaylistDetails);
+
+    /*    Glide
+                .with(holder.videoThumbnail.getContext())
+                .load(videos.get(position).getUri())
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .override(holder.videoThumbnail.getWidth(),holder.videoThumbnail.getHeight())
+                .centerCrop()
+                .into(holder.videoThumbnail);*/
     }
 
     static PlaylistDetailsViewHolder create(ViewGroup parent,
