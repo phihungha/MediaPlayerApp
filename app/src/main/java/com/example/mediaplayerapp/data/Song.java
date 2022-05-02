@@ -1,36 +1,38 @@
 package com.example.mediaplayerapp.data;
 
+import android.graphics.Bitmap;
+
 public class Song {
-    public final long id;
-    public final String title;
-    public final long albumId;
-    public final String albumName;
-    public final long artistId;
-    public final String artistName;
-    public final int duration;
-    public final int trackNumber;
-
-
+    public long songId;
+    public String songTitle;
+    public String songArtist;
+    public String albumName;
+    public String path;
+    public String genre;
+    public long duration;
+    public Bitmap albumArt;
     public Song() {
-        id = -1;
-        title = "";
-        albumId = -1;
+        songId = -1;
+        songTitle = "";
         albumName = "";
-        artistId = -1;
-        artistName = "";
+        path="";
+        songArtist = "";
+        genre="";
         duration = -1;
-        trackNumber = -1;
+
     }
-    public Song(long id, String title, long albumId, String albumName,
-                long artistId, String artistName, int duration, int trackNumber) {
-        this.id = id;
-        this.title = title;
-        this.albumId = albumId;
+    public Song(long id, String title, String albumName,
+               String artistName, String path) {
+        this.songId = id;
+        this.songTitle = title;
         this.albumName = albumName;
-        this.artistId = artistId;
-        this.artistName = artistName;
-        this.duration = duration;
-        this.trackNumber = trackNumber;
+        this.songArtist = artistName;
+        this.path=path;
+
+    }
+    public String toString() {
+        return String.format("songId: %d, Title: %s, Artist: %s, Path: %s, Genere: %d, Duration %s",
+                songId, songTitle, songArtist, path, genre, duration);
     }
 
 }

@@ -1,9 +1,8 @@
 package com.example.mediaplayerapp.ui.music_library;
 
-import android.os.AsyncTask;
+import android.database.Cursor;
 import android.os.Bundle;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,14 +14,15 @@ import android.view.ViewGroup;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Song;
 import com.example.mediaplayerapp.data.SongAdapter;
-import com.example.mediaplayerapp.data.SongLoder;
 
-import java.util.List;
+import java.util.ArrayList;
 
 
 public class SongsFragment extends Fragment {
     private SongAdapter songAdapter;
     private RecyclerView recyclerView;
+    private ArrayList<Song> SongList = new ArrayList<Song>();
+    private Song s;
 
 
     public SongsFragment() {
@@ -38,31 +38,16 @@ public class SongsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view=inflater.inflate(R.layout.fragment_songs,container,false);
         recyclerView = (RecyclerView)view.findViewById(R.id.sr);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext().getApplicationContext()));
-        new LoadData().execute("");
-        recyclerView.setHasFixedSize(true);
-        return inflater.inflate(R.layout.fragment_songs, container, false);
+        LinearLayoutManager linearLayoutManager = new
+                LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(linearLayoutManager);
+        Song s= new Song(01,"Cheap Thrills","This Is Acting","Sia",
+                "http://mp3fb.com/wp-includes/inc/down.php?id=hyCQomZzosfGBvVON0tRV7xfiL2GdtKXbTsBrZh_3NM&t=Sia%2B-%2BCheap%2BThrils%2B%D0%A0%D0%B5%D0%BC%D0%B8%D0%BA%D1%81.mp3&hash=true");
+        SongList.add(s);
+        songAdapter= new SongAdapter(getContext(),SongList);
+        recyclerView.setAdapter(songAdapter);
+        return view;
     }
-    public class LoadData extends AsyncTask<String,Void,String>
-    {
-        @Override
-        protected String doInBackground(String...strings){
-            if(getActivity()!=null)
-            {
-                songAdapter=new SongAdapter( new SongLoder().getAllSongs(getActivity()));
-            }
-            return "Executed";
-        }
 
-        @Override
-        protected void onPostExecute(String s) {
-            recyclerView.setAdapter(songAdapter);
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-    }
 
 }
