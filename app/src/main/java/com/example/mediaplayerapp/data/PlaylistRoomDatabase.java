@@ -37,8 +37,7 @@ public abstract class PlaylistRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-
- /*   private static RoomDatabase.Callback sRoomDatabaseCallBack= new RoomDatabase.Callback(){
+/*    private static RoomDatabase.Callback sRoomDatabaseCallBack= new RoomDatabase.Callback(){
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
@@ -50,10 +49,10 @@ public abstract class PlaylistRoomDatabase extends RoomDatabase {
                 // If you want to start with more words, just add them.
                 PlaylistDao dao = INSTANCE.playlistDao();
 
-                Playlist playlist = new Playlist(1, R.drawable.img_for_test,"Hello",1,true,10,11);
+               *//* Playlist playlist = new Playlist(1, R.drawable.img_for_test,"Hello",1,true,10,11);
                 dao.insert(playlist);
                 playlist = new Playlist(2, R.drawable.img_for_test,"World",1,true,10,11);
-                dao.insert(playlist);
+                dao.insert(playlist);*//*
             });
         }
     };*/
