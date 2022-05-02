@@ -30,12 +30,12 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     MediaControllerCompat mediaController =
                             new MediaControllerCompat(MusicPlayerActivity.this, token);
                     MediaControllerCompat.setMediaController(MusicPlayerActivity.this, mediaController);
-                    buildTransportControls();
+                    setupTransportControls();
                 }
 
                 @Override
                 public void onConnectionSuspended() {
-                    // The Service has crashed. Disable transport controls until it automatically reconnects
+                    disableTransportControls();
                 }
 
                 @Override
@@ -49,10 +49,19 @@ public class MusicPlayerActivity extends AppCompatActivity {
     MediaControllerCompat.Callback controllerCallback =
             new MediaControllerCompat.Callback() {
                 @Override
-                public void onMetadataChanged(MediaMetadataCompat metadata) {}
+                public void onMetadataChanged(MediaMetadataCompat metadata) {
+                    binding.musicTitle.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_TITLE));
+                    binding.musicArtist.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_ARTIST));
+                    binding.musicDuration.setText(Long.toString(metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)));
+                }
 
                 @Override
-                public void onPlaybackStateChanged(PlaybackStateCompat state) {}
+                public void onPlaybackStateChanged(PlaybackStateCompat state) {
+                    if (state.getState() == PlaybackStateCompat.STATE_PLAYING)
+                        binding.musicPlayPauseBtn.setImageLevel(1);
+                    else
+                        binding.musicPlayPauseBtn.setImageLevel(0);
+                }
 
                 @Override
                 public void onSessionDestroyed() {
@@ -60,7 +69,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     mediaBrowser.disconnect();
                 }
             };
-
 
     ActivityMusicPlayerBinding binding;
 
@@ -80,29 +88,32 @@ public class MusicPlayerActivity extends AppCompatActivity {
         binding.musicSeekbar.setPosition(50);
 
         binding.repeatBtn.setImageLevel(1);
-        binding.musicPlayPauseBtn.setOnClickListener(view -> binding.musicPlayPauseBtn.setImageLevel(1));
-
     }
 
-    private void buildTransportControls() {
+    private void setupTransportControls() {
         MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
-        int playbackState = controller.getPlaybackState().getState();
         MediaControllerCompat.TransportControls transportControls = controller.getTransportControls();
 
         String path = Environment.getExternalStorageDirectory().getPath();
         transportControls.playFromUri(Uri.fromFile(new File(path + "/Download/music_sample.flac")), null);
 
         binding.musicPlayPauseBtn.setOnClickListener(view -> {
-            if (playbackState == PlaybackStateCompat.STATE_PLAYING) {
+            int playbackState = controller.getPlaybackState().getState();
+            if (playbackState == PlaybackStateCompat.STATE_PLAYING)
                 transportControls.pause();
-                binding.musicPlayPauseBtn.setImageLevel(0);
-            } else if (playbackState == PlaybackStateCompat.STATE_PAUSED) {
+            else if (playbackState == PlaybackStateCompat.STATE_PAUSED)
                 transportControls.play();
-                binding.musicPlayPauseBtn.setImageLevel(1);
-            }
         });
 
         controller.registerCallback(controllerCallback);
+    }
+
+    private void disableTransportControls() {
+        binding.musicPlayPauseBtn.setEnabled(false);
+        binding.musicSkipNextBtn.setEnabled(false);
+        binding.musicSkipPrevBtn.setEnabled(false);
+        binding.repeatBtn.setEnabled(false);
+        binding.shuffleBtn.setEnabled(false);
     }
 
     @Override
