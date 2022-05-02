@@ -69,7 +69,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/music_play_pause_btn"
             app:srcCompat="@drawable/levellist_repeat_btn"
-            tools:ignore="TouchTargetSizeCheck" />
+            tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
 
         <ImageButton
             android:id="@+id/shuffle_btn"
@@ -81,8 +81,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/music_play_pause_btn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/music_play_pause_btn"
-            app:srcCompat="@drawable/ic_shuffle_white_24dp"
-            tools:ignore="TouchTargetSizeCheck" />
+            app:srcCompat="@drawable/levellist_shuffle_btn"
+            tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
 
         <com.google.android.exoplayer2.ui.DefaultTimeBar
             android:id="@+id/music_seekbar"

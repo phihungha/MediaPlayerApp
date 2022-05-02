@@ -22,37 +22,13 @@ import java.io.File;
 public class MusicPlayerActivity extends AppCompatActivity {
 
     private MediaBrowserCompat mediaBrowser;
-    private final MediaBrowserCompat.ConnectionCallback connectionCallback =
-            new MediaBrowserCompat.ConnectionCallback() {
-                @Override
-                public void onConnected() {
-                    MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
-                    MediaControllerCompat mediaController =
-                            new MediaControllerCompat(MusicPlayerActivity.this, token);
-                    MediaControllerCompat.setMediaController(MusicPlayerActivity.this, mediaController);
-                    setupTransportControls();
-                }
-
-                @Override
-                public void onConnectionSuspended() {
-                    disableTransportControls();
-                }
-
-                @Override
-                public void onConnectionFailed() {
-                    Toast.makeText(MusicPlayerActivity.this,
-                            "Music playback service error!",
-                            Toast.LENGTH_SHORT).show();
-                }
-            };
-
     MediaControllerCompat.Callback controllerCallback =
             new MediaControllerCompat.Callback() {
                 @Override
                 public void onMetadataChanged(MediaMetadataCompat metadata) {
                     binding.musicTitle.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_TITLE));
                     binding.musicArtist.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_ARTIST));
-                    binding.musicDuration.setText(Long.toString(metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)));
+                    binding.musicDuration.setText(String.valueOf(metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)));
                 }
 
                 @Override
@@ -61,6 +37,24 @@ public class MusicPlayerActivity extends AppCompatActivity {
                         binding.musicPlayPauseBtn.setImageLevel(1);
                     else
                         binding.musicPlayPauseBtn.setImageLevel(0);
+                }
+
+                @Override
+                public void onRepeatModeChanged(int repeatMode) {
+                    if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE)
+                        binding.repeatBtn.setImageLevel(0);
+                    else if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL)
+                        binding.repeatBtn.setImageLevel(1);
+                    else if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE)
+                        binding.repeatBtn.setImageLevel(2);
+                }
+
+                @Override
+                public void onShuffleModeChanged(int shuffleMode) {
+                    if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE)
+                        binding.shuffleBtn.setImageLevel(0);
+                    else if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL)
+                        binding.shuffleBtn.setImageLevel(1);
                 }
 
                 @Override
@@ -77,6 +71,30 @@ public class MusicPlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMusicPlayerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        MediaBrowserCompat.ConnectionCallback connectionCallback =
+                new MediaBrowserCompat.ConnectionCallback() {
+                    @Override
+                    public void onConnected() {
+                        MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
+                        MediaControllerCompat mediaController =
+                                new MediaControllerCompat(MusicPlayerActivity.this, token);
+                        MediaControllerCompat.setMediaController(MusicPlayerActivity.this, mediaController);
+                        setupTransportControls();
+                    }
+
+                    @Override
+                    public void onConnectionSuspended() {
+                        disableTransportControls();
+                    }
+
+                    @Override
+                    public void onConnectionFailed() {
+                        Toast.makeText(MusicPlayerActivity.this,
+                                "Music playback service error!",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                };
 
         mediaBrowser = new MediaBrowserCompat(this,
                 new ComponentName(this, BackgroundMusicService.class),
@@ -103,6 +121,22 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 transportControls.pause();
             else if (playbackState == PlaybackStateCompat.STATE_PAUSED)
                 transportControls.play();
+        });
+        binding.repeatBtn.setOnClickListener(view -> {
+            int repeatMode = controller.getRepeatMode();
+            if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE)
+                transportControls.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
+            else if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL)
+                transportControls.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ONE);
+            else if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE)
+                transportControls.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE);
+        });
+        binding.shuffleBtn.setOnClickListener(view -> {
+            int shuffleMode = controller.getShuffleMode();
+            if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE)
+                transportControls.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
+            else if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL)
+                transportControls.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
         });
 
         controller.registerCallback(controllerCallback);
