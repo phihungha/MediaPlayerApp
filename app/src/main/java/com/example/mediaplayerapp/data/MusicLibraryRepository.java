@@ -37,15 +37,15 @@ public class MusicLibraryRepository {
                 Song music = new Song();
 
 
-                music.path = cursor.getString(cursor
+                music.data = cursor.getString(cursor
                         .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA));
 
-                if (!new File(music.path).exists()) {
+                if (!new File(music.data).exists()) {
                     continue;
                 }
 
 
-                music.songId = cursor.getLong(cursor
+                music.songId = cursor.getString(cursor
                         .getColumnIndexOrThrow(MediaStore.Audio.Media._ID));
 
                 music.songTitle = cursor.getString(cursor
@@ -67,7 +67,7 @@ public class MusicLibraryRepository {
                                 .getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION));
 
                 MediaMetadataRetriever mmr = new MediaMetadataRetriever();
-                mmr.setDataSource(music.path);
+                mmr.setDataSource(music.data);
 
                 mmr.release();
 

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,13 +42,35 @@ public class SongsFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new
                 LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(linearLayoutManager);
-        Song s= new Song(01,"Cheap Thrills","This Is Acting","Sia",
-                "http://mp3fb.com/wp-includes/inc/down.php?id=hyCQomZzosfGBvVON0tRV7xfiL2GdtKXbTsBrZh_3NM&t=Sia%2B-%2BCheap%2BThrils%2B%D0%A0%D0%B5%D0%BC%D0%B8%D0%BA%D1%81.mp3&hash=true");
-        SongList.add(s);
+        String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
+        String[] projection = {
+                MediaStore.Audio.Media._ID,
+                MediaStore.Audio.Media.ARTIST,
+                MediaStore.Audio.Media.TITLE,
+                MediaStore.Audio.Media.DATA,
+                MediaStore.Audio.Media.ALBUM
+        };
+        Cursor cursor = getActivity().getContentResolver().query(
+                MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                projection,
+                selection,
+                null,
+                null);
+        while (cursor.moveToNext()) {
+            SongList.add(convertToSong(cursor));
+        }
         songAdapter= new SongAdapter(getContext(),SongList);
         recyclerView.setAdapter(songAdapter);
         return view;
     }
-
+    private Song convertToSong(Cursor cursor) {
+        Song song = new Song();
+        song.setId(cursor.getString(0));
+        song.setArtist(cursor.getString(1));
+        song.setTitle(cursor.getString(2));
+        song.setData(cursor.getString(3));
+        song.setAlbum(cursor.getString(4));
+        return song;
+    }
 
 }

@@ -19,7 +19,7 @@ import com.google.android.material.tabs.TabLayout;
 
 public class MusicLibraryFragment extends Fragment {
 
-    private static final int KEY_PER = 123;
+
     private FragmentMusicLibraryBinding binding;
     private MusicLibraryViewModel viewModel;
 
