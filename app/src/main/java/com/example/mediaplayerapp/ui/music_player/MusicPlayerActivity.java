@@ -1,10 +1,13 @@
 package com.example.mediaplayerapp.ui.music_player;
 
+import android.annotation.SuppressLint;
 import android.content.ComponentName;
+import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -14,12 +17,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.databinding.ActivityMusicPlayerBinding;
 import com.example.mediaplayerapp.services.BackgroundMusicService;
+import com.google.android.exoplayer2.ui.TimeBar;
 
 import java.io.File;
 
 public class MusicPlayerActivity extends AppCompatActivity {
+
+    private static final String PLAYBACK_TIME_FORMAT = "%02d:%02d";
 
     private MediaBrowserCompat mediaBrowser;
     MediaControllerCompat.Callback controllerCallback =
@@ -28,7 +35,21 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 public void onMetadataChanged(MediaMetadataCompat metadata) {
                     binding.musicTitle.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_TITLE));
                     binding.musicArtist.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_ARTIST));
-                    binding.musicDuration.setText(String.valueOf(metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION)));
+
+                    long duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
+                    binding.musicDuration.setText(getFormattedPlaybackPosition(duration));
+                    binding.musicSeekbar.setDuration(duration);
+
+                    String albumArtUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_ALBUM_ART_URI);
+                    if (albumArtUri != null) {
+                        Glide.with(MusicPlayerActivity.this)
+                                .asBitmap()
+                                .load(Uri.parse(albumArtUri))
+                                .into(binding.albumArt);
+                    }
+                    Bitmap albumArtBitmap = metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ALBUM_ART);
+                    if (albumArtBitmap != null)
+                        binding.albumArt.setImageBitmap(albumArtBitmap);
                 }
 
                 @Override
@@ -81,6 +102,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                                 new MediaControllerCompat(MusicPlayerActivity.this, token);
                         MediaControllerCompat.setMediaController(MusicPlayerActivity.this, mediaController);
                         setupTransportControls();
+                        setupTimeIndicators();
                     }
 
                     @Override
@@ -138,8 +160,52 @@ public class MusicPlayerActivity extends AppCompatActivity {
             else if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL)
                 transportControls.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
         });
+        binding.musicSkipNextBtn.setOnClickListener(view -> transportControls.skipToNext());
+        binding.musicSkipPrevBtn.setOnClickListener(view -> transportControls.skipToPrevious());
+        binding.musicSeekbar.addListener(new TimeBar.OnScrubListener() {
+            @Override
+            public void onScrubStart(TimeBar timeBar, long position) {
+
+            }
+
+            @Override
+            public void onScrubMove(TimeBar timeBar, long position) {
+                timeBar.setPosition(position);
+                binding.musicCurrentPosition.setText(getFormattedPlaybackPosition(position));
+            }
+
+            @Override
+            public void onScrubStop(TimeBar timeBar, long position, boolean canceled) {
+                transportControls.seekTo(position);
+            }
+        });
 
         controller.registerCallback(controllerCallback);
+    }
+
+    private void setupTimeIndicators() {
+        Handler handler = new Handler();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                MediaControllerCompat controller = MediaControllerCompat.getMediaController(MusicPlayerActivity.this);
+                long currentPlaybackPosition = controller.getPlaybackState().getPosition();
+                binding.musicSeekbar.setPosition(currentPlaybackPosition);
+                binding.musicCurrentPosition.setText(getFormattedPlaybackPosition(currentPlaybackPosition));
+                handler.postDelayed(this, 100);
+            }
+        });
+    }
+
+    /**
+     * Get formatted playback position from a milisecond value for display.
+     * @param position Playback position as miliseconds
+     * @return String Formatted playback position
+     */
+    @SuppressLint("DefaultLocale")
+    private String getFormattedPlaybackPosition(long position) {
+        long playedSeconds = position / 1000;
+        return String.format(PLAYBACK_TIME_FORMAT, (playedSeconds % 3600) / 60, playedSeconds % 60);
     }
 
     private void disableTransportControls() {
@@ -148,6 +214,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
         binding.musicSkipPrevBtn.setEnabled(false);
         binding.repeatBtn.setEnabled(false);
         binding.shuffleBtn.setEnabled(false);
+        binding.musicSeekbar.setEnabled(false);
     }
 
     @Override
