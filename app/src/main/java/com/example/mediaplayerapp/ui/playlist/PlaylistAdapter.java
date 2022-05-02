@@ -26,7 +26,7 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull PlaylistViewHolder holder, int position) {
         Playlist current=getItem(position);
-        holder.setBinding(current.getIdResource(),current.getName(),current.getNumbers());
+        holder.setBinding(current.getIdResource(),current.getName());
     }
 
     static class PlaylistDiff extends DiffUtil.ItemCallback<Playlist> {

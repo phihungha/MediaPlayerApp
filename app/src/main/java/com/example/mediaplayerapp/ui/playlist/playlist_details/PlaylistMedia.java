@@ -1,23 +1,50 @@
 package com.example.mediaplayerapp.ui.playlist.playlist_details;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.PrimaryKey;
+
+import com.example.mediaplayerapp.data.Playlist;
+
 /***
- *  Video class for playlist
+ *  Media class for playlist
  */
+@Entity(tableName = "media_table",
+        primaryKeys = {"MediaId","MediaUri"})
 public class PlaylistMedia {
-    private String videoUri;
+    @NonNull
+    @ColumnInfo(name = "MediaId")
+    private int id;
+
+    @NonNull
+    @ColumnInfo(name = "MediaUri")
+    private String mediaUri;
+
+    @ColumnInfo(name = "MediaName")
     private String name;
 
-    public PlaylistMedia(String videoUri, String name) {
-        this.videoUri = videoUri;
+    public PlaylistMedia(int id, String mediaUri, String name) {
+        this.id = id;
+        this.mediaUri = mediaUri;
         this.name = name;
     }
 
-    public String getVideoUri() {
-        return videoUri;
+    public int getId() {
+        return id;
     }
 
-    public void setVideoUri(String videoUri) {
-        this.videoUri = videoUri;
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getMediaUri() {
+        return mediaUri;
+    }
+
+    public void setMediaUri(String mediaUri) {
+        this.mediaUri = mediaUri;
     }
 
     public String getName() {

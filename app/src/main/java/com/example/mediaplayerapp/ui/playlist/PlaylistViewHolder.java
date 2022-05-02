@@ -70,10 +70,9 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         bottomSheetDialog.show();
     }
 
-    public void setBinding(int idResource, String name, int numbers) {
+    public void setBinding(int idResource, String name) {
         binding.imgThumbnail.setImageResource(idResource);
         binding.tvPlaylistName.setText(name);
-        binding.tvPlaylistNumbers.setText(String.valueOf(numbers));
     }
 
     static PlaylistViewHolder create(ViewGroup parent, IOnPlaylistItemClickListener l,

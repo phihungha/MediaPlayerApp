@@ -6,9 +6,8 @@ public class PlaylistConstants {
     public static final String STRING_NEW_PLAYLIST="New Playlist";
     public static final String STRING_HINT_SEARCH="Type here to search!";
 
-    public static final String DB_NAME="playlist_database";
-
     public static final String KEY_PLAYLIST="playlist";
+    public static final String KEY_TRANSFER_PLAYLIST="trans_data_playlist";
 
     public static final String COLOR_WHITE="#FFFFFF";
 

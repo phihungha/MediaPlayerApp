@@ -23,23 +23,6 @@ public class MediaUtils {
         }
     }
 
-    public static String getNameFromURI(Context context, Uri contentUri) {
-        Cursor cursor = null;
-        try {
-            final String orderBy = MediaStore.Video.Media.DATE_TAKEN;
-            String[] proj = {MediaStore.Images.Media.DISPLAY_NAME};
-
-            cursor = context.getContentResolver().query(contentUri, proj, null, null, orderBy + " DESC");
-            int name = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME);
-            cursor.moveToFirst();
-            return cursor.getString(name);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
-
     public static String getThumbFromURI(Context context, Uri contentUri) {
 
         Cursor cursor = null;
@@ -58,7 +41,7 @@ public class MediaUtils {
         }
     }
 
-    public static PlaylistMedia getVideoFromURI(Context context, Uri uri) {
+    public static String getMediaNameFromURI(Context context, Uri uri) {
         Cursor cursor = null;
         try {
             String[] projection = new String[]{
@@ -69,9 +52,9 @@ public class MediaUtils {
             cursor.moveToFirst();
 
             int nameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
-            String videoName = cursor.getString(nameColumnIndex);
+            String name = cursor.getString(nameColumnIndex);
             cursor.close();
-            return new PlaylistMedia(uri.toString(), videoName);
+            return name;
         } finally {
             if (cursor != null) {
                 cursor.close();

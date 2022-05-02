@@ -20,21 +20,13 @@ public class Playlist implements Serializable {
     @ColumnInfo(name = "Name")
     private String name;
 
-    @ColumnInfo(name = "Numbers", defaultValue = "0")
-    private int numbers;
-
     @ColumnInfo(name = "IsVideo")
     private boolean isVideo;
 
-    @ColumnInfo(name = "MediaUri")
-    private String mediaUri;
-
-    public Playlist(int idResource, String name, int numbers, boolean isVideo, String mediaUri) {
+    public Playlist(int idResource, String name, boolean isVideo) {
         this.idResource = idResource;
         this.name = name;
-        this.numbers = numbers;
         this.isVideo = isVideo;
-        this.mediaUri = mediaUri;
     }
 
     public int getId() {
@@ -61,27 +53,11 @@ public class Playlist implements Serializable {
         this.name = name;
     }
 
-    public int getNumbers() {
-        return numbers;
-    }
-
-    public void setNumbers(int numbers) {
-        this.numbers = numbers;
-    }
-
     public boolean isVideo() {
         return isVideo;
     }
 
     public void setVideo(boolean video) {
         isVideo = video;
-    }
-
-    public String getMediaUri() {
-        return mediaUri;
-    }
-
-    public void setMediaUri(String mediaUri) {
-        this.mediaUri = mediaUri;
     }
 }

@@ -27,4 +27,7 @@ public interface PlaylistDao {
     @Query("SELECT * FROM playlist_table ORDER BY PlaylistID ASC")
     LiveData<List<Playlist>> getAllPlaylists();
 
+  /*  @Query("SELECT * from playlist_table WHERE PlaylistID=:id")
+    LiveData<List<Playlist>> getPlayListWithID(int id);*/
+
 }

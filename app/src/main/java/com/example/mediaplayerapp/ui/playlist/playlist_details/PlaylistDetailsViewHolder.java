@@ -26,10 +26,11 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
     }
 
     public void setBinding(PlaylistMedia video) {
-        binding.tvPlaylistNamePlaylistDetails.setText(video.getName());
+        binding.tvPlaylistNamePlaylistDetails.setText(
+                                        "ID: "+video.getId());
 
         Glide.with(mContext)
-                .load(video.getVideoUri())
+                .load(video.getMediaUri())
                 .skipMemoryCache(false)
                 .error(R.drawable.ic_round_error_24)
                 .centerCrop()

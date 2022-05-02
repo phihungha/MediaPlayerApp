@@ -31,10 +31,12 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDe
 
     @Override
     public void onBindViewHolder(@NonNull PlaylistDetailsViewHolder holder, int position) {
-        PlaylistMedia current=getPlaylistVideoItemAt(position);
+        PlaylistMedia current= getPlaylistMediaItemAt(position);
+        if (current==null){
+            return;
+        }
 
         holder.setBinding(current);
-
     }
 
     static class PlaylistMediaDiff extends DiffUtil.ItemCallback<PlaylistMedia> {
@@ -45,11 +47,11 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDe
 
         @Override
         public boolean areContentsTheSame(@NonNull PlaylistMedia oldItem, @NonNull PlaylistMedia newItem) {
-            return oldItem.getVideoUri().equals(newItem.getVideoUri());
+            return oldItem.getMediaUri().equals(newItem.getMediaUri());
         }
     }
 
-    public PlaylistMedia getPlaylistVideoItemAt(int position){
+    public PlaylistMedia getPlaylistMediaItemAt(int position){
         return getItem(position);
     }
 }

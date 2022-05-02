@@ -13,12 +13,6 @@ public class PlaylistRepository {
         mPlaylistDao = database.playlistDao();
         mAllPlaylists = mPlaylistDao.getAllPlaylists();
     }
-/*
-    tạo 1 hàm mà đưa cho nó cái id của playlist thì
-    nó trả về uri (hay đối tượng) mọi bài hát hay video
-    trong playlist đó nha (tui cần cái này để music hay video player
-            activity nó đọc đc nội dung playlist trực tiếp từ
-            database mà ko cần phải gửi qua intent)*/
 
     public void insert(Playlist playlist) {
         PlaylistRoomDatabase.databaseWriteExecutor.execute(() -> {
@@ -43,6 +37,10 @@ public class PlaylistRepository {
             mPlaylistDao.deleteAll();
         });
     }
+
+/*    public LiveData<List<Playlist>> getPlaylistWithID(int id){
+        return mPlaylistDao.getPlayListWithID(id);
+    }*/
 
     public LiveData<List<Playlist>> getAllPlaylists() {
         return mAllPlaylists;

@@ -28,7 +28,7 @@ public abstract class PlaylistRoomDatabase extends RoomDatabase {
             synchronized (PlaylistRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            PlaylistRoomDatabase.class, PlaylistConstants.DB_NAME)
+                            PlaylistRoomDatabase.class, "playlist_table")
                             //.addCallback(sRoomDatabaseCallBack)
                             .build();
                 }
