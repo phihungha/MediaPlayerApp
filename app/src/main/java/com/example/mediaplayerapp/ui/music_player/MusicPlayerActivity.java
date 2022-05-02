@@ -19,7 +19,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.databinding.ActivityMusicPlayerBinding;
-import com.example.mediaplayerapp.services.BackgroundMusicService;
+import com.example.mediaplayerapp.services.MusicPlaybackService;
 import com.google.android.exoplayer2.ui.TimeBar;
 
 import java.io.File;
@@ -119,7 +119,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 };
 
         mediaBrowser = new MediaBrowserCompat(this,
-                new ComponentName(this, BackgroundMusicService.class),
+                new ComponentName(this, MusicPlaybackService.class),
                 connectionCallback,
                 null);
 

@@ -31,11 +31,11 @@ import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 
 import java.util.List;
 
-public class BackgroundMusicService extends MediaBrowserServiceCompat {
+public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
     private static final String ACTION_PLAY_PLAYLIST = "PLAY_PLAYLIST";
     private static final String ACTION_PLAY_PLAYLIST_ID = "PLAYLIST_ID";
-    private static final String NOTIFICATION_CHANNEL_ID = "com.example.mediaplayerapp.services.MUSIC_NOW_PLAYING";
+    private static final String NOTIFICATION_CHANNEL_ID = "com.example.mediaplayerapp.services.MUSIC_PLAYBACK";
     private static final int NOTIFICATION_ID = 1;
 
     ExoPlayer player;
@@ -49,7 +49,7 @@ public class BackgroundMusicService extends MediaBrowserServiceCompat {
 
         player = new ExoPlayer.Builder(this).build();
 
-        mediaSession = new MediaSessionCompat(this, "BackgroundMusicService");
+        mediaSession = new MediaSessionCompat(this, "MusicPlaybackService");
         setSessionToken(mediaSession.getSessionToken());
 
         // Supports playing from uri or search term
@@ -81,6 +81,7 @@ public class BackgroundMusicService extends MediaBrowserServiceCompat {
             @Override
             public void onPrepareFromUri(@NonNull Uri uri, boolean playWhenReady, @Nullable Bundle extras) {
                 MediaMetadata metadata = new MediaMetadata.Builder()
+                        .setTitle("abcdef")
                         .build();
                 MediaItem item = new MediaItem.Builder()
                         .setUri(uri)
@@ -125,15 +126,12 @@ public class BackgroundMusicService extends MediaBrowserServiceCompat {
             @NonNull
             @Override
             public MediaDescriptionCompat getMediaDescription(Player player, int windowIndex) {
-                MediaItem currentMediaItem = player.getCurrentMediaItem();
-                if (currentMediaItem != null) {
-                    return new MediaDescriptionCompat.Builder()
-                            .setTitle(currentMediaItem.mediaMetadata.title)
-                            .setDescription(currentMediaItem.mediaMetadata.description)
-                            .setSubtitle(currentMediaItem.mediaMetadata.subtitle)
-                            .build();
-                }
-                return new MediaDescriptionCompat.Builder().build();
+                MediaItem mediaItem = player.getMediaItemAt(windowIndex);
+                return new MediaDescriptionCompat.Builder()
+                        .setTitle(mediaItem.mediaMetadata.title)
+                        .setDescription(mediaItem.mediaMetadata.description)
+                        .setSubtitle(mediaItem.mediaMetadata.subtitle)
+                        .build();
             }
         };
 
@@ -148,7 +146,7 @@ public class BackgroundMusicService extends MediaBrowserServiceCompat {
 
             @Override
             public void onNotificationPosted(int notificationId, Notification notification, boolean ongoing) {
-                startService(new Intent(BackgroundMusicService.this, BackgroundMusicService.class));
+                startService(new Intent(MusicPlaybackService.this, MusicPlaybackService.class));
                 startForeground(notificationId, notification);
             }
         };
@@ -221,7 +219,7 @@ public class BackgroundMusicService extends MediaBrowserServiceCompat {
      * @param bitmapCallback Callback to send the result
      */
     private void loadBitmap(Uri artworkUri, PlayerNotificationManager.BitmapCallback bitmapCallback) {
-        Glide.with(BackgroundMusicService.this)
+        Glide.with(MusicPlaybackService.this)
                 .asBitmap()
                 .load(artworkUri)
                 .into(new CustomTarget<Bitmap>() {
