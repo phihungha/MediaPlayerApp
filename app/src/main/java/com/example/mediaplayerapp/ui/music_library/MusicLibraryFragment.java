@@ -49,7 +49,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
     // add your fragments
     adapter.addFrag(new SongsFragment(), "Song");
     adapter.addFrag(new AlbumFragment(), "Album");
-    adapter.addFrag(new ArtistFragment(), "Artit");
+    adapter.addFrag(new ArtistFragment(), "Artist");
 
     // set adapter on viewpager
     viewPager.setAdapter(adapter);
