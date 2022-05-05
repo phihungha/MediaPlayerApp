@@ -1,17 +1,14 @@
-package com.example.mediaplayerapp.data;
+package com.example.mediaplayerapp.data.video;
 
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Size;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.loader.content.CursorLoader;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 

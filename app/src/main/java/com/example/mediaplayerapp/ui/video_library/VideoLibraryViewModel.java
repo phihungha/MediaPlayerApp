@@ -5,8 +5,8 @@ import android.app.Application;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.mediaplayerapp.data.Video;
-import com.example.mediaplayerapp.data.VideoLibraryRepository;
+import com.example.mediaplayerapp.data.video.Video;
+import com.example.mediaplayerapp.data.video.VideoLibraryRepository;
 
 import java.util.List;
 
