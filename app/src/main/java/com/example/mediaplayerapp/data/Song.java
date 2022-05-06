@@ -21,19 +21,8 @@ public class Song {
         duration = -1;
 
     }
-    public Song(String id, String title, String albumName,
-               String artistName, String data) {
-        this.songId = id;
-        this.songTitle = title;
-        this.albumName = albumName;
-        this.songArtist = artistName;
-        this.data=data;
 
-    }
-    public String toString() {
-        return String.format("songId: %d, Title: %s, Artist: %s, Path: %s, Genere: %d, Duration %s",
-                songId, songTitle, songArtist, data, genre, duration);
-    }
+
     public void setId(String id) {
         this.songId = id;
     }

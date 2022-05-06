@@ -3,6 +3,7 @@ package com.example.mediaplayerapp.ui.music_library;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -20,10 +21,8 @@ import java.util.ArrayList;
 
 
 public class SongsFragment extends Fragment {
-    private SongAdapter songAdapter;
-    private RecyclerView recyclerView;
-    private ArrayList<Song> SongList = new ArrayList<Song>();
-    private Song s;
+    private final ArrayList<Song> SongList = new ArrayList<>();
+
 
 
     public SongsFragment() {
@@ -33,13 +32,13 @@ public class SongsFragment extends Fragment {
 
     View view;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         if (view==null) {
             // Inflate the layout for this fragment
             view = inflater.inflate(R.layout.fragment_songs, container, false);
-            recyclerView = (RecyclerView) view.findViewById(R.id.sr);
+            RecyclerView recyclerView = view.findViewById(R.id.sr);
             LinearLayoutManager linearLayoutManager = new
                     LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(linearLayoutManager);
@@ -60,7 +59,7 @@ public class SongsFragment extends Fragment {
             while (cursor.moveToNext()) {
                 SongList.add(convertToSong(cursor));
             }
-            songAdapter = new SongAdapter(getContext(), SongList);
+            SongAdapter songAdapter = new SongAdapter(getContext(), SongList);
             recyclerView.setAdapter(songAdapter);
         }
         return view;
