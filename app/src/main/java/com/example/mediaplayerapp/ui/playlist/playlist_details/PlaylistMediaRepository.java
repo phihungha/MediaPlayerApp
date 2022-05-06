@@ -4,10 +4,6 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
-import com.example.mediaplayerapp.data.Playlist;
-import com.example.mediaplayerapp.data.PlaylistDao;
-import com.example.mediaplayerapp.data.PlaylistRoomDatabase;
-
 import java.util.List;
 
 public class PlaylistMediaRepository {

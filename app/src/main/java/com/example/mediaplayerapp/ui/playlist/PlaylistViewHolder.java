@@ -17,15 +17,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     BottomSheetDialog bottomSheetDialog;
     private ItemPlaylistBinding binding;
-    private static IOnBottomSheetRenameClick bsRenameListener;
+    private static IOnBottomSheetSelectionClick bsRenameListener;
+    private static IOnBottomSheetSelectionClick bsDeleteListener;
+    private static IOnBottomSheetSelectionClick bsPlayListener;
     private static IOnPlaylistItemClickListener listener;
-    private static IOnBottomSheetDeleteClick bsDeleteListener;
+
 
     public PlaylistViewHolder(@NonNull ItemPlaylistBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
         this.binding.imgBtnMore.setOnClickListener(this);
-        this.binding.getRoot().setOnClickListener(this);
         this.binding.layoutItemPlaylist.setOnClickListener(this);
     }
 
@@ -76,28 +77,30 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     static PlaylistViewHolder create(ViewGroup parent, IOnPlaylistItemClickListener l,
-                                     IOnBottomSheetRenameClick bsL,
-                                     IOnBottomSheetDeleteClick bsDelListener) {
+                                     IOnBottomSheetSelectionClick _bsRenameListener,
+                                     IOnBottomSheetSelectionClick _bsDeleteListener,
+                                     IOnBottomSheetSelectionClick _bsPlayListener) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemPlaylistBinding binding = ItemPlaylistBinding.inflate(inflater, parent, false);
         listener = l;
-        bsRenameListener = bsL;
-        bsDeleteListener = bsDelListener;
+        bsRenameListener = _bsRenameListener;
+        bsDeleteListener = _bsDeleteListener;
+        bsPlayListener=_bsPlayListener;
         return new PlaylistViewHolder(binding);
     }
 
     private void StartPlaylist() {
-        makeToast("Start Playlist");
+        bsPlayListener.onItemBSClick(itemView,getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void RenamePlaylist() {
-        bsRenameListener.onItemBSClick(getBindingAdapterPosition());
+        bsRenameListener.onItemBSClick(itemView,getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void DeletePlaylist() {
-        bsDeleteListener.onItemBSClick(getBindingAdapterPosition());
+        bsDeleteListener.onItemBSClick(itemView,getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
@@ -107,7 +110,4 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         }
     }
 
-    private void makeToast(String mess) {
-        Toast.makeText(itemView.getContext(), mess, Toast.LENGTH_SHORT).show();
-    }
 }

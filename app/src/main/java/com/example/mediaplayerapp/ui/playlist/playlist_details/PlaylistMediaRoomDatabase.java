@@ -6,10 +6,6 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
-import com.example.mediaplayerapp.data.Playlist;
-import com.example.mediaplayerapp.data.PlaylistDao;
-import com.example.mediaplayerapp.data.PlaylistRoomDatabase;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

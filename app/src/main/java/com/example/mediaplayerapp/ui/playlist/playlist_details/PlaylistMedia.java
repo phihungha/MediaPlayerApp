@@ -3,10 +3,6 @@ package com.example.mediaplayerapp.ui.playlist.playlist_details;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
-import androidx.room.PrimaryKey;
-
-import com.example.mediaplayerapp.data.Playlist;
 
 /***
  *  Media class for playlist

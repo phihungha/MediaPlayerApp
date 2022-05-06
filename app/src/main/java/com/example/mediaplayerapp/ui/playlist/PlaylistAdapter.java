@@ -6,13 +6,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.example.mediaplayerapp.data.Playlist;
+import com.example.mediaplayerapp.data.playlist.Playlist;
 
 public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     private IOnPlaylistItemClickListener mListener;
-    private IOnBottomSheetRenameClick mBSRenameListener;
-    private IOnBottomSheetDeleteClick mBSDeleteListener;
 
+    private IOnBottomSheetSelectionClick mBSRenameListener;
+    private IOnBottomSheetSelectionClick mBSDeleteListener;
+    private IOnBottomSheetSelectionClick mBSPlayListener;
     protected PlaylistAdapter(@NonNull DiffUtil.ItemCallback<Playlist> diffCallback) {
         super(diffCallback);
     }
@@ -20,7 +21,7 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     @NonNull
     @Override
     public PlaylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return PlaylistViewHolder.create(parent, mListener,mBSRenameListener,mBSDeleteListener);
+        return PlaylistViewHolder.create(parent, mListener,mBSRenameListener,mBSDeleteListener,mBSPlayListener);
     }
 
     @Override
@@ -41,11 +42,15 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
         }
     }
 
-    public void setBSDeleteListener(IOnBottomSheetDeleteClick listener){
+    public void setBSPlayListener(IOnBottomSheetSelectionClick mBSPlayListener) {
+        this.mBSPlayListener = mBSPlayListener;
+    }
+
+    public void setBSDeleteListener(IOnBottomSheetSelectionClick listener){
         mBSDeleteListener=listener;
     }
 
-    public void setBSRenameListener(IOnBottomSheetRenameClick listener){
+    public void setBSRenameListener(IOnBottomSheetSelectionClick listener){
         mBSRenameListener=listener;
     }
 

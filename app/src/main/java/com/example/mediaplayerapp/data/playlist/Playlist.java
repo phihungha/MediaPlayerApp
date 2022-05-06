@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.data;
+package com.example.mediaplayerapp.data.playlist;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;

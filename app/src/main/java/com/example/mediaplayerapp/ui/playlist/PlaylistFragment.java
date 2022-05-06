@@ -16,8 +16,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.Playlist;
-
+import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -54,14 +53,13 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                     }
                 }
         );
+        setListenerForAdapter();
+        binding.layoutItemAddPlaylist.setOnClickListener(this);
+    }
 
-/*        SharedViewModel viewModel = new ViewModelProvider(requireActivity())
-                .get(SharedViewModel.class);*/
-
+    private void setListenerForAdapter(){
         //set click item listener for recyclerview
         adapter.setListener((v, position) -> {
-            //viewModel.setSelected(adapter.getPlaylistItemAt(position));
-
             Bundle bundle=new Bundle();
             bundle.putSerializable(PlaylistConstants.KEY_TRANSFER_PLAYLIST,adapter.getPlaylistItemAt(position));
             detailsFragment.setArguments(bundle);
@@ -71,20 +69,23 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                     .addToBackStack(null)
                     .commit();
         });
+
+        //click bottom sheet play item recyclerview
+        adapter.setBSPlayListener((view, position) -> {
+            makeToast("Play at pos " + position);
+        });
         //click bottom sheet rename item recyclerview
-        adapter.setBSRenameListener((position) -> {
+        adapter.setBSRenameListener((view,position) -> {
             Playlist playlist = adapter.getPlaylistItemAt(position);
             PlaylistRenameDialog dialog = PlaylistRenameDialog.newInstance(playlist);
             dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_RENAME_DIALOG);
         });
         //click bottom sheet delete item recyclerview
-        adapter.setBSDeleteListener((position -> {
+        adapter.setBSDeleteListener(((view,position) -> {
             Playlist playlist = adapter.getPlaylistItemAt(position);
             PlaylistDeleteDialog dialog = PlaylistDeleteDialog.newInstance(playlist);
             dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_DELETE_DIALOG);
         }));
-
-        binding.layoutItemAddPlaylist.setOnClickListener(this);
     }
 
     @Override

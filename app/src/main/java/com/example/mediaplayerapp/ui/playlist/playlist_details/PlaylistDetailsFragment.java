@@ -23,7 +23,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.Playlist;
+import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 
@@ -44,29 +44,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                              Bundle savedInstanceState) {
         binding = FragmentPlaylistDetailsBinding.inflate(inflater, container, false);
         playlistMediaViewModel = new ViewModelProvider(this).get(PlaylistMediaViewModel.class);
-
-        /*SharedViewModel viewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-        viewModel.getSelected().observe(getViewLifecycleOwner(),
-                new Observer<Playlist>() {
-                    @Override
-                    public void onChanged(Playlist p) {
-                        Log.d("TAG","onChanged_start");
-                        playlist = p;
-                        id=p.getId();
-                        binding.tvPlaylistDetailsName.setText(playlist.getName() + ", ID "+ playlist.getId());
-                        binding.tvPlaylistDetailsNumbers.setText("Play list 0 media");
-                        Log.d("TAG","onChanged_end");
-                    }
-
-            /*binding.tvIdPlaylist.setText("Playlist id: " + item.getId() +"\n" +
-                    "Name: " + item.getName() + "\n"+
-                    "Number: " + item.getNumbers() + "\n"+
-                    "Song: " + item.getSongID() + "\n"+
-                    "Video: " + item.getVideoID() + "\n"+
-                    "IsVideo: " + item.isVideo() + "\n");*//*
-
-                });*/
-        Log.d("TAG", "onCreate");
         // Inflate the layout for this fragment
         return binding.getRoot();
     }
@@ -97,6 +74,11 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 }
         );
 
+        setListener();
+        binding.btnAddMore.setOnClickListener(this);
+    }
+
+    private void setListener() {
         //item detail (media) click
         adapter.setItemClickListener((v, position) -> {
             /**
@@ -110,8 +92,14 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             Toast.makeText(getActivity(), "click + pos " + position, Toast.LENGTH_SHORT).show();
         });
 
-        Log.d("TAG", "viewCreated");
-        binding.btnAddMore.setOnClickListener(this);
+        // click play bottom sheet
+        adapter.setBsPlayListener((view, position) -> {
+            Toast.makeText(getActivity(), "Play media pos " + position, Toast.LENGTH_SHORT).show();
+        });
+        // click delete bottom sheet
+        adapter.setBsDeleteListener((view, position) -> {
+            Toast.makeText(getActivity(), "Delete media pos " + position, Toast.LENGTH_SHORT).show();
+        });
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -119,25 +107,19 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_addMore:
-                Log.d("TAG", "setOnCLick");
                 AddMoreMedia();
                 break;
         }
     }
 
     private void AddMoreMedia() {
-        Log.d("TAG", "addMore");
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT,
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         if (playlist.isVideo()) {
             intent.setType("video/*");
-            Log.d("TAG", "readyLaunchVideo");
-            //pickerLauncher.launch(intent);
         } else {
             intent.setType("audio/*");
-            Log.d("TAG", "readyLaunchAudio");
-            //pickerLauncher.launch(Intent.createChooser(intent, "Select Audio(s)"));
         }
         startActivityForResult(intent, PlaylistConstants.REQUEST_CODE_GALLERY);
     }
@@ -147,8 +129,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         if (requestCode == PlaylistConstants.REQUEST_CODE_GALLERY
                 && resultCode == Activity.RESULT_OK
                 && data != null) {
-            Log.d("TAG", "activityLauncher");
-
             try {
                 if (data.getClipData() != null) {
                     //pick multiple media file
@@ -184,11 +164,10 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        Log.d("TAG", "destroyView");
         binding = null;
     }
-     /*
-  private final ActivityResultLauncher<Intent> pickerLauncher = registerForActivityResult(
+
+   /* public final ActivityResultLauncher<Intent> pickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @SuppressLint("NotifyDataSetChanged")

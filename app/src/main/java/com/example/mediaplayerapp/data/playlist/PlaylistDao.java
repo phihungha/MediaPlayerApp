@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.data;
+package com.example.mediaplayerapp.data.playlist;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;

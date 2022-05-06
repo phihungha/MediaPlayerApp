@@ -1,15 +1,10 @@
-package com.example.mediaplayerapp.data;
+package com.example.mediaplayerapp.data.playlist;
 
 import android.content.Context;
 
-import androidx.annotation.NonNull;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.sqlite.db.SupportSQLiteDatabase;
-
-import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

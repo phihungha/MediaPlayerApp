@@ -20,4 +20,5 @@
     <string name="new_playlist_name">New playlist name</string>
     <string name="delete_playlist_from_device">Delete playlist from device?</string>
     <string name="message_delete">Playlist will be deleted permanently from device.</string>
+    <string name="remove">Remove</string>
 </resources>

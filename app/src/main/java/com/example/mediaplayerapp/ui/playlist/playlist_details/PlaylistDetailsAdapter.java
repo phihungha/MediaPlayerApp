@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.ListAdapter;
 public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDetailsViewHolder> {
     private Context mContext;
     private IOnPlaylistDetailsItemClickListener itemClickListener;
+    private IOnPlaylistDetailsItemClickListener bsPlayListener;
+    private IOnPlaylistDetailsItemClickListener bsDeleteListener;
 
     protected PlaylistDetailsAdapter(@NonNull DiffUtil.ItemCallback<PlaylistMedia> diffCallback) {
         super(diffCallback);
@@ -19,6 +21,15 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDe
     public void setItemClickListener(IOnPlaylistDetailsItemClickListener listener){
         itemClickListener=listener;
     }
+
+    public void setBsPlayListener(IOnPlaylistDetailsItemClickListener bsPlayListener) {
+        this.bsPlayListener = bsPlayListener;
+    }
+
+    public void setBsDeleteListener(IOnPlaylistDetailsItemClickListener bsDeleteListener) {
+        this.bsDeleteListener = bsDeleteListener;
+    }
+
     public void setContext(Context mContext) {
         this.mContext = mContext;
     }
@@ -26,7 +37,7 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDe
     @NonNull
     @Override
     public PlaylistDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return PlaylistDetailsViewHolder.create(parent,mContext,itemClickListener);
+        return PlaylistDetailsViewHolder.create(parent,mContext,itemClickListener,bsPlayListener,bsDeleteListener);
     }
 
     @Override

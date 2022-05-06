@@ -33,7 +33,7 @@
 
     <TextView
         android:id="@+id/tv_playlistNamePlaylistDetails"
-        android:layout_width="240dp"
+        android:layout_width="200dp"
         android:layout_height="wrap_content"
 
         android:layout_marginStart="20dp"
@@ -68,9 +68,22 @@
         app:layout_constraintTop_toBottomOf="@id/tv_playlistNamePlaylistDetails" />
 
 -->
+    <ImageView
+        android:id="@+id/imgBtn_play"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:contentDescription="@string/add_more"
 
+        android:layout_marginEnd="10dp"
+        android:layout_gravity="center_vertical"
+        android:src="@drawable/ic_round_play_circle_outline_24"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/imgBtn_playlist_details_more"
+        app:tint="@color/black" />
     <ImageButton
-        android:id="@+id/imgBtn_more"
+        android:id="@+id/imgBtn_playlist_details_more"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:contentDescription="@string/add_more"
@@ -83,6 +96,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+
         app:tint="@color/black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
