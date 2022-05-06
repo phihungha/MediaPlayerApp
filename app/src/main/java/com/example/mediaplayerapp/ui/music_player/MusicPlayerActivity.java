@@ -40,16 +40,22 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     binding.musicDuration.setText(getFormattedPlaybackPosition(duration));
                     binding.musicSeekbar.setDuration(duration);
 
-                    String albumArtUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI);
-                    if (albumArtUri != null) {
+                    String artUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI);
+                    if (artUri != null) {
                         Glide.with(MusicPlayerActivity.this)
                                 .asBitmap()
-                                .load(Uri.parse(albumArtUri))
-                                .into(binding.albumArt);
+                                .load(Uri.parse(artUri))
+                                .into(binding.musicArt);
+                        Glide.with(MusicPlayerActivity.this)
+                                .asBitmap()
+                                .load(Uri.parse(artUri))
+                                .into(binding.musicArtBackground);
                     }
-                    Bitmap albumArtBitmap = metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ART);
-                    if (albumArtBitmap != null)
-                        binding.albumArt.setImageBitmap(albumArtBitmap);
+                    Bitmap artBitmap = metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ART);
+                    if (artBitmap != null) {
+                        binding.musicArt.setImageBitmap(artBitmap);
+                        binding.musicArtBackground.setImageBitmap(artBitmap);
+                    }
                 }
 
                 @Override
