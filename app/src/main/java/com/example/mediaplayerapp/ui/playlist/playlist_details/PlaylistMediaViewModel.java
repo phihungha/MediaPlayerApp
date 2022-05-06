@@ -10,7 +10,7 @@ import java.util.List;
 
 public class PlaylistMediaViewModel extends AndroidViewModel{
     private PlaylistMediaRepository mRepository;
-    private final LiveData<List<PlaylistMedia>> mAllMedias;
+    private LiveData<List<PlaylistMedia>> mAllMedias;
 
     public PlaylistMediaViewModel(@NonNull Application application) {
         super(application);

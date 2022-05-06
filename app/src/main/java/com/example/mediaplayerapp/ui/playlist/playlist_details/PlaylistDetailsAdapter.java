@@ -47,7 +47,8 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDe
 
         @Override
         public boolean areContentsTheSame(@NonNull PlaylistMedia oldItem, @NonNull PlaylistMedia newItem) {
-            return oldItem.getMediaUri().equals(newItem.getMediaUri());
+            return oldItem.getMediaUri().equals(newItem.getMediaUri())
+                    && oldItem.getId()==newItem.getId();
         }
     }
 

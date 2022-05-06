@@ -9,6 +9,8 @@ public class PlaylistConstants {
     public static final String KEY_PLAYLIST="playlist";
     public static final String KEY_TRANSFER_PLAYLIST="trans_data_playlist";
 
+    public static final int REQUEST_CODE_GALLERY=121;
+
     public static final String COLOR_WHITE="#FFFFFF";
 
     public static final String EXTRA_VIDEO="video";

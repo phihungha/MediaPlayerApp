@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 public class MediaUtils {
     public static String getRealPathFromURI(Context context, Uri contentUri) {
@@ -55,7 +56,8 @@ public class MediaUtils {
             String name = cursor.getString(nameColumnIndex);
             cursor.close();
             return name;
-        } finally {
+        }
+        finally {
             if (cursor != null) {
                 cursor.close();
             }
