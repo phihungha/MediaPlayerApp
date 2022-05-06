@@ -130,7 +130,7 @@
         android:layout_marginBottom="50dp"
         android:text="@string/default_song_name"
         android:textColor="@color/white"
-        android:textSize="28sp"
+        android:textSize="26sp"
         app:layout_constraintBottom_toTopOf="@+id/music_seekbar"
         app:layout_constraintStart_toStartOf="@+id/music_current_position" />
 
@@ -154,7 +154,7 @@
         android:layout_marginTop="8dp"
         android:text="@string/default_artist_name"
         android:textColor="@color/white"
-        android:textSize="19sp"
+        android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/music_current_position"
         app:layout_constraintTop_toBottomOf="@+id/music_title" />
 

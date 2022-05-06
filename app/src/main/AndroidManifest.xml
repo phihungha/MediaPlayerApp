@@ -22,6 +22,7 @@ package="com.example.mediaplayerapp">
 
     <activity
         android:name=".ui.music_player.MusicPlayerActivity"
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:exported="false" />
 
     <activity

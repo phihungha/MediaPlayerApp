@@ -29,6 +29,30 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private static final String PLAYBACK_TIME_FORMAT = "%02d:%02d";
 
     private MediaBrowserCompat mediaBrowser;
+    MediaBrowserCompat.ConnectionCallback connectionCallback =
+            new MediaBrowserCompat.ConnectionCallback() {
+                @Override
+                public void onConnected() {
+                    MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
+                    MediaControllerCompat mediaController =
+                            new MediaControllerCompat(MusicPlayerActivity.this, token);
+                    MediaControllerCompat.setMediaController(MusicPlayerActivity.this, mediaController);
+                    setupTransportControls();
+                    setupTimeIndicators();
+                }
+
+                @Override
+                public void onConnectionSuspended() {
+                    disableTransportControls();
+                }
+
+                @Override
+                public void onConnectionFailed() {
+                    Toast.makeText(MusicPlayerActivity.this,
+                            "Music playback service error!",
+                            Toast.LENGTH_SHORT).show();
+                }
+            };
     MediaControllerCompat.Callback controllerCallback =
             new MediaControllerCompat.Callback() {
                 @Override
@@ -98,31 +122,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMusicPlayerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        MediaBrowserCompat.ConnectionCallback connectionCallback =
-                new MediaBrowserCompat.ConnectionCallback() {
-                    @Override
-                    public void onConnected() {
-                        MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
-                        MediaControllerCompat mediaController =
-                                new MediaControllerCompat(MusicPlayerActivity.this, token);
-                        MediaControllerCompat.setMediaController(MusicPlayerActivity.this, mediaController);
-                        setupTransportControls();
-                        setupTimeIndicators();
-                    }
-
-                    @Override
-                    public void onConnectionSuspended() {
-                        disableTransportControls();
-                    }
-
-                    @Override
-                    public void onConnectionFailed() {
-                        Toast.makeText(MusicPlayerActivity.this,
-                                "Music playback service error!",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                };
 
         mediaBrowser = new MediaBrowserCompat(this,
                 new ComponentName(this, MusicPlaybackService.class),
