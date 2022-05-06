@@ -16,7 +16,7 @@
 
     <item
         android:id="@+id/navigation_playlist"
-        android:icon="@drawable/ic_playlist"
+        android:icon="@drawable/ic_playlist_blue_24dp"
         android:orderInCategory="20"
         android:title="@string/title_playlist" />
 </menu>

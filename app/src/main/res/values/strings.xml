@@ -21,4 +21,8 @@
     <string name="notification_channel_name">Music playback</string>
     <string name="notification_channel_description">Display and control music playback</string>
     <string name="music_artwork">Music artwork</string>
+    <string name="playlist">Playlist</string>
+    <string name="add_to_favorite">Add to favorite</string>
+    <string name="add_to_listen_later">Add to listen later</string>
+    <string name="add_to_playlist">Add to playlist</string>
 </resources>

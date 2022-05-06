@@ -13,11 +13,13 @@ import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.ActivityMusicPlayerBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
 import com.google.android.exoplayer2.ui.TimeBar;
@@ -57,55 +59,55 @@ public class MusicPlayerActivity extends AppCompatActivity {
             new MediaControllerCompat.Callback() {
                 @Override
                 public void onMetadataChanged(MediaMetadataCompat metadata) {
-                    binding.musicTitle.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_TITLE));
-                    binding.musicArtist.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST));
+                    binding.musicPlayerSongTitle.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_TITLE));
+                    binding.musicPlayerSongArtist.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST));
 
                     long duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
-                    binding.musicDuration.setText(getFormattedPlaybackPosition(duration));
-                    binding.musicSeekbar.setDuration(duration);
+                    binding.musicPlayerSongDuration.setText(getFormattedPlaybackPosition(duration));
+                    binding.musicPlayerSeekbar.setDuration(duration);
 
                     String artUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI);
                     if (artUri != null) {
                         Glide.with(MusicPlayerActivity.this)
                                 .asBitmap()
                                 .load(Uri.parse(artUri))
-                                .into(binding.musicArt);
+                                .into(binding.musicPlayerSongArtwork);
                         Glide.with(MusicPlayerActivity.this)
                                 .asBitmap()
                                 .load(Uri.parse(artUri))
-                                .into(binding.musicArtBackground);
+                                .into(binding.musicPlayerSongArtworkBackground);
                     }
                     Bitmap artBitmap = metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ART);
                     if (artBitmap != null) {
-                        binding.musicArt.setImageBitmap(artBitmap);
-                        binding.musicArtBackground.setImageBitmap(artBitmap);
+                        binding.musicPlayerSongArtwork.setImageBitmap(artBitmap);
+                        binding.musicPlayerSongArtworkBackground.setImageBitmap(artBitmap);
                     }
                 }
 
                 @Override
                 public void onPlaybackStateChanged(PlaybackStateCompat state) {
                     if (state.getState() == PlaybackStateCompat.STATE_PLAYING)
-                        binding.musicPlayPauseBtn.setImageLevel(1);
+                        binding.musicPlayerPlayPauseBtn.setImageLevel(1);
                     else
-                        binding.musicPlayPauseBtn.setImageLevel(0);
+                        binding.musicPlayerPlayPauseBtn.setImageLevel(0);
                 }
 
                 @Override
                 public void onRepeatModeChanged(int repeatMode) {
                     if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE)
-                        binding.repeatBtn.setImageLevel(0);
+                        binding.musicPlayerRepeatBtn.setImageLevel(0);
                     else if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL)
-                        binding.repeatBtn.setImageLevel(1);
+                        binding.musicPlayerRepeatBtn.setImageLevel(1);
                     else if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE)
-                        binding.repeatBtn.setImageLevel(2);
+                        binding.musicPlayerRepeatBtn.setImageLevel(2);
                 }
 
                 @Override
                 public void onShuffleModeChanged(int shuffleMode) {
                     if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE)
-                        binding.shuffleBtn.setImageLevel(0);
+                        binding.musicPlayerShuffleBtn.setImageLevel(0);
                     else if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL)
-                        binding.shuffleBtn.setImageLevel(1);
+                        binding.musicPlayerShuffleBtn.setImageLevel(1);
                 }
 
                 @Override
@@ -128,11 +130,27 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 connectionCallback,
                 null);
 
-        binding.musicCloseBtn.setOnClickListener(view -> finish());
-        binding.musicSeekbar.setDuration(100);
-        binding.musicSeekbar.setPosition(50);
+        binding.musicPlayerCloseBtn.setOnClickListener(view -> finish());
+        binding.musicPlayerMenuBtn.setOnClickListener(view -> openMenu());
+    }
 
-        binding.repeatBtn.setImageLevel(1);
+    private void openMenu() {
+        PopupMenu popupMenu = new PopupMenu(this, binding.musicPlayerMenuBtn);
+        popupMenu.inflate(R.menu.music_player_menu);
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            if (menuItem.getItemId() == R.id.music_player_add_to_listen_later) {
+                // TODO: Add to listen later playlist
+            }
+            else if (menuItem.getItemId() == R.id.music_player_add_to_favorites) {
+                // TODO: Add to favorite playlist
+            }
+            else if (menuItem.getItemId() == R.id.music_player_playlist) {
+                // TODO: Edit current playlist
+            }
+            return true;
+        });
+        popupMenu.setForceShowIcon(true);
+        popupMenu.show();
     }
 
     private void setupTransportControls() {
@@ -142,14 +160,14 @@ public class MusicPlayerActivity extends AppCompatActivity {
         String path = Environment.getExternalStorageDirectory().getPath();
         transportControls.playFromUri(Uri.fromFile(new File(path + "/Download/music_sample.flac")), null);
 
-        binding.musicPlayPauseBtn.setOnClickListener(view -> {
+        binding.musicPlayerPlayPauseBtn.setOnClickListener(view -> {
             int playbackState = controller.getPlaybackState().getState();
             if (playbackState == PlaybackStateCompat.STATE_PLAYING)
                 transportControls.pause();
             else if (playbackState == PlaybackStateCompat.STATE_PAUSED)
                 transportControls.play();
         });
-        binding.repeatBtn.setOnClickListener(view -> {
+        binding.musicPlayerRepeatBtn.setOnClickListener(view -> {
             int repeatMode = controller.getRepeatMode();
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE)
                 transportControls.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
@@ -158,16 +176,16 @@ public class MusicPlayerActivity extends AppCompatActivity {
             else if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE)
                 transportControls.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE);
         });
-        binding.shuffleBtn.setOnClickListener(view -> {
+        binding.musicPlayerShuffleBtn.setOnClickListener(view -> {
             int shuffleMode = controller.getShuffleMode();
             if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE)
                 transportControls.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
             else if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL)
                 transportControls.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
         });
-        binding.musicSkipNextBtn.setOnClickListener(view -> transportControls.skipToNext());
-        binding.musicSkipPrevBtn.setOnClickListener(view -> transportControls.skipToPrevious());
-        binding.musicSeekbar.addListener(new TimeBar.OnScrubListener() {
+        binding.musicPlayerSkipNextBtn.setOnClickListener(view -> transportControls.skipToNext());
+        binding.musicPlayerSkipPrevBtn.setOnClickListener(view -> transportControls.skipToPrevious());
+        binding.musicPlayerSeekbar.addListener(new TimeBar.OnScrubListener() {
             @Override
             public void onScrubStart(TimeBar timeBar, long position) {
 
@@ -176,7 +194,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             @Override
             public void onScrubMove(TimeBar timeBar, long position) {
                 timeBar.setPosition(position);
-                binding.musicCurrentPosition.setText(getFormattedPlaybackPosition(position));
+                binding.musicPlayerSongCurrentPosition.setText(getFormattedPlaybackPosition(position));
             }
 
             @Override
@@ -195,8 +213,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
             public void run() {
                 MediaControllerCompat controller = MediaControllerCompat.getMediaController(MusicPlayerActivity.this);
                 long currentPlaybackPosition = controller.getPlaybackState().getPosition();
-                binding.musicSeekbar.setPosition(currentPlaybackPosition);
-                binding.musicCurrentPosition.setText(getFormattedPlaybackPosition(currentPlaybackPosition));
+                binding.musicPlayerSeekbar.setPosition(currentPlaybackPosition);
+                binding.musicPlayerSongCurrentPosition.setText(getFormattedPlaybackPosition(currentPlaybackPosition));
                 handler.postDelayed(this, 100);
             }
         });
@@ -214,12 +232,12 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     private void disableTransportControls() {
-        binding.musicPlayPauseBtn.setEnabled(false);
-        binding.musicSkipNextBtn.setEnabled(false);
-        binding.musicSkipPrevBtn.setEnabled(false);
-        binding.repeatBtn.setEnabled(false);
-        binding.shuffleBtn.setEnabled(false);
-        binding.musicSeekbar.setEnabled(false);
+        binding.musicPlayerPlayPauseBtn.setEnabled(false);
+        binding.musicPlayerSkipPrevBtn.setEnabled(false);
+        binding.musicPlayerSkipNextBtn.setEnabled(false);
+        binding.musicPlayerRepeatBtn.setEnabled(false);
+        binding.musicPlayerShuffleBtn.setEnabled(false);
+        binding.musicPlayerSeekbar.setEnabled(false);
     }
 
     @Override
