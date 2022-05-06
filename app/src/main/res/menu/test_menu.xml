@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/grid_list_change_menu_item"
+        android:icon="@drawable/ic_music"
+        android:orderInCategory="10"
+        android:title="@string/item_list_grid_change" />
+
+
+    <item
+        android:id="@+id/sort_by_name_menu_item"
+        android:icon="@drawable/ic_video"
+        android:orderInCategory="30"
+        android:title="@string/item_sort_by_name" />
+
+    <item
+        android:id="@+id/sort_by_length_menu_item"
+        android:icon="@drawable/ic_playlist"
+        android:orderInCategory="20"
+        android:title="@string/item_sort_by_length" />
+
+</menu>
