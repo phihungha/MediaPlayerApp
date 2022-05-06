@@ -3,6 +3,7 @@ package com.example.mediaplayerapp.ui.music_library;
 import android.database.Cursor;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,18 +16,15 @@ import android.view.ViewGroup;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Album;
 import com.example.mediaplayerapp.data.AlbumAdapter;
-import com.example.mediaplayerapp.data.Artist;
 import com.example.mediaplayerapp.data.GridSpacingItemDecoration;
 
 import java.util.ArrayList;
 
 
 public class AlbumFragment extends Fragment {
-    private final ArrayList<Album> albums;
-    {
-        albums = new ArrayList<>();
-    }
-
+    private ArrayList<Album> albums= new ArrayList<Album>();
+    private RecyclerView recyclerView;
+    private AlbumAdapter albumAdapter;
     public AlbumFragment() {
         // Required empty public constructor
     }
@@ -37,7 +35,7 @@ public class AlbumFragment extends Fragment {
         if(view==null)
         {
             view = inflater.inflate(R.layout.fragment_album, container, false);
-            RecyclerView recyclerView = view.findViewById(R.id.ar);
+            recyclerView = view.findViewById(R.id.ar);
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
             String[] projection = new String[]{
                     MediaStore.Audio.Albums._ID,//0
@@ -56,7 +54,7 @@ public class AlbumFragment extends Fragment {
             while (albumCursor.moveToNext()) {
                 albums.add(convertToAlbum(albumCursor));
             }
-            AlbumAdapter albumAdapter = new AlbumAdapter(getContext(),albums);
+            albumAdapter = new AlbumAdapter(getContext(),albums);
             recyclerView.setAdapter(albumAdapter);
             if(getActivity()!=null)
             {

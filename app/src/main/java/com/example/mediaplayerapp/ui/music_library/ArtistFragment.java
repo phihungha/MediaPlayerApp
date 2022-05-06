@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.provider.MediaStore;
@@ -24,25 +25,24 @@ import java.util.ArrayList;
 
 public class ArtistFragment extends Fragment {
 
-    private final ArrayList<Artist> artists;
-
-    {
-        artists = new ArrayList<>();
-    }
-
-
+    private RecyclerView recyclerView;
+    private ArtistAdapter artistAdapter;
+    private ArrayList<Artist> artists = new ArrayList<Artist>();
+    private Artist artist;
     public ArtistFragment() {
         // Required empty public constructor
     }
 
     View view;
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         if(view==null) {
             view = inflater.inflate(R.layout.fragment_artist, container, false);
-            RecyclerView recyclerView = view.findViewById(R.id.arr);
+            recyclerView = (RecyclerView) view.findViewById(R.id.arr);
+            LinearLayoutManager linearLayoutManager = new
+                    LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
             String[] mProjection =
                     {
@@ -61,7 +61,7 @@ public class ArtistFragment extends Fragment {
             while (artistCursor.moveToNext()) {
                 artists.add(convertToArtist(artistCursor));
             }
-            ArtistAdapter artistAdapter = new ArtistAdapter(getContext(), artists);
+            artistAdapter = new ArtistAdapter(getContext(), artists);
             recyclerView.setAdapter(artistAdapter);
             if(getActivity()!=null)
             {

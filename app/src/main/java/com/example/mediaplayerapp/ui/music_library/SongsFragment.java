@@ -21,8 +21,10 @@ import java.util.ArrayList;
 
 
 public class SongsFragment extends Fragment {
-    private final ArrayList<Song> SongList = new ArrayList<>();
-
+    private SongAdapter songAdapter;
+    private RecyclerView recyclerView;
+    private ArrayList<Song> SongList = new ArrayList<Song>();
+    private Song s;
 
 
     public SongsFragment() {
@@ -32,13 +34,13 @@ public class SongsFragment extends Fragment {
 
     View view;
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         if (view==null) {
             // Inflate the layout for this fragment
             view = inflater.inflate(R.layout.fragment_songs, container, false);
-            RecyclerView recyclerView = view.findViewById(R.id.sr);
+            recyclerView = (RecyclerView) view.findViewById(R.id.sr);
             LinearLayoutManager linearLayoutManager = new
                     LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(linearLayoutManager);
@@ -59,7 +61,7 @@ public class SongsFragment extends Fragment {
             while (cursor.moveToNext()) {
                 SongList.add(convertToSong(cursor));
             }
-            SongAdapter songAdapter = new SongAdapter(getContext(), SongList);
+            songAdapter = new SongAdapter(getContext(), SongList);
             recyclerView.setAdapter(songAdapter);
         }
         return view;
