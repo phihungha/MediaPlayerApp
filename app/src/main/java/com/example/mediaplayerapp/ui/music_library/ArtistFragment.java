@@ -72,7 +72,7 @@ public class ArtistFragment extends Fragment {
     }
     private Artist convertToArtist(Cursor cursor) {
         Artist artist = new Artist();
-        artist.setId(cursor.getString(0));
+        artist.setId(cursor.getLong(0));
         artist.setName(cursor.getString(1));
         artist.setNum_tracks(cursor.getLong(2));
         artist.setNum_albums(cursor.getLong(3));
