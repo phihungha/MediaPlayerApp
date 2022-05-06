@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +16,7 @@ import android.view.ViewGroup;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Artist;
 import com.example.mediaplayerapp.data.ArtistAdapter;
+import com.example.mediaplayerapp.data.GridSpacingItemDecoration;
 
 
 import java.util.ArrayList;
@@ -38,9 +40,7 @@ public class ArtistFragment extends Fragment {
         if(view==null) {
             view = inflater.inflate(R.layout.fragment_artist, container, false);
             recyclerView = (RecyclerView) view.findViewById(R.id.arr);
-            LinearLayoutManager linearLayoutManager = new
-                    LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
             String[] mProjection =
                     {
                             MediaStore.Audio.Artists._ID,
@@ -60,6 +60,10 @@ public class ArtistFragment extends Fragment {
             }
             artistAdapter = new ArtistAdapter(getContext(), artists);
             recyclerView.setAdapter(artistAdapter);
+            if(getActivity()!=null)
+            {
+                recyclerView.addItemDecoration(new GridSpacingItemDecoration(2,30,true));
+            }
         }
         return view;
     }
