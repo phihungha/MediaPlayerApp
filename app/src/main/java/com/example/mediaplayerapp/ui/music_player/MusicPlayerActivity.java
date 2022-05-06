@@ -1,6 +1,5 @@
 package com.example.mediaplayerapp.ui.music_player;
 
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -25,6 +24,7 @@ import com.example.mediaplayerapp.services.MusicPlaybackService;
 import com.google.android.exoplayer2.ui.TimeBar;
 
 import java.io.File;
+import java.util.Locale;
 
 public class MusicPlayerActivity extends AppCompatActivity {
 
@@ -41,6 +41,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     MediaControllerCompat.setMediaController(MusicPlayerActivity.this, mediaController);
                     setupTransportControls();
                     setupTimeIndicators();
+                    playSample();
                 }
 
                 @Override
@@ -134,6 +135,16 @@ public class MusicPlayerActivity extends AppCompatActivity {
         binding.musicPlayerMenuBtn.setOnClickListener(view -> openMenu());
     }
 
+    private void playSample() {
+        String path = Environment.getExternalStorageDirectory().getPath();
+        MediaControllerCompat.getMediaController(this)
+                .getTransportControls()
+                .playFromUri(Uri.fromFile(new File(path + "/Download/music_sample.flac")), null);
+    }
+
+    /**
+     * Open more button's menu.
+     */
     private void openMenu() {
         PopupMenu popupMenu = new PopupMenu(this, binding.musicPlayerMenuBtn);
         popupMenu.inflate(R.menu.music_player_menu);
@@ -153,38 +164,51 @@ public class MusicPlayerActivity extends AppCompatActivity {
         popupMenu.show();
     }
 
+    /**
+     * Set up transport controls on the UI.
+     */
     private void setupTransportControls() {
-        MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
-        MediaControllerCompat.TransportControls transportControls = controller.getTransportControls();
-
-        String path = Environment.getExternalStorageDirectory().getPath();
-        transportControls.playFromUri(Uri.fromFile(new File(path + "/Download/music_sample.flac")), null);
-
         binding.musicPlayerPlayPauseBtn.setOnClickListener(view -> {
+            MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
             int playbackState = controller.getPlaybackState().getState();
             if (playbackState == PlaybackStateCompat.STATE_PLAYING)
-                transportControls.pause();
+                controller.getTransportControls().pause();
             else if (playbackState == PlaybackStateCompat.STATE_PAUSED)
-                transportControls.play();
+                controller.getTransportControls().play();
         });
+
         binding.musicPlayerRepeatBtn.setOnClickListener(view -> {
+            MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
             int repeatMode = controller.getRepeatMode();
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE)
-                transportControls.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
+                controller.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
             else if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL)
-                transportControls.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ONE);
+                controller.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ONE);
             else if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE)
-                transportControls.setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE);
+                controller.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_NONE);
         });
+
         binding.musicPlayerShuffleBtn.setOnClickListener(view -> {
+            MediaControllerCompat controller = MediaControllerCompat.getMediaController(this);
             int shuffleMode = controller.getShuffleMode();
             if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE)
-                transportControls.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
+                controller.getTransportControls().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
             else if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL)
-                transportControls.setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
+                controller.getTransportControls().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_NONE);
         });
-        binding.musicPlayerSkipNextBtn.setOnClickListener(view -> transportControls.skipToNext());
-        binding.musicPlayerSkipPrevBtn.setOnClickListener(view -> transportControls.skipToPrevious());
+
+        binding.musicPlayerSkipNextBtn.setOnClickListener(
+                view -> MediaControllerCompat.getMediaController(this)
+                        .getTransportControls()
+                        .skipToNext()
+        );
+
+        binding.musicPlayerSkipPrevBtn.setOnClickListener(
+                view -> MediaControllerCompat.getMediaController(this)
+                        .getTransportControls()
+                        .skipToPrevious()
+        );
+
         binding.musicPlayerSeekbar.addListener(new TimeBar.OnScrubListener() {
             @Override
             public void onScrubStart(TimeBar timeBar, long position) {
@@ -199,13 +223,32 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
             @Override
             public void onScrubStop(TimeBar timeBar, long position, boolean canceled) {
-                transportControls.seekTo(position);
+                MediaControllerCompat.getMediaController(MusicPlayerActivity.this)
+                        .getTransportControls()
+                        .seekTo(position);
             }
         });
 
-        controller.registerCallback(controllerCallback);
+        MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(this);
+        mediaController.registerCallback(controllerCallback);
     }
 
+    /**
+     * Disable all transport controls on the UI in case
+     * we lost connection to the music playback service.
+     */
+    private void disableTransportControls() {
+        binding.musicPlayerPlayPauseBtn.setEnabled(false);
+        binding.musicPlayerSkipPrevBtn.setEnabled(false);
+        binding.musicPlayerSkipNextBtn.setEnabled(false);
+        binding.musicPlayerRepeatBtn.setEnabled(false);
+        binding.musicPlayerShuffleBtn.setEnabled(false);
+        binding.musicPlayerSeekbar.setEnabled(false);
+    }
+
+    /**
+     * Begin updating current playback position and seekbar progress.
+     */
     private void setupTimeIndicators() {
         Handler handler = new Handler();
         runOnUiThread(new Runnable() {
@@ -225,19 +268,10 @@ public class MusicPlayerActivity extends AppCompatActivity {
      * @param position Playback position as miliseconds
      * @return String Formatted playback position
      */
-    @SuppressLint("DefaultLocale")
     private String getFormattedPlaybackPosition(long position) {
         long playedSeconds = position / 1000;
-        return String.format(PLAYBACK_TIME_FORMAT, (playedSeconds % 3600) / 60, playedSeconds % 60);
-    }
-
-    private void disableTransportControls() {
-        binding.musicPlayerPlayPauseBtn.setEnabled(false);
-        binding.musicPlayerSkipPrevBtn.setEnabled(false);
-        binding.musicPlayerSkipNextBtn.setEnabled(false);
-        binding.musicPlayerRepeatBtn.setEnabled(false);
-        binding.musicPlayerShuffleBtn.setEnabled(false);
-        binding.musicPlayerSeekbar.setEnabled(false);
+        return String.format(Locale.getDefault(), PLAYBACK_TIME_FORMAT,
+                (playedSeconds % 3600) / 60, playedSeconds % 60);
     }
 
     @Override
