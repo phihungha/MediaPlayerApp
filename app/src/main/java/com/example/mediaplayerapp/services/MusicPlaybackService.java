@@ -57,16 +57,16 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
             @Override
             public void onMediaMetadataChanged(@NonNull MediaMetadata mediaMetadata) {
                 MediaMetadataCompat.Builder metadataCompatBuilder = new MediaMetadataCompat.Builder();
-                putValueIntoMediaMetadataCompat(metadataCompatBuilder,
+                putStringIntoMediaMetadataCompat(metadataCompatBuilder,
                         MediaMetadataCompat.METADATA_KEY_TITLE,
                         mediaMetadata.title);
-                putValueIntoMediaMetadataCompat(metadataCompatBuilder,
+                putStringIntoMediaMetadataCompat(metadataCompatBuilder,
                         MediaMetadataCompat.METADATA_KEY_ARTIST,
                         mediaMetadata.artist);
-                putValueIntoMediaMetadataCompat(metadataCompatBuilder,
+                putStringIntoMediaMetadataCompat(metadataCompatBuilder,
                         MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST,
                         mediaMetadata.albumArtist);
-                putValueIntoMediaMetadataCompat(metadataCompatBuilder,
+                putStringIntoMediaMetadataCompat(metadataCompatBuilder,
                         MediaMetadataCompat.METADATA_KEY_ALBUM,
                         mediaMetadata.albumTitle);
                 metadataCompatBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION,
@@ -89,7 +89,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         });
     }
 
-    private void putValueIntoMediaMetadataCompat(
+    private void putStringIntoMediaMetadataCompat(
             MediaMetadataCompat.Builder metadataCompat,
             String key,
             CharSequence value) {
