@@ -20,6 +20,7 @@ import com.example.mediaplayerapp.data.video.Video;
 import com.example.mediaplayerapp.databinding.FragmentVideoLibraryBinding;
 
 import java.util.List;
+import java.util.Objects;
 
 
 public class VideoLibraryFragment extends Fragment {
@@ -32,7 +33,7 @@ public class VideoLibraryFragment extends Fragment {
     private RecyclerView recyclerViewAllVideos;
     private VideoLibraryItemAdapter videoLibraryItemAdapter;
 
-    private int columnCount = 1;
+    public static int recyclerViewColumnCount = 2;
     private SortArgs sortArgs = SortArgs.VIDEO_NAME;
     private SortOrder sortOrder = SortOrder.ASC;
 
@@ -52,17 +53,20 @@ public class VideoLibraryFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+
             case R.id.grid_list_change_menu_item: {
-                if (columnCount <= 1) {
-                    columnCount = 2;
+
+                if (recyclerViewColumnCount <= 1) {
+                    recyclerViewColumnCount = 2;
                     recyclerViewAllVideos.setLayoutManager(new GridLayoutManager
-                            (binding.getRoot().getContext(), columnCount));
+                            (binding.getRoot().getContext(), recyclerViewColumnCount));
 
                 } else {
-                    columnCount = 1;
+                    recyclerViewColumnCount = 1;
                     recyclerViewAllVideos.setLayoutManager(new LinearLayoutManager
                             ((binding.getRoot().getContext())));
                 }
+                recyclerViewAllVideos.setAdapter(videoLibraryItemAdapter);
                 return true;
             }
             case R.id.sort_by_name_menu_item: {
@@ -87,17 +91,17 @@ public class VideoLibraryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
-            columnCount = savedInstanceState.getInt(ARG_COLUMN_COUNT);
+            recyclerViewColumnCount = savedInstanceState.getInt(ARG_COLUMN_COUNT);
         }
         binding = FragmentVideoLibraryBinding.inflate(inflater, container, false);
 
         recyclerViewAllVideos = binding.allVideosRecyclerview;
-        if (columnCount <= 1) {
+        if (recyclerViewColumnCount <= 1) {
             recyclerViewAllVideos.setLayoutManager(new LinearLayoutManager
                     (binding.getRoot().getContext()));
         } else {
             recyclerViewAllVideos.setLayoutManager(new GridLayoutManager
-                    (binding.getRoot().getContext(), columnCount));
+                    (binding.getRoot().getContext(), recyclerViewColumnCount));
         }
 
         videoLibraryItemAdapter = new VideoLibraryItemAdapter();
@@ -105,9 +109,9 @@ public class VideoLibraryFragment extends Fragment {
         recyclerViewAllVideos.setHasFixedSize(true);
 
         videoLibraryViewModel = new ViewModelProvider
-                (getActivity()).get(VideoLibraryViewModel.class);
+                (requireActivity()).get(VideoLibraryViewModel.class);
 
-        videoLibraryViewModel.getAllVideos().observe(getActivity(), videoList -> {
+        videoLibraryViewModel.getAllVideos().observe(requireActivity(), videoList -> {
             videoLibraryItemAdapter.updateVideoList(videoList, sortArgs, sortOrder);
             currentVideosList = videoList;
         });
@@ -123,7 +127,7 @@ public class VideoLibraryFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(ARG_COLUMN_COUNT, columnCount);
+        outState.putInt(ARG_COLUMN_COUNT, recyclerViewColumnCount);
     }
 
     enum SortArgs {

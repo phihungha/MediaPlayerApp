@@ -14,6 +14,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.video.Video;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryGridBinding;
+import com.example.mediaplayerapp.databinding.ItemVideoLibraryListBinding;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -31,10 +32,16 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
         videos = new ArrayList<>();
     }
 
+    @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(ItemVideoLibraryGridBinding.inflate
-                (LayoutInflater.from(parent.getContext()), parent, false));
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        if (VideoLibraryFragment.recyclerViewColumnCount > 1)
+            return new ViewHolder(ItemVideoLibraryGridBinding.inflate
+                    (LayoutInflater.from(parent.getContext()), parent, false));
+        else
+            return new ViewHolder(ItemVideoLibraryListBinding.inflate
+                    (LayoutInflater.from(parent.getContext()), parent, false));
     }
 
     @Override
@@ -77,7 +84,10 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
 
             TextView videoNameTextview =
                     bottomSheetDialog.findViewById(R.id.video_name_bottom_sheet_textview);
-            videoNameTextview.setText(holder.videoName.getText());
+
+            if (videoNameTextview != null) {
+                videoNameTextview.setText(holder.videoName.getText());
+            }
 
             bottomSheetDialog.show();
         });
@@ -122,6 +132,13 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
         public final TextView videoDuration;
         public final ImageView videoOptions;
 
+        public ViewHolder(ItemVideoLibraryListBinding binding) {
+            super(binding.getRoot());
+            videoThumbnail = binding.videoThumbnailShapeableimageview;
+            videoName = binding.videoNameTextview;
+            videoDuration = binding.videoDurationTextview;
+            videoOptions = binding.videoOptionsImageview;
+        }
         public ViewHolder(ItemVideoLibraryGridBinding binding) {
             super(binding.getRoot());
             videoThumbnail = binding.videoThumbnailShapeableimageview;
