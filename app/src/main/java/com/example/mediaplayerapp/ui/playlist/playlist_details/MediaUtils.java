@@ -11,17 +11,17 @@ public class MediaUtils {
         Cursor cursor = null;
         try {
             String[] proj = {MediaStore.MediaColumns.DISPLAY_NAME,
-                            MediaStore.MediaColumns.DURATION,
-                            MediaStore.MediaColumns.SIZE,
+                            MediaStore.Video.Media.DURATION,
+                            MediaStore.Video.Media.SIZE,
                             MediaStore.MediaColumns.DATA,
-                            MediaStore.MediaColumns.DATE_ADDED};
+                            MediaStore.Video.Media.DATE_ADDED};
 
             cursor = context.getContentResolver().query(uri, proj, null, null, null);
             int column_name = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
-            int column_duration= cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DURATION);
-            int column_size = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.SIZE);
+            int column_duration= cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
+            int column_size = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE);
             int column_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-            int column_date = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_ADDED);
+            int column_date = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED);
             cursor.moveToFirst();
 
             String name=cursor.getString(column_name);
