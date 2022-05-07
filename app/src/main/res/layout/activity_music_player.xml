@@ -196,11 +196,11 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
         android:scaleType="fitCenter"
+        android:contentDescription="@string/music_artwork"
         app:layout_constraintBottom_toTopOf="@+id/music_player_song_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/music_player_screen_title"
-        app:srcCompat="@drawable/ic_music_note_white_24dp"
-        android:contentDescription="@string/music_artwork" />
+        app:srcCompat="@drawable/ic_music_note_white_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
