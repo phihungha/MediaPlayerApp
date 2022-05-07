@@ -8,6 +8,8 @@ import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
+import com.example.mediaplayerapp.data.playlist.Playlist;
+
 import java.util.List;
 
 @Dao
@@ -29,6 +31,15 @@ public interface PlaylistMediaDao {
 
     @Query("SELECT * FROM media_table ORDER BY MediaId ASC")
     LiveData<List<PlaylistMedia>> getAllPlaylistMedias();
+
+    @Query("SELECT * FROM media_table WHERE media_table.MediaName LIKE '%' || :text || '%'")
+    LiveData<List<PlaylistMedia>> getAllMediaSearching(String text);
+
+    @Query("SELECT * FROM media_table ORDER BY media_table.MediaName ASC")
+    LiveData<List<PlaylistMedia>> sortAllMediaByNameASC();
+
+    @Query("SELECT * FROM media_table ORDER BY media_table.MediaName DESC")
+    LiveData<List<PlaylistMedia>> sortAllMediaByNameDESC();
 
     @Query("DELETE FROM media_table WHERE media_table.MediaId=:id")
     void deleteAllWithID(int id);

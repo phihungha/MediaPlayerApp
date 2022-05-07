@@ -2,13 +2,19 @@ package com.example.mediaplayerapp.ui.playlist.playlist_details;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,6 +35,10 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     private FragmentPlaylistDetailsBinding binding;
     private PlaylistDetailsAdapter adapter;
     private PlaylistMediaViewModel playlistMediaViewModel;
+
+    private MenuItem menuItemSearch;
+    private SearchView searchView;
+    private boolean isASC = false;
 
     public PlaylistDetailsFragment() {
         // Required empty public constructor
@@ -273,6 +283,77 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
             }
         }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.option_menu_playlist, menu);
+        menuItemSearch = menu.findItem(R.id.action_search);
+        searchView = (SearchView) menuItemSearch.getActionView();
+        searchView.setIconified(true);
+        searchView.setQueryHint(PlaylistConstants.STRING_HINT_SEARCH);
+
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                Searching(s);
+                return true;
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_sort:
+                SortByName();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void Searching(String s){
+        if (s.equals("")) {
+            playlistMediaViewModel.getAllPlaylistMedias().observe(
+                    getViewLifecycleOwner(),
+                    playlists -> adapter.submitList(playlists)
+            );
+        } else {
+            playlistMediaViewModel.getAllMediaSearching(s).observe(
+                    getViewLifecycleOwner(),
+                    playlists -> adapter.submitList(playlists)
+            );
+        }
+    }
+
+    private void SortByName(){
+        if (isASC) {
+            playlistMediaViewModel.sortAllMediaByNameDESC().observe(
+                    getViewLifecycleOwner(),
+                    playlists -> adapter.submitList(playlists)
+            );
+        } else {
+            playlistMediaViewModel.sortAllMediaByNameASC().observe(
+                    getViewLifecycleOwner(),
+                    playlists -> adapter.submitList(playlists)
+            );
+        }
+        isASC = !isASC;
     }
 
     @Override

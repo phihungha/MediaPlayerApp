@@ -3,6 +3,7 @@ package com.example.mediaplayerapp.ui.playlist.playlist_details;
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
+import androidx.room.Query;
 
 import java.util.List;
 
@@ -52,6 +53,18 @@ public class PlaylistMediaRepository {
 
     public LiveData<List<PlaylistMedia>> getAllPlaylistMediasWithID(int id) {
         return mPlaylistMediaDao.getAllPlaylistMediasWithID(id);
+    }
+
+    public LiveData<List<PlaylistMedia>> getAllMediaSearching(String text){
+        return mPlaylistMediaDao.getAllMediaSearching(text);
+    }
+
+    public LiveData<List<PlaylistMedia>> sortAllMediaByNameASC(){
+        return mPlaylistMediaDao.sortAllMediaByNameASC();
+    }
+
+    public LiveData<List<PlaylistMedia>> sortAllMediaByNameDESC(){
+        return mPlaylistMediaDao.sortAllMediaByNameDESC();
     }
 
     public LiveData<List<PlaylistMedia>> getAllPlaylistMedias() {

@@ -210,12 +210,12 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
 
     private void SortByName() {
         if (isASC) {
-            playlistViewModel.sortPlaylistByNameASC().observe(
+            playlistViewModel.sortPlaylistByNameDESC().observe(
                     getViewLifecycleOwner(),
                     playlists -> adapter.submitList(playlists)
             );
         } else {
-            playlistViewModel.sortPlaylistByNameDESC().observe(
+            playlistViewModel.sortPlaylistByNameASC().observe(
                     getViewLifecycleOwner(),
                     playlists -> adapter.submitList(playlists)
             );

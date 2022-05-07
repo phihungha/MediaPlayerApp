@@ -27,5 +27,5 @@
     <string name="file_size">File size</string>
     <string name="duration">Duration</string>
     <string name="file_name">File name</string>
-    <string name="sort">Sort</string>
+    <string name="sort">Sort by name</string>
 </resources>
