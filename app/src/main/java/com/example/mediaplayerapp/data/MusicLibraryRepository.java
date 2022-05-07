@@ -74,7 +74,7 @@ public class MusicLibraryRepository {
 
         public static List<Song> getAllArtistSongs(Context context, long artist_id) {
 
-            List<Song> artistSongList = new ArrayList<>();
+            ArrayList<Song> artistSongList = new ArrayList<Song>();
 
             Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
             String[] projection = new String[]{

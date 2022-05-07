@@ -17,6 +17,7 @@ import com.example.mediaplayerapp.data.Artist;
 import com.example.mediaplayerapp.data.ArtistDetailAdapter;
 import com.example.mediaplayerapp.data.MusicLibraryRepository;
 import com.example.mediaplayerapp.data.Song;
+import com.example.mediaplayerapp.data.SongAdapter;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
@@ -29,8 +30,8 @@ public class ArtistDetailFragment extends Fragment {
     private Artist artist;
     private TextView anaam, ade;
     private RecyclerView recyclerView;
-    private ArtistDetailAdapter adapter;
-    private List<Song> songList = new ArrayList<>();
+    private SongAdapter adapter;
+    private ArrayList<Song> songList = new ArrayList<>();
 
     public ArtistDetailFragment() {
         // Required empty public constructor
@@ -63,8 +64,8 @@ public class ArtistDetailFragment extends Fragment {
         collapsingToolbarLayout.setTitle(artist.ArtistName);
         anaam.setText(artist.ArtistName);
         ade.setText(" songs: " + artist.num_tracks);
-        songList = MusicLibraryRepository.ArtistSongLoader.getAllArtistSongs(getActivity(), artistId);
-        adapter = new ArtistDetailAdapter(getActivity(), songList);
+        songList = (ArrayList<Song>) MusicLibraryRepository.ArtistSongLoader.getAllArtistSongs(getActivity(), artistId);
+        adapter = new SongAdapter(getActivity(), songList);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(adapter);
         return view;
