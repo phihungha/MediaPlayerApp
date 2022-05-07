@@ -7,16 +7,13 @@ public class MediaInfo implements Serializable {
     private String duration;
     private String fileSize;
     private String location;
-    private String date;
 
-    public MediaInfo(String fileName, String duration, String fileSize, String location, String date) {
+    public MediaInfo(String fileName, String duration, String fileSize, String location) {
         this.fileName = fileName;
         this.duration = duration;
         this.fileSize = fileSize;
         this.location = location;
-        this.date = date;
     }
-
     public MediaInfo() {
     }
 
@@ -52,11 +49,4 @@ public class MediaInfo implements Serializable {
         this.location = location;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
 }

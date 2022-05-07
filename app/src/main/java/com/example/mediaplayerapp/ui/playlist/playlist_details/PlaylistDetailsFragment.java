@@ -93,27 +93,53 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         binding.layoutShuffleAll.setOnClickListener(this);
         //item detail (media) click
         adapter.setItemClickListener((v, position) -> {
-            /**
-             *
-             *
-             *        CLICK TO OPEN VIDEO OR SONG HERE
-             *
-             *
-             *
-             * */
+            PlaylistMedia media=adapter.getPlaylistMediaItemAt(position);
+            if (playlist.isVideo()){
+                /**
+                 *
+                 *
+                 *        CLICK TO OPEN VIDEO HERE
+                 *
+                 *
+                 *
+                 * */
+            }
+            else {
+                /**
+                 *
+                 *
+                 *        CLICK TO OPEN SONG HERE
+                 *
+                 *
+                 *
+                 * */
+            }
             Toast.makeText(getActivity(), "click + pos " + position, Toast.LENGTH_SHORT).show();
         });
 
         // click play bottom sheet
         adapter.setBsPlayListener((view, position) -> {
-            /**
-             *
-             *
-             *        CLICK TO OPEN VIDEO OR SONG HERE (Linear Play)
-             *
-             *
-             *
-             * */
+            PlaylistMedia media=adapter.getPlaylistMediaItemAt(position);
+            if (playlist.isVideo()){
+                /**
+                 *
+                 *
+                 *        CLICK TO OPEN VIDEO HERE
+                 *
+                 *
+                 *
+                 * */
+            }
+            else {
+                /**
+                 *
+                 *
+                 *        CLICK TO OPEN SONG HERE
+                 *
+                 *
+                 *
+                 * */
+            }
             Toast.makeText(getActivity(), "Play media pos " + position, Toast.LENGTH_SHORT).show();
         });
         // click delete bottom sheet
@@ -135,26 +161,50 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
 
     private void PlayAll() {
-        /**
-         *
-         *
-         *        CLICK TO OPEN VIDEO OR SONG HERE (Linear Play)
-         *
-         *
-         *
-         * */
+        if (playlist.isVideo()){
+            /**
+             *
+             *
+             *        CLICK TO OPEN VIDEO HERE
+             *
+             *
+             *
+             * */
+        }
+        else {
+            /**
+             *
+             *
+             *        CLICK TO OPEN SONG HERE
+             *
+             *
+             *
+             * */
+        }
         Toast.makeText(getActivity(), "Play all", Toast.LENGTH_SHORT).show();
     }
 
     private void PlayShuffleAll() {
-        /**
-         *
-         *
-         *        CLICK TO OPEN VIDEO OR SONG HERE (Linear Play)
-         *
-         *
-         *
-         * */
+        if (playlist.isVideo()){
+            /**
+             *
+             *
+             *        CLICK TO OPEN VIDEO HERE
+             *
+             *
+             *
+             * */
+        }
+        else {
+            /**
+             *
+             *
+             *        CLICK TO OPEN SONG HERE
+             *
+             *
+             *
+             * */
+        }
         Toast.makeText(getActivity(), "Play Shuffle All ", Toast.LENGTH_SHORT).show();
     }
 

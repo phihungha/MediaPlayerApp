@@ -27,7 +27,6 @@ public class PlaylistDetailsPropertiesDialog extends AppCompatDialogFragment {
         Bundle args = new Bundle();
         args.putSerializable(PlaylistConstants.KEY_PLAYLIST_DETAIL,info);
         f.setArguments(args);
-
         return f;
     }
 
@@ -40,12 +39,22 @@ public class PlaylistDetailsPropertiesDialog extends AppCompatDialogFragment {
         View view= getActivity().getLayoutInflater().inflate(R.layout.dialog_properties_playlist_playout,null);
 
         TextView tvName=view.findViewById(R.id.tv_nameProp);
-  /*      TextView tvDuration=view.findViewById(R.id.tv_durationProp);
+        TextView tvDuration=view.findViewById(R.id.tv_durationProp);
         TextView tvSize=view.findViewById(R.id.tv_fileSizeProp);
         TextView tvLocation=view.findViewById(R.id.tv_locationProp);
-        TextView tvDate=view.findViewById(R.id.tv_dateProp);*/
 
-        tvName.setText(mInfo.getFileName());
+        String name=mInfo.getFileName();
+        String duration=mInfo.getDuration();
+        String size=mInfo.getFileSize();
+        String location=Uri.parse(mInfo.getLocation()).getPath();
+
+        size=MediaUtils.convertToSizeMb(size);
+        duration=MediaUtils.convertDuration(duration);
+
+        tvName.setText(name);
+        tvDuration.setText(duration);
+        tvSize.setText(size);
+        tvLocation.setText(location);
 
         builder.setView(view)
                 .setPositiveButton("OK", (dialogInterface, i) -> {
