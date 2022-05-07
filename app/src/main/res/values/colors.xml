@@ -10,5 +10,6 @@
     <color name="colorPlaylist_background">#FFFFFF</color>
     <color name="colorPlaylist_addPlaylist">#7CCEDC</color>
     <color name="colorPlaylist_textColor">#474646</color>
-
+    <color name="blue1">#7CCEDC</color>
+    <color name="blue2">#3AB0C5</color>
 </resources>

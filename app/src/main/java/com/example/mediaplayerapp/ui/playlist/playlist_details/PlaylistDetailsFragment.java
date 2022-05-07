@@ -126,24 +126,10 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         //click properties bottom sheet
         adapter.setBsPropertiesListener((view, position) -> {
             PlaylistMedia media = adapter.getPlaylistMediaItemAt(position);
-  /*        PlaylistMedia media = adapter.getPlaylistMediaItemAt(position);
+            MediaInfo mediaInfo=MediaUtils.getInfoWithUri(getContext(),Uri.parse(media.getMediaUri()));
 
-            String name=null;
-
-            try {
-                name=MediaUtils.getMediaNameFromURI(requireContext(),Uri.parse(media.getMediaUri()));
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            finally {
-                MediaInfo mediaInfo=new MediaInfo(name,null,null,null,null);
-
-                // mediaInfo=MediaUtils.getInfoWithUri(getContext(),Uri.parse(media.getMediaUri()));
-                PlaylistDetailsPropertiesDialog dialog = PlaylistDetailsPropertiesDialog.newInstance(mediaInfo);
-                dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_DETAIL_PROPERTY_DIALOG);
-            }
-*/
+            PlaylistDetailsPropertiesDialog dialog = PlaylistDetailsPropertiesDialog.newInstance(mediaInfo);
+            dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_DETAIL_PROPERTY_DIALOG);
         });
     }
 
