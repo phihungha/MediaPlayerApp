@@ -51,40 +51,34 @@ public class VideoLibraryFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
+        int itemId = item.getItemId();
+        if (itemId == R.id.grid_list_change_menu_item) {
+            if (recyclerViewColumnCount <= 1) {
+                recyclerViewColumnCount = 2;
+                recyclerViewAllVideos.setLayoutManager(new GridLayoutManager
+                        (binding.getRoot().getContext(), recyclerViewColumnCount));
 
-            case R.id.grid_list_change_menu_item: {
-
-                if (recyclerViewColumnCount <= 1) {
-                    recyclerViewColumnCount = 2;
-                    recyclerViewAllVideos.setLayoutManager(new GridLayoutManager
-                            (binding.getRoot().getContext(), recyclerViewColumnCount));
-
-                } else {
-                    recyclerViewColumnCount = 1;
-                    recyclerViewAllVideos.setLayoutManager(new LinearLayoutManager
-                            ((binding.getRoot().getContext())));
-                }
-                recyclerViewAllVideos.setAdapter(videoLibraryItemAdapter);
-                return true;
+            } else {
+                recyclerViewColumnCount = 1;
+                recyclerViewAllVideos.setLayoutManager(new LinearLayoutManager
+                        ((binding.getRoot().getContext())));
             }
-            case R.id.sort_by_name_menu_item: {
-                sortArgs = SortArgs.VIDEO_NAME;
-                sortOrder = sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
+            recyclerViewAllVideos.setAdapter(videoLibraryItemAdapter);
+            return true;
+        } else if (itemId == R.id.sort_by_name_menu_item) {
+            sortArgs = SortArgs.VIDEO_NAME;
+            sortOrder = sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
 
-                videoLibraryItemAdapter.updateVideoList(currentVideosList, sortArgs, sortOrder);
-                return true;
-            }
-            case R.id.sort_by_length_menu_item: {
-                sortArgs = SortArgs.VIDEO_DURATION;
-                sortOrder = sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
+            videoLibraryItemAdapter.updateVideoList(currentVideosList, sortArgs, sortOrder);
+            return true;
+        } else if (itemId == R.id.sort_by_length_menu_item) {
+            sortArgs = SortArgs.VIDEO_DURATION;
+            sortOrder = sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
 
-                videoLibraryItemAdapter.updateVideoList(currentVideosList, sortArgs, sortOrder);
-                return true;
-            }
-            default:
-                return super.onOptionsItemSelected(item);
+            videoLibraryItemAdapter.updateVideoList(currentVideosList, sortArgs, sortOrder);
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
