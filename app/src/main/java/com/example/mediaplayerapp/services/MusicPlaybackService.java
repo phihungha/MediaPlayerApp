@@ -11,6 +11,7 @@ import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,12 +31,14 @@ import java.util.List;
 
 public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
+    private static final String LOG_TAG = MusicPlaybackService.class.getSimpleName();
     private static final String NOTIFICATION_CHANNEL_ID = "com.example.mediaplayerapp.services.MUSIC_PLAYBACK";
     private static final int NOTIFICATION_ID = 1;
 
     ExoPlayer player;
     private MediaSessionCompat mediaSession;
     private PlayerNotificationManager notificationManager;
+    private boolean isForeground = false;
 
     @Override
     public void onCreate() {
@@ -85,6 +88,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                 }
 
                 mediaSession.setMetadata(metadataCompatBuilder.build());
+                Log.d(LOG_TAG, "New media metadata found");
             }
         });
     }
@@ -129,9 +133,18 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
                     @Override
                     public void onPrepareFromUri(@NonNull Uri uri, boolean playWhenReady, @Nullable Bundle extras) {
-                        player.setMediaItem(MediaItem.fromUri(uri));
+                        if (uri.getScheme().equals(PlaylistUriUtils.PLAYLIST_URI_SCHEME)) {
+                            // TODO: Load all music items from playlist
+                            long playlistId = Long.parseLong(uri.getPathSegments().get(0));
+                            Log.i(LOG_TAG, "Loaded media from playlist id: " + playlistId);
+                        } else {
+                            player.setMediaItem(MediaItem.fromUri(uri));
+                            // TODO: Load all music items from media store
+                            Log.i(LOG_TAG, "Loaded media from uri: " + uri);
+                        }
                         player.setPlayWhenReady(playWhenReady);
                         player.prepare();
+                        Log.i(LOG_TAG, "ExoPlayer prepared");
                     }
 
                     @Override
@@ -145,13 +158,8 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                 = new TimelineQueueNavigator(mediaSession) {
             @NonNull
             @Override
-            public MediaDescriptionCompat getMediaDescription(Player player, int windowIndex) {
-                MediaItem mediaItem = player.getMediaItemAt(windowIndex);
-                return new MediaDescriptionCompat.Builder()
-                        .setTitle(mediaItem.mediaMetadata.title)
-                        .setDescription(mediaItem.mediaMetadata.description)
-                        .setSubtitle(mediaItem.mediaMetadata.subtitle)
-                        .build();
+            public MediaDescriptionCompat getMediaDescription(@NonNull Player player, int windowIndex) {
+                return new MediaDescriptionCompat.Builder().build();
             }
         };
 
@@ -170,13 +178,19 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
             @Override
             public void onNotificationCancelled(int notificationId, boolean dismissedByUser) {
                 stopForeground(true);
+                isForeground = false;
                 stopSelf();
+                Log.i(LOG_TAG, "Stopped foreground service");
             }
 
             @Override
             public void onNotificationPosted(int notificationId, Notification notification, boolean ongoing) {
-                startService(new Intent(MusicPlaybackService.this, MusicPlaybackService.class));
-                startForeground(notificationId, notification);
+                if (ongoing && !isForeground) {
+                    startService(new Intent(MusicPlaybackService.this, MusicPlaybackService.class));
+                    startForeground(notificationId, notification);
+                    isForeground = true;
+                    Log.i(LOG_TAG, "Started foreground service");
+                }
             }
         };
 
@@ -205,6 +219,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     public BrowserRoot onGetRoot(@NonNull String clientPackageName,
                                  int clientUid,
                                  Bundle rootHints) {
+        Log.d(LOG_TAG, "Get root requested");
         return new BrowserRoot("empty_root", null);
     }
 
@@ -214,5 +229,6 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     @Override
     public void onLoadChildren(@NonNull final String parentMediaId,
                                @NonNull final Result<List<android.support.v4.media.MediaBrowserCompat.MediaItem>> result) {
+        Log.d(LOG_TAG, "Load children requested");
     }
 }

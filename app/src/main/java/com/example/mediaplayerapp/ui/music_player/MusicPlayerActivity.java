@@ -6,13 +6,13 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
+import android.util.Log;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -30,11 +30,11 @@ import com.example.mediaplayerapp.databinding.ActivityMusicPlayerBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
 import com.google.android.exoplayer2.ui.TimeBar;
 
-import java.io.File;
 import java.util.Locale;
 
 public class MusicPlayerActivity extends AppCompatActivity {
 
+    private static final String LOG_TAG = MusicPlayerActivity.class.getSimpleName();
     private static final String PLAYBACK_TIME_FORMAT = "%02d:%02d";
 
     private MediaBrowserCompat mediaBrowser;
@@ -42,22 +42,24 @@ public class MusicPlayerActivity extends AppCompatActivity {
             new MediaBrowserCompat.ConnectionCallback() {
                 @Override
                 public void onConnected() {
+                    Log.i(LOG_TAG, "Connected to music playback service");
                     MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
                     MediaControllerCompat mediaController =
                             new MediaControllerCompat(MusicPlayerActivity.this, token);
                     MediaControllerCompat.setMediaController(MusicPlayerActivity.this, mediaController);
                     setupTransportControls();
                     setupTimeIndicators();
-                    playSample();
                 }
 
                 @Override
                 public void onConnectionSuspended() {
+                    Log.i(LOG_TAG, "Suspended connection to music playback service");
                     disableTransportControls();
                 }
 
                 @Override
                 public void onConnectionFailed() {
+                    Log.i(LOG_TAG, "Connection to music playback service failed");
                     Toast.makeText(MusicPlayerActivity.this,
                             "Music playback service error!",
                             Toast.LENGTH_SHORT).show();
@@ -80,6 +82,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                         setArtworkFromBitmap(artworkBitmap);
                     else if (artworkUri != null)
                         setArtworkFromArtworkUri(Uri.parse(artworkUri));
+                    Log.d(LOG_TAG, "Media metadata displays updated");
                 }
 
                 @Override
@@ -88,6 +91,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                         binding.musicPlayerPlayPauseBtn.setImageLevel(1);
                     else
                         binding.musicPlayerPlayPauseBtn.setImageLevel(0);
+                    Log.d(LOG_TAG, "Playback state changed");
                 }
 
                 @Override
@@ -112,6 +116,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 public void onSessionDestroyed() {
                     super.onSessionDestroyed();
                     mediaBrowser.disconnect();
+                    Log.i(LOG_TAG, "Music playback service disconnected");
                 }
             };
 
@@ -130,13 +135,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
         binding.musicPlayerCloseBtn.setOnClickListener(view -> finish());
         binding.musicPlayerMenuBtn.setOnClickListener(view -> openMenu());
-    }
-
-    private void playSample() {
-        String path = Environment.getExternalStorageDirectory().getPath();
-        MediaControllerCompat.getMediaController(this)
-                .getTransportControls()
-                .playFromUri(Uri.fromFile(new File(path + "/Download/music_sample_2.mp3")), null);
     }
 
     /**
@@ -271,6 +269,10 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 (playedSeconds % 3600) / 60, playedSeconds % 60);
     }
 
+    /**
+     * Set song's artwork from artwork's uri.
+     * @param artworkUri Artwork's uri
+     */
     private void setArtworkFromArtworkUri(Uri artworkUri) {
         Glide.with(MusicPlayerActivity.this)
                 .asBitmap()
@@ -279,6 +281,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         setArtworkFromBitmap(resource);
+                        Log.d(LOG_TAG, "Song's artwork loaded from uri");
                         setViewsColors(resource);
                     }
 
@@ -289,12 +292,21 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Set song's artwork from artwork's bitmap.
+     * @param artworkBitmap Artwork's bitmap
+     */
     private void setArtworkFromBitmap(Bitmap artworkBitmap) {
         binding.musicPlayerSongArtwork.setImageBitmap(artworkBitmap);
         binding.musicPlayerSongArtworkBackground.setImageBitmap(artworkBitmap);
+        Log.d(LOG_TAG, "Song's artwork loaded from bitmap");
         setViewsColors(artworkBitmap);
     }
 
+    /**
+     * Set colors of views on the UI based on song's artwork.
+     * @param artworkBitmap Artwork's bitmap
+     */
     private void setViewsColors(Bitmap artworkBitmap) {
         Palette.from(artworkBitmap).generate(palette -> {
             if (palette == null)
@@ -320,6 +332,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             binding.musicPlayerScreenTitle.setTextColor(color);
             binding.musicPlayerMenuBtn.setColorFilter(color);
             binding.musicPlayerCloseBtn.setColorFilter(color);
+            Log.d(LOG_TAG, "Updated views' colors");
         });
     }
 
