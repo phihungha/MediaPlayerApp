@@ -46,11 +46,14 @@ public class SongsFragment extends Fragment {
             recyclerView.setLayoutManager(linearLayoutManager);
             String selection = MediaStore.Audio.Media.IS_MUSIC + " != 0";
             String[] projection = {
-                    MediaStore.Audio.Media._ID,
-                    MediaStore.Audio.Media.ARTIST,
-                    MediaStore.Audio.Media.TITLE,
-                    MediaStore.Audio.Media.DATA,
-                    MediaStore.Audio.Media.ALBUM
+                    MediaStore.Audio.Media._ID,//0
+                    MediaStore.Audio.Media.TITLE,//1
+                    MediaStore.Audio.Media.ALBUM_ID,//2
+                    MediaStore.Audio.Media.ALBUM,//3
+                    MediaStore.Audio.Media.ARTIST_ID,//4
+                    MediaStore.Audio.Media.ARTIST,//5
+                    MediaStore.Audio.Media.DURATION,//6
+                    MediaStore.Audio.Media.TRACK//7
             };
             Cursor cursor = getActivity().getContentResolver().query(
                     MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
@@ -68,11 +71,14 @@ public class SongsFragment extends Fragment {
     }
     private Song convertToSong(Cursor cursor) {
         Song song = new Song();
-        song.setId(cursor.getString(0));
-        song.setArtist(cursor.getString(1));
-        song.setTitle(cursor.getString(2));
-        song.setData(cursor.getString(3));
-        song.setAlbum(cursor.getString(4));
+        song.setId(cursor.getLong(0));
+        song.setTitle(cursor.getString(1));
+        song.setAlbumId(cursor.getLong(2));
+        song.setAlbum(cursor.getString(3));
+        song.setArtistId(cursor.getLong(4));
+        song.setArtist(cursor.getString(5));
+        song.setDuration(cursor.getLong(6));
+        song.setTrackNumber(cursor.getInt(7));
         return song;
     }
 
