@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 
@@ -30,6 +32,7 @@ import com.example.mediaplayerapp.databinding.ActivityMusicPlayerBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
 import com.google.android.exoplayer2.ui.TimeBar;
 
+import java.io.File;
 import java.util.Locale;
 
 public class MusicPlayerActivity extends AppCompatActivity {
@@ -49,6 +52,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     MediaControllerCompat.setMediaController(MusicPlayerActivity.this, mediaController);
                     setupTransportControls();
                     setupTimeIndicators();
+                    playSample();
                 }
 
                 @Override
@@ -82,6 +86,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
                         setArtworkFromBitmap(artworkBitmap);
                     else if (artworkUri != null)
                         setArtworkFromArtworkUri(Uri.parse(artworkUri));
+                    else
+                        setDefaultArtwork();
                     Log.d(LOG_TAG, "Media metadata displays updated");
                 }
 
@@ -228,6 +234,11 @@ public class MusicPlayerActivity extends AppCompatActivity {
         mediaController.registerCallback(controllerCallback);
     }
 
+    private void playSample() {
+        Uri uri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "Download/music_sample.flac"));
+        MediaControllerCompat.getMediaController(this).getTransportControls().playFromUri(uri, null);
+    }
+
     /**
      * Disable all transport controls on the UI in case
      * we lost connection to the music playback service.
@@ -303,6 +314,13 @@ public class MusicPlayerActivity extends AppCompatActivity {
         setViewsColors(artworkBitmap);
     }
 
+    private void setDefaultArtwork() {
+        Drawable defaultArtwork = AppCompatResources.getDrawable(this, R.drawable.ic_music_note_white_24dp);
+        binding.musicPlayerSongArtwork.setImageDrawable(defaultArtwork);
+        binding.musicPlayerSongArtworkBackground.setImageResource(android.R.color.transparent);
+        setDefaultViewsColorsDefault();
+    }
+
     /**
      * Set colors of views on the UI based on song's artwork.
      * @param artworkBitmap Artwork's bitmap
@@ -334,6 +352,30 @@ public class MusicPlayerActivity extends AppCompatActivity {
             binding.musicPlayerCloseBtn.setColorFilter(color);
             Log.d(LOG_TAG, "Updated views' colors");
         });
+    }
+
+    /**
+     * Set views' colors back to default values.
+     */
+    private void setDefaultViewsColorsDefault() {
+        int color = ContextCompat.getColor(this, R.color.white);
+        int darkerColor = ContextCompat.getColor(this, R.color.bright_grey);
+        binding.musicPlayerSongTitle.setTextColor(color);
+        binding.musicPlayerSongArtist.setTextColor(color);
+        binding.musicPlayerRepeatBtn.setColorFilter(color);
+        binding.musicPlayerShuffleBtn.setColorFilter(color);
+        binding.musicPlayerSongDuration.setTextColor(color);
+        binding.musicPlayerSongCurrentPosition.setTextColor(color);
+        binding.musicPlayerPlayPauseBtn.setColorFilter(color);
+        binding.musicPlayerSkipNextBtn.setColorFilter(color);
+        binding.musicPlayerSkipPrevBtn.setColorFilter(color);
+        binding.musicPlayerSeekbar.setPlayedColor(color);
+        binding.musicPlayerSeekbar.setScrubberColor(color);
+        binding.musicPlayerSeekbar.setUnplayedColor(darkerColor);
+        binding.musicPlayerScreenTitle.setTextColor(color);
+        binding.musicPlayerMenuBtn.setColorFilter(color);
+        binding.musicPlayerCloseBtn.setColorFilter(color);
+        Log.d(LOG_TAG, "Updated views' colors to default");
     }
 
     @Override
