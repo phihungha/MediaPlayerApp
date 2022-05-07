@@ -20,7 +20,6 @@ import com.example.mediaplayerapp.data.video.Video;
 import com.example.mediaplayerapp.databinding.FragmentVideoLibraryBinding;
 
 import java.util.List;
-import java.util.Objects;
 
 
 public class VideoLibraryFragment extends Fragment {
@@ -47,7 +46,7 @@ public class VideoLibraryFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.test_menu, menu);
+        inflater.inflate(R.menu.menu_video_library, menu);
     }
 
     @Override
