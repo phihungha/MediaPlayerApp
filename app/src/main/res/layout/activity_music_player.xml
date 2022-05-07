@@ -14,7 +14,7 @@
         android:layout_gravity="center"
         android:contentDescription="@string/music_artwork_background"
         android:scaleType="centerCrop"
-        android:alpha="0.3"
+        android:alpha="0.4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

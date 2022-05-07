@@ -68,7 +68,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 @Override
                 public void onMetadataChanged(MediaMetadataCompat metadata) {
                     binding.musicPlayerSongTitle.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_TITLE));
-                    binding.musicPlayerSongArtist.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST));
+                    binding.musicPlayerSongArtist.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_ARTIST));
 
                     long duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
                     binding.musicPlayerSongDuration.setText(getFormattedPlaybackPosition(duration));
@@ -136,7 +136,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
         String path = Environment.getExternalStorageDirectory().getPath();
         MediaControllerCompat.getMediaController(this)
                 .getTransportControls()
-                .playFromUri(Uri.fromFile(new File(path + "/Download/music_sample.flac")), null);
+                .playFromUri(Uri.fromFile(new File(path + "/Download/music_sample_2.mp3")), null);
     }
 
     /**
