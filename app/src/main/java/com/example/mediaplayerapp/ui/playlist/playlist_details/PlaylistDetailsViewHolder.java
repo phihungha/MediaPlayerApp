@@ -24,6 +24,7 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
     private static IOnPlaylistDetailsItemClickListener itemClickListener;
     private static IOnPlaylistDetailsItemClickListener bsPlayListener;
     private static IOnPlaylistDetailsItemClickListener bsDeleteListener;
+    private static IOnPlaylistDetailsItemClickListener bsPropertiesListener;
 
     public PlaylistDetailsViewHolder(@NonNull ItemPlaylistDetailsBinding binding) {
         super(binding.getRoot());
@@ -32,12 +33,11 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
         this.binding.imgBtnPlaylistDetailsMore.setOnClickListener(this);
     }
 
-    public void setBinding(PlaylistMedia video) {
-        binding.tvPlaylistNamePlaylistDetails.setText(
-                                        "ID: "+video.getId());
+    public void setBinding(PlaylistMedia media) {
+        binding.tvPlaylistNamePlaylistDetails.setText(media.getName());
 
         Glide.with(mContext)
-                .load(video.getMediaUri())
+                .load(media.getMediaUri())
                 .skipMemoryCache(false)
                 .error(R.drawable.ic_round_error_24)
                 .centerCrop()
@@ -48,12 +48,14 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
                                             Context context,
                                             IOnPlaylistDetailsItemClickListener _itemClickListener,
                                             IOnPlaylistDetailsItemClickListener _bsPlayListener,
-                                            IOnPlaylistDetailsItemClickListener _bsDeleteListener) {
+                                            IOnPlaylistDetailsItemClickListener _bsDeleteListener,
+                                            IOnPlaylistDetailsItemClickListener _bsPropertiesListener) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemPlaylistDetailsBinding binding = ItemPlaylistDetailsBinding.inflate(inflater, parent, false);
         itemClickListener=_itemClickListener;
         bsPlayListener=_bsPlayListener;
         bsDeleteListener=_bsDeleteListener;
+        bsPropertiesListener=_bsPropertiesListener;
         mContext=context;
         return new PlaylistDetailsViewHolder(binding);
     }
@@ -81,7 +83,16 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
             case R.id.bs_deletePlaylistDetailsItem:
                 deleteItem();
                 break;
+
+            case R.id.bs_propertiesPlaylistDetailsItem:
+                openProperties();
+                break;
         }
+    }
+
+    private void openProperties() {
+        bsPropertiesListener.OnClick(itemView,getBindingAdapterPosition());
+        bottomSheetDialog.dismiss();
     }
 
     private void deleteItem() {
@@ -107,6 +118,7 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
 
         bsView.findViewById(R.id.bs_startPlaylistDetailsItem).setOnClickListener(this);
         bsView.findViewById(R.id.bs_deletePlaylistDetailsItem).setOnClickListener(this);
+        bsView.findViewById(R.id.bs_propertiesPlaylistDetailsItem).setOnClickListener(this);
 
         bottomSheetDialog.setContentView(bsView);
         bottomSheetDialog.show();

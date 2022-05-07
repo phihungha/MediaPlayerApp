@@ -40,11 +40,21 @@ public class PlaylistMediaRepository {
         });
     }
 
-    LiveData<List<PlaylistMedia>> getAllPlaylistMediasWithID(int id) {
+    public void deleteAllWithID(int id){
+        PlaylistMediaRoomDatabase.databaseWriteExecutor.execute(() -> {
+            mPlaylistMediaDao.deleteAllWithID(id);
+        });
+    }
+
+    public int getCountPlaylistWithID(int id) {
+        return mPlaylistMediaDao.getCountPlaylistWithID(id);
+    }
+
+    public LiveData<List<PlaylistMedia>> getAllPlaylistMediasWithID(int id) {
         return mPlaylistMediaDao.getAllPlaylistMediasWithID(id);
     }
 
-    LiveData<List<PlaylistMedia>> getAllPlaylistMedias() {
+    public LiveData<List<PlaylistMedia>> getAllPlaylistMedias() {
         return mAllMedias;
     }
 }

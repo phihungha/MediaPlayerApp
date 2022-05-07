@@ -24,6 +24,7 @@ public abstract class PlaylistMediaRoomDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             PlaylistMediaRoomDatabase.class, "media_table")
+                            .allowMainThreadQueries()
                             .build();
                 }
             }

@@ -54,10 +54,12 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                 }
         );
         setListenerForAdapter();
-        binding.layoutItemAddPlaylist.setOnClickListener(this);
     }
 
     private void setListenerForAdapter(){
+        binding.layoutItemAddPlaylist.setOnClickListener(this);
+
+        adapter.setApplication(getActivity().getApplication());
         //set click item listener for recyclerview
         adapter.setListener((v, position) -> {
             Bundle bundle=new Bundle();
@@ -72,6 +74,14 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
 
         //click bottom sheet play item recyclerview
         adapter.setBSPlayListener((view, position) -> {
+            /**
+             *
+             *
+             *        CLICK TO OPEN LINEAR PLAY HERE
+             *
+             *
+             *
+             * */
             makeToast("Play at pos " + position);
         });
         //click bottom sheet rename item recyclerview

@@ -7,34 +7,29 @@ import android.provider.MediaStore;
 import android.util.Log;
 
 public class MediaUtils {
-    public static String getRealPathFromURI(Context context, Uri contentUri) {
+    public static MediaInfo getInfoWithUri(Context context,Uri uri){
         Cursor cursor = null;
         try {
-            final String orderBy = MediaStore.Video.Media.DATE_TAKEN;
-            String[] proj = {MediaStore.Images.Media.DATA};
+            String[] proj = {MediaStore.MediaColumns.DISPLAY_NAME,
+                            MediaStore.MediaColumns.DURATION,
+                            MediaStore.MediaColumns.SIZE,
+                            MediaStore.MediaColumns.DATA,
+                            MediaStore.MediaColumns.DATE_ADDED};
 
-            cursor = context.getContentResolver().query(contentUri, proj, null, null, orderBy + " DESC");
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            cursor = context.getContentResolver().query(uri, proj, null, null, null);
+            int column_name = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
+            int column_duration= cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DURATION);
+            int column_size = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.SIZE);
+            int column_data = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+            int column_date = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATE_ADDED);
             cursor.moveToFirst();
-            return cursor.getString(column_index);
-        } finally {
-            if (cursor != null) {
-                cursor.close();
-            }
-        }
-    }
 
-    public static String getThumbFromURI(Context context, Uri contentUri) {
-
-        Cursor cursor = null;
-        try {
-            final String orderBy = MediaStore.Video.Media.DATE_TAKEN;
-            String[] proj = {MediaStore.Images.Thumbnails.DATA};
-
-            cursor = context.getContentResolver().query(contentUri, proj, null, null, orderBy + " DESC");
-            int thumb = cursor.getColumnIndexOrThrow(MediaStore.Images.Thumbnails.DATA);
-            cursor.moveToFirst();
-            return cursor.getString(thumb);
+            String name=cursor.getString(column_name);
+            String duration=cursor.getString(column_duration);
+            String size=cursor.getString(column_size);
+            String data=cursor.getString(column_data);
+            String date=cursor.getString(column_date);
+            return new MediaInfo(name,duration,size,data,date);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -43,6 +38,7 @@ public class MediaUtils {
     }
 
     public static String getMediaNameFromURI(Context context, Uri uri) {
+
         Cursor cursor = null;
         try {
             String[] projection = new String[]{

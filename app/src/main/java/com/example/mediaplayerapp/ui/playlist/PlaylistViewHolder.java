@@ -1,5 +1,7 @@
 package com.example.mediaplayerapp.ui.playlist;
 
+import android.app.Activity;
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,11 +9,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
 
+import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.databinding.ItemPlaylistBinding;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistMediaViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -21,7 +26,6 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
     private static IOnBottomSheetSelectionClick bsDeleteListener;
     private static IOnBottomSheetSelectionClick bsPlayListener;
     private static IOnPlaylistItemClickListener listener;
-
 
     public PlaylistViewHolder(@NonNull ItemPlaylistBinding binding) {
         super(binding.getRoot());
@@ -71,15 +75,17 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         bottomSheetDialog.show();
     }
 
-    public void setBinding(int idResource, String name) {
-        binding.imgThumbnail.setImageResource(idResource);
-        binding.tvPlaylistName.setText(name);
+    public void setBinding(Playlist playlist, String textCount) {
+        binding.imgThumbnail.setImageResource(playlist.getIdResource());
+        binding.tvPlaylistName.setText(playlist.getName());
+        binding.tvPlaylistNumbers.setText(textCount);
     }
 
     static PlaylistViewHolder create(ViewGroup parent, IOnPlaylistItemClickListener l,
                                      IOnBottomSheetSelectionClick _bsRenameListener,
                                      IOnBottomSheetSelectionClick _bsDeleteListener,
-                                     IOnBottomSheetSelectionClick _bsPlayListener) {
+                                     IOnBottomSheetSelectionClick _bsPlayListener
+                                        ) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemPlaylistBinding binding = ItemPlaylistBinding.inflate(inflater, parent, false);
         listener = l;

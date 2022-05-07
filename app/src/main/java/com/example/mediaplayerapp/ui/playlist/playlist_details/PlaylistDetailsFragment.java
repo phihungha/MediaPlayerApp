@@ -6,16 +6,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -56,10 +51,8 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         if (bundle != null) {
             playlist = (Playlist) bundle.getSerializable(PlaylistConstants.KEY_TRANSFER_PLAYLIST);
 
-            binding.tvPlaylistDetailsName.setText(playlist.getName() + ", ID " + playlist.getId());
-            binding.tvPlaylistDetailsNumbers.setText("Play list 0 media");
+            refresh();
         }
-
         adapter = new PlaylistDetailsAdapter(new PlaylistDetailsAdapter.PlaylistMediaDiff());
         adapter.setContext(getContext());
         binding.rcvPlaylistsDetails.setAdapter(adapter);
@@ -73,12 +66,31 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                     }
                 }
         );
-
         setListener();
-        binding.btnAddMore.setOnClickListener(this);
+    }
+
+    public void refresh() {
+        int count = playlistMediaViewModel.getCountPlaylistWithID(playlist.getId());
+        String textNumber = "Playlist " + count + " ";
+        if (playlist.isVideo()) {
+            if (count <= 1) {
+                textNumber += "video";
+            } else
+                textNumber += "videos";
+        } else {
+            if (count <= 1) {
+                textNumber += "audio";
+            } else
+                textNumber += "audios";
+        }
+        binding.tvPlaylistDetailsName.setText(playlist.getName());
+        binding.tvPlaylistDetailsNumbers.setText(textNumber);
     }
 
     private void setListener() {
+        binding.btnAddMore.setOnClickListener(this);
+        binding.layoutPlayAll.setOnClickListener(this);
+        binding.layoutShuffleAll.setOnClickListener(this);
         //item detail (media) click
         adapter.setItemClickListener((v, position) -> {
             /**
@@ -94,12 +106,70 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
         // click play bottom sheet
         adapter.setBsPlayListener((view, position) -> {
+            /**
+             *
+             *
+             *        CLICK TO OPEN VIDEO OR SONG HERE (Linear Play)
+             *
+             *
+             *
+             * */
             Toast.makeText(getActivity(), "Play media pos " + position, Toast.LENGTH_SHORT).show();
         });
         // click delete bottom sheet
         adapter.setBsDeleteListener((view, position) -> {
-            Toast.makeText(getActivity(), "Delete media pos " + position, Toast.LENGTH_SHORT).show();
+            PlaylistMedia media = adapter.getPlaylistMediaItemAt(position);
+            PlaylistDetailsDeleteDialog dialog = PlaylistDetailsDeleteDialog.newInstance(media);
+            dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_DETAIL_DELETE_DIALOG);
         });
+
+        //click properties bottom sheet
+        adapter.setBsPropertiesListener((view, position) -> {
+            PlaylistMedia media = adapter.getPlaylistMediaItemAt(position);
+  /*        PlaylistMedia media = adapter.getPlaylistMediaItemAt(position);
+
+            String name=null;
+
+            try {
+                name=MediaUtils.getMediaNameFromURI(requireContext(),Uri.parse(media.getMediaUri()));
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            finally {
+                MediaInfo mediaInfo=new MediaInfo(name,null,null,null,null);
+
+                // mediaInfo=MediaUtils.getInfoWithUri(getContext(),Uri.parse(media.getMediaUri()));
+                PlaylistDetailsPropertiesDialog dialog = PlaylistDetailsPropertiesDialog.newInstance(mediaInfo);
+                dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_DETAIL_PROPERTY_DIALOG);
+            }
+*/
+        });
+    }
+
+
+    private void PlayAll() {
+        /**
+         *
+         *
+         *        CLICK TO OPEN VIDEO OR SONG HERE (Linear Play)
+         *
+         *
+         *
+         * */
+        Toast.makeText(getActivity(), "Play all", Toast.LENGTH_SHORT).show();
+    }
+
+    private void PlayShuffleAll() {
+        /**
+         *
+         *
+         *        CLICK TO OPEN VIDEO OR SONG HERE (Linear Play)
+         *
+         *
+         *
+         * */
+        Toast.makeText(getActivity(), "Play Shuffle All ", Toast.LENGTH_SHORT).show();
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -108,6 +178,14 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         switch (view.getId()) {
             case R.id.btn_addMore:
                 AddMoreMedia();
+                break;
+
+            case R.id.layout_playAll:
+                PlayAll();
+                break;
+
+            case R.id.layout_shuffleAll:
+                PlayShuffleAll();
                 break;
         }
     }
@@ -151,11 +229,11 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                             MediaUtils.getMediaNameFromURI(requireContext(), uri)
                     );
                     playlistMediaViewModel.insert(media);
+
                 }
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
-                adapter.notifyDataSetChanged();
 
             }
         }

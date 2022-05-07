@@ -1,21 +1,30 @@
 package com.example.mediaplayerapp.ui.playlist;
 
+import android.app.Activity;
+import android.app.Application;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistMediaDao;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistMediaViewModel;
 
 public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     private IOnPlaylistItemClickListener mListener;
-
+    private Application application;
     private IOnBottomSheetSelectionClick mBSRenameListener;
     private IOnBottomSheetSelectionClick mBSDeleteListener;
     private IOnBottomSheetSelectionClick mBSPlayListener;
     protected PlaylistAdapter(@NonNull DiffUtil.ItemCallback<Playlist> diffCallback) {
         super(diffCallback);
+    }
+
+    public void setApplication(Application application) {
+        this.application = application;
     }
 
     @NonNull
@@ -27,7 +36,23 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull PlaylistViewHolder holder, int position) {
         Playlist current=getItem(position);
-        holder.setBinding(current.getIdResource(),current.getName());
+
+        PlaylistMediaViewModel playlistMediaViewModel=new PlaylistMediaViewModel(application);
+        int count=playlistMediaViewModel.getCountPlaylistWithID(current.getId());
+        String textNumber=count+" ";
+        if (current.isVideo()){
+            if (count<=1){
+                textNumber+="video";
+            }else
+                textNumber+="videos";
+        }
+        else {
+            if (count<=1){
+                textNumber+="audio";
+            }else
+                textNumber+="audios";
+        }
+        holder.setBinding(current,textNumber);
     }
 
     static class PlaylistDiff extends DiffUtil.ItemCallback<Playlist> {

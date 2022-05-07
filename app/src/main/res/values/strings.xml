@@ -19,6 +19,12 @@
     <string name="rename_playlist">Rename playlist</string>
     <string name="new_playlist_name">New playlist name</string>
     <string name="delete_playlist_from_device">Delete playlist from device?</string>
-    <string name="message_delete">Playlist will be deleted permanently from device.</string>
+    <string name="message_delete">This will be deleted permanently from device.</string>
     <string name="remove">Remove</string>
+    <string name="properties">Properties</string>
+    <string name="date">Date</string>
+    <string name="location">Location</string>
+    <string name="file_size">File size</string>
+    <string name="duration">Duration</string>
+    <string name="file_name">File name</string>
 </resources>

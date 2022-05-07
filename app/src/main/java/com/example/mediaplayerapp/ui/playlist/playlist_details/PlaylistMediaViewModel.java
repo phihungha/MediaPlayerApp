@@ -37,6 +37,12 @@ public class PlaylistMediaViewModel extends AndroidViewModel{
         mRepository.delete(media);
     }
 
+    public void deleteAllWithID(int id){
+        mRepository.deleteAllWithID(id);
+    }
+    public int getCountPlaylistWithID(int id) {
+        return mRepository.getCountPlaylistWithID(id);
+    }
     public void deleteAll(){
         mRepository.deleteAll();
     }

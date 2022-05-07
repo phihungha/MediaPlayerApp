@@ -4,12 +4,14 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
+import java.io.Serializable;
+
 /***
  *  Media class for playlist
  */
 @Entity(tableName = "media_table",
         primaryKeys = {"MediaId","MediaUri"})
-public class PlaylistMedia {
+public class PlaylistMedia implements Serializable {
     @NonNull
     @ColumnInfo(name = "MediaId")
     private int id;

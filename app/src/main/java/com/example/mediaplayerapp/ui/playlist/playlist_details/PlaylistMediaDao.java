@@ -30,4 +30,10 @@ public interface PlaylistMediaDao {
     @Query("SELECT * FROM media_table ORDER BY MediaId ASC")
     LiveData<List<PlaylistMedia>> getAllPlaylistMedias();
 
+    @Query("DELETE FROM media_table WHERE media_table.MediaId=:id")
+    void deleteAllWithID(int id);
+
+    @Query("SELECT COUNT(*) FROM media_table WHERE media_table.MediaId=:id")
+    int getCountPlaylistWithID(int id);
+
 }

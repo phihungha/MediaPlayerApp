@@ -67,4 +67,29 @@
             android:text="@string/remove"
             android:textColor="@color/black" />
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bs_propertiesPlaylistDetailsItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="?attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_round_info_24"
+            app:tint="@color/black" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="24dp"
+            android:text="@string/properties"
+            android:textColor="@color/black" />
+    </LinearLayout>
 </LinearLayout>

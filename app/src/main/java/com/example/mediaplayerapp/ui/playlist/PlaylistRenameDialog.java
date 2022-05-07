@@ -43,7 +43,6 @@ public class PlaylistRenameDialog extends AppCompatDialogFragment {
         View view= getActivity().getLayoutInflater().inflate(R.layout.dialog_rename_playlist_layout,null);
         edtRename=view.findViewById(R.id.edt_renamePlaylist);
         edtRename.setText(playlist.getName());
-        String name=edtRename.getText().toString().trim();
 
         builder.setView(view)
                 .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
@@ -54,6 +53,7 @@ public class PlaylistRenameDialog extends AppCompatDialogFragment {
                 .setPositiveButton("rename", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        String name=edtRename.getText().toString().trim();
                         if (!name.isEmpty()){
                             playlist.setName(edtRename.getText().toString());
                             viewModel.update(playlist);

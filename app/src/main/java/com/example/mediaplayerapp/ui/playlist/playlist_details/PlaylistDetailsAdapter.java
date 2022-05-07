@@ -13,9 +13,14 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDe
     private IOnPlaylistDetailsItemClickListener itemClickListener;
     private IOnPlaylistDetailsItemClickListener bsPlayListener;
     private IOnPlaylistDetailsItemClickListener bsDeleteListener;
+    private IOnPlaylistDetailsItemClickListener bsPropertiesListener;
 
     protected PlaylistDetailsAdapter(@NonNull DiffUtil.ItemCallback<PlaylistMedia> diffCallback) {
         super(diffCallback);
+    }
+
+    public void setBsPropertiesListener(IOnPlaylistDetailsItemClickListener bsPropertiesListener) {
+        this.bsPropertiesListener = bsPropertiesListener;
     }
 
     public void setItemClickListener(IOnPlaylistDetailsItemClickListener listener){
@@ -37,7 +42,8 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDe
     @NonNull
     @Override
     public PlaylistDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return PlaylistDetailsViewHolder.create(parent,mContext,itemClickListener,bsPlayListener,bsDeleteListener);
+        return PlaylistDetailsViewHolder.create(parent,mContext,itemClickListener,
+                bsPlayListener,bsDeleteListener,bsPropertiesListener);
     }
 
     @Override
