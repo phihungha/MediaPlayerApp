@@ -201,6 +201,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                 .setChannelNameResourceId(R.string.notification_channel_name)
                 .setChannelDescriptionResourceId(R.string.notification_channel_description)
                 .build();
+        notificationManager.setUseStopAction(true);
         notificationManager.setPlayer(player);
         notificationManager.setMediaSessionToken(mediaSession.getSessionToken());
     }
