@@ -29,6 +29,18 @@ public class PlaylistViewModel extends AndroidViewModel {
         return mRepository.getPlaylistWithID(id);
     }*/
 
+    public LiveData<List<Playlist>> getAllPlaylistSearching(String text){
+        return mRepository.getAllPlaylistSearching(text);
+    }
+
+    public LiveData<List<Playlist>> sortPlaylistByNameASC(){
+        return mRepository.sortPlaylistByNameASC();
+    }
+
+    public LiveData<List<Playlist>> sortPlaylistByNameDESC(){
+        return mRepository.sortPlaylistByNameDESC();
+    }
+
     public void insert(Playlist playlist){
         mRepository.insert(playlist);
     }

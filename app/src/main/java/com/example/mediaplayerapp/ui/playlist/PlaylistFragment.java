@@ -1,16 +1,23 @@
 package com.example.mediaplayerapp.ui.playlist;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,6 +35,11 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
     private PlaylistDetailsFragment detailsFragment = new PlaylistDetailsFragment();
     private PlaylistAdapter adapter;
     private PlaylistViewModel playlistViewModel;
+
+    private MenuItem menuItemSearch;
+    private SearchView searchView;
+    private boolean isASC = false;
+
     BottomSheetDialog bottomSheetDialog;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -56,14 +68,14 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         setListenerForAdapter();
     }
 
-    private void setListenerForAdapter(){
+    private void setListenerForAdapter() {
         binding.layoutItemAddPlaylist.setOnClickListener(this);
 
         adapter.setApplication(getActivity().getApplication());
         //set click item listener for recyclerview
         adapter.setListener((v, position) -> {
-            Bundle bundle=new Bundle();
-            bundle.putSerializable(PlaylistConstants.KEY_TRANSFER_PLAYLIST,adapter.getPlaylistItemAt(position));
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(PlaylistConstants.KEY_TRANSFER_PLAYLIST, adapter.getPlaylistItemAt(position));
             detailsFragment.setArguments(bundle);
 
             getParentFragmentManager().beginTransaction()
@@ -85,13 +97,13 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
             makeToast("Play at pos " + position);
         });
         //click bottom sheet rename item recyclerview
-        adapter.setBSRenameListener((view,position) -> {
+        adapter.setBSRenameListener((view, position) -> {
             Playlist playlist = adapter.getPlaylistItemAt(position);
             PlaylistRenameDialog dialog = PlaylistRenameDialog.newInstance(playlist);
             dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_RENAME_DIALOG);
         });
         //click bottom sheet delete item recyclerview
-        adapter.setBSDeleteListener(((view,position) -> {
+        adapter.setBSDeleteListener(((view, position) -> {
             Playlist playlist = adapter.getPlaylistItemAt(position);
             PlaylistDeleteDialog dialog = PlaylistDeleteDialog.newInstance(playlist);
             dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_DELETE_DIALOG);
@@ -152,5 +164,76 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
 
         bottomSheetDialog.setContentView(bsAddView);
         bottomSheetDialog.show();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.option_menu_playlist, menu);
+        menuItemSearch = menu.findItem(R.id.action_search);
+        searchView = (SearchView) menuItemSearch.getActionView();
+        searchView.setIconified(true);
+        searchView.setQueryHint(PlaylistConstants.STRING_HINT_SEARCH);
+
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                Searching(s);
+                return true;
+            }
+        });
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_sort:
+                SortByName();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void SortByName() {
+        if (isASC) {
+            playlistViewModel.sortPlaylistByNameASC().observe(
+                    getViewLifecycleOwner(),
+                    playlists -> adapter.submitList(playlists)
+            );
+        } else {
+            playlistViewModel.sortPlaylistByNameDESC().observe(
+                    getViewLifecycleOwner(),
+                    playlists -> adapter.submitList(playlists)
+            );
+        }
+        isASC = !isASC;
+    }
+
+    private void Searching(String s) {
+        if (s.equals("")) {
+            playlistViewModel.getAllPlaylists().observe(
+                    getViewLifecycleOwner(),
+                    playlists -> adapter.submitList(playlists)
+            );
+        } else {
+            playlistViewModel.getAllPlaylistSearching(s).observe(
+                    getViewLifecycleOwner(),
+                    playlists -> adapter.submitList(playlists)
+            );
+        }
     }
 }

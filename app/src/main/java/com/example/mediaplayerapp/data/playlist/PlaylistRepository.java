@@ -42,6 +42,18 @@ public class PlaylistRepository {
         return mPlaylistDao.getPlayListWithID(id);
     }*/
 
+    public LiveData<List<Playlist>> sortPlaylistByNameASC(){
+        return mPlaylistDao.sortPlaylistByNameASC();
+    }
+
+    public LiveData<List<Playlist>> sortPlaylistByNameDESC(){
+        return mPlaylistDao.sortPlaylistByNameDESC();
+    }
+
+    public LiveData<List<Playlist>> getAllPlaylistSearching(String text) {
+        return mPlaylistDao.getAllPlaylistSearching(text);
+    }
+
     public LiveData<List<Playlist>> getAllPlaylists() {
         return mAllPlaylists;
     }
