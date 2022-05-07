@@ -2,6 +2,7 @@ package com.example.mediaplayerapp.ui.music_player;
 
 import android.content.ComponentName;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,9 +16,15 @@ import android.support.v4.media.session.PlaybackStateCompat;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.ActivityMusicPlayerBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
@@ -67,22 +74,12 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     binding.musicPlayerSongDuration.setText(getFormattedPlaybackPosition(duration));
                     binding.musicPlayerSeekbar.setDuration(duration);
 
-                    String artUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI);
-                    if (artUri != null) {
-                        Glide.with(MusicPlayerActivity.this)
-                                .asBitmap()
-                                .load(Uri.parse(artUri))
-                                .into(binding.musicPlayerSongArtwork);
-                        Glide.with(MusicPlayerActivity.this)
-                                .asBitmap()
-                                .load(Uri.parse(artUri))
-                                .into(binding.musicPlayerSongArtworkBackground);
-                    }
-                    Bitmap artBitmap = metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ART);
-                    if (artBitmap != null) {
-                        binding.musicPlayerSongArtwork.setImageBitmap(artBitmap);
-                        binding.musicPlayerSongArtworkBackground.setImageBitmap(artBitmap);
-                    }
+                    String artworkUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI);
+                    Bitmap artworkBitmap = metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ART);
+                    if (artworkBitmap != null)
+                        setArtworkFromBitmap(artworkBitmap);
+                    else if (artworkUri != null)
+                        setArtworkFromArtworkUri(Uri.parse(artworkUri));
                 }
 
                 @Override
@@ -272,6 +269,58 @@ public class MusicPlayerActivity extends AppCompatActivity {
         long playedSeconds = position / 1000;
         return String.format(Locale.getDefault(), PLAYBACK_TIME_FORMAT,
                 (playedSeconds % 3600) / 60, playedSeconds % 60);
+    }
+
+    private void setArtworkFromArtworkUri(Uri artworkUri) {
+        Glide.with(MusicPlayerActivity.this)
+                .asBitmap()
+                .load(artworkUri)
+                .into(new CustomTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        setArtworkFromBitmap(resource);
+                        setViewsColors(resource);
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                    }
+                });
+    }
+
+    private void setArtworkFromBitmap(Bitmap artworkBitmap) {
+        binding.musicPlayerSongArtwork.setImageBitmap(artworkBitmap);
+        binding.musicPlayerSongArtworkBackground.setImageBitmap(artworkBitmap);
+        setViewsColors(artworkBitmap);
+    }
+
+    private void setViewsColors(Bitmap artworkBitmap) {
+        Palette.from(artworkBitmap).generate(palette -> {
+            if (palette == null)
+                return;
+            int color = palette.getLightVibrantColor(
+                    ContextCompat.getColor(MusicPlayerActivity.this,
+                            R.color.white));
+            int darkerColor = palette.getDarkMutedColor(
+                    ContextCompat.getColor(MusicPlayerActivity.this,
+                    R.color.black));
+            binding.musicPlayerSongTitle.setTextColor(color);
+            binding.musicPlayerSongArtist.setTextColor(color);
+            binding.musicPlayerRepeatBtn.setColorFilter(color);
+            binding.musicPlayerShuffleBtn.setColorFilter(color);
+            binding.musicPlayerSongDuration.setTextColor(color);
+            binding.musicPlayerSongCurrentPosition.setTextColor(color);
+            binding.musicPlayerPlayPauseBtn.setColorFilter(color);
+            binding.musicPlayerSkipNextBtn.setColorFilter(color);
+            binding.musicPlayerSkipPrevBtn.setColorFilter(color);
+            binding.musicPlayerSeekbar.setPlayedColor(color);
+            binding.musicPlayerSeekbar.setScrubberColor(color);
+            binding.musicPlayerSeekbar.setUnplayedColor(darkerColor);
+            binding.musicPlayerScreenTitle.setTextColor(color);
+            binding.musicPlayerMenuBtn.setColorFilter(color);
+            binding.musicPlayerCloseBtn.setColorFilter(color);
+        });
     }
 
     @Override
