@@ -4,35 +4,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ui.music_library.ArtistDetailFragment">
+    tools:context=".ui.music_library.AlbumDetailFragment">
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         style="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:fitsSystemWindows="true"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/artistcollapsinglayout"
+            android:id="@+id/collapsed_layout"
             android:layout_width="match_parent"
             android:layout_height="370dp"
             android:theme="@style/Theme.AppCompat"
             android:background="@android:color/white"
-
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:statusBarScrim="@android:color/transparent">
 
             <ImageView
-                android:id="@+id/bigartist"
+                android:id="@+id/album_art"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:contentDescription="TODO"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-
                 android:transitionName="transition_album_art"
                 app:layout_collapseMode="parallax" />
 
@@ -64,7 +62,7 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/artistimg"
+                    android:id="@+id/aaimg"
                     android:layout_width="55dp"
                     android:layout_height="55dp"
                     android:layout_marginStart="8dp"
@@ -77,7 +75,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/artistnaam"
+                    android:id="@+id/atrnaam"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -87,11 +85,11 @@
                     android:singleLine="true"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/artistimg"
+                    app:layout_constraintStart_toEndOf="@+id/aaimg"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/artistDetails"
+                    android:id="@+id/albumDetails"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -105,8 +103,8 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/artistimg"
-                    app:layout_constraintTop_toBottomOf="@+id/artistnaam" />
+                    app:layout_constraintStart_toEndOf="@+id/aaimg"
+                    app:layout_constraintTop_toBottomOf="@+id/atrnaam" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -125,6 +123,5 @@
         android:layout_height="wrap_content"
         app:layout_anchor="@id/app_bar"
         app:layout_anchorGravity="bottom|right|end"
-        />
-
+       />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
