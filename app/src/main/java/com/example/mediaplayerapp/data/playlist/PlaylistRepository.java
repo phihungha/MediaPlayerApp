@@ -38,9 +38,9 @@ public class PlaylistRepository {
         });
     }
 
-/*    public LiveData<List<Playlist>> getPlaylistWithID(int id){
+    public LiveData<List<Playlist>> getPlaylistWithID(int id){
         return mPlaylistDao.getPlayListWithID(id);
-    }*/
+    }
 
     public LiveData<List<Playlist>> sortPlaylistByNameASC(){
         return mPlaylistDao.sortPlaylistByNameASC();

@@ -35,11 +35,11 @@ public interface PlaylistMediaDao {
     @Query("SELECT * FROM media_table WHERE media_table.MediaName LIKE '%' || :text || '%'")
     LiveData<List<PlaylistMedia>> getAllMediaSearching(String text);
 
-    @Query("SELECT * FROM media_table ORDER BY media_table.MediaName ASC")
-    LiveData<List<PlaylistMedia>> sortAllMediaByNameASC();
+    @Query("SELECT * FROM media_table WHERE media_table.MediaId=:id ORDER BY media_table.MediaName ASC")
+    LiveData<List<PlaylistMedia>> sortAllMediaByNameASCWithID(int id);
 
-    @Query("SELECT * FROM media_table ORDER BY media_table.MediaName DESC")
-    LiveData<List<PlaylistMedia>> sortAllMediaByNameDESC();
+    @Query("SELECT * FROM media_table WHERE media_table.MediaId=:id ORDER BY media_table.MediaName DESC")
+    LiveData<List<PlaylistMedia>> sortAllMediaByNameDESCWithID(int id);
 
     @Query("DELETE FROM media_table WHERE media_table.MediaId=:id")
     void deleteAllWithID(int id);

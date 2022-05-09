@@ -28,11 +28,11 @@ public class PlaylistMediaViewModel extends AndroidViewModel{
         return mAllMedias;
     }
 
-    public LiveData<List<PlaylistMedia>> sortAllMediaByNameDESC(){
-        return mRepository.sortAllMediaByNameDESC();
+    public LiveData<List<PlaylistMedia>> sortAllMediaByNameDESCWithID(int id){
+        return mRepository.sortAllMediaByNameDESCWithID(id);
     }
-    public LiveData<List<PlaylistMedia>> sortAllMediaByNameASC(){
-        return mRepository.sortAllMediaByNameASC();
+    public LiveData<List<PlaylistMedia>> sortAllMediaByNameASCWithID(int id){
+        return mRepository.sortAllMediaByNameASCWithID(id);
     }
     public void insert(PlaylistMedia media){
         mRepository.insert(media);

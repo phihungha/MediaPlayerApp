@@ -59,12 +59,12 @@ public class PlaylistMediaRepository {
         return mPlaylistMediaDao.getAllMediaSearching(text);
     }
 
-    public LiveData<List<PlaylistMedia>> sortAllMediaByNameASC(){
-        return mPlaylistMediaDao.sortAllMediaByNameASC();
+    public LiveData<List<PlaylistMedia>> sortAllMediaByNameASCWithID(int id){
+        return mPlaylistMediaDao.sortAllMediaByNameASCWithID(id);
     }
 
-    public LiveData<List<PlaylistMedia>> sortAllMediaByNameDESC(){
-        return mPlaylistMediaDao.sortAllMediaByNameDESC();
+    public LiveData<List<PlaylistMedia>> sortAllMediaByNameDESCWithID(int id){
+        return mPlaylistMediaDao.sortAllMediaByNameDESCWithID(id);
     }
 
     public LiveData<List<PlaylistMedia>> getAllPlaylistMedias() {

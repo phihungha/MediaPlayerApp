@@ -60,13 +60,10 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         Bundle bundle = getArguments();
         if (bundle != null) {
             playlist = (Playlist) bundle.getSerializable(PlaylistConstants.KEY_TRANSFER_PLAYLIST);
-
-            refresh();
         }
+        refresh();
         adapter = new PlaylistDetailsAdapter(new PlaylistDetailsAdapter.PlaylistMediaDiff());
         adapter.setContext(getContext());
-        binding.rcvPlaylistsDetails.setAdapter(adapter);
-
         playlistMediaViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
                 getViewLifecycleOwner(),
                 new Observer<List<PlaylistMedia>>() {
@@ -76,6 +73,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                     }
                 }
         );
+        binding.rcvPlaylistsDetails.setAdapter(adapter);
         setListener();
     }
 
@@ -108,7 +106,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 /**
                  *
                  *
-                 *        CLICK TO OPEN VIDEO HERE
+                 *        CLICK TO OPEN VIDEO HERE (Play single media)
                  *
                  *
                  *
@@ -118,7 +116,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 /**
                  *
                  *
-                 *        CLICK TO OPEN SONG HERE
+                 *        CLICK TO OPEN SONG HERE (Play single media)
                  *
                  *
                  *
@@ -134,7 +132,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 /**
                  *
                  *
-                 *        CLICK TO OPEN VIDEO HERE
+                 *        CLICK TO OPEN VIDEO HERE (Play background media)
                  *
                  *
                  *
@@ -144,7 +142,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 /**
                  *
                  *
-                 *        CLICK TO OPEN SONG HERE
+                 *        CLICK TO OPEN SONG HERE (Play background media)
                  *
                  *
                  *
@@ -169,13 +167,12 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         });
     }
 
-
     private void PlayAll() {
         if (playlist.isVideo()){
             /**
              *
              *
-             *        CLICK TO OPEN VIDEO HERE
+             *        CLICK TO Linear Play video
              *
              *
              *
@@ -185,7 +182,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             /**
              *
              *
-             *        CLICK TO OPEN SONG HERE
+             *         CLICK TO Linear Play song
              *
              *
              *
@@ -199,7 +196,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             /**
              *
              *
-             *        CLICK TO OPEN VIDEO HERE
+             *        CLICK TO Shuffle Play video
              *
              *
              *
@@ -209,7 +206,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             /**
              *
              *
-             *        CLICK TO OPEN SONG HERE
+             *         CLICK TO Shuffle Play song
              *
              *
              *
@@ -329,7 +326,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
     private void Searching(String s){
         if (s.equals("")) {
-            playlistMediaViewModel.getAllPlaylistMedias().observe(
+            playlistMediaViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
                     getViewLifecycleOwner(),
                     playlists -> adapter.submitList(playlists)
             );
@@ -343,12 +340,12 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
     private void SortByName(){
         if (isASC) {
-            playlistMediaViewModel.sortAllMediaByNameDESC().observe(
+            playlistMediaViewModel.sortAllMediaByNameDESCWithID(playlist.getId()).observe(
                     getViewLifecycleOwner(),
                     playlists -> adapter.submitList(playlists)
             );
         } else {
-            playlistMediaViewModel.sortAllMediaByNameASC().observe(
+            playlistMediaViewModel.sortAllMediaByNameASCWithID(playlist.getId()).observe(
                     getViewLifecycleOwner(),
                     playlists -> adapter.submitList(playlists)
             );

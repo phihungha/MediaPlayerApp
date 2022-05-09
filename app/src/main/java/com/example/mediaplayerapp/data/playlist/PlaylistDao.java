@@ -38,7 +38,7 @@ public interface PlaylistDao {
     @Query("SELECT * FROM playlist_table ORDER BY playlist_table.Name DESC")
     LiveData<List<Playlist>> sortPlaylistByNameDESC();
 
-  /*  @Query("SELECT * from playlist_table WHERE PlaylistID=:id")
-    LiveData<List<Playlist>> getPlayListWithID(int id);*/
+    @Query("SELECT * from playlist_table WHERE PlaylistID=:id")
+    LiveData<List<Playlist>> getPlayListWithID(int id);
 
 }

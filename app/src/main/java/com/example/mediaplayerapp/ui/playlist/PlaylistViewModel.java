@@ -25,9 +25,9 @@ public class PlaylistViewModel extends AndroidViewModel {
         return mAllPlaylists;
     }
 
-/*    public LiveData<List<Playlist>> getPlaylistWithID(int id){
+    public LiveData<List<Playlist>> getPlaylistWithID(int id){
         return mRepository.getPlaylistWithID(id);
-    }*/
+    }
 
     public LiveData<List<Playlist>> getAllPlaylistSearching(String text){
         return mRepository.getAllPlaylistSearching(text);
