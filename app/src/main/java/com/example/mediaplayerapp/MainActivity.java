@@ -1,8 +1,9 @@
 package com.example.mediaplayerapp;
 
+import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.support.v4.media.session.MediaControllerCompat;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -11,6 +12,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.mediaplayerapp.databinding.ActivityMainBinding;
+import com.example.mediaplayerapp.ui.music_player.BottomMusicPlayerComponent;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
@@ -32,6 +33,18 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
+
+        BottomMusicPlayerComponent bottomMusicPlayer = new BottomMusicPlayerComponent(this);
+        getLifecycle().addObserver(bottomMusicPlayer);
     }
 
+    public static void playMusic(Activity activity, Uri uri) {
+        MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(activity);
+        if (mediaController != null)
+            mediaController.getTransportControls().playFromUri(uri, null);
+    }
+
+    public ActivityMainBinding getBinding() {
+        return binding;
+    }
 }

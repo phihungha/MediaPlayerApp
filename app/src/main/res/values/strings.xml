@@ -5,8 +5,8 @@
     <string name="title_playlist">Playlist</string>
     <string name="default_playback_time">0:00</string>
     <string name="play_pause_btn">Play pause</string>
-    <string name="skip_forward_btn">Skip forward</string>
-    <string name="skip_backward_btn">Skip backward</string>
+    <string name="skip_next_btn">Skip forward</string>
+    <string name="skip_prev_btn">Skip backward</string>
     <string name="repeat_btn">Repeat</string>
     <string name="shuffle_btn">Shuffle</string>
     <string name="default_song_name">Song name</string>
