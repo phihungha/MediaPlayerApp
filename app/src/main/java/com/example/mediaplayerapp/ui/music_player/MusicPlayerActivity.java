@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
@@ -32,9 +31,11 @@ import com.example.mediaplayerapp.databinding.ActivityMusicPlayerBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
 import com.google.android.exoplayer2.ui.TimeBar;
 
-import java.io.File;
 import java.util.Locale;
 
+/**
+ * Music player UI.
+ */
 public class MusicPlayerActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MusicPlayerActivity.class.getSimpleName();
@@ -52,7 +53,12 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     MediaControllerCompat.setMediaController(MusicPlayerActivity.this, mediaController);
                     setupTransportControls();
                     setupTimeIndicators();
-                    playSample();
+                    MediaMetadataCompat metadata = mediaController.getMetadata();
+                    PlaybackStateCompat playbackState = mediaController.getPlaybackState();
+                    if (metadata != null)
+                        controllerCallback.onMetadataChanged(metadata);
+                    if (playbackState != null)
+                        controllerCallback.onPlaybackStateChanged(playbackState);
                 }
 
                 @Override
@@ -232,11 +238,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
         MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(this);
         mediaController.registerCallback(controllerCallback);
-    }
-
-    private void playSample() {
-        Uri uri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "Download/music_sample.flac"));
-        MediaControllerCompat.getMediaController(this).getTransportControls().playFromUri(uri, null);
     }
 
     /**
