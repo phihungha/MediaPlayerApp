@@ -10,4 +10,5 @@
     <string name="video_duration_placeholder">-01:00</string>
     <string name="video_name_placeholder">VIDEO.MP4</string>
     <string name="description_play_arrow_icon">A white play arrow icon</string>
+    <string name="all_videos_textView">All videos</string>
 </resources>

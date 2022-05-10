@@ -8,11 +8,12 @@
     tools:context=".ui.video_library.VideoLibraryFragment">
 
     <TextView
+        android:layout_margin="10dp"
         android:id="@+id/all_videos_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top"
-        android:text="All videos (445)"
+        android:text="@string/all_videos_textView"
         android:textColor="#474646"
         android:textSize="14sp"
         android:textStyle="bold"
