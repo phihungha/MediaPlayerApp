@@ -3,9 +3,12 @@
     <gradient
         android:type="linear"
         android:angle="135"
-        android:startColor="@color/colorPlaylist_addPlaylist"
-        android:endColor="@color/white" />
-
+        android:startColor="@color/blue1"
+        android:endColor="@color/blue2"
+    />
     <corners android:bottomLeftRadius="30dp"
         android:bottomRightRadius="30dp"/>
 </shape>
+
+    <!-- android:startColor="#37d5d6"
+        android:endColor="#36096d"-->

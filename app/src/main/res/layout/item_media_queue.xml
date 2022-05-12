@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp"
-    android:id="@+id/layoutItem_PlaylistDetails"
+    android:id="@+id/layoutItem_mediaQueue"
     >
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cardView_thumbnailPlaylistDetails"
+        android:id="@+id/cardView_thumbnailMediaQueue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
@@ -27,7 +26,7 @@
 
 
             <ImageView
-                android:id="@+id/img_thumbnailPlaylistDetails"
+                android:id="@+id/img_thumbnailMediaQueue"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:contentDescription="@string/image_for_thumbnail"
@@ -36,7 +35,7 @@
                 android:scaleType="centerCrop"
                 />
             <TextView
-                android:id="@+id/tv_durationMedia"
+                android:id="@+id/tv_durationMediaQueue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
@@ -54,7 +53,7 @@
 
 
     <TextView
-        android:id="@+id/tv_playlistNamePlaylistDetails"
+        android:id="@+id/tv_nameMediaQueue"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
 
@@ -70,28 +69,11 @@
         android:singleLine="true"
 
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/cardView_thumbnailPlaylistDetails"
+        app:layout_constraintStart_toEndOf="@id/cardView_thumbnailMediaQueue"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--
-    <TextView
-        android:id="@+id/tv_timeMediaPlaylistDetails"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:fontFamily="@font/poppins_thin"
-        android:text="@string/app_name"
-
-        android:textColor="@color/colorPlaylist_textColor"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/cardView_thumbnailPlaylistDetails"
-
-        app:layout_constraintTop_toBottomOf="@id/tv_playlistNamePlaylistDetails" />
-
--->
     <ImageView
-        android:id="@+id/imgBtn_play"
+        android:id="@+id/imgBtn_playMediaQueue"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:contentDescription="@string/add_more"
@@ -102,10 +84,10 @@
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/imgBtn_playlist_details_more"
+        app:layout_constraintEnd_toStartOf="@id/imgBtn_playlist_details_more_MediaQueue"
         app:tint="@color/black" />
     <ImageButton
-        android:id="@+id/imgBtn_playlist_details_more"
+        android:id="@+id/imgBtn_playlist_details_more_MediaQueue"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:contentDescription="@string/add_more"

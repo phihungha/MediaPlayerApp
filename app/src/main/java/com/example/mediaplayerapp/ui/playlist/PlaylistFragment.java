@@ -1,7 +1,9 @@
 package com.example.mediaplayerapp.ui.playlist;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,7 +19,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -25,19 +26,22 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
+import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistMedia;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistMediaViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlaylistFragment extends Fragment implements View.OnClickListener {
     private FragmentPlaylistBinding binding;
     private PlaylistDetailsFragment detailsFragment = new PlaylistDetailsFragment();
+    private MediaQueueFragment mediaQueueFragment=new MediaQueueFragment();
     private PlaylistAdapter adapter;
     private PlaylistViewModel playlistViewModel;
 
-    private MenuItem menuItemSearch;
-    private SearchView searchView;
     private boolean isASC = false;
 
     BottomSheetDialog bottomSheetDialog;
@@ -86,15 +90,32 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
 
         //click bottom sheet play item recyclerview
         adapter.setBSPlayListener((view, position) -> {
-            /**
-             *
-             *
-             *        CLICK TO OPEN LINEAR PLAY HERE
-             *
-             *
-             *
-             * */
-            makeToast("Play at pos " + position);
+            Playlist playlist=adapter.getPlaylistItemAt(position);
+
+            PlaylistMediaViewModel playlistMediaViewModel = new ViewModelProvider(this)
+                    .get(PlaylistMediaViewModel.class);
+            playlistMediaViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
+                    getViewLifecycleOwner(),
+                    new Observer<List<PlaylistMedia>>() {
+                        @Override
+                        public void onChanged(List<PlaylistMedia> media) {
+                            //list uri of Media need to play
+                            List<Uri> listUriMedia = new ArrayList<>();
+                            media.forEach(item ->{
+                                listUriMedia.add(Uri.parse(item.getMediaUri()));
+                            });
+                            /**
+                             *
+                             *
+                             *        Play LINEAR playlists with listUriMedia HERE
+                             *
+                             *
+                             *
+                             * */
+                            makeToast("Play at pos " + position);
+                        }
+                    }
+            );
         });
         //click bottom sheet rename item recyclerview
         adapter.setBSRenameListener((view, position) -> {
@@ -175,8 +196,8 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.option_menu_playlist, menu);
-        menuItemSearch = menu.findItem(R.id.action_search);
-        searchView = (SearchView) menuItemSearch.getActionView();
+        MenuItem menuItemSearch = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) menuItemSearch.getActionView();
         searchView.setIconified(true);
         searchView.setQueryHint(PlaylistConstants.STRING_HINT_SEARCH);
 
@@ -204,8 +225,20 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
             case R.id.action_sort:
                 SortByName();
                 break;
+
+            case R.id.action_queue:
+                GoToQueue();
+                break;
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void GoToQueue() {
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, mediaQueueFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void SortByName() {

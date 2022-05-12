@@ -14,8 +14,13 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDe
     private IOnPlaylistDetailsItemClickListener bsPlayListener;
     private IOnPlaylistDetailsItemClickListener bsDeleteListener;
     private IOnPlaylistDetailsItemClickListener bsPropertiesListener;
+    private IOnPlaylistDetailsItemClickListener bsAddQueueListener;
 
-    protected PlaylistDetailsAdapter(@NonNull DiffUtil.ItemCallback<PlaylistMedia> diffCallback) {
+    public void setBsAddQueueListener(IOnPlaylistDetailsItemClickListener bsAddQueueListener) {
+        this.bsAddQueueListener = bsAddQueueListener;
+    }
+
+    public PlaylistDetailsAdapter(@NonNull DiffUtil.ItemCallback<PlaylistMedia> diffCallback) {
         super(diffCallback);
     }
 
@@ -43,7 +48,7 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDe
     @Override
     public PlaylistDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return PlaylistDetailsViewHolder.create(parent,mContext,itemClickListener,
-                bsPlayListener,bsDeleteListener,bsPropertiesListener);
+                bsPlayListener,bsDeleteListener,bsPropertiesListener,bsAddQueueListener);
     }
 
     @Override
@@ -56,7 +61,7 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDe
         holder.setBinding(current);
     }
 
-    static class PlaylistMediaDiff extends DiffUtil.ItemCallback<PlaylistMedia> {
+    public static class PlaylistMediaDiff extends DiffUtil.ItemCallback<PlaylistMedia> {
         @Override
         public boolean areItemsTheSame(@NonNull PlaylistMedia oldItem, @NonNull PlaylistMedia newItem) {
             return oldItem == newItem;

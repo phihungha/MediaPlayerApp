@@ -18,7 +18,7 @@ public class PlaylistMediaViewModel extends AndroidViewModel{
         mAllMedias =mRepository.getAllPlaylistMedias();
     }
 
-    LiveData<List<PlaylistMedia>> getAllPlaylistMediasWithID(int id){
+    public LiveData<List<PlaylistMedia>> getAllPlaylistMediasWithID(int id){
         return mRepository.getAllPlaylistMediasWithID(id);
     }
     public LiveData<List<PlaylistMedia>> getAllMediaSearching(String text){

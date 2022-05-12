@@ -18,6 +18,15 @@
         app:showAsAction="ifRoom|collapseActionView"
         android:iconTint="@color/white"
         />
+
+    <item android:id="@+id/action_queue"
+        android:title="@string/go_to_queue_list"
+        android:iconTint="@color/white"
+        app:showAsAction="ifRoom|collapseActionView"
+        android:icon="@drawable/ic_round_add_to_queue_24"
+        />
+
+
 <!--
     <item android:title="Title 1"
         android:id="@+id/item_1"/>

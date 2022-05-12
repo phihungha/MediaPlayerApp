@@ -27,8 +27,11 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
+import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class PlaylistDetailsFragment extends Fragment implements View.OnClickListener {
     private Playlist playlist;
@@ -36,8 +39,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     private PlaylistDetailsAdapter adapter;
     private PlaylistMediaViewModel playlistMediaViewModel;
 
-    private MenuItem menuItemSearch;
-    private SearchView searchView;
     private boolean isASC = false;
 
     public PlaylistDetailsFragment() {
@@ -74,6 +75,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 }
         );
         binding.rcvPlaylistsDetails.setAdapter(adapter);
+        //mediaQueue.setContext(getContext());
         setListener();
     }
 
@@ -102,6 +104,8 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         //item detail (media) click
         adapter.setItemClickListener((v, position) -> {
             PlaylistMedia media=adapter.getPlaylistMediaItemAt(position);
+            //uri of media need to play
+            Uri uriMedia=Uri.parse(media.getMediaUri());
             if (playlist.isVideo()){
                 /**
                  *
@@ -128,6 +132,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         // click play bottom sheet
         adapter.setBsPlayListener((view, position) -> {
             PlaylistMedia media=adapter.getPlaylistMediaItemAt(position);
+            Uri uriMedia=Uri.parse(media.getMediaUri());
             if (playlist.isVideo()){
                 /**
                  *
@@ -156,6 +161,23 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             PlaylistDetailsDeleteDialog dialog = PlaylistDetailsDeleteDialog.newInstance(media);
             dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_DETAIL_DELETE_DIALOG);
         });
+        
+        //click add to queue bottom sheet
+        adapter.setBsAddQueueListener(new IOnPlaylistDetailsItemClickListener() {
+            @Override
+            public void OnClick(View view, int position) {
+                PlaylistMedia media=adapter.getPlaylistMediaItemAt(position);
+                /*mediaQueue.addToQueue(media);
+                mediaQueue.playQueue();*/
+                /**
+                 *
+                 *              Play in queue -> set up in MediaQueue class
+                 *
+                 *
+                 * */
+
+            }
+        });
 
         //click properties bottom sheet
         adapter.setBsPropertiesListener((view, position) -> {
@@ -165,14 +187,29 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             PlaylistDetailsPropertiesDialog dialog = PlaylistDetailsPropertiesDialog.newInstance(mediaInfo);
             dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_DETAIL_PROPERTY_DIALOG);
         });
+        
     }
 
-    private void PlayAll() {
+    private void PlayAll(PlaylistDetailsAdapter adapter) {
+        //list uri of Media need to play
+        List<Uri> listUriMedia = new ArrayList<>();
+        playlistMediaViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
+                getViewLifecycleOwner(),
+                new Observer<List<PlaylistMedia>>() {
+                    @Override
+                    public void onChanged(List<PlaylistMedia> media) {
+                        media.forEach(item ->{
+                            listUriMedia.add(Uri.parse(item.getMediaUri()));
+                        });
+                    }
+                }
+        );
+
         if (playlist.isVideo()){
             /**
              *
              *
-             *        CLICK TO Linear Play video
+             *        CLICK TO Linear Play video with list of uri media
              *
              *
              *
@@ -182,7 +219,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             /**
              *
              *
-             *         CLICK TO Linear Play song
+             *         CLICK TO Linear Play song with list of uri media
              *
              *
              *
@@ -191,12 +228,19 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         Toast.makeText(getActivity(), "Play all", Toast.LENGTH_SHORT).show();
     }
 
-    private void PlayShuffleAll() {
+    private void PlayShuffleAll(PlaylistDetailsAdapter adapter) {
+        Random random=new Random();
+        int int_rand = random.nextInt(adapter.getItemCount());
+        PlaylistMedia media=adapter.getPlaylistMediaItemAt(int_rand);
+
+        //uri of media
+        Uri uriMedia= Uri.parse(media.getMediaUri());
+
         if (playlist.isVideo()){
             /**
              *
              *
-             *        CLICK TO Shuffle Play video
+             *        CLICK TO Shuffle Play video with UriMedia
              *
              *
              *
@@ -206,7 +250,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             /**
              *
              *
-             *         CLICK TO Shuffle Play song
+             *         CLICK TO Shuffle Play song with UriMedia
              *
              *
              *
@@ -224,11 +268,11 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 break;
 
             case R.id.layout_playAll:
-                PlayAll();
+                PlayAll(adapter);
                 break;
 
             case R.id.layout_shuffleAll:
-                PlayShuffleAll();
+                PlayShuffleAll(adapter);
                 break;
         }
     }
@@ -276,8 +320,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
-
             }
         }
     }
@@ -291,8 +333,8 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.option_menu_playlist, menu);
-        menuItemSearch = menu.findItem(R.id.action_search);
-        searchView = (SearchView) menuItemSearch.getActionView();
+        MenuItem menuItemSearch = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) menuItemSearch.getActionView();
         searchView.setIconified(true);
         searchView.setQueryHint(PlaylistConstants.STRING_HINT_SEARCH);
 
@@ -314,14 +356,27 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_sort:
                 SortByName();
                 break;
+
+            case R.id.action_queue:
+                GoToQueue();
+                break;
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void GoToQueue() {
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, new MediaQueueFragment())
+                .addToBackStack(null)
+                .commit();
     }
 
     private void Searching(String s){

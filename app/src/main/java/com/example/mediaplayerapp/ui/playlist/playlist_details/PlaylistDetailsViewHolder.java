@@ -1,12 +1,12 @@
 package com.example.mediaplayerapp.ui.playlist.playlist_details;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +25,7 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
     private static IOnPlaylistDetailsItemClickListener bsPlayListener;
     private static IOnPlaylistDetailsItemClickListener bsDeleteListener;
     private static IOnPlaylistDetailsItemClickListener bsPropertiesListener;
+    private static IOnPlaylistDetailsItemClickListener bsAddQueueListener;
 
     public PlaylistDetailsViewHolder(@NonNull ItemPlaylistDetailsBinding binding) {
         super(binding.getRoot());
@@ -35,6 +36,9 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
 
     public void setBinding(PlaylistMedia media) {
         binding.tvPlaylistNamePlaylistDetails.setText(media.getName());
+        MediaInfo mediaInfo=MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
+        String duration=MediaUtils.convertDuration(mediaInfo.getDuration());
+        binding.tvDurationMedia.setText(duration);
 
         Glide.with(mContext)
                 .load(media.getMediaUri())
@@ -49,13 +53,15 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
                                             IOnPlaylistDetailsItemClickListener _itemClickListener,
                                             IOnPlaylistDetailsItemClickListener _bsPlayListener,
                                             IOnPlaylistDetailsItemClickListener _bsDeleteListener,
-                                            IOnPlaylistDetailsItemClickListener _bsPropertiesListener) {
+                                            IOnPlaylistDetailsItemClickListener _bsPropertiesListener,
+                                            IOnPlaylistDetailsItemClickListener _bsAddQueueListener) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemPlaylistDetailsBinding binding = ItemPlaylistDetailsBinding.inflate(inflater, parent, false);
         itemClickListener=_itemClickListener;
         bsPlayListener=_bsPlayListener;
         bsDeleteListener=_bsDeleteListener;
         bsPropertiesListener=_bsPropertiesListener;
+        bsAddQueueListener=_bsAddQueueListener;
         mContext=context;
         return new PlaylistDetailsViewHolder(binding);
     }
@@ -68,7 +74,7 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.layoutItem_playlistDetails:
+            case R.id.layoutItem_mediaQueue:
                 onClickItem();
                 break;
 
@@ -87,7 +93,16 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
             case R.id.bs_propertiesPlaylistDetailsItem:
                 openProperties();
                 break;
+
+            case R.id.bs_addToQueuePlaylistDetailsItem:
+                addToQueue();
+                break;
         }
+    }
+
+    private void addToQueue() {
+        bsAddQueueListener.OnClick(itemView,getBindingAdapterPosition());
+        bottomSheetDialog.dismiss();
     }
 
     private void openProperties() {
@@ -119,6 +134,7 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
         bsView.findViewById(R.id.bs_startPlaylistDetailsItem).setOnClickListener(this);
         bsView.findViewById(R.id.bs_deletePlaylistDetailsItem).setOnClickListener(this);
         bsView.findViewById(R.id.bs_propertiesPlaylistDetailsItem).setOnClickListener(this);
+        bsView.findViewById(R.id.bs_addToQueuePlaylistDetailsItem).setOnClickListener(this);
 
         bottomSheetDialog.setContentView(bsView);
         bottomSheetDialog.show();

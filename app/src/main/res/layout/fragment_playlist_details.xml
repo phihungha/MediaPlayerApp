@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="60dp"
+
     android:orientation="vertical"
     tools:context=".ui.playlist.playlist_details.PlaylistDetailsFragment">
 
@@ -25,7 +26,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/cardView_thumbnailPlaylistDetails"
+            android:id="@+id/cardView_thumbnailMediaQueue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
@@ -54,15 +55,14 @@
             android:layout_height="wrap_content"
 
             android:layout_marginStart="20dp"
-            android:fontFamily="@font/poppins_thin"
             android:text="@string/app_name"
 
-            android:textColor="@color/colorPlaylist_textColor"
-            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:textSize="24sp"
             android:textStyle="bold"
 
             app:layout_constraintBottom_toBottomOf="@+id/view_background"
-            app:layout_constraintStart_toEndOf="@id/cardView_thumbnailPlaylistDetails"
+            app:layout_constraintStart_toEndOf="@id/cardView_thumbnailMediaQueue"
             app:layout_constraintTop_toTopOf="@id/view_background" />
 
         <TextView
@@ -70,13 +70,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:fontFamily="@font/poppins_thin"
 
             android:text="@string/app_name"
-            android:textColor="@color/colorPlaylist_textColor"
+            android:textColor="@color/white"
             android:textSize="14sp"
 
-            app:layout_constraintStart_toEndOf="@+id/cardView_thumbnailPlaylistDetails"
+            app:layout_constraintStart_toEndOf="@+id/cardView_thumbnailMediaQueue"
             app:layout_constraintTop_toBottomOf="@+id/tv_playlistDetailsName" />
 
         <ImageView
