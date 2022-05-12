@@ -25,14 +25,12 @@ import java.util.List;
 public class VideoLibraryFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "recycler_column_count";
-
+    public static int recyclerViewColumnCount = 2;
     private FragmentVideoLibraryBinding binding;
     private VideoLibraryViewModel videoLibraryViewModel;
-
     private RecyclerView recyclerViewAllVideos;
     private VideoLibraryItemAdapter videoLibraryItemAdapter;
 
-    public static int recyclerViewColumnCount = 2;
     private SortArgs sortArgs = SortArgs.VIDEO_NAME;
     private SortOrder sortOrder = SortOrder.ASC;
 
@@ -65,12 +63,14 @@ public class VideoLibraryFragment extends Fragment {
             }
             recyclerViewAllVideos.setAdapter(videoLibraryItemAdapter);
             return true;
+
         } else if (itemId == R.id.sort_by_name_menu_item) {
             sortArgs = SortArgs.VIDEO_NAME;
             sortOrder = sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
 
             videoLibraryItemAdapter.updateVideoList(currentVideosList, sortArgs, sortOrder);
             return true;
+
         } else if (itemId == R.id.sort_by_length_menu_item) {
             sortArgs = SortArgs.VIDEO_DURATION;
             sortOrder = sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
@@ -124,13 +124,11 @@ public class VideoLibraryFragment extends Fragment {
     }
 
     enum SortArgs {
-        NONE,
         VIDEO_NAME,
         VIDEO_DURATION
     }
 
     enum SortOrder {
-        NONE,
         ASC,
         DESC
     }
