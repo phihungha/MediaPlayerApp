@@ -11,4 +11,15 @@
     <string name="video_name_placeholder">VIDEO.MP4</string>
     <string name="description_play_arrow_icon">A white play arrow icon</string>
     <string name="all_videos_textView">All videos</string>
+    <string name="dialog_bottom_video_name">VIDEO NAME</string>
+    <string name="bottom_dialog_option_info">Information</string>
+    <string name="dialog_bottom_option_playlist">Add to playlist</string>
+    <string name="dialog_bottom_option_rename">Rename</string>
+    <string name="dialog_bottom_option_delete">Delete</string>
+    <string name="dialog_bottom_option_share">Share</string>
+    <string name="dialog_bottom_option_information_ic">Bottom dialog option - Information</string>
+    <string name="dialog_bottom_option_playlist_ic">Bottom dialog option - Add to playlist</string>
+    <string name="dialog_bottom_option_rename_ic">Bottom dialog option - Rename</string>
+    <string name="dialog_bottom_option_share_ic">Bottom dialog option - Share</string>
+    <string name="dialog_bottom_option_delete_ic">Bottom dialog option - Delete</string>
 </resources>
