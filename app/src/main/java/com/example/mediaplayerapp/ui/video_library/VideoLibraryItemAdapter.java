@@ -1,9 +1,11 @@
 package com.example.mediaplayerapp.ui.video_library;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -51,11 +53,11 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
                 .with(holder.videoThumbnail.getContext())
                 .load(videos.get(position).getUri())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .override(holder.videoThumbnail.getWidth(),holder.videoThumbnail.getHeight())
+                .override(holder.videoThumbnail.getWidth(), holder.videoThumbnail.getHeight())
                 .centerCrop()
                 .into(holder.videoThumbnail);
 
-        holder.videoThumbnail.setOnClickListener(view -> {
+        holder.videoClickArea.setOnClickListener(view -> {
             ArrayList<String> videoUris = new ArrayList<>();
             videoUris.add(videos.get(position).getUri().toString());
 
@@ -88,7 +90,14 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
             if (videoNameTextview != null) {
                 videoNameTextview.setText(holder.videoName.getText());
             }
+            LinearLayout optionAddToPlaylist =
+                    bottomSheetDialog.findViewById(R.id.bottom_sheet_option_add_playlist);
 
+            if (optionAddToPlaylist != null) {
+                optionAddToPlaylist.setOnClickListener(view1 -> {
+
+                });
+            }
             bottomSheetDialog.show();
         });
     }
@@ -98,6 +107,7 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
         return videos.size();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void updateVideoList(
             final List<Video> updatedVideoList
             , VideoLibraryFragment.SortArgs sortArgs
@@ -126,8 +136,9 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
         notifyDataSetChanged();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public final ShapeableImageView videoThumbnail;
+        public final LinearLayout videoClickArea;
         public final TextView videoName;
         public final TextView videoDuration;
         public final ImageView videoOptions;
@@ -135,13 +146,16 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
         public ViewHolder(ItemVideoLibraryListBinding binding) {
             super(binding.getRoot());
             videoThumbnail = binding.videoThumbnailShapeableimageview;
+            videoClickArea = binding.videoClickAreaLinearlayout;
             videoName = binding.videoNameTextview;
             videoDuration = binding.videoDurationTextview;
             videoOptions = binding.videoOptionsImageview;
         }
+
         public ViewHolder(ItemVideoLibraryGridBinding binding) {
             super(binding.getRoot());
             videoThumbnail = binding.videoThumbnailShapeableimageview;
+            videoClickArea = binding.videoClickAreaLinearlayout;
             videoName = binding.videoNameTextview;
             videoDuration = binding.videoDurationTextview;
             videoOptions = binding.videoOptionsImageview;
