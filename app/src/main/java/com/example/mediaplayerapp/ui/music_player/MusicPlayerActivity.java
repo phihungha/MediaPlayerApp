@@ -21,6 +21,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.WindowCompat;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
@@ -139,13 +140,17 @@ public class MusicPlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMusicPlayerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
 
         mediaBrowser = new MediaBrowserCompat(this,
                 new ComponentName(this, MusicPlaybackService.class),
                 connectionCallback,
                 null);
 
-        binding.musicPlayerCloseBtn.setOnClickListener(view -> finish());
+        binding.musicPlayerCloseBtn.setOnClickListener(view -> {
+            finishAfterTransition();
+            finish();
+        });
         binding.musicPlayerMenuBtn.setOnClickListener(view -> openMenu());
     }
 

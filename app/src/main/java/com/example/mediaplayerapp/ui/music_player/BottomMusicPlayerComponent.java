@@ -2,6 +2,7 @@ package com.example.mediaplayerapp.ui.music_player;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.ActivityOptions;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -125,8 +126,14 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
                 connectionCallback,
                 null);
 
-        binding.bottomMusicPlayer.setOnClickListener(
-                view -> activity.startActivity(new Intent(activity, MusicPlayerActivity.class))
+        binding.bottomMusicPlayer.setOnClickListener(view -> {
+                    Intent intent = new Intent(activity, MusicPlayerActivity.class);
+                    ActivityOptions options = ActivityOptions
+                            .makeSceneTransitionAnimation(activity,
+                                    binding.bottomMusicPlayerSongArtwork,
+                                    "song_artwork");
+                    activity.startActivity(intent, options.toBundle());
+                }
         );
     }
 
