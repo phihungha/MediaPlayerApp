@@ -1,5 +1,7 @@
 package com.example.mediaplayerapp.ui.music_player;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -35,6 +37,7 @@ import com.example.mediaplayerapp.services.MusicPlaybackService;
 public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
 
     private static final String LOG_TAG = BottomMusicPlayerComponent.class.getSimpleName();
+    private boolean isDisplayed = false;
 
     private MediaBrowserCompat mediaBrowser;
     MediaBrowserCompat.ConnectionCallback connectionCallback =
@@ -91,13 +94,12 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
                 public void onPlaybackStateChanged(PlaybackStateCompat state) {
                     if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
                         binding.bottomMusicPlayerPlayPauseBtn.setImageLevel(1);
-                        binding.bottomMusicPlayer.setVisibility(View.VISIBLE);
+                        displayUI();
                     }
                     else if (state.getState() == PlaybackStateCompat.STATE_PAUSED)
                         binding.bottomMusicPlayerPlayPauseBtn.setImageLevel(0);
-                    else
-                        binding.bottomMusicPlayer.setVisibility(View.INVISIBLE);
-                    Log.d(LOG_TAG, "Playback state changed");
+
+                    Log.d(LOG_TAG, "Playback state changed to " + state.getState());
                 }
 
                 @Override
@@ -122,6 +124,7 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
                 new ComponentName(activity, MusicPlaybackService.class),
                 connectionCallback,
                 null);
+
         binding.bottomMusicPlayer.setOnClickListener(
                 view -> activity.startActivity(new Intent(activity, MusicPlayerActivity.class))
         );
@@ -152,6 +155,16 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
                         .skipToPrevious()
         );
 
+        binding.bottomMusicPlayerStopBtn.setOnClickListener(
+                view -> {
+                    MediaControllerCompat
+                            .getMediaController(activity)
+                            .getTransportControls()
+                            .stop();
+                    hideUI();
+                }
+        );
+
         MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(activity);
         mediaController.registerCallback(controllerCallback);
     }
@@ -160,6 +173,39 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
         binding.bottomMusicPlayerPlayPauseBtn.setEnabled(false);
         binding.bottomMusicPlayerSkipPrevBtn.setEnabled(false);
         binding.bottomMusicPlayerSkipNextBtn.setEnabled(false);
+    }
+
+    /**
+     * Display the player's UI with slide up animation.
+     */
+    private void displayUI()
+    {
+        if (!isDisplayed) {
+            binding.bottomMusicPlayer.animate().translationY(-binding.navView.getHeight())
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            binding.bottomMusicPlayer.setVisibility(View.VISIBLE);
+                        }
+                    });
+            isDisplayed = true;
+        }
+    }
+
+    /**
+     * Hide the player's UI with slide down animation.
+     */
+    private void hideUI()
+    {
+        binding.bottomMusicPlayer.animate()
+                .translationY(0)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        binding.bottomMusicPlayer.setVisibility(View.GONE);
+                    }
+                });
+        isDisplayed = false;
     }
 
     /**
