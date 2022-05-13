@@ -20,6 +20,7 @@ import com.example.mediaplayerapp.data.video.Video;
 import com.example.mediaplayerapp.databinding.FragmentVideoLibraryBinding;
 
 import java.util.List;
+import java.util.Objects;
 
 
 public class VideoLibraryFragment extends Fragment {
@@ -64,20 +65,25 @@ public class VideoLibraryFragment extends Fragment {
             recyclerViewAllVideos.setAdapter(videoLibraryItemAdapter);
             return true;
 
-        } else if (itemId == R.id.sort_by_name_menu_item) {
+        }
+
+        else if (itemId == R.id.sort_by_name_menu_item) {
             sortArgs = SortArgs.VIDEO_NAME;
             sortOrder = sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
 
             videoLibraryItemAdapter.updateVideoList(currentVideosList, sortArgs, sortOrder);
             return true;
 
-        } else if (itemId == R.id.sort_by_length_menu_item) {
+        }
+
+        else if (itemId == R.id.sort_by_length_menu_item) {
             sortArgs = SortArgs.VIDEO_DURATION;
             sortOrder = sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
 
             videoLibraryItemAdapter.updateVideoList(currentVideosList, sortArgs, sortOrder);
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -89,15 +95,18 @@ public class VideoLibraryFragment extends Fragment {
         binding = FragmentVideoLibraryBinding.inflate(inflater, container, false);
 
         recyclerViewAllVideos = binding.allVideosRecyclerview;
+
         if (recyclerViewColumnCount <= 1) {
             recyclerViewAllVideos.setLayoutManager(new LinearLayoutManager
                     (binding.getRoot().getContext()));
-        } else {
+        }
+
+        else {
             recyclerViewAllVideos.setLayoutManager(new GridLayoutManager
                     (binding.getRoot().getContext(), recyclerViewColumnCount));
         }
 
-        videoLibraryItemAdapter = new VideoLibraryItemAdapter();
+        videoLibraryItemAdapter = new VideoLibraryItemAdapter(requireActivity());
         recyclerViewAllVideos.setAdapter(videoLibraryItemAdapter);
         recyclerViewAllVideos.setHasFixedSize(true);
 

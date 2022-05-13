@@ -1,6 +1,7 @@
 package com.example.mediaplayerapp.ui.video_library;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -9,16 +10,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.video.Video;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryGridBinding;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryListBinding;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
@@ -26,11 +26,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryItemAdapter.ViewHolder> {
+public class VideoLibraryItemAdapter extends
+        RecyclerView.Adapter<VideoLibraryItemAdapter.ViewHolder> {
 
     private final List<Video> videos;
+    private Context context;
 
-    public VideoLibraryItemAdapter() {
+    public VideoLibraryItemAdapter(Context context) {
+        this.context = context;
         videos = new ArrayList<>();
     }
 
@@ -81,24 +84,10 @@ public class VideoLibraryItemAdapter extends RecyclerView.Adapter<VideoLibraryIt
         holder.videoDuration.setText(durationFormatted);
 
         holder.videoOptions.setOnClickListener(view -> {
-            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(view.getContext());
-            bottomSheetDialog.setContentView(R.layout.dialog_bottom_sheet);
+            VideoLibraryBottomSheetDialog bottomSheetDialog = new VideoLibraryBottomSheetDialog();
+            bottomSheetDialog.show(((AppCompatActivity) context).getSupportFragmentManager(),
+                    bottomSheetDialog.getTag());
 
-            TextView videoNameTextview =
-                    bottomSheetDialog.findViewById(R.id.video_name_bottom_sheet_textview);
-
-            if (videoNameTextview != null) {
-                videoNameTextview.setText(holder.videoName.getText());
-            }
-            LinearLayout optionAddToPlaylist =
-                    bottomSheetDialog.findViewById(R.id.bottom_sheet_option_add_playlist);
-
-            if (optionAddToPlaylist != null) {
-                optionAddToPlaylist.setOnClickListener(view1 -> {
-
-                });
-            }
-            bottomSheetDialog.show();
         });
     }
 
