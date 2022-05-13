@@ -315,6 +315,9 @@ public class MusicPlayerActivity extends AppCompatActivity {
         setViewsColors(artworkBitmap);
     }
 
+    /**
+     * Set default artwork.
+     */
     private void setDefaultArtwork() {
         Drawable defaultArtwork = AppCompatResources.getDrawable(this, R.drawable.ic_music_note_white_24dp);
         binding.musicPlayerSongArtwork.setImageDrawable(defaultArtwork);

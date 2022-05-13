@@ -127,6 +127,9 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
         );
     }
 
+    /**
+     * Setup transport controls for the bottom player UI.
+     */
     private void setupTransportControls() {
         binding.bottomMusicPlayerPlayPauseBtn.setOnClickListener(view -> {
             MediaControllerCompat controller = MediaControllerCompat.getMediaController(activity);
@@ -190,6 +193,9 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
         Log.d(LOG_TAG, "Song's artwork loaded from bitmap");
     }
 
+    /**
+     * Set default artwork.
+     */
     private void setDefaultArtwork() {
         Drawable defaultArtwork = AppCompatResources.getDrawable(activity, R.drawable.ic_music_note_white_24dp);
         binding.bottomMusicPlayerSongArtwork.setImageDrawable(defaultArtwork);
