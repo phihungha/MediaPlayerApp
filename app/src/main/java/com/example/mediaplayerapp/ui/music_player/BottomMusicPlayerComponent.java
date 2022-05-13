@@ -1,13 +1,11 @@
 package com.example.mediaplayerapp.ui.music_player;
 
-import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
-import android.os.Environment;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -30,8 +28,6 @@ import com.example.mediaplayerapp.MainActivity;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.ActivityMainBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
-
-import java.io.File;
 
 /**
  * Logic for bottom music player UI.
@@ -129,11 +125,6 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
         binding.bottomMusicPlayer.setOnClickListener(
                 view -> activity.startActivity(new Intent(activity, MusicPlayerActivity.class))
         );
-    }
-
-    private void playSample() {
-        Uri uri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "Download/music_sample.flac"));
-        MediaControllerCompat.getMediaController(activity).getTransportControls().playFromUri(uri, null);
     }
 
     private void setupTransportControls() {
