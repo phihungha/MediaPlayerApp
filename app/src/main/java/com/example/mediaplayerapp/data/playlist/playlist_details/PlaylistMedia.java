@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.playlist.playlist_details;
+package com.example.mediaplayerapp.data.playlist.playlist_details;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;

@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.playlist.media_queue;
+package com.example.mediaplayerapp.data.playlist.media_queue;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -7,7 +7,6 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import java.util.List;
-
 
 @Dao
 public interface MediaQueueDao {

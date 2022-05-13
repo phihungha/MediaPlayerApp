@@ -25,9 +25,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMedia;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMediaViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
+import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
+import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
+import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -163,19 +168,17 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         });
         
         //click add to queue bottom sheet
-        adapter.setBsAddQueueListener(new IOnPlaylistDetailsItemClickListener() {
+        adapter.setBsAddQueueListener(new IOnItemClickListener() {
             @Override
-            public void OnClick(View view, int position) {
+            public void onClick(View view, int position) {
                 PlaylistMedia media=adapter.getPlaylistMediaItemAt(position);
-                /*mediaQueue.addToQueue(media);
-                mediaQueue.playQueue();*/
-                /**
-                 *
-                 *              Play in queue -> set up in MediaQueue class
-                 *
-                 *
-                 * */
 
+                MediaQueueViewModel mediaQueueViewModel=new ViewModelProvider(getActivity())
+                        .get(MediaQueueViewModel.class);
+
+                MediaQueue mediaQueue=new MediaQueue(media.getMediaUri(),media.getName());
+                mediaQueueViewModel.insert(mediaQueue);
+                Toast.makeText(getContext(), "Add to queue completed!!!", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -1,6 +1,5 @@
 package com.example.mediaplayerapp.ui.playlist;
 
-import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.net.Uri;
@@ -25,11 +24,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistMedia;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistMediaViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMedia;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMediaViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;

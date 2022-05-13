@@ -7,8 +7,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
+import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
+import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
+
 public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHolder> {
     private Context mContext;
+    private IOnItemClickListener deleteItemListener;
+
+    public void setDeleteItemListener(IOnItemClickListener deleteItemListener) {
+        this.deleteItemListener = deleteItemListener;
+    }
 
     public void setContext(Context mContext) {
         this.mContext = mContext;
@@ -20,7 +28,7 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
     @NonNull
     @Override
     public MediaQueueViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return MediaQueueViewHolder.create(parent,mContext);
+        return MediaQueueViewHolder.create(parent,mContext,deleteItemListener);
     }
 
     @Override

@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMedia;
 import com.example.mediaplayerapp.databinding.ItemPlaylistDetailsBinding;
+import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 
@@ -21,11 +23,11 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
     private static Context mContext;
     private ItemPlaylistDetailsBinding binding;
     private BottomSheetDialog bottomSheetDialog;
-    private static IOnPlaylistDetailsItemClickListener itemClickListener;
-    private static IOnPlaylistDetailsItemClickListener bsPlayListener;
-    private static IOnPlaylistDetailsItemClickListener bsDeleteListener;
-    private static IOnPlaylistDetailsItemClickListener bsPropertiesListener;
-    private static IOnPlaylistDetailsItemClickListener bsAddQueueListener;
+    private static IOnItemClickListener itemClickListener;
+    private static IOnItemClickListener bsPlayListener;
+    private static IOnItemClickListener bsDeleteListener;
+    private static IOnItemClickListener bsPropertiesListener;
+    private static IOnItemClickListener bsAddQueueListener;
 
     public PlaylistDetailsViewHolder(@NonNull ItemPlaylistDetailsBinding binding) {
         super(binding.getRoot());
@@ -50,11 +52,11 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
 
     static PlaylistDetailsViewHolder create(ViewGroup parent,
                                             Context context,
-                                            IOnPlaylistDetailsItemClickListener _itemClickListener,
-                                            IOnPlaylistDetailsItemClickListener _bsPlayListener,
-                                            IOnPlaylistDetailsItemClickListener _bsDeleteListener,
-                                            IOnPlaylistDetailsItemClickListener _bsPropertiesListener,
-                                            IOnPlaylistDetailsItemClickListener _bsAddQueueListener) {
+                                            IOnItemClickListener _itemClickListener,
+                                            IOnItemClickListener _bsPlayListener,
+                                            IOnItemClickListener _bsDeleteListener,
+                                            IOnItemClickListener _bsPropertiesListener,
+                                            IOnItemClickListener _bsAddQueueListener) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemPlaylistDetailsBinding binding = ItemPlaylistDetailsBinding.inflate(inflater, parent, false);
         itemClickListener=_itemClickListener;
@@ -68,7 +70,7 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
 
     private void onClickItem(){
         if (itemClickListener != null && getBindingAdapterPosition() != RecyclerView.NO_POSITION) {
-            itemClickListener.OnClick(itemView.getRootView(), getBindingAdapterPosition());
+            itemClickListener.onClick(itemView.getRootView(), getBindingAdapterPosition());
         }
     }
     @Override
@@ -101,22 +103,22 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
     }
 
     private void addToQueue() {
-        bsAddQueueListener.OnClick(itemView,getBindingAdapterPosition());
+        bsAddQueueListener.onClick(itemView,getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void openProperties() {
-        bsPropertiesListener.OnClick(itemView,getBindingAdapterPosition());
+        bsPropertiesListener.onClick(itemView,getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void deleteItem() {
-        bsDeleteListener.OnClick(itemView,getBindingAdapterPosition());
+        bsDeleteListener.onClick(itemView,getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void playNext() {
-        bsPlayListener.OnClick(itemView,getBindingAdapterPosition());
+        bsPlayListener.onClick(itemView,getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 

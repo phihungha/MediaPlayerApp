@@ -8,15 +8,18 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMedia;
+import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
+
 public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDetailsViewHolder> {
     private Context mContext;
-    private IOnPlaylistDetailsItemClickListener itemClickListener;
-    private IOnPlaylistDetailsItemClickListener bsPlayListener;
-    private IOnPlaylistDetailsItemClickListener bsDeleteListener;
-    private IOnPlaylistDetailsItemClickListener bsPropertiesListener;
-    private IOnPlaylistDetailsItemClickListener bsAddQueueListener;
+    private IOnItemClickListener itemClickListener;
+    private IOnItemClickListener bsPlayListener;
+    private IOnItemClickListener bsDeleteListener;
+    private IOnItemClickListener bsPropertiesListener;
+    private IOnItemClickListener bsAddQueueListener;
 
-    public void setBsAddQueueListener(IOnPlaylistDetailsItemClickListener bsAddQueueListener) {
+    public void setBsAddQueueListener(IOnItemClickListener bsAddQueueListener) {
         this.bsAddQueueListener = bsAddQueueListener;
     }
 
@@ -24,19 +27,19 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDe
         super(diffCallback);
     }
 
-    public void setBsPropertiesListener(IOnPlaylistDetailsItemClickListener bsPropertiesListener) {
+    public void setBsPropertiesListener(IOnItemClickListener bsPropertiesListener) {
         this.bsPropertiesListener = bsPropertiesListener;
     }
 
-    public void setItemClickListener(IOnPlaylistDetailsItemClickListener listener){
+    public void setItemClickListener(IOnItemClickListener listener){
         itemClickListener=listener;
     }
 
-    public void setBsPlayListener(IOnPlaylistDetailsItemClickListener bsPlayListener) {
+    public void setBsPlayListener(IOnItemClickListener bsPlayListener) {
         this.bsPlayListener = bsPlayListener;
     }
 
-    public void setBsDeleteListener(IOnPlaylistDetailsItemClickListener bsDeleteListener) {
+    public void setBsDeleteListener(IOnItemClickListener bsDeleteListener) {
         this.bsDeleteListener = bsDeleteListener;
     }
 

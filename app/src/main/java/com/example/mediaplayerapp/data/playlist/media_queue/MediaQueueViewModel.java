@@ -1,10 +1,13 @@
-package com.example.mediaplayerapp.ui.playlist.media_queue;
+package com.example.mediaplayerapp.data.playlist.media_queue;
 
 import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+
+import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
+import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueRepository;
 
 import java.util.List;
 

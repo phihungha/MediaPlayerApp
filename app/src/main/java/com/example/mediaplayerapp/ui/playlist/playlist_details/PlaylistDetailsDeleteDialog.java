@@ -13,10 +13,9 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMedia;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMediaViewModel;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
-import com.example.mediaplayerapp.ui.playlist.PlaylistDeleteDialog;
-import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
 
 public class PlaylistDetailsDeleteDialog extends AppCompatDialogFragment {
 

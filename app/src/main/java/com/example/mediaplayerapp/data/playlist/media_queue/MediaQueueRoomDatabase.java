@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.playlist.media_queue;
+package com.example.mediaplayerapp.data.playlist.media_queue;
 
 import android.content.Context;
 
@@ -23,7 +23,7 @@ public abstract class MediaQueueRoomDatabase extends RoomDatabase {
             synchronized (MediaQueueRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            MediaQueueRoomDatabase.class, "media_table")
+                            MediaQueueRoomDatabase.class, "mediaQueue_table")
                             .allowMainThreadQueries()
                             .fallbackToDestructiveMigration()
                             .build();

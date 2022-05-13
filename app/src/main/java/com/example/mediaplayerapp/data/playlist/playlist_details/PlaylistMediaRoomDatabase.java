@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.playlist.playlist_details;
+package com.example.mediaplayerapp.data.playlist.playlist_details;
 
 import android.content.Context;
 
@@ -25,6 +25,7 @@ public abstract class PlaylistMediaRoomDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             PlaylistMediaRoomDatabase.class, "media_table")
                             .allowMainThreadQueries()
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }

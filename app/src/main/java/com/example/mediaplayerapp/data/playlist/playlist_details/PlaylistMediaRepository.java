@@ -1,9 +1,8 @@
-package com.example.mediaplayerapp.ui.playlist.playlist_details;
+package com.example.mediaplayerapp.data.playlist.playlist_details;
 
 import android.app.Application;
 
 import androidx.lifecycle.LiveData;
-import androidx.room.Query;
 
 import java.util.List;
 

@@ -1,31 +1,26 @@
 package com.example.mediaplayerapp.ui.playlist;
 
-import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
 
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.databinding.ItemPlaylistBinding;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistMediaViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     BottomSheetDialog bottomSheetDialog;
     private ItemPlaylistBinding binding;
-    private static IOnBottomSheetSelectionClick bsRenameListener;
-    private static IOnBottomSheetSelectionClick bsDeleteListener;
-    private static IOnBottomSheetSelectionClick bsPlayListener;
-    private static IOnPlaylistItemClickListener listener;
+    private static IOnItemClickListener bsRenameListener;
+    private static IOnItemClickListener bsDeleteListener;
+    private static IOnItemClickListener bsPlayListener;
+    private static IOnItemClickListener listener;
 
     public PlaylistViewHolder(@NonNull ItemPlaylistBinding binding) {
         super(binding.getRoot());
@@ -81,10 +76,10 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         binding.tvPlaylistNumbers.setText(textCount);
     }
 
-    static PlaylistViewHolder create(ViewGroup parent, IOnPlaylistItemClickListener l,
-                                     IOnBottomSheetSelectionClick _bsRenameListener,
-                                     IOnBottomSheetSelectionClick _bsDeleteListener,
-                                     IOnBottomSheetSelectionClick _bsPlayListener
+    static PlaylistViewHolder create(ViewGroup parent, IOnItemClickListener l,
+                                     IOnItemClickListener _bsRenameListener,
+                                     IOnItemClickListener _bsDeleteListener,
+                                     IOnItemClickListener _bsPlayListener
                                         ) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemPlaylistBinding binding = ItemPlaylistBinding.inflate(inflater, parent, false);
@@ -96,17 +91,17 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     private void StartPlaylist() {
-        bsPlayListener.onItemBSClick(itemView,getBindingAdapterPosition());
+        bsPlayListener.onClick(itemView,getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void RenamePlaylist() {
-        bsRenameListener.onItemBSClick(itemView,getBindingAdapterPosition());
+        bsRenameListener.onClick(itemView,getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void DeletePlaylist() {
-        bsDeleteListener.onItemBSClick(itemView,getBindingAdapterPosition());
+        bsDeleteListener.onClick(itemView,getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 

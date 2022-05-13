@@ -1,11 +1,13 @@
-package com.example.mediaplayerapp.ui.playlist.media_queue;
+package com.example.mediaplayerapp.data.playlist.media_queue;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "mediaQueue_table")
-public class MediaQueue {
+public class MediaQueue implements Serializable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "MediaQueueId")
     private int id;
@@ -16,8 +18,7 @@ public class MediaQueue {
     @ColumnInfo(name = "MediaQueueName")
     private String name;
 
-    public MediaQueue(int id, String mediaUri, String name) {
-        this.id = id;
+    public MediaQueue(String mediaUri, String name) {
         this.mediaUri = mediaUri;
         this.name = name;
     }

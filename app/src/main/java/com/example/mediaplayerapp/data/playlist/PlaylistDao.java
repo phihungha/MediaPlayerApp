@@ -8,8 +8,6 @@ import androidx.room.Query;
 import androidx.room.Update;
 
 
-import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistMedia;
-
 import java.util.List;
 
 @Dao

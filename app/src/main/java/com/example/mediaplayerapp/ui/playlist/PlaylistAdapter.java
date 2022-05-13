@@ -1,24 +1,21 @@
 package com.example.mediaplayerapp.ui.playlist;
 
-import android.app.Activity;
 import android.app.Application;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistMediaDao;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistMediaViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMediaViewModel;
 
 public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
-    private IOnPlaylistItemClickListener mListener;
+    private IOnItemClickListener mListener;
     private Application application;
-    private IOnBottomSheetSelectionClick mBSRenameListener;
-    private IOnBottomSheetSelectionClick mBSDeleteListener;
-    private IOnBottomSheetSelectionClick mBSPlayListener;
+    private IOnItemClickListener mBSRenameListener;
+    private IOnItemClickListener mBSDeleteListener;
+    private IOnItemClickListener mBSPlayListener;
     protected PlaylistAdapter(@NonNull DiffUtil.ItemCallback<Playlist> diffCallback) {
         super(diffCallback);
     }
@@ -67,19 +64,19 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
         }
     }
 
-    public void setBSPlayListener(IOnBottomSheetSelectionClick mBSPlayListener) {
+    public void setBSPlayListener(IOnItemClickListener mBSPlayListener) {
         this.mBSPlayListener = mBSPlayListener;
     }
 
-    public void setBSDeleteListener(IOnBottomSheetSelectionClick listener){
+    public void setBSDeleteListener(IOnItemClickListener listener){
         mBSDeleteListener=listener;
     }
 
-    public void setBSRenameListener(IOnBottomSheetSelectionClick listener){
+    public void setBSRenameListener(IOnItemClickListener listener){
         mBSRenameListener=listener;
     }
 
-    public void setListener(IOnPlaylistItemClickListener listener){
+    public void setListener(IOnItemClickListener listener){
         mListener=listener;
     }
 

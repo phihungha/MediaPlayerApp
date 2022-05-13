@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.playlist.playlist_details;
+package com.example.mediaplayerapp.data.playlist.playlist_details;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
@@ -7,8 +7,6 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
-
-import com.example.mediaplayerapp.data.playlist.Playlist;
 
 import java.util.List;
 
