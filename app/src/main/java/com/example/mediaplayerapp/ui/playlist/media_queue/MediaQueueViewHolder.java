@@ -22,10 +22,12 @@ public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements Vie
     private ItemMediaQueueBinding binding;
     private static Context mContext;
     private static IOnItemClickListener deleteItemListener;
+    private static IOnItemClickListener itemClickListener;
     public MediaQueueViewHolder(@NonNull ItemMediaQueueBinding binding) {
         super(binding.getRoot());
         this.binding=binding;
         binding.imgBtnDeleteMediaQueue.setOnClickListener(this);
+        binding.getRoot().setOnClickListener(this);
     }
 
     public void setBinding(MediaQueue media) {
@@ -44,10 +46,12 @@ public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements Vie
 
     static MediaQueueViewHolder create(ViewGroup parent,
                                             Context context,
-                                       IOnItemClickListener _deleteItemListener) {
+                                       IOnItemClickListener _deleteItemListener,
+                                       IOnItemClickListener _itemClickListener) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemMediaQueueBinding binding = ItemMediaQueueBinding.inflate(inflater, parent, false);
         deleteItemListener=_deleteItemListener;
+        itemClickListener=_itemClickListener;
         mContext=context;
         return new MediaQueueViewHolder(binding);
     }
@@ -58,8 +62,18 @@ public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements Vie
             case R.id.imgBtn_Delete_MediaQueue:
                 DeleteItemQueue();
                 break;
+
+            case R.id.layoutItem_mediaQueue:
+                QueueItemClick();
+                break;
         }
 
+    }
+
+    private void QueueItemClick() {
+        if (itemClickListener != null && getBindingAdapterPosition() != RecyclerView.NO_POSITION) {
+            itemClickListener.onClick(itemView.getRootView(), getBindingAdapterPosition());
+        }
     }
 
     private void DeleteItemQueue() {

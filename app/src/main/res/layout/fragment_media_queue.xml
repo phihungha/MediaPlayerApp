@@ -39,7 +39,7 @@
             />
 
         <LinearLayout
-            android:id="@+id/layout_saveToPlaylist"
+            android:id="@+id/layout_playQueue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
@@ -52,23 +52,24 @@
             app:layout_constraintStart_toStartOf="@id/view_queue">
 
             <ImageView
-                android:id="@+id/img_saveToPlaylist"
+                android:id="@+id/img_playQueue"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
 
                 android:layout_gravity="center"
                 android:backgroundTint="@color/white"
-                android:src="@drawable/ic_round_playlist_add_24" />
+                android:src="@drawable/ic_round_play_circle_outline_24"
+                app:tint="@color/white" />
 
             <TextView
-                android:id="@+id/tv_saveToPlaylist"
+                android:id="@+id/tv_playQueue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
 
-                android:text="@string/save_to_playlist"
+                android:text="@string/play_all"
                 android:textColor="@color/white"
                 android:textSize="20sp"
                 />
@@ -83,8 +84,8 @@
             android:clickable="true"
 
             android:padding="8dp"
-            app:layout_constraintTop_toTopOf="@id/layout_saveToPlaylist"
-            app:layout_constraintBottom_toBottomOf="@id/layout_saveToPlaylist"
+            app:layout_constraintTop_toTopOf="@id/layout_playQueue"
+            app:layout_constraintBottom_toBottomOf="@id/layout_playQueue"
             app:layout_constraintEnd_toEndOf="@id/view_queue">
 
             <ImageView

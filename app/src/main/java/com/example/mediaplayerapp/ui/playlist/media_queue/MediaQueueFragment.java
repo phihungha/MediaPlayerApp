@@ -1,5 +1,6 @@
 package com.example.mediaplayerapp.ui.playlist.media_queue;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MediaQueueFragment extends Fragment implements View.OnClickListener {
@@ -65,32 +67,71 @@ public class MediaQueueFragment extends Fragment implements View.OnClickListener
         );
     }
 
-    private void setListeners(){
-        binding.layoutSaveToPlaylist.setOnClickListener(this);
+    private void setListeners() {
         binding.layoutClearQueue.setOnClickListener(this);
+        binding.layoutPlayQueue.setOnClickListener(this);
+
         adapter.setDeleteItemListener(new IOnItemClickListener() {
             @Override
             public void onClick(View view, int position) {
-                DeleteItemQueue(view,position);
+                DeleteItemQueue(view, position);
+            }
+        });
+
+        adapter.setItemClickListener(new IOnItemClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                ClickItem(view, position);
             }
         });
     }
 
+    private void ClickItem(View view, int position) {
+        MediaQueue media = adapter.getItemAt(position);
+        Uri uri = Uri.parse(media.getMediaUri());
+        /**
+         *
+         *              Click to play item queue
+         *
+         *
+         *
+         * */
+        makeToast("Play item at " + position);
+    }
+
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
-            case R.id.layout_saveToPlaylist:
-                openBottomSheetDialogAddPlaylist();
-                break;
-
+        switch (view.getId()) {
             case R.id.layout_clearQueue:
                 ClearQueue();
+                break;
+
+            case R.id.layout_playQueue:
+                PlayQueue();
                 break;
         }
     }
 
-    private void DeleteItemQueue(View view,int position) {
-        MediaQueue mediaQueue=adapter.getItemAt(position);
+    private void PlayQueue() {
+        List<MediaQueue> listMedia = adapter.getCurrentList();
+        List<Uri> uriList = new ArrayList<>();
+        listMedia.forEach(item -> {
+            Uri uri = Uri.parse(item.getMediaUri());
+            uriList.add(uri);
+        });
+        /**
+         *
+         *              Click to play item queue
+         *
+         *
+         *
+         * */
+        makeToast("Play all");
+
+    }
+
+    private void DeleteItemQueue(View view, int position) {
+        MediaQueue mediaQueue = adapter.getItemAt(position);
         MediaQueueDeleteDialog dialog = MediaQueueDeleteDialog.newInstance(mediaQueue);
         dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_DELETE_DIALOG_QUEUE);
     }
@@ -98,57 +139,6 @@ public class MediaQueueFragment extends Fragment implements View.OnClickListener
     private void ClearQueue() {
         MediaQueueDeleteDialog dialog = MediaQueueDeleteDialog.newInstance(null);
         dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_DELETE_DIALOG_ALL_QUEUE);
-    }
-
-    private void AddToPlayList(int idResource, String name, boolean isVideo) {
-        //insert playlist
-        PlaylistViewModel playlistViewModel=new ViewModelProvider(this).get(PlaylistViewModel.class);
-        Playlist playlist = new Playlist(R.drawable.img_for_test,
-                name, isVideo);
-        playlistViewModel.insert(playlist);
-
-        //insert item playlist
-        PlaylistMediaViewModel playlistMediaViewModel=new ViewModelProvider(this).get(PlaylistMediaViewModel.class);
-        List<MediaQueue> list=adapter.getCurrentList();
-        list.forEach(item -> {
-            PlaylistMedia media=new PlaylistMedia(playlist.getId(),
-                    item.getMediaUri(),
-                    item.getName());
-            playlistMediaViewModel.insert(media);
-        });
-    }
-
-    private void openBottomSheetDialogAddPlaylist() {
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext(), R.style.BottomSheetTheme);
-        View bsAddView = LayoutInflater.from(getContext()).inflate(
-                R.layout.playlist_create_bs_layout,
-                getActivity().findViewById(R.id.bs_playlist_create)
-        );
-        //set click event here
-        EditText edtName = bsAddView.findViewById(R.id.edt_playlistNameCreate);
-        Button btnCreate = bsAddView.findViewById(R.id.btn_createPlaylist);
-        RadioButton radioAudio = bsAddView.findViewById(R.id.radio_audio);
-        RadioButton radioVideo = bsAddView.findViewById(R.id.radio_video);
-        btnCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (edtName.getText().toString().trim().isEmpty()) {
-                    makeToast("Name is empty!");
-                } else if (!radioAudio.isChecked() && !radioVideo.isChecked()) {
-                    makeToast("Please check type for playlist!");
-                } else {
-                    AddToPlayList(R.drawable.img_for_test,
-                            edtName.getText().toString().trim(),
-                            radioVideo.isChecked());
-                    bottomSheetDialog.dismiss();
-                    makeToast("Create Playlist Success!");
-                }
-            }
-        });
-
-        bottomSheetDialog.setContentView(bsAddView);
-        bottomSheetDialog.show();
     }
 
     private void makeToast(String mess) {

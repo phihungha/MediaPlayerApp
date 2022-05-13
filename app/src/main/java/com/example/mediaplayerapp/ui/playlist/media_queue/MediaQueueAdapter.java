@@ -13,6 +13,11 @@ import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHolder> {
     private Context mContext;
     private IOnItemClickListener deleteItemListener;
+    private IOnItemClickListener itemClickListener;
+
+    public void setItemClickListener(IOnItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
 
     public void setDeleteItemListener(IOnItemClickListener deleteItemListener) {
         this.deleteItemListener = deleteItemListener;
@@ -28,7 +33,7 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
     @NonNull
     @Override
     public MediaQueueViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return MediaQueueViewHolder.create(parent,mContext,deleteItemListener);
+        return MediaQueueViewHolder.create(parent,mContext,deleteItemListener,itemClickListener);
     }
 
     @Override

@@ -76,7 +76,7 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
     @Override
     public void onClick(View view) {
         switch (view.getId()){
-            case R.id.layoutItem_mediaQueue:
+            case R.id.layoutItem_PlaylistDetails:
                 onClickItem();
                 break;
 
