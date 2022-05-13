@@ -4,6 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,12 +16,16 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMedia;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMediaViewModel;
 import com.example.mediaplayerapp.databinding.FragmentMediaQueueBinding;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.List;
 
@@ -72,7 +80,7 @@ public class MediaQueueFragment extends Fragment implements View.OnClickListener
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.layout_saveToPlaylist:
-                AddToPlayList();
+                openBottomSheetDialogAddPlaylist();
                 break;
 
             case R.id.layout_clearQueue:
@@ -92,8 +100,58 @@ public class MediaQueueFragment extends Fragment implements View.OnClickListener
         dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_DELETE_DIALOG_ALL_QUEUE);
     }
 
-    private void AddToPlayList() {
+    private void AddToPlayList(int idResource, String name, boolean isVideo) {
+        //insert playlist
         PlaylistViewModel playlistViewModel=new ViewModelProvider(this).get(PlaylistViewModel.class);
+        Playlist playlist = new Playlist(R.drawable.img_for_test,
+                name, isVideo);
+        playlistViewModel.insert(playlist);
 
+        //insert item playlist
+        PlaylistMediaViewModel playlistMediaViewModel=new ViewModelProvider(this).get(PlaylistMediaViewModel.class);
+        List<MediaQueue> list=adapter.getCurrentList();
+        list.forEach(item -> {
+            PlaylistMedia media=new PlaylistMedia(playlist.getId(),
+                    item.getMediaUri(),
+                    item.getName());
+            playlistMediaViewModel.insert(media);
+        });
+    }
+
+    private void openBottomSheetDialogAddPlaylist() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext(), R.style.BottomSheetTheme);
+        View bsAddView = LayoutInflater.from(getContext()).inflate(
+                R.layout.playlist_create_bs_layout,
+                getActivity().findViewById(R.id.bs_playlist_create)
+        );
+        //set click event here
+        EditText edtName = bsAddView.findViewById(R.id.edt_playlistNameCreate);
+        Button btnCreate = bsAddView.findViewById(R.id.btn_createPlaylist);
+        RadioButton radioAudio = bsAddView.findViewById(R.id.radio_audio);
+        RadioButton radioVideo = bsAddView.findViewById(R.id.radio_video);
+        btnCreate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if (edtName.getText().toString().trim().isEmpty()) {
+                    makeToast("Name is empty!");
+                } else if (!radioAudio.isChecked() && !radioVideo.isChecked()) {
+                    makeToast("Please check type for playlist!");
+                } else {
+                    AddToPlayList(R.drawable.img_for_test,
+                            edtName.getText().toString().trim(),
+                            radioVideo.isChecked());
+                    bottomSheetDialog.dismiss();
+                    makeToast("Create Playlist Success!");
+                }
+            }
+        });
+
+        bottomSheetDialog.setContentView(bsAddView);
+        bottomSheetDialog.show();
+    }
+
+    private void makeToast(String mess) {
+        Toast.makeText(getActivity(), mess, Toast.LENGTH_SHORT).show();
     }
 }
