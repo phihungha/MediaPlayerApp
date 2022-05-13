@@ -5,10 +5,15 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.text.style.TextAppearanceSpan;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,18 +24,18 @@ import com.example.mediaplayerapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
+public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> implements Filterable {
     ArrayList<Song> SongList = new ArrayList<>();
+    ArrayList<Song> SongListOld = new ArrayList<>();
     Context context;
-    MediaPlayer mediaPlayer;
-    Song obj;
+
 
     public SongAdapter(Context context, ArrayList<Song> SongList) {
-
         this.context = context;
         this.SongList = SongList;
-
+        this.SongListOld=SongList;
     }
     @NonNull
     @Override
@@ -51,15 +56,60 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> {
     public int getItemCount() {
         return SongList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String strsearch= charSequence.toString();
+                if (strsearch.isEmpty())
+                {
+                    SongList=SongListOld;
+                }else {
+                    ArrayList<Song> NewList = new ArrayList<>();
+                    for(Song song : SongListOld){
+                        if(song.getSongTitle().toLowerCase().contains(strsearch.toLowerCase()))
+                        {
+                            NewList.add(song);
+                        }
+                    }
+                    SongList=NewList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values=SongList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                SongList=(ArrayList<Song>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
     public class SongHolder extends RecyclerView.ViewHolder  {
         TextView sogname;
         TextView artistname;
+        ImageView contextmenu;
+        private PopupMenu popup;
         public SongHolder(View itemView)    {
 
             super(itemView);
             sogname = (TextView)itemView.findViewById(R.id.sogname);
             artistname= (TextView)itemView.findViewById(R.id.artistname);
-        }
+            contextmenu=itemView.findViewById(R.id.contextmenu);
+            contextmenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    popup = new PopupMenu(context, view, Gravity.END);
+                    MenuInflater inflater = popup.getMenuInflater();
+                    inflater.inflate(R.menu.song_option, popup.getMenu());
+                    popup.show();
+                }
+            });
 
+        }
     }
 }

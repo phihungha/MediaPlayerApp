@@ -54,9 +54,7 @@ public class Song {
     public void setDuration(long duration){this.duration=duration;}
     public void setTrackNumber(int trackNumber){this.trackNumber=trackNumber;}
 
-
-
-
-
-
+    public String getSongTitle() {
+        return songTitle;
+    }
 }

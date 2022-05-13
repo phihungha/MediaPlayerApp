@@ -13,6 +13,9 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.SearchView;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Artist;
@@ -29,6 +32,8 @@ public class ArtistFragment extends Fragment {
     private ArtistAdapter artistAdapter;
     private ArrayList<Artist> artists = new ArrayList<Artist>();
     private Artist artist;
+    private EditText betatest;
+    private ImageView abc;
     public ArtistFragment() {
         // Required empty public constructor
     }
@@ -41,6 +46,12 @@ public class ArtistFragment extends Fragment {
         if(view==null) {
             view = inflater.inflate(R.layout.fragment_artist, container, false);
             recyclerView = (RecyclerView) view.findViewById(R.id.arr);
+            betatest=view.findViewById(R.id.search);
+
+
+
+
+
             LinearLayoutManager linearLayoutManager = new
                     LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));

@@ -73,7 +73,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> {
             transaction.setCustomAnimations(R.anim.layout_fad_in, R.anim.layout_fad_out,
                     R.anim.layout_fad_in, R.anim.layout_fad_out);
             fragment = ArtistDetailFragment.newInstance(artistId);
-            transaction.add(R.id.container,fragment);
+            transaction.add(R.id.song_container,fragment);
             transaction.addToBackStack(null);
             transaction.commit();
         }

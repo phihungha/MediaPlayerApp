@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/add_playlist"
+
+        android:orderInCategory="10"
+        android:title="Add to playlist" />
+
+
+    <item
+        android:id="@+id/song_detail"
+
+        android:orderInCategory="30"
+        android:title="Song detail" />
+
+    <item
+        android:id="@+id/add_favorite"
+
+        android:orderInCategory="20"
+        android:title="Favorite" />
+</menu>

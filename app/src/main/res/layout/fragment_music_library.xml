@@ -6,17 +6,19 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="false"
-
+    android:id="@+id/song_container"
     tools:context=".ui.music_library.MusicLibraryFragment">
 
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tablayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
        />
-
-
-
     <androidx.viewpager.widget.ViewPager
         android:layout_width="match_parent"
         android:layout_height="0dp"
