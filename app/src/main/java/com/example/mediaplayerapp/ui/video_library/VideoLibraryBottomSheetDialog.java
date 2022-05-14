@@ -1,6 +1,7 @@
 package com.example.mediaplayerapp.ui.video_library;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +57,11 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
 
         LinearLayout bottomSheetOptionShare = binding.bottomSheetOptionShare;
         bottomSheetOptionShare.setOnClickListener(view1 -> {
-
+            Intent shareVideoIntent=new Intent("android.intent.action.SEND");
+            shareVideoIntent.setType("video/mp4");
+            shareVideoIntent.putExtra("android.intent.extra.STREAM", currentVideo.getUri());
+            startActivity(Intent.createChooser(shareVideoIntent,
+                    "Share " + currentVideo.getName()));
         });
 
         LinearLayout bottomSheetOptionDelete = binding.bottomSheetOptionDelete;
