@@ -1,6 +1,5 @@
 package com.example.mediaplayerapp.ui.video_library;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +13,11 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.example.mediaplayerapp.data.video.Video;
 import com.example.mediaplayerapp.databinding.DialogBottomSheetBinding;
+import com.example.mediaplayerapp.databinding.DialogVideoInfoBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
 
@@ -42,7 +45,22 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
 
         LinearLayout bottomSheetOptionInfo = binding.bottomSheetOptionInfo;
         bottomSheetOptionInfo.setOnClickListener(view1 -> {
+            DialogVideoInfoBinding binding
+                    = DialogVideoInfoBinding.inflate(inflater, container,false);
 
+            binding.dialogVideoInfoVideoNameTextview.setText(currentVideo.getName());
+
+            int duration = currentVideo.getDuration();
+            String durationFormatted = String.format(
+                    Locale.US,
+                    "%02d:%02d",
+                    TimeUnit.MILLISECONDS.toMinutes(duration),
+                    TimeUnit.MILLISECONDS.toSeconds(duration)
+            );
+            binding.dialogVideoInfoVideoLengthTextview.setText(durationFormatted);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+            builder.setView(binding.getRoot()).show();
         });
 
         LinearLayout bottomSheetOptionAddPlaylist = binding.bottomSheetOptionAddPlaylist;

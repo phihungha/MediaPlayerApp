@@ -20,18 +20,16 @@ import com.example.mediaplayerapp.data.video.Video;
 import com.example.mediaplayerapp.databinding.FragmentVideoLibraryBinding;
 
 import java.util.List;
-import java.util.Objects;
 
 
 public class VideoLibraryFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "recycler_column_count";
     public static int recyclerViewColumnCount = 2;
-    private FragmentVideoLibraryBinding binding;
     private VideoLibraryViewModel videoLibraryViewModel;
+    private FragmentVideoLibraryBinding binding;
     private RecyclerView recyclerViewAllVideos;
     private VideoLibraryItemAdapter videoLibraryItemAdapter;
-
     private SortArgs sortArgs = SortArgs.VIDEO_NAME;
     private SortOrder sortOrder = SortOrder.ASC;
 
@@ -65,18 +63,14 @@ public class VideoLibraryFragment extends Fragment {
             recyclerViewAllVideos.setAdapter(videoLibraryItemAdapter);
             return true;
 
-        }
-
-        else if (itemId == R.id.sort_by_name_menu_item) {
+        } else if (itemId == R.id.sort_by_name_menu_item) {
             sortArgs = SortArgs.VIDEO_NAME;
             sortOrder = sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
 
             videoLibraryItemAdapter.updateVideoList(currentVideosList, sortArgs, sortOrder);
             return true;
 
-        }
-
-        else if (itemId == R.id.sort_by_length_menu_item) {
+        } else if (itemId == R.id.sort_by_length_menu_item) {
             sortArgs = SortArgs.VIDEO_DURATION;
             sortOrder = sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
 
@@ -99,9 +93,7 @@ public class VideoLibraryFragment extends Fragment {
         if (recyclerViewColumnCount <= 1) {
             recyclerViewAllVideos.setLayoutManager(new LinearLayoutManager
                     (binding.getRoot().getContext()));
-        }
-
-        else {
+        } else {
             recyclerViewAllVideos.setLayoutManager(new GridLayoutManager
                     (binding.getRoot().getContext(), recyclerViewColumnCount));
         }
