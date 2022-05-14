@@ -77,6 +77,12 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
             new MediaControllerCompat.Callback() {
                 @Override
                 public void onMetadataChanged(MediaMetadataCompat metadata) {
+                    if (MediaControllerCompat
+                            .getMediaController(activity)
+                            .getPlaybackState()
+                            .getState() == PlaybackStateCompat.STATE_NONE)
+                        return;
+
                     binding.bottomMusicPlayerSongTitle.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_TITLE));
                     binding.bottomMusicPlayerSongArtist.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_ARTIST));
 
@@ -88,6 +94,7 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
                         setArtworkFromArtworkUri(Uri.parse(artworkUri));
                     else
                         setDefaultArtwork();
+
                     Log.d(LOG_TAG, "Media metadata displays updated");
                 }
 
@@ -95,10 +102,12 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
                 public void onPlaybackStateChanged(PlaybackStateCompat state) {
                     if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
                         binding.bottomMusicPlayerPlayPauseBtn.setImageLevel(1);
-                        displayUI();
+                        showUI();
                     }
                     else if (state.getState() == PlaybackStateCompat.STATE_PAUSED)
                         binding.bottomMusicPlayerPlayPauseBtn.setImageLevel(0);
+                    else if (state.getState() == PlaybackStateCompat.STATE_NONE)
+                        hideUI();
 
                     Log.d(LOG_TAG, "Playback state changed to " + state.getState());
                 }
@@ -163,13 +172,9 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
         );
 
         binding.bottomMusicPlayerStopBtn.setOnClickListener(
-                view -> {
-                    MediaControllerCompat
-                            .getMediaController(activity)
-                            .getTransportControls()
-                            .stop();
-                    hideUI();
-                }
+                view -> MediaControllerCompat.getMediaController(activity)
+                        .getTransportControls()
+                        .stop()
         );
 
         MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(activity);
@@ -183,9 +188,9 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
     }
 
     /**
-     * Display the player's UI with slide up animation.
+     * Show the player's UI with slide up animation.
      */
-    private void displayUI()
+    private void showUI()
     {
         if (!isDisplayed) {
             binding.bottomMusicPlayer.animate().translationY(-binding.navView.getHeight())
@@ -204,15 +209,17 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
      */
     private void hideUI()
     {
-        binding.bottomMusicPlayer.animate()
-                .translationY(0)
-                .setListener(new AnimatorListenerAdapter() {
-                    @Override
-                    public void onAnimationEnd(Animator animation) {
-                        binding.bottomMusicPlayer.setVisibility(View.GONE);
-                    }
-                });
-        isDisplayed = false;
+        if (isDisplayed) {
+            binding.bottomMusicPlayer.animate()
+                    .translationY(0)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            binding.bottomMusicPlayer.setVisibility(View.GONE);
+                        }
+                    });
+            isDisplayed = false;
+        }
     }
 
     /**
