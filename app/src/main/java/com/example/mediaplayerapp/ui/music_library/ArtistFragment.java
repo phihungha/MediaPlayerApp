@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Artist;
-import com.example.mediaplayerapp.data.ArtistAdapter;
 import com.example.mediaplayerapp.data.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.data.MusicLibraryRepository;
 

@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.data;
+package com.example.mediaplayerapp.ui.music_library;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -16,8 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.ui.music_library.ArtistDetailFragment;
-import com.example.mediaplayerapp.ui.music_library.MusicLibraryFragment;
+import com.example.mediaplayerapp.data.Artist;
 
 
 import java.util.List;

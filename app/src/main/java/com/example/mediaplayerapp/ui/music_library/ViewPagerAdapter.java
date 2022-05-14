@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.data;
+package com.example.mediaplayerapp.ui.music_library;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;

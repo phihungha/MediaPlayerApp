@@ -44,4 +44,8 @@ public class Album {public  long id;
     public void setYear(int num) {
         this.year = num;
     }
+
+    public String getAlbumName() {
+        return albumName;
+    }
 }

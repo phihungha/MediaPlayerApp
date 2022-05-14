@@ -1,10 +1,12 @@
-package com.example.mediaplayerapp.data;
+package com.example.mediaplayerapp.ui.music_library;
 
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,13 +18,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.ui.music_library.AlbumDetailFragment;
-import com.example.mediaplayerapp.ui.music_library.ArtistDetailFragment;
+import com.example.mediaplayerapp.data.Album;
+import com.example.mediaplayerapp.data.Song;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>{
+public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder> implements Filterable {
     private Context context;
     private ArrayList<Album> albumList;
     private ArrayList<Album> albumListOld;
@@ -52,6 +53,39 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
     public int getItemCount() {
         return albumList.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String strsearch= charSequence.toString();
+                if (strsearch.isEmpty())
+                {
+                    albumList=albumListOld;
+                }else {
+                    ArrayList<Album> NewList = new ArrayList<>();
+                    for(Album album : albumListOld){
+                        if(album.getAlbumName().toLowerCase().contains(strsearch.toLowerCase()))
+                        {
+                            NewList.add(album);
+                        }
+                    }
+                    albumList=NewList;
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values=albumList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                albumList= (ArrayList<Album>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
     public class AlbumViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
         private ImageView img;

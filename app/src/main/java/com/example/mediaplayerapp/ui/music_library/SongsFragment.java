@@ -2,19 +2,15 @@ package com.example.mediaplayerapp.ui.music_library;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.database.Cursor;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
@@ -22,7 +18,6 @@ import android.widget.SearchView;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.MusicLibraryRepository;
 import com.example.mediaplayerapp.data.Song;
-import com.example.mediaplayerapp.data.SongAdapter;
 
 import java.util.ArrayList;
 

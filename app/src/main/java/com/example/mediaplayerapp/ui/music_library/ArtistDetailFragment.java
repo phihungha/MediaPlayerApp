@@ -14,14 +14,11 @@ import android.widget.TextView;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Artist;
-import com.example.mediaplayerapp.data.ArtistDetailAdapter;
 import com.example.mediaplayerapp.data.MusicLibraryRepository;
 import com.example.mediaplayerapp.data.Song;
-import com.example.mediaplayerapp.data.SongAdapter;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class ArtistDetailFragment extends Fragment {

@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.ViewPagerAdapter;
 import com.example.mediaplayerapp.databinding.FragmentMusicLibraryBinding;
 import com.google.android.material.tabs.TabLayout;
 

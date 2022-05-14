@@ -1,10 +1,6 @@
-package com.example.mediaplayerapp.data;
+package com.example.mediaplayerapp.ui.music_library;
 
-import android.content.ContentUris;
 import android.content.Context;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.text.style.TextAppearanceSpan;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -20,11 +16,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.Song;
 
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> implements Filterable {
     ArrayList<Song> SongList = new ArrayList<>();

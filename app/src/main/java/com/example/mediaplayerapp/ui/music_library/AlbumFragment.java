@@ -1,6 +1,8 @@
 package com.example.mediaplayerapp.ui.music_library;
 
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,12 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Album;
-import com.example.mediaplayerapp.data.AlbumAdapter;
 import com.example.mediaplayerapp.data.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.data.MusicLibraryRepository;
 
@@ -35,6 +39,7 @@ public class AlbumFragment extends Fragment {
         if(view==null)
         {
             view = inflater.inflate(R.layout.fragment_album, container, false);
+            setHasOptionsMenu(true);
             recyclerView = view.findViewById(R.id.ar);
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
             albums= (ArrayList<Album>) MusicLibraryRepository.AlbumLoader.albumList(getActivity());
@@ -47,5 +52,26 @@ public class AlbumFragment extends Fragment {
         }
         // Inflate the layout for this fragment
         return view;
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        inflater.inflate(R.menu.search, menu);
+        SearchManager searchManager = (SearchManager)getContext().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                albumAdapter.getFilter().filter(s);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                albumAdapter.getFilter().filter(s);
+                return false;
+            }
+        });
+
     }
 }
