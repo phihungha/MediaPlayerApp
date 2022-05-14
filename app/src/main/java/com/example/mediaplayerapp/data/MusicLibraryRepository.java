@@ -17,7 +17,7 @@ public class MusicLibraryRepository {
     public static class ArtistLoader {
 
 
-        public List<Artist> getArtiss(Cursor cursor) {
+        public static List<Artist> getArtiss(Cursor cursor) {
 
             List<Artist> list = new ArrayList<>();
             if (cursor != null && cursor.moveToFirst()) {
@@ -50,7 +50,7 @@ public class MusicLibraryRepository {
             return artis;
         }
 
-        public List<Artist> artisList(Context context) {
+        public static List<Artist> artisList(Context context) {
             return getArtiss(makeCursor(context, null, null));
         }
 
@@ -114,7 +114,7 @@ public class MusicLibraryRepository {
     public static class AlbumLoader {
 
 
-        public ArrayList<Album> getAlbums(Cursor cursor) {
+        public static ArrayList<Album> getAlbums(Cursor cursor) {
 
             List<Album> list = new ArrayList<>();
             if (cursor != null && cursor.moveToFirst()) {
@@ -135,7 +135,7 @@ public class MusicLibraryRepository {
             return album(makeCursor(context, "_id=?", new String[]{String.valueOf(id)}));
         }
 
-        private Album album(Cursor cursor) {
+        private static Album album(Cursor cursor) {
             Album album = new Album();
             if (cursor.moveToFirst() && cursor != null) {
 
@@ -149,11 +149,11 @@ public class MusicLibraryRepository {
             return album;
         }
 
-        public List<Album> albumList(Context context) {
+        public static List<Album> albumList(Context context) {
             return getAlbums(makeCursor(context, null, null));
         }
 
-        public  Cursor makeCursor(Context context, String selection, String[] selectionArg) {
+        public  static Cursor makeCursor(Context context, String selection, String[] selectionArg) {
 
 
             Uri uri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
@@ -210,6 +210,44 @@ public class MusicLibraryRepository {
             }
 
             return (ArrayList<Song>) albumSongList;
+        }
+    }
+
+    public static class SongLoder {
+
+        public static List<Song> getAllSongs(Context context){
+
+            List<Song> songList = new ArrayList<>();
+
+            Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+            String[] projection = new String[]{
+                    MediaStore.Audio.Media._ID,//0
+                    MediaStore.Audio.Media.TITLE,//1
+                    MediaStore.Audio.Media.ALBUM_ID,//2
+                    MediaStore.Audio.Media.ALBUM,//3
+                    MediaStore.Audio.Media.ARTIST_ID,//4
+                    MediaStore.Audio.Media.ARTIST,//5
+                    MediaStore.Audio.Media.DURATION,//6
+                    MediaStore.Audio.Media.TRACK//7
+
+            };
+
+            String sortOrder = MediaStore.Audio.Media.DEFAULT_SORT_ORDER;
+            Cursor cursor = context.getContentResolver().query(uri,projection,null,null,sortOrder);
+
+            if (cursor!=null&&cursor.moveToFirst()){
+                do {
+                    songList.add(new Song(cursor.getLong(0),cursor.getString(1),cursor.getLong(2),cursor.getString(3),
+                            cursor.getLong(4),cursor.getString(5),cursor.getInt(6),cursor.getInt(7)));
+                }while (cursor.moveToNext());
+
+                if (cursor!=null) {
+                    cursor.close();
+                }
+
+            }
+
+            return songList;
         }
     }
 }

@@ -19,16 +19,19 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.ui.music_library.AlbumDetailFragment;
 import com.example.mediaplayerapp.ui.music_library.ArtistDetailFragment;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>{
     private Context context;
-    private List<Album> albumList;
+    private ArrayList<Album> albumList;
+    private ArrayList<Album> albumListOld;
 
 
-    public AlbumAdapter(Context context, List<Album> albumList) {
+    public AlbumAdapter(Context context, ArrayList<Album> albumList) {
         this.albumList = albumList;
         this.context = context;
+        this.albumListOld=albumList;
     }
     @NonNull
     @Override
