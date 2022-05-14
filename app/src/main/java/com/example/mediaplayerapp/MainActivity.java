@@ -16,13 +16,11 @@ import com.example.mediaplayerapp.ui.music_player.BottomMusicPlayerComponent;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityMainBinding binding;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        com.example.mediaplayerapp.databinding.ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         // Passing each menu ID as a set of Ids because each
@@ -34,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
 
-        BottomMusicPlayerComponent bottomMusicPlayer = new BottomMusicPlayerComponent(this);
+        BottomMusicPlayerComponent bottomMusicPlayer = new BottomMusicPlayerComponent(this, binding);
         getLifecycle().addObserver(bottomMusicPlayer);
     }
 
@@ -42,9 +40,5 @@ public class MainActivity extends AppCompatActivity {
         MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(activity);
         if (mediaController != null)
             mediaController.getTransportControls().playFromUri(uri, null);
-    }
-
-    public ActivityMainBinding getBinding() {
-        return binding;
     }
 }

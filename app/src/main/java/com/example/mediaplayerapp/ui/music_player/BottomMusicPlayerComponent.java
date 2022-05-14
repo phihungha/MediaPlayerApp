@@ -30,6 +30,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.example.mediaplayerapp.MainActivity;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.ActivityMainBinding;
+import com.example.mediaplayerapp.databinding.BottomMusicPlayerBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
 
 /**
@@ -39,6 +40,7 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
 
     private static final String LOG_TAG = BottomMusicPlayerComponent.class.getSimpleName();
     private boolean isDisplayed = false;
+    private boolean firstDisplayTime = true;
 
     private MediaBrowserCompat mediaBrowser;
     MediaBrowserCompat.ConnectionCallback connectionCallback =
@@ -121,11 +123,13 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
             };
 
     MainActivity activity;
-    ActivityMainBinding binding;
+    ActivityMainBinding activityMainBinding;
+    BottomMusicPlayerBinding binding;
 
-    public BottomMusicPlayerComponent(MainActivity activity) {
+    public BottomMusicPlayerComponent(MainActivity activity, ActivityMainBinding binding) {
         this.activity = activity;
-        binding = activity.getBinding();
+        this.activityMainBinding = binding;
+        this.binding = binding.bottomMusicPlayer;
     }
 
     @Override
@@ -135,7 +139,8 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
                 connectionCallback,
                 null);
 
-        binding.bottomMusicPlayer.setOnClickListener(view -> {
+        binding.getRoot().setVisibility(View.INVISIBLE);
+        binding.getRoot().setOnClickListener(view -> {
                     Intent intent = new Intent(activity, MusicPlayerActivity.class);
                     ActivityOptions options = ActivityOptions
                             .makeSceneTransitionAnimation(activity,
@@ -192,12 +197,19 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
      */
     private void showUI()
     {
+        if (firstDisplayTime) {
+            binding.getRoot().setTranslationY(binding.getRoot().getHeight());
+            firstDisplayTime = false;
+        }
+
         if (!isDisplayed) {
-            binding.bottomMusicPlayer.animate().translationY(-binding.navView.getHeight())
+            binding.getRoot()
+                    .animate()
+                    .translationY(0)
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationStart(Animator animation) {
-                            binding.bottomMusicPlayer.setVisibility(View.VISIBLE);
+                            binding.getRoot().setVisibility(View.VISIBLE);
                         }
                     });
             isDisplayed = true;
@@ -210,12 +222,13 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
     private void hideUI()
     {
         if (isDisplayed) {
-            binding.bottomMusicPlayer.animate()
-                    .translationY(0)
+            binding.getRoot()
+                    .animate()
+                    .translationY(binding.getRoot().getHeight())
                     .setListener(new AnimatorListenerAdapter() {
                         @Override
                         public void onAnimationEnd(Animator animation) {
-                            binding.bottomMusicPlayer.setVisibility(View.GONE);
+                            binding.getRoot().setVisibility(View.INVISIBLE);
                         }
                     });
             isDisplayed = false;

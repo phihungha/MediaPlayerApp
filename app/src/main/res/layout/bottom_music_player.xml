@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="bottom"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/bottom_music_player_height" >
+
+    <ImageButton
+        android:id="@+id/bottom_music_player_play_pause_btn"
+        style="@style/MusicControlBtn"
+        android:layout_width="@dimen/bottom_music_player_btn_size"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:background="@null"
+        android:contentDescription="@string/play_pause_btn"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_music_player_skip_next_btn"
+        app:layout_constraintEnd_toStartOf="@+id/bottom_music_player_skip_next_btn"
+        app:layout_constraintTop_toTopOf="@+id/bottom_music_player_skip_next_btn"
+        app:srcCompat="@drawable/level_list_play_pause_button_dark"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <ImageButton
+        android:id="@+id/bottom_music_player_skip_next_btn"
+        style="@style/MusicControlBtn"
+        android:layout_width="@dimen/bottom_music_player_btn_size"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@null"
+        android:contentDescription="@string/skip_next_btn"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_music_player_stop_btn"
+        app:layout_constraintEnd_toStartOf="@+id/bottom_music_player_stop_btn"
+        app:layout_constraintTop_toTopOf="@+id/bottom_music_player_stop_btn"
+        app:layout_constraintVertical_bias="0.52"
+        app:srcCompat="@drawable/ic_skip_next_dark_24dp"
+        tools:ignore="TouchTargetSizeCheck,DuplicateSpeakableTextCheck" />
+
+    <ImageButton
+        android:id="@+id/bottom_music_player_stop_btn"
+        style="@style/MusicControlBtn"
+        android:layout_width="30dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@null"
+        android:contentDescription="@string/skip_next_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.52"
+        app:srcCompat="@drawable/ic_cancel_thin_gray_24dp"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <ImageButton
+        android:id="@+id/bottom_music_player_skip_prev_btn"
+        style="@style/MusicControlBtn"
+        android:layout_width="@dimen/bottom_music_player_btn_size"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:background="@null"
+        android:contentDescription="@string/skip_prev_btn"
+        app:layout_constraintBottom_toBottomOf="@+id/bottom_music_player_skip_next_btn"
+        app:layout_constraintEnd_toStartOf="@+id/bottom_music_player_play_pause_btn"
+        app:layout_constraintTop_toTopOf="@+id/bottom_music_player_skip_next_btn"
+        app:srcCompat="@drawable/ic_skip_prev_dark_24dp"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <ImageView
+        android:id="@+id/bottom_music_player_song_artwork"
+        android:transitionName="song_artwork"
+        android:layout_width="@dimen/bottom_music_player_height"
+        android:layout_height="0dp"
+        android:background="@color/black"
+        android:contentDescription="@string/music_artwork"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_music_note_white_24dp" />
+
+    <TextView
+        android:id="@+id/bottom_music_player_song_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:text="@string/default_song_name"
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_music_player_song_artist"
+        app:layout_constraintEnd_toStartOf="@+id/bottom_music_player_skip_prev_btn"
+        app:layout_constraintStart_toEndOf="@+id/bottom_music_player_song_artwork"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/bottom_music_player_song_artist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/default_artist_name"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/bottom_music_player_song_title"
+        app:layout_constraintStart_toStartOf="@+id/bottom_music_player_song_title"
+        app:layout_constraintTop_toBottomOf="@+id/bottom_music_player_song_title" />
+</androidx.constraintlayout.widget.ConstraintLayout>
