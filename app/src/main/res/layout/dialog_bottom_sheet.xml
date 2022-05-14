@@ -25,8 +25,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_margin="8dp"
-            android:src="@drawable/ic_notifications_black_24dp"
-            android:contentDescription="@string/dialog_bottom_option_information_ic" />
+            android:contentDescription="@string/dialog_bottom_option_information_ic"
+            android:src="@drawable/ic_notifications_black_24dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -48,8 +48,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_margin="8dp"
-            android:src="@drawable/ic_video"
-            android:contentDescription="@string/dialog_bottom_option_playlist_ic" />
+            android:contentDescription="@string/dialog_bottom_option_playlist_ic"
+            android:src="@drawable/ic_video" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -61,7 +61,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/uploadLinearLaySout"
+        android:id="@+id/bottom_sheet_option_rename"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
@@ -72,8 +72,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_margin="8dp"
-            android:src="@drawable/ic_music"
-            android:contentDescription="@string/dialog_bottom_option_rename_ic" />
+            android:contentDescription="@string/dialog_bottom_option_rename_ic"
+            android:src="@drawable/ic_music" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/copyLinearLayout"
+        android:id="@+id/bottom_sheet_option_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
@@ -96,8 +96,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_margin="8dp"
-            android:src="@drawable/ic_playlist"
-            android:contentDescription="@string/dialog_bottom_option_share_ic" />
+            android:contentDescription="@string/dialog_bottom_option_share_ic"
+            android:src="@drawable/ic_playlist" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -108,7 +108,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/delete"
+        android:id="@+id/bottom_sheet_option_delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
@@ -119,8 +119,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_margin="8dp"
-            android:src="@drawable/ic_home_black_24dp"
-            android:contentDescription="@string/dialog_bottom_option_delete_ic" />
+            android:contentDescription="@string/dialog_bottom_option_delete_ic"
+            android:src="@drawable/ic_home_black_24dp" />
 
         <TextView
             android:layout_width="wrap_content"

@@ -84,7 +84,10 @@ public class VideoLibraryItemAdapter extends
         holder.videoDuration.setText(durationFormatted);
 
         holder.videoOptions.setOnClickListener(view -> {
-            VideoLibraryBottomSheetDialog bottomSheetDialog = new VideoLibraryBottomSheetDialog();
+
+            VideoLibraryBottomSheetDialog bottomSheetDialog =
+                    new VideoLibraryBottomSheetDialog(videos.get(position));
+
             bottomSheetDialog.show(((AppCompatActivity) context).getSupportFragmentManager(),
                     bottomSheetDialog.getTag());
 
