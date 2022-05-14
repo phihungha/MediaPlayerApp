@@ -45,6 +45,10 @@ public class Album {public  long id;
         this.year = num;
     }
 
+    public long getId() {
+        return id;
+    }
+
     public String getAlbumName() {
         return albumName;
     }

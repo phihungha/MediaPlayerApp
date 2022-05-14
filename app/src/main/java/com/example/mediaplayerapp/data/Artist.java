@@ -32,6 +32,10 @@ public class Artist {
         this.num_albums = num_albums;
     }
 
+    public long getArtistId() {
+        return ArtistId;
+    }
+
     public String getArtistName() {
         return ArtistName;
     }

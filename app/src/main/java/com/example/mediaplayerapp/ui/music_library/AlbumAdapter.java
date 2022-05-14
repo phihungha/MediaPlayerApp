@@ -1,7 +1,9 @@
 package com.example.mediaplayerapp.ui.music_library;
 
 
+import android.content.ContentUris;
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Album;
 import com.example.mediaplayerapp.data.Song;
@@ -28,7 +31,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
     private ArrayList<Album> albumList;
     private ArrayList<Album> albumListOld;
 
-
+    public static Uri getImage(long albumId) {
+        return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
+    }
     public AlbumAdapter(Context context, ArrayList<Album> albumList) {
         this.albumList = albumList;
         this.context = context;
@@ -46,6 +51,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         if (album != null) {
             holder.albumT.setText(album.albumName);
             holder.albumA.setText(album.artistName);
+            Glide.with(context).load(getImage(album.getId())).skipMemoryCache(true).into(holder.img);
         }
     }
 
@@ -95,6 +101,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
             super(itemView);
             albumT = (TextView)itemView.findViewById(R.id.album_title);
             albumA = (TextView)itemView.findViewById(R.id.album_artist);
+            img=itemView.findViewById(R.id.albumimg);
             itemView.setOnClickListener(this);
         }
 

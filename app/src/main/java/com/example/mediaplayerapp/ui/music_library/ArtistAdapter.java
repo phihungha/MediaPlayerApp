@@ -1,12 +1,16 @@
 package com.example.mediaplayerapp.ui.music_library;
 
+import android.content.ContentUris;
 import android.content.Context;
+import android.media.Image;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +21,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Album;
 import com.example.mediaplayerapp.data.Artist;
@@ -30,7 +35,9 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> imple
     private Context context;
     private ArrayList<Artist> artisList;
     private ArrayList<Artist> artisListOld;
-
+    public static Uri getImage(long albumId) {
+        return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
+    }
     public ArtistAdapter(Context context, ArrayList<Artist> artisList) {
         this.context = context;
         this.artisList = artisList;
@@ -49,6 +56,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> imple
         Artist artis = artisList.get(position);
         if (artis != null) {
             holder.artNaam.setText(artis.ArtistName);
+            Glide.with(context).load(getImage(artis.getArtistId())).skipMemoryCache(true).into(holder.artthum);
         }
 
     }
@@ -94,10 +102,11 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> imple
 
 
         private TextView artNaam;
-
+        private ImageView artthum;
         public ARV(@NonNull View itemView) {
             super(itemView);
             artNaam = itemView.findViewById(R.id.artname);
+            artthum=itemView.findViewById(R.id.artthum);
             itemView.setOnClickListener(this);
         }
 

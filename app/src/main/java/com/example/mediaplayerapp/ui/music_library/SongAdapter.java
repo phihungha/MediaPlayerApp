@@ -1,6 +1,8 @@
 package com.example.mediaplayerapp.ui.music_library;
 
+import android.content.ContentUris;
 import android.content.Context;
+import android.net.Uri;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Song;
 
@@ -26,7 +29,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
     ArrayList<Song> SongListOld = new ArrayList<>();
     Context context;
 
-
+    public static Uri getImage(long albumId) {
+        return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
+    }
     public SongAdapter(Context context, ArrayList<Song> SongList) {
         this.context = context;
         this.SongList = SongList;
@@ -45,6 +50,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         final Song songInfoModel = SongList.get(position);
         holder.sogname.setText(songInfoModel.songTitle);
         holder.artistname.setText(songInfoModel.songArtist);
+        Glide.with(context).load(getImage(songInfoModel.getAlbumId())).skipMemoryCache(true).into(holder.albumart);
     }
 
     @Override
@@ -88,10 +94,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         TextView sogname;
         TextView artistname;
         ImageView contextmenu;
+        ImageView albumart;
         private PopupMenu popup;
+
         public SongHolder(View itemView)    {
 
             super(itemView);
+            albumart=itemView.findViewById(R.id.songthumb);
             sogname = (TextView)itemView.findViewById(R.id.sogname);
             artistname= (TextView)itemView.findViewById(R.id.artistname);
             contextmenu=itemView.findViewById(R.id.contextmenu);
