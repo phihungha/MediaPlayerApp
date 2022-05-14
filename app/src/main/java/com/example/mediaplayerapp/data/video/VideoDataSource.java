@@ -14,7 +14,13 @@ import java.util.List;
 
 public class VideoDataSource {
 
-    public static MutableLiveData<List<Video>> getAllVideos(Context context) {
+    private Context context;
+
+    public VideoDataSource(Context context) {
+        this.context = context;
+    }
+
+    public MutableLiveData<List<Video>> getAllVideos() {
         List<Video> videoList = new ArrayList<>();
 
         String[] projection = new String[]{
@@ -58,5 +64,9 @@ public class VideoDataSource {
         }
 
         return new MutableLiveData<>(videoList);
+    }
+
+
+    public void deleteVideo(Video video) {
     }
 }
