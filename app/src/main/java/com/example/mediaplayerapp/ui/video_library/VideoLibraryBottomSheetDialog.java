@@ -16,6 +16,8 @@ import com.example.mediaplayerapp.databinding.DialogBottomSheetBinding;
 import com.example.mediaplayerapp.databinding.DialogVideoInfoBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -34,11 +36,12 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
         super.onCreate(savedInstanceState);
 
     }
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DialogBottomSheetBinding.inflate(inflater, container, false);
-        videoLibraryViewModel  = new VideoLibraryViewModel(requireActivity().getApplication());
+        videoLibraryViewModel = new VideoLibraryViewModel(requireActivity().getApplication());
 
         TextView textView = binding.videoNameBottomSheetTextview;
         textView.setText(currentVideo.getName());
@@ -46,7 +49,7 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
         LinearLayout bottomSheetOptionInfo = binding.bottomSheetOptionInfo;
         bottomSheetOptionInfo.setOnClickListener(view1 -> {
             DialogVideoInfoBinding binding
-                    = DialogVideoInfoBinding.inflate(inflater, container,false);
+                    = DialogVideoInfoBinding.inflate(inflater, container, false);
 
             binding.dialogVideoInfoVideoNameTextview.setText(currentVideo.getName());
 
@@ -58,6 +61,13 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
                     TimeUnit.MILLISECONDS.toSeconds(duration)
             );
             binding.dialogVideoInfoVideoLengthTextview.setText(durationFormatted);
+            binding.dialogVideoInfoVideoPathTextview.setText(currentVideo.getPath());
+
+            binding.dialogVideoInfoVideoSizeTextview
+                    .setText(convertFileSize(currentVideo.getSize()));
+            binding.dialogVideoInfoVideoResolutionTextview.setText(currentVideo.getResolution());
+            binding.dialogVideoInfoVideoDateTakenTextview
+                    .setText(DateFormat.getDateInstance().format(currentVideo.getDateTaken()));
 
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setView(binding.getRoot()).show();
@@ -75,7 +85,7 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
 
         LinearLayout bottomSheetOptionShare = binding.bottomSheetOptionShare;
         bottomSheetOptionShare.setOnClickListener(view1 -> {
-            Intent shareVideoIntent=new Intent("android.intent.action.SEND");
+            Intent shareVideoIntent = new Intent("android.intent.action.SEND");
             shareVideoIntent.setType("video/mp4");
             shareVideoIntent.putExtra("android.intent.extra.STREAM", currentVideo.getUri());
             startActivity(Intent.createChooser(shareVideoIntent,
@@ -91,11 +101,25 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
                     .setMessage("Are you sure you want to delete this video ?")
                     .setPositiveButton("Delete", (dialogInterface, i) ->
                             videoLibraryViewModel.deleteVideo(currentVideo))
-                    .setNegativeButton("Cancel",null)
+                    .setNegativeButton("Cancel", null)
                     .show();
 
         });
 
         return binding.getRoot();
+    }
+
+    /**
+     * Convert a file size from type long to an easy-to-look string format
+     *
+     * @param size The file size that needs converting
+     * @return The result string
+     */
+    private String convertFileSize(long size) {
+        if (size <= 0) return "0";
+        final String[] units = new String[]{"B", "kB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        return new DecimalFormat("#,##0.#")
+                .format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 }

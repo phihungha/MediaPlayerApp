@@ -28,7 +28,11 @@ public class VideoDataSource {
         String[] projection = new String[]{
                 MediaStore.MediaColumns._ID,
                 MediaStore.MediaColumns.DISPLAY_NAME,
-                MediaStore.Video.Media.DURATION
+                MediaStore.Video.Media.DURATION,
+                MediaStore.Video.Media.DATA,
+                MediaStore.Video.Media.SIZE,
+                MediaStore.Video.Media.RESOLUTION,
+                MediaStore.Video.Media.DATE_TAKEN,
         };
         String selection = null;
         String[] selectionArgs = null;
@@ -50,8 +54,13 @@ public class VideoDataSource {
 
             int idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
             int nameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
+            int pathColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
             int durationColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
-
+            int sizeColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE);
+            int resolutionColumnIndex
+                    = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.RESOLUTION);
+            int dateTakenColumnIndex
+                    = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_TAKEN);
             do {
                 long videoId = cursor.getLong(idColumnIndex);
                 Uri videoUri = ContentUris.withAppendedId(
@@ -59,8 +68,14 @@ public class VideoDataSource {
 
                 String videoName = cursor.getString(nameColumnIndex);
                 int videoDuration = cursor.getInt(durationColumnIndex);
+                String videoPath = cursor.getString(pathColumnIndex);
+                long videoSize = cursor.getLong(sizeColumnIndex);
+                String videoResolution = cursor.getString(resolutionColumnIndex);
+                int videoDateTaken = cursor.getInt(dateTakenColumnIndex);
 
-                videoList.add(new Video(videoUri, videoName, videoDuration));
+                videoList.add(new Video(videoUri, videoName, videoDuration
+                        , videoPath, videoSize, videoResolution, videoDateTaken));
+
             } while (cursor.moveToNext());
             cursor.close();
         }
@@ -74,6 +89,6 @@ public class VideoDataSource {
         boolean deleteResult = videoFile.delete();
         if (deleteResult) Log.d("[DATABASE] - (INFO)", "Deleted video successfully !");
         else Log.d("[DATABASE] - (ERROR)", "Failed to delete video !");
-        context.getContentResolver().delete(video.getUri(),null,null);
+        context.getContentResolver().delete(video.getUri(), null, null);
     }
 }
