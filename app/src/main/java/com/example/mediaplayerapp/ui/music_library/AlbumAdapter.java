@@ -115,8 +115,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
             transaction.setCustomAnimations(R.anim.layout_fad_in, R.anim.layout_fad_out,
                     R.anim.layout_fad_in, R.anim.layout_fad_out);
             fragment = AlbumDetailFragment.newInstance(albumId);
-            transaction.add(R.id.container,fragment);
-            transaction.addToBackStack(null);
+            String tag = fragment.getTag();
+            transaction.add(R.id.music_container,fragment);
+            transaction.addToBackStack(tag);
             transaction.commit();
         }
     }

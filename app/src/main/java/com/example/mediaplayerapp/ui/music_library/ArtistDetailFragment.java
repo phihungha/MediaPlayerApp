@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Artist;
 import com.example.mediaplayerapp.data.MusicLibraryRepository;
@@ -26,6 +28,7 @@ public class ArtistDetailFragment extends Fragment {
     private long artistId;
     private Artist artist;
     private TextView anaam, ade;
+    private ImageView img, img2;
     private RecyclerView recyclerView;
     private SongAdapter adapter;
     private ArrayList<Song> songList = new ArrayList<>();
@@ -54,14 +57,19 @@ public class ArtistDetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_artist_detail, container, false);
         anaam = view.findViewById(R.id.artistnaam);
         ade = view.findViewById(R.id.artistDetails);
+        img = view.findViewById(R.id.bigartist);
+        img2 = view.findViewById(R.id.artistimg);
         collapsingToolbarLayout = view.findViewById(R.id.artistcollapsinglayout);
         recyclerView = view.findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         artist = MusicLibraryRepository.ArtistLoader.getArtis(getActivity(),artistId);
         collapsingToolbarLayout.setTitle(artist.ArtistName);
         anaam.setText(artist.ArtistName);
-        ade.setText(" songs: " + songList.size());
+
+        Glide.with(getContext()).load(artistId).skipMemoryCache(true).into(img);
+        Glide.with(getContext()).load(artistId).skipMemoryCache(true).into(img2);
         songList = (ArrayList<Song>) MusicLibraryRepository.ArtistSongLoader.getAllArtistSongs(getActivity(), artistId);
+        ade.setText(" songs: " + songList.size());
         adapter = new SongAdapter(getActivity(), songList);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(adapter);
