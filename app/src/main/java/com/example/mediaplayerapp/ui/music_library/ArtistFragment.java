@@ -1,6 +1,8 @@
 package com.example.mediaplayerapp.ui.music_library;
 
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
 
 
@@ -11,8 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 
 import com.example.mediaplayerapp.R;
@@ -29,7 +34,6 @@ public class ArtistFragment extends Fragment {
     private RecyclerView recyclerView;
     private ArtistAdapter artistAdapter;
     private ArrayList<Artist> artists = new ArrayList<Artist>();
-    private Artist artist;
     public ArtistFragment() {
         // Required empty public constructor
     }
@@ -41,6 +45,7 @@ public class ArtistFragment extends Fragment {
         // Inflate the layout for this fragment
         if(view==null) {
             view = inflater.inflate(R.layout.fragment_artist, container, false);
+            setHasOptionsMenu(true);
             recyclerView = (RecyclerView) view.findViewById(R.id.arr);
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
             artists= (ArrayList<Artist>) MusicLibraryRepository.ArtistLoader.artisList(getActivity());
@@ -53,5 +58,25 @@ public class ArtistFragment extends Fragment {
         }
         return view;
     }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+        inflater.inflate(R.menu.search, menu);
+        SearchManager searchManager = (SearchManager)getContext().getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                artistAdapter.getFilter().filter(s);
+                return false;
+            }
 
+            @Override
+            public boolean onQueryTextChange(String s) {
+                artistAdapter.getFilter().filter(s);
+                return false;
+            }
+        });
+
+    }
 }

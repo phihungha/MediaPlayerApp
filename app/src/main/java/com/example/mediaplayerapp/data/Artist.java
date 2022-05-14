@@ -31,4 +31,8 @@ public class Artist {
     public void setNum_albums(long num_albums) {
         this.num_albums = num_albums;
     }
+
+    public String getArtistName() {
+        return ArtistName;
+    }
 }
