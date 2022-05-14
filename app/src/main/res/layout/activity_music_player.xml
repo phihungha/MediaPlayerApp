@@ -21,6 +21,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/music_player_song_artwork"
+        android:transitionName="song_artwork"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:scaleType="fitCenter"
+        android:contentDescription="@string/music_artwork"
+        app:layout_constraintBottom_toTopOf="@+id/music_player_song_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/music_player_screen_title"
+        app:srcCompat="@drawable/ic_music_note_white_24dp" />
+
     <ImageButton
         android:id="@+id/music_player_play_pause_btn"
         style="@style/MusicControlBtn"
@@ -187,22 +204,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_arrow_down_white_24dp"
         tools:ignore="ImageContrastCheck,ImageContrastCheck,TouchTargetSizeCheck" />
-
-    <ImageView
-        android:id="@+id/music_player_song_artwork"
-        android:transitionName="song_artwork"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        android:scaleType="fitCenter"
-        android:contentDescription="@string/music_artwork"
-        app:layout_constraintBottom_toTopOf="@+id/music_player_song_title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/music_player_screen_title"
-        app:srcCompat="@drawable/ic_music_note_white_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
