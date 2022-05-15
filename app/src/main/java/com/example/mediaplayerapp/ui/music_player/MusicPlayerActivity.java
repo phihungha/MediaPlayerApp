@@ -154,10 +154,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 connectionCallback,
                 null);
 
-        binding.musicPlayerCloseBtn.setOnClickListener(view -> {
-            finishAfterTransition();
-            finish();
-        });
+        binding.musicPlayerCloseBtn.setOnClickListener(view -> finishAfterTransition());
         binding.musicPlayerMenuBtn.setOnClickListener(view -> openMenu());
 
         binding.musicPlayerVisualizer.setDensity(70);
