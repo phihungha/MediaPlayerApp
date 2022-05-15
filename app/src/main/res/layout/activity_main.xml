@@ -32,6 +32,17 @@
         app:navGraph="@navigation/mobile_navigation"
         tools:ignore="FragmentTagUsage" />
 
+    <include
+        android:id="@+id/bottom_music_player"
+        layout="@layout/bottom_music_player"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/bottom_music_player_height"
+        android:foregroundGravity="bottom"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@+id/nav_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"

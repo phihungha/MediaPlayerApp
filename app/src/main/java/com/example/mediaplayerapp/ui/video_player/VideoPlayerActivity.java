@@ -3,11 +3,9 @@ package com.example.mediaplayerapp.ui.video_player;
 import android.app.PictureInPictureParams;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.support.v4.media.session.PlaybackStateCompat;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -16,14 +14,12 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.example.mediaplayerapp.databinding.ActivityVideoPlayerBinding;
+import com.example.mediaplayerapp.services.PlaylistUriUtils;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
-
-import java.util.List;
-import java.util.Objects;
 
 public class VideoPlayerActivity extends AppCompatActivity {
 
@@ -48,20 +44,12 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         mediaSession = new MediaSessionCompat(this, LOG_TAG);
         mediaSession.setMediaButtonReceiver(null);
-        PlaybackStateCompat.Builder playbackStateBuilder = new PlaybackStateCompat.Builder()
-                .setActions(PlaybackStateCompat.ACTION_PLAY |
-                            PlaybackStateCompat.ACTION_PLAY_PAUSE);
-        mediaSession.setPlaybackState(playbackStateBuilder.build());
         MediaSessionConnector mediaSessionConnector = new MediaSessionConnector(mediaSession);
         mediaSessionConnector.setQueueNavigator(new TimelineQueueNavigator(mediaSession) {
             @NonNull
             @Override
             public MediaDescriptionCompat getMediaDescription(@NonNull Player player, int windowIndex) {
-                return new MediaDescriptionCompat.Builder()
-                        .setTitle(Objects.requireNonNull(player.getCurrentMediaItem()).mediaMetadata.title)
-                        .setDescription("MediaDescription description for " + windowIndex)
-                        .setSubtitle("MediaDescription subtitle")
-                        .build();
+                return new MediaDescriptionCompat.Builder().build();
             }
         });
         mediaSessionConnector.setPlayer(player);
@@ -74,11 +62,13 @@ public class VideoPlayerActivity extends AppCompatActivity {
      * Load media items from intent into player.
      */
     private void loadMediaItemsFromIntent(Intent intent) {
-        List<String> videoUris = intent.getStringArrayListExtra(VIDEO_URI_LIST);
-        if (videoUris != null)
-            videoUris.forEach(uri -> player.addMediaItem(MediaItem.fromUri(Uri.parse(uri))));
-        else
+        if (intent.getScheme().equals(PlaylistUriUtils.PLAYLIST_URI_SCHEME)) {
+            // TODO: Load all media items from playlist
+        }
+        else {
+            // TODO: Load all media items from repository
             player.setMediaItem(MediaItem.fromUri(intent.getData()));
+        }
     }
 
     /**

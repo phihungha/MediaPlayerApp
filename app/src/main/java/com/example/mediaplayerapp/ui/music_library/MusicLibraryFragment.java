@@ -1,6 +1,8 @@
 package com.example.mediaplayerapp.ui.music_library;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +13,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.mediaplayerapp.MainActivity;
 import com.example.mediaplayerapp.databinding.FragmentMusicLibraryBinding;
+
+import java.io.File;
 
 public class MusicLibraryFragment extends Fragment {
 
@@ -30,6 +35,9 @@ public class MusicLibraryFragment extends Fragment {
 
         final TextView textView = binding.textMusicLibrary;
         viewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
+
+        Uri uri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "Download/music_sample_2.mp3"));
+        binding.playMusicBtn.setOnClickListener(view -> MainActivity.playMusic(requireActivity(), uri));
 
         return binding.getRoot();
     }
