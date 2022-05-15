@@ -67,7 +67,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         if (bundle != null) {
             playlist = (Playlist) bundle.getSerializable(PlaylistConstants.KEY_TRANSFER_PLAYLIST);
         }
-        refresh();
+
         adapter = new MediaItemAdapter(new MediaItemAdapter.PlaylistMediaDiff());
         adapter.setContext(getContext());
         mediaItemViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
@@ -80,8 +80,10 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 }
         );
         binding.rcvPlaylistsDetails.setAdapter(adapter);
-        //mediaQueue.setContext(getContext());
+        binding.imgThumbnailPlaylistDetails.setImageResource(playlist.getIdResource());
+
         setListener();
+        refresh();
     }
 
     public void refresh() {
@@ -117,6 +119,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         binding.btnAddMore.setOnClickListener(this);
         binding.layoutPlayAll.setOnClickListener(this);
         binding.layoutShuffleAll.setOnClickListener(this);
+
         //item detail (media) click
         adapter.setItemClickListener((v, position) -> {
             MediaItem media=adapter.getPlaylistMediaItemAt(position);

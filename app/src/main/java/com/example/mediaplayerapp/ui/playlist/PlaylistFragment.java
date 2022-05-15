@@ -182,7 +182,14 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                 } else if (!radioAudio.isChecked() && !radioVideo.isChecked()) {
                     makeToast("Please check type for playlist!");
                 } else {
-                    Playlist playlist = new Playlist(R.drawable.img_for_test,
+                    int idResource=-1;
+                    if (radioAudio.isChecked()){
+                        idResource=R.drawable.ic_round_ondemand_video_24;
+                    }
+                    else {
+                        idResource=R.drawable.ic_round_music_video_24;
+                    }
+                    Playlist playlist = new Playlist(idResource,
                             edtName.getText().toString().trim(), radioVideo.isChecked());
                     playlistViewModel.insert(playlist);
 

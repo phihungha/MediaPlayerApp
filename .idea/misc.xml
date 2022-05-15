@@ -21,15 +21,23 @@
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/layout/video_player_controller.xml" value="0.25" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/background_gradient_playlist_details.xml" value="0.1715" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_baseline_search_24.xml" value="0.1715" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.135" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.114" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_music.xml" value="0.135" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_outline_add_circle_outline_24.xml" value="0.1" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_clear_all_24.xml" value="0.148" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_error_24.xml" value="0.133" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_heart_24.xml" value="0.135" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_info_24.xml" value="0.133" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_music_video_24.xml" value="0.135" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_ondemand_video_24.xml" value="0.135" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_play_circle_outline_24.xml" value="0.135" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_playlist_add_24.xml" value="0.1715" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_remove_from_queue_24.xml" value="0.135" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_shuffle_24.xml" value="0.135" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_sort_24.xml" value="0.133" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_watch_later_24.xml" value="0.135" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_video.xml" value="0.135" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/playlist_bs_background.xml" value="0.1435" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/activity_main.xml" value="0.12817028985507245" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/activity_new_playlist.xml" value="0.152" />
