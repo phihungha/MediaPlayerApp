@@ -23,4 +23,10 @@
     <string name="dialog_bottom_option_share_ic">Bottom dialog option - Share</string>
     <string name="dialog_bottom_option_delete_ic">Bottom dialog option - Delete</string>
     <string name="item_search">Search</string>
+    <string name="dialog_video_info_name_textview">VIDEO NAME</string>
+    <string name="dialog_video_info_path_textview">File path:</string>
+    <string name="dialog_video_info_size_textview">File size:</string>
+    <string name="dialog_video_info_date_textview">Date taken:</string>
+    <string name="dialog_video_info_resolution_textview">Resolution:</string>
+    <string name="dialog_video_info_length_textview">Length:</string>
 </resources>

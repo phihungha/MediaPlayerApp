@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="VIDEO NAME"
+        android:text="@string/dialog_video_info_name_textview"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:gravity="center"
-        android:text="File path:"
+        android:text="@string/dialog_video_info_path_textview"
         android:textSize="14sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/dialog_video_info_video_path_textview"
         app:layout_constraintStart_toStartOf="parent" />
@@ -36,11 +36,12 @@
         android:layout_marginStart="100dp"
         android:layout_marginTop="20dp"
         android:gravity="left"
-        android:text="File path"
+        android:text="@string/dialog_video_info_path_textview"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_video_info_video_name_textview" />
+        app:layout_constraintTop_toBottomOf="@+id/dialog_video_info_video_name_textview"
+        tools:ignore="RtlHardcoded" />
 
     <TextView
         android:id="@+id/textView2"
@@ -48,7 +49,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:gravity="center"
-        android:text="File size:"
+        android:text="@string/dialog_video_info_size_textview"
         android:textSize="14sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/dialog_video_info_video_size_textview"
         app:layout_constraintStart_toStartOf="parent" />
@@ -60,7 +61,7 @@
         android:layout_marginStart="100dp"
         android:layout_marginTop="20dp"
         android:gravity="left"
-        android:text="Size"
+        android:text="@string/dialog_video_info_size_textview"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -73,7 +74,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:gravity="center"
-        android:text="Date taken:"
+        android:text="@string/dialog_video_info_date_textview"
         android:textSize="14sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/dialog_video_info_video_date_taken_textview"
         app:layout_constraintStart_toStartOf="parent" />
@@ -85,12 +86,13 @@
         android:layout_marginStart="100dp"
         android:layout_marginTop="20dp"
         android:gravity="left"
-        android:text="Date taken"
+        android:text="@string/dialog_video_info_date_textview"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_video_info_video_size_textview" />
+        app:layout_constraintTop_toBottomOf="@+id/dialog_video_info_video_size_textview"
+        tools:ignore="RtlHardcoded" />
 
     <TextView
         android:id="@+id/textView4"
@@ -98,7 +100,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:gravity="center"
-        android:text="Resolution:"
+        android:text="@string/dialog_video_info_resolution_textview"
         android:textSize="14sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/dialog_video_info_video_resolution_textview"
         app:layout_constraintStart_toStartOf="parent" />
@@ -110,11 +112,12 @@
         android:layout_marginStart="100dp"
         android:layout_marginTop="20dp"
         android:gravity="left"
-        android:text="Resolution"
+        android:text="@string/dialog_video_info_resolution_textview"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_video_info_video_date_taken_textview" />
+        app:layout_constraintTop_toBottomOf="@+id/dialog_video_info_video_date_taken_textview"
+        tools:ignore="RtlHardcoded" />
 
     <TextView
         android:id="@+id/textView5"
@@ -122,10 +125,11 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:gravity="center"
-        android:text="Length:"
+        android:text="@string/dialog_video_info_length_textview"
         android:textSize="14sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/dialog_video_info_video_length_textview"
         app:layout_constraintStart_toStartOf="parent" />
+
     <TextView
         android:id="@+id/dialog_video_info_video_length_textview"
         android:layout_width="0dp"
@@ -133,9 +137,10 @@
         android:layout_marginStart="100dp"
         android:layout_marginTop="20dp"
         android:gravity="left"
-        android:text="Length"
+        android:text="@string/dialog_video_info_length_textview"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialog_video_info_video_resolution_textview" />
+        app:layout_constraintTop_toBottomOf="@+id/dialog_video_info_video_resolution_textview"
+        tools:ignore="RtlHardcoded" />
 </androidx.constraintlayout.widget.ConstraintLayout>
