@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -23,9 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
 
-    private Video currentVideo;
-    private DialogBottomSheetBinding binding;
-    private VideoLibraryViewModel videoLibraryViewModel;
+    private final Video currentVideo;
 
     public VideoLibraryBottomSheetDialog(Video video) {
         currentVideo = video;
@@ -40,18 +37,19 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = DialogBottomSheetBinding.inflate(inflater, container, false);
-        videoLibraryViewModel = new VideoLibraryViewModel(requireActivity().getApplication());
+        DialogBottomSheetBinding bottomSheetBinding
+                = DialogBottomSheetBinding.inflate(inflater, container, false);
 
-        TextView textView = binding.videoNameBottomSheetTextview;
-        textView.setText(currentVideo.getName());
+        bottomSheetBinding.bottomSheetVideoNameTextview.setText(currentVideo.getName());
 
-        LinearLayout bottomSheetOptionInfo = binding.bottomSheetOptionInfo;
-        bottomSheetOptionInfo.setOnClickListener(view1 -> {
-            DialogVideoInfoBinding binding
+
+        LinearLayout optionInfo = bottomSheetBinding.bottomSheetOptionInfo;
+        optionInfo.setOnClickListener(view1 -> {
+
+            DialogVideoInfoBinding videoInfoBinding
                     = DialogVideoInfoBinding.inflate(inflater, container, false);
 
-            binding.dialogVideoInfoVideoNameTextview.setText(currentVideo.getName());
+            videoInfoBinding.dialogVideoInfoVideoNameTextview.setText(currentVideo.getName());
 
             int duration = currentVideo.getDuration();
             String durationFormatted = String.format(
@@ -60,31 +58,30 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
                     TimeUnit.MILLISECONDS.toMinutes(duration),
                     TimeUnit.MILLISECONDS.toSeconds(duration)
             );
-            binding.dialogVideoInfoVideoLengthTextview.setText(durationFormatted);
-            binding.dialogVideoInfoVideoPathTextview.setText(currentVideo.getPath());
+            videoInfoBinding.dialogVideoInfoVideoLengthTextview.setText(durationFormatted);
+            videoInfoBinding.dialogVideoInfoVideoPathTextview.setText(currentVideo.getPath());
 
-            binding.dialogVideoInfoVideoSizeTextview
+            videoInfoBinding.dialogVideoInfoVideoSizeTextview
                     .setText(convertFileSize(currentVideo.getSize()));
-            binding.dialogVideoInfoVideoResolutionTextview.setText(currentVideo.getResolution());
-            binding.dialogVideoInfoVideoDateTakenTextview
+
+            videoInfoBinding.dialogVideoInfoVideoResolutionTextview
+                    .setText(currentVideo.getResolution());
+
+            videoInfoBinding.dialogVideoInfoVideoDateTakenTextview
                     .setText(DateFormat.getDateInstance().format(currentVideo.getDateTaken()));
 
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-            builder.setView(binding.getRoot()).show();
+            builder.setView(videoInfoBinding.getRoot()).show();
         });
 
-        LinearLayout bottomSheetOptionAddPlaylist = binding.bottomSheetOptionAddPlaylist;
-        bottomSheetOptionAddPlaylist.setOnClickListener(view1 -> {
-
-        });
-
-        LinearLayout bottomSheetOptionRename = binding.bottomSheetOptionRename;
-        bottomSheetOptionRename.setOnClickListener(view1 -> {
+        LinearLayout optionAddPlaylist = bottomSheetBinding.bottomSheetOptionAddPlaylist;
+        optionAddPlaylist.setOnClickListener(view1 -> {
 
         });
 
-        LinearLayout bottomSheetOptionShare = binding.bottomSheetOptionShare;
-        bottomSheetOptionShare.setOnClickListener(view1 -> {
+
+        LinearLayout optionShare = bottomSheetBinding.bottomSheetOptionShare;
+        optionShare.setOnClickListener(view1 -> {
             Intent shareVideoIntent = new Intent("android.intent.action.SEND");
             shareVideoIntent.setType("video/mp4");
             shareVideoIntent.putExtra("android.intent.extra.STREAM", currentVideo.getUri());
@@ -92,21 +89,7 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
                     "Share " + currentVideo.getName()));
         });
 
-        LinearLayout bottomSheetOptionDelete = binding.bottomSheetOptionDelete;
-        bottomSheetOptionDelete.setOnClickListener(view1 -> {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-
-            builder.setTitle("Delete video ?")
-                    .setMessage("Are you sure you want to delete this video ?")
-                    .setPositiveButton("Delete", (dialogInterface, i) ->
-                            videoLibraryViewModel.deleteVideo(currentVideo))
-                    .setNegativeButton("Cancel", null)
-                    .show();
-
-        });
-
-        return binding.getRoot();
+        return bottomSheetBinding.getRoot();
     }
 
     /**

@@ -5,7 +5,7 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/video_name_bottom_sheet_textview"
+        android:id="@+id/bottom_sheet_video_name_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
