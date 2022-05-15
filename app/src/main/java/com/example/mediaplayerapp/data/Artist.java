@@ -28,12 +28,6 @@ public class Artist {
     public void setName(String name) {
         this.ArtistName = name;
     }
-    public void setNum_tracks(long num_tracks) {
-        this.num_tracks = num_tracks;
-    }
-    public void setNum_albums(long num_albums) {
-        this.num_albums = num_albums;
-    }
 
     public void setTypeDisplay(int typeDisplay) {
         this.typeDisplay = typeDisplay;

@@ -1,14 +1,13 @@
 package com.example.mediaplayerapp.data;
 
 
-import android.annotation.SuppressLint;
+
 import android.content.Context;
 import android.database.Cursor;
-import android.media.MediaMetadataRetriever;
+
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.graphics.Bitmap;
-import java.io.File;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +73,7 @@ public class MusicLibraryRepository {
 
         public static List<Song> getAllArtistSongs(Context context, long artist_id) {
 
-            ArrayList<Song> artistSongList = new ArrayList<Song>();
+            ArrayList<Song> artistSongList = new ArrayList<>();
 
             Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
             String[] projection = new String[]{

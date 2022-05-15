@@ -142,11 +142,12 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
                                     break;
                                 case R.id.song_detail:
+                                    //find info selected song in song list
                                     String name = sogname.getText().toString();
                                     Song selectSong = new Song();
                                     for(Song song : SongList)
                                     {
-                                        if(name == song.songTitle)
+                                        if(name.equals(song.songTitle))
                                         {
                                             selectSong=song;
                                             break;

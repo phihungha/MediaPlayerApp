@@ -33,21 +33,6 @@ public class Album {
     public void setId(long id) {
         this.id = id;
     }
-    public void setAlbumName(String name) {
-        this.albumName = name;
-    }
-    public void setArtistId(long id) {
-        this.artistId = id;
-    }
-    public void setArtistName(String name) {
-        this.artistName = name;
-    }
-    public void setNumSong(int num) {
-        this.numSong = num;
-    }
-    public void setYear(int num) {
-        this.year = num;
-    }
 
     public int getTypeDisplay() {
         return typeDisplay;
