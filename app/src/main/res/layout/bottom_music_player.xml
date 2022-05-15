@@ -92,22 +92,27 @@
 
     <TextView
         android:id="@+id/bottom_music_player_song_title"
+        style="@style/HorizontalAutoScrollTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:text="@string/default_song_name"
         android:textColor="@color/black"
-        android:textSize="16sp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_music_player_song_artist"
         app:layout_constraintEnd_toStartOf="@+id/bottom_music_player_skip_prev_btn"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/bottom_music_player_song_artwork"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/bottom_music_player_song_artist"
+        style="@style/HorizontalAutoScrollTextView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:text="@string/default_artist_name"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"

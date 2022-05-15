@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -46,6 +47,7 @@ import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
 
     private static final String LOG_TAG = BottomMusicPlayerComponent.class.getSimpleName();
+    private static final int AUTOSCROLL_DELAY = 4000;
     private boolean isDisplayed = false;
     private boolean firstDisplayTime = true;
 
@@ -156,6 +158,13 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
                     activity.startActivity(intent, options.toBundle());
                 }
         );
+
+        // Delay text auto-scroll
+        Handler handler = new Handler(activity.getMainLooper());
+        handler.postDelayed(() -> {
+            binding.bottomMusicPlayerSongTitle.setSelected(true);
+            binding.bottomMusicPlayerSongArtist.setSelected(true);
+        }, AUTOSCROLL_DELAY);
     }
 
     /**
