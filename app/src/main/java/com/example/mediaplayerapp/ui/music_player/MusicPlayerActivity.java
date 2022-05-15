@@ -2,8 +2,6 @@ package com.example.mediaplayerapp.ui.music_player;
 
 import android.content.ComponentName;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -26,6 +24,7 @@ import androidx.core.view.WindowCompat;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -37,6 +36,7 @@ import com.google.android.exoplayer2.ui.TimeBar;
 import java.util.Locale;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 
 /**
  * Music player UI.
@@ -320,13 +320,17 @@ public class MusicPlayerActivity extends AppCompatActivity {
      * @param artworkBitmap Artwork's bitmap
      */
     private void setArtworkFromBitmap(Bitmap artworkBitmap) {
-        binding.getRoot().setBackground(new ColorDrawable(Color.BLACK));
         binding.musicPlayerSongArtwork.setImageBitmap(artworkBitmap);
+
+        MultiTransformation<Bitmap> multiTransformation = new MultiTransformation<>(
+                new BlurTransformation(6, 5),
+                new BrightnessFilterTransformation(-0.1f));
         Glide.with(this)
                 .load(artworkBitmap)
-                .apply(RequestOptions.bitmapTransform(new BlurTransformation(7, 5)))
+                .apply(RequestOptions.bitmapTransform(multiTransformation))
                 .into(binding.musicPlayerSongArtworkBackground);
         Log.d(LOG_TAG, "Song's artwork loaded from bitmap");
+
         setViewsColors(artworkBitmap);
     }
 
@@ -334,12 +338,11 @@ public class MusicPlayerActivity extends AppCompatActivity {
      * Set default artwork.
      */
     private void setDefaultArtwork() {
-        binding.getRoot().setBackground(
-                ContextCompat.getDrawable(this,
-                        R.drawable.shape_music_player_default_background));
         binding.musicPlayerSongArtwork.setImageDrawable(null);
-        binding.musicPlayerSongArtworkBackground.setImageDrawable(null);
-        setDefaultViewsColorsDefault();
+        binding.musicPlayerSongArtworkBackground.setImageDrawable(
+                ContextCompat.getDrawable(this,
+                    R.drawable.shape_music_player_default_background));
+        setDefaultViewsColors();
     }
 
     /**
@@ -377,7 +380,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
     /**
      * Set views' colors back to default values.
      */
-    private void setDefaultViewsColorsDefault() {
+    private void setDefaultViewsColors() {
         int color = ContextCompat.getColor(this, R.color.white);
         int darkerColor = ContextCompat.getColor(this, R.color.bright_grey);
         binding.musicPlayerSongTitle.setTextColor(color);

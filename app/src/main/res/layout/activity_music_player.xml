@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/shape_music_player_default_background"
     tools:context=".ui.music_player.MusicPlayerActivity">
 
     <ImageView
@@ -12,9 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:alpha="0.7"
         android:contentDescription="@string/music_artwork_background"
         android:scaleType="centerCrop"
+        android:src="@drawable/shape_music_player_default_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +28,6 @@
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
         android:contentDescription="@string/music_artwork"
-        android:cropToPadding="false"
         android:scaleType="fitCenter"
         android:transitionName="song_artwork"
         app:layout_constraintBottom_toTopOf="@+id/music_player_song_title"
