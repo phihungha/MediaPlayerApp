@@ -1,6 +1,9 @@
 package com.example.mediaplayerapp.ui.music_player;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
@@ -16,6 +19,8 @@ import android.util.Log;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -46,6 +51,15 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private static final String LOG_TAG = MusicPlayerActivity.class.getSimpleName();
     private static final String PLAYBACK_TIME_FORMAT = "%02d:%02d";
     private static final int AUTOSCROLL_DELAY = 4500;
+
+    private final ActivityResultLauncher<String> requestPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(),
+                    isGranted -> {
+                        if (isGranted)
+                            bindAudioVisualizerToAudio();
+                        else
+                            showAudioVisualizerPermissionDeniedNotice();
+                    });
 
     private MediaBrowserCompat mediaBrowser;
     MediaBrowserCompat.ConnectionCallback connectionCallback =
@@ -107,7 +121,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 public void onPlaybackStateChanged(PlaybackStateCompat state) {
                     if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
                         // Bind visualizer to new audio session id if it changes.
-                        bindAudioVisualizerToAudio();
+                        if (checkAudioVisualizerPermission())
+                            bindAudioVisualizerToAudio();
                         binding.musicPlayerPlayPauseBtn.setImageLevel(1);
                     }
                     else
@@ -410,12 +425,50 @@ public class MusicPlayerActivity extends AppCompatActivity {
         Log.d(LOG_TAG, "Updated views' colors to default");
     }
 
+    /**
+     * Connect audio visualizer to the current music audio stream.
+     */
     private void bindAudioVisualizerToAudio() {
         int audioSessionId = MediaControllerCompat
                 .getMediaController(this)
                 .getExtras()
                 .getInt(MusicPlaybackService.AUDIO_SESSION_ID_KEY);
         binding.musicPlayerVisualizer.setPlayer(audioSessionId);
+    }
+
+    /**
+     * Check RECORD_AUDIO permission for audio visualizer
+     * and request it if necessary.
+     * @return True if RECORD_AUDIO permission is granted.
+     */
+    private boolean checkAudioVisualizerPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
+                == PackageManager.PERMISSION_GRANTED)
+            return true;
+
+        if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+            dialogBuilder.setMessage(R.string.audio_visualizer_permission_rationale_message)
+                    .setTitle(R.string.audio_visualizer_permission_rationale_title)
+                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> {});
+            dialogBuilder.create().show();
+        }
+        else
+            requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+
+        return false;
+    }
+
+    /**
+     * Show that the audio visualizer has been disabled because
+     * RECORD_AUDIO permission is denied.
+     */
+    private void showAudioVisualizerPermissionDeniedNotice() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setMessage(R.string.audio_visualizer_permission_denied_notice_message)
+                .setTitle(R.string.audio_visualizer_permission_denied_notice_title)
+                        .setPositiveButton(R.string.ok, (dialogInterface, i) -> {});
+        dialogBuilder.create().show();
     }
 
     @Override

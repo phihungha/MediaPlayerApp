@@ -5,8 +5,8 @@
     <string name="title_playlist">Playlist</string>
     <string name="default_playback_time">0:00</string>
     <string name="play_pause_btn">Play pause</string>
-    <string name="skip_next_btn">Skip forward</string>
-    <string name="skip_prev_btn">Skip backward</string>
+    <string name="skip_next_btn">Skip to next song</string>
+    <string name="skip_prev_btn">Skip to previous song</string>
     <string name="repeat_btn">Repeat</string>
     <string name="shuffle_btn">Shuffle</string>
     <string name="default_song_name">Song name</string>
@@ -25,4 +25,10 @@
     <string name="add_to_favorite">Add to favorite</string>
     <string name="add_to_listen_later">Add to listen later</string>
     <string name="add_to_playlist">Add to playlist</string>
+    <string name="audio_visualizer_permission_rationale_title">Audio recording permission needed</string>
+    <string name="audio_visualizer_permission_rationale_message">This app needs to record audio to render the music visualization. The audio won\'t actually be saved.</string>
+    <string name="ok">OK</string>
+    <string name="disable_music_visual">Disable music visual</string>
+    <string name="audio_visualizer_permission_denied_notice_title">Audio visualizer disabled</string>
+    <string name="audio_visualizer_permission_denied_notice_message">Audio visualizer disabled because audio recording permission is denied</string>
 </resources>
