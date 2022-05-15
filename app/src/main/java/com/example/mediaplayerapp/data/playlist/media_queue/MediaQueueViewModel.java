@@ -19,22 +19,37 @@ public class MediaQueueViewModel extends AndroidViewModel {
         mRepository=new MediaQueueRepository(application);
     }
 
+    /**
+     *  insert MediaQueue object to database
+     * */
     public void insert(MediaQueue media){
         mRepository.insert(media);
     }
 
+    /**
+     *  delete MediaQueue object from database
+     * */
     public void delete(MediaQueue media){
         mRepository.delete(media);
     }
 
+    /**
+     *  delete All MediaQueue object from database
+     * */
     public void deleteAll(){
         mRepository.deleteAll();
     }
 
+    /**
+     *  get count of MediaQueue object from database
+     * */
     public int getCountMediaQueue() {
         return mRepository.getCountMediaQueue();
     }
 
+    /**
+     *  get all MediaQueue object from database to display
+     * */
     public LiveData<List<MediaQueue>> getAllMediaQueue() {
         return mRepository.getAllMediaQueue();
     }

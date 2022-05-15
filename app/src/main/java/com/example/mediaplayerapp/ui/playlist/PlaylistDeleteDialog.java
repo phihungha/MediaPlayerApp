@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMediaViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
 
 public class PlaylistDeleteDialog extends AppCompatDialogFragment {
     private Playlist playlist;
@@ -49,9 +49,9 @@ public class PlaylistDeleteDialog extends AppCompatDialogFragment {
                 .setPositiveButton("delete", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        PlaylistMediaViewModel playlistMediaViewModel=new ViewModelProvider(getActivity())
-                                .get(PlaylistMediaViewModel.class);
-                        playlistMediaViewModel.deleteAllWithID(playlist.getId());
+                        MediaItemViewModel mediaItemViewModel =new ViewModelProvider(getActivity())
+                                .get(MediaItemViewModel.class);
+                        mediaItemViewModel.deleteAllWithID(playlist.getId());
 
                         viewModel.delete(playlist);
                         Toast.makeText(getActivity(), "Playlist deleted!", Toast.LENGTH_SHORT).show();

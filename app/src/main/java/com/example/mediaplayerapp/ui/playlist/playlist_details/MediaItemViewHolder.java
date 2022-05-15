@@ -13,15 +13,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMedia;
-import com.example.mediaplayerapp.databinding.ItemPlaylistDetailsBinding;
+import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
+import com.example.mediaplayerapp.databinding.ItemMediaBinding;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 
-public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private static Context mContext;
-    private ItemPlaylistDetailsBinding binding;
+    private ItemMediaBinding binding;
     private BottomSheetDialog bottomSheetDialog;
     private static IOnItemClickListener itemClickListener;
     private static IOnItemClickListener bsPlayListener;
@@ -29,14 +29,14 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
     private static IOnItemClickListener bsPropertiesListener;
     private static IOnItemClickListener bsAddQueueListener;
 
-    public PlaylistDetailsViewHolder(@NonNull ItemPlaylistDetailsBinding binding) {
+    public MediaItemViewHolder(@NonNull ItemMediaBinding binding) {
         super(binding.getRoot());
         this.binding=binding;
         this.binding.layoutItemPlaylistDetails.setOnClickListener(this);
         this.binding.imgBtnPlaylistDetailsMore.setOnClickListener(this);
     }
 
-    public void setBinding(PlaylistMedia media) {
+    public void setBinding(MediaItem media) {
         binding.tvPlaylistNamePlaylistDetails.setText(media.getName());
         MediaInfo mediaInfo=MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
         String duration=MediaUtils.convertDuration(mediaInfo.getDuration());
@@ -50,22 +50,22 @@ public class PlaylistDetailsViewHolder extends RecyclerView.ViewHolder implement
                 .into(binding.imgThumbnailPlaylistDetails);
     }
 
-    static PlaylistDetailsViewHolder create(ViewGroup parent,
-                                            Context context,
-                                            IOnItemClickListener _itemClickListener,
-                                            IOnItemClickListener _bsPlayListener,
-                                            IOnItemClickListener _bsDeleteListener,
-                                            IOnItemClickListener _bsPropertiesListener,
-                                            IOnItemClickListener _bsAddQueueListener) {
+    static MediaItemViewHolder create(ViewGroup parent,
+                                      Context context,
+                                      IOnItemClickListener _itemClickListener,
+                                      IOnItemClickListener _bsPlayListener,
+                                      IOnItemClickListener _bsDeleteListener,
+                                      IOnItemClickListener _bsPropertiesListener,
+                                      IOnItemClickListener _bsAddQueueListener) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        ItemPlaylistDetailsBinding binding = ItemPlaylistDetailsBinding.inflate(inflater, parent, false);
+        ItemMediaBinding binding = ItemMediaBinding.inflate(inflater, parent, false);
         itemClickListener=_itemClickListener;
         bsPlayListener=_bsPlayListener;
         bsDeleteListener=_bsDeleteListener;
         bsPropertiesListener=_bsPropertiesListener;
         bsAddQueueListener=_bsAddQueueListener;
         mContext=context;
-        return new PlaylistDetailsViewHolder(binding);
+        return new MediaItemViewHolder(binding);
     }
 
     private void onClickItem(){

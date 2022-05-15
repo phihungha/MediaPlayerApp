@@ -13,15 +13,20 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMedia;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMediaViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
+import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 
 public class PlaylistDetailsDeleteDialog extends AppCompatDialogFragment {
 
-    private PlaylistMedia mMedia;
+    private MediaItem mMedia;
+    private PlaylistDetailsFragment playlistDetailsFragment;
 
-    public static PlaylistDetailsDeleteDialog newInstance(PlaylistMedia media) {
+    public void setPlaylistDetailsFragment(PlaylistDetailsFragment playlistDetailsFragment) {
+        this.playlistDetailsFragment = playlistDetailsFragment;
+    }
+
+    public static PlaylistDetailsDeleteDialog newInstance(MediaItem media) {
         PlaylistDetailsDeleteDialog f = new PlaylistDetailsDeleteDialog();
 
         // Supply num input as an argument.
@@ -36,9 +41,9 @@ public class PlaylistDetailsDeleteDialog extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         assert getArguments() != null;
-        mMedia=(PlaylistMedia) getArguments().getSerializable(PlaylistConstants.KEY_PLAYLIST_DETAIL);
-        PlaylistMediaViewModel viewModel= new ViewModelProvider(this)
-                .get(PlaylistMediaViewModel.class);
+        mMedia=(MediaItem) getArguments().getSerializable(PlaylistConstants.KEY_PLAYLIST_DETAIL);
+        MediaItemViewModel viewModel= new ViewModelProvider(this)
+                .get(MediaItemViewModel.class);
 
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
         View view= getActivity().getLayoutInflater().inflate(R.layout.dialog_delete_playlist_layout,null);
@@ -54,6 +59,7 @@ public class PlaylistDetailsDeleteDialog extends AppCompatDialogFragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         viewModel.delete(mMedia);
                         Toast.makeText(getActivity(), "Item deleted!", Toast.LENGTH_SHORT).show();
+                        playlistDetailsFragment.refresh();
                     }
                 });
 

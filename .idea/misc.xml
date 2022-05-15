@@ -25,22 +25,26 @@
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_outline_add_circle_outline_24.xml" value="0.1" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_clear_all_24.xml" value="0.148" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_error_24.xml" value="0.133" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_heart_24.xml" value="0.135" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_info_24.xml" value="0.133" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_playlist_add_24.xml" value="0.1715" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_sort_24.xml" value="0.133" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/ic_round_watch_later_24.xml" value="0.135" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/drawable/playlist_bs_background.xml" value="0.1435" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/activity_main.xml" value="0.12817028985507245" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/activity_new_playlist.xml" value="0.152" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/activity_video_player.xml" value="0.24818840579710144" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/dialog_delete_item_queue.xml" value="0.176" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/dialog_delete_playlist_layout.xml" value="0.2" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/dialog_properties_playlist_layout.xml" value="0.25" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/dialog_properties_playlist_playout.xml" value="0.25" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/dialog_rename_playlist_layout.xml" value="0.264" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/fragment_media_queue.xml" value="0.25" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/fragment_music_library.xml" value="0.21302083333333333" />
-        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/fragment_playlist.xml" value="0.264" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/fragment_playlist.xml" value="0.21754385964912282" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/fragment_playlist_details.xml" value="0.2" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/fragment_video_library.xml" value="0.21302083333333333" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/item_media.xml" value="0.25" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/item_media_queue.xml" value="0.25" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/item_playlist.xml" value="0.176" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/item_playlist_details.xml" value="0.4" />
@@ -50,7 +54,7 @@
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/playlist_create_bs_layout.xml" value="0.2" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/layout/playlist_details_bs_layout.xml" value="0.25" />
         <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/menu/bottom_nav_menu.xml" value="0.21302083333333333" />
-        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/menu/option_menu_playlist.xml" value="0.176" />
+        <entry key="..\:/Project/MediaPlayerApp/app/src/main/res/menu/option_menu_playlist.xml" value="0.264" />
         <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.1" />
         <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.1" />
         <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_icon_video.xml" value="0.1" />

@@ -8,10 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMedia;
+import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 
-public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDetailsViewHolder> {
+public class MediaItemAdapter extends ListAdapter<MediaItem, MediaItemViewHolder> {
     private Context mContext;
     private IOnItemClickListener itemClickListener;
     private IOnItemClickListener bsPlayListener;
@@ -23,7 +23,7 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDe
         this.bsAddQueueListener = bsAddQueueListener;
     }
 
-    public PlaylistDetailsAdapter(@NonNull DiffUtil.ItemCallback<PlaylistMedia> diffCallback) {
+    public MediaItemAdapter(@NonNull DiffUtil.ItemCallback<MediaItem> diffCallback) {
         super(diffCallback);
     }
 
@@ -49,14 +49,14 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDe
 
     @NonNull
     @Override
-    public PlaylistDetailsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return PlaylistDetailsViewHolder.create(parent,mContext,itemClickListener,
+    public MediaItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return MediaItemViewHolder.create(parent,mContext,itemClickListener,
                 bsPlayListener,bsDeleteListener,bsPropertiesListener,bsAddQueueListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PlaylistDetailsViewHolder holder, int position) {
-        PlaylistMedia current= getPlaylistMediaItemAt(position);
+    public void onBindViewHolder(@NonNull MediaItemViewHolder holder, int position) {
+        MediaItem current= getPlaylistMediaItemAt(position);
         if (current==null){
             return;
         }
@@ -64,20 +64,20 @@ public class PlaylistDetailsAdapter extends ListAdapter<PlaylistMedia,PlaylistDe
         holder.setBinding(current);
     }
 
-    public static class PlaylistMediaDiff extends DiffUtil.ItemCallback<PlaylistMedia> {
+    public static class PlaylistMediaDiff extends DiffUtil.ItemCallback<MediaItem> {
         @Override
-        public boolean areItemsTheSame(@NonNull PlaylistMedia oldItem, @NonNull PlaylistMedia newItem) {
+        public boolean areItemsTheSame(@NonNull MediaItem oldItem, @NonNull MediaItem newItem) {
             return oldItem == newItem;
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull PlaylistMedia oldItem, @NonNull PlaylistMedia newItem) {
+        public boolean areContentsTheSame(@NonNull MediaItem oldItem, @NonNull MediaItem newItem) {
             return oldItem.getMediaUri().equals(newItem.getMediaUri())
                     && oldItem.getId()==newItem.getId();
         }
     }
 
-    public PlaylistMedia getPlaylistMediaItemAt(int position){
+    public MediaItem getPlaylistMediaItemAt(int position){
         return getItem(position);
     }
 }

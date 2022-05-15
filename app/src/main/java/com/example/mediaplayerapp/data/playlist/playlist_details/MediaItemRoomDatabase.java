@@ -9,21 +9,21 @@ import androidx.room.RoomDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {PlaylistMedia.class}, version = 1, exportSchema = false)
-public abstract class PlaylistMediaRoomDatabase extends RoomDatabase {
-    public abstract PlaylistMediaDao playlistMediaDao();
+@Database(entities = {MediaItem.class}, version = 1, exportSchema = false)
+public abstract class MediaItemRoomDatabase extends RoomDatabase {
+    public abstract MediaItemDao playlistMediaDao();
 
-    private static volatile PlaylistMediaRoomDatabase INSTANCE;
+    private static volatile MediaItemRoomDatabase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    static PlaylistMediaRoomDatabase getDatabase(final Context context) {
+    static MediaItemRoomDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            synchronized (PlaylistMediaRoomDatabase.class) {
+            synchronized (MediaItemRoomDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            PlaylistMediaRoomDatabase.class, "media_table")
+                            MediaItemRoomDatabase.class, "media_table")
                             .allowMainThreadQueries()
                             .fallbackToDestructiveMigration()
                             .build();

@@ -74,6 +74,10 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         binding.imgThumbnail.setImageResource(playlist.getIdResource());
         binding.tvPlaylistName.setText(playlist.getName());
         binding.tvPlaylistNumbers.setText(textCount);
+
+        if (playlist.getId()==1){
+            binding.imgBtnMore.setVisibility(View.GONE);
+        }
     }
 
     static PlaylistViewHolder create(ViewGroup parent, IOnItemClickListener l,

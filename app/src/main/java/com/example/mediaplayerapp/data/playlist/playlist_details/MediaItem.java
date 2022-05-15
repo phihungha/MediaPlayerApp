@@ -11,7 +11,7 @@ import java.io.Serializable;
  */
 @Entity(tableName = "media_table",
         primaryKeys = {"MediaId","MediaUri"})
-public class PlaylistMedia implements Serializable {
+public class MediaItem implements Serializable {
     @NonNull
     @ColumnInfo(name = "MediaId")
     private int id;
@@ -23,7 +23,7 @@ public class PlaylistMedia implements Serializable {
     @ColumnInfo(name = "MediaName")
     private String name;
 
-    public PlaylistMedia(int id, String mediaUri, String name) {
+    public MediaItem(int id, String mediaUri, String name) {
         this.id = id;
         this.mediaUri = mediaUri;
         this.name = name;

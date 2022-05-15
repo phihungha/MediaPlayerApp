@@ -25,11 +25,11 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMedia;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMediaViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -74,6 +74,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
 
     private void setListenerForAdapter() {
         binding.layoutItemAddPlaylist.setOnClickListener(this);
+        binding.layoutItemWatchLater.setOnClickListener(this);
 
         adapter.setApplication(getActivity().getApplication());
         //set click item listener for recyclerview
@@ -92,13 +93,13 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         adapter.setBSPlayListener((view, position) -> {
             Playlist playlist=adapter.getPlaylistItemAt(position);
 
-            PlaylistMediaViewModel playlistMediaViewModel = new ViewModelProvider(this)
-                    .get(PlaylistMediaViewModel.class);
-            playlistMediaViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
+            MediaItemViewModel mediaItemViewModel = new ViewModelProvider(this)
+                    .get(MediaItemViewModel.class);
+            mediaItemViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
                     getViewLifecycleOwner(),
-                    new Observer<List<PlaylistMedia>>() {
+                    new Observer<List<MediaItem>>() {
                         @Override
-                        public void onChanged(List<PlaylistMedia> media) {
+                        public void onChanged(List<MediaItem> media) {
                             //list uri of Media need to play
                             List<Uri> listUriMedia = new ArrayList<>();
                             media.forEach(item ->{
@@ -137,7 +138,15 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
             case R.id.layoutItem_addPlaylist:
                 openBottomSheetDialogAddPlaylist();
                 break;
+
+            case R.id.layoutItem_watchLater:
+                openWatchLaterList();
+                break;
         }
+    }
+
+    private void openWatchLaterList() {
+        GoToQueue();
     }
 
     private void makeToast(String mess) {
@@ -225,11 +234,6 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
             case R.id.action_sort:
                 SortByName();
                 break;
-
-            case R.id.action_queue:
-                GoToQueue();
-                break;
-
         }
         return super.onOptionsItemSelected(item);
     }

@@ -1,7 +1,6 @@
 package com.example.mediaplayerapp.data.playlist.media_queue;
 
 import android.app.Application;
-
 import androidx.lifecycle.LiveData;
 
 import java.util.List;

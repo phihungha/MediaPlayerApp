@@ -36,4 +36,6 @@
     <string name="queue">Queue</string>
     <string name="save_to_playlist">Save to playlist</string>
     <string name="clear">Clear</string>
+    <string name="my_favourites">My favourites</string>
+    <string name="watch_later_list">Watch later list</string>
 </resources>

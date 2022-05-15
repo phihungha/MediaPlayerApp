@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistMediaViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
 
 public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     private IOnItemClickListener mListener;
@@ -34,20 +34,30 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     public void onBindViewHolder(@NonNull PlaylistViewHolder holder, int position) {
         Playlist current=getItem(position);
 
-        PlaylistMediaViewModel playlistMediaViewModel=new PlaylistMediaViewModel(application);
-        int count=playlistMediaViewModel.getCountPlaylistWithID(current.getId());
+        MediaItemViewModel mediaItemViewModel =new MediaItemViewModel(application);
+        int count= mediaItemViewModel.getCountPlaylistWithID(current.getId());
         String textNumber=count+" ";
-        if (current.isVideo()){
-            if (count<=1){
-                textNumber+="video";
-            }else
-                textNumber+="videos";
+
+
+        if (current.getId()==1){
+            if (count <= 1) {
+                textNumber += "media";
+            } else
+                textNumber += "medias";
         }
         else {
-            if (count<=1){
-                textNumber+="audio";
-            }else
-                textNumber+="audios";
+            if (current.isVideo()){
+                if (count<=1){
+                    textNumber+="video";
+                }else
+                    textNumber+="videos";
+            }
+            else {
+                if (count<=1){
+                    textNumber+="song";
+                }else
+                    textNumber+="songs";
+            }
         }
         holder.setBinding(current,textNumber);
     }
