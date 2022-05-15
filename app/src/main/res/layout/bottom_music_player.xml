@@ -6,6 +6,17 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/bottom_music_player_height" >
 
+    <ImageView
+        android:id="@+id/bottom_music_player_song_artwork_background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/music_artwork_background"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageButton
         android:id="@+id/bottom_music_player_play_pause_btn"
         style="@style/MusicControlBtn"
@@ -78,17 +89,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:shapeAppearanceOverlay="@style/ImageViewRoundedCorner"
         app:srcCompat="@drawable/default_song_artwork_bottom_music_player" />
-
-    <ImageView
-        android:id="@+id/bottom_music_player_song_artwork_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:contentDescription="@string/music_artwork_background"
-        android:scaleType="centerCrop"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/bottom_music_player_song_title"

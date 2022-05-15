@@ -21,10 +21,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.mediaplayerapp.MainActivity;
@@ -32,6 +36,9 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.ActivityMainBinding;
 import com.example.mediaplayerapp.databinding.BottomMusicPlayerBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
+
+import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 
 /**
  * Logic for bottom music player UI.
@@ -248,6 +255,7 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         setArtworkFromBitmap(resource);
                         Log.d(LOG_TAG, "Song's artwork loaded from uri");
+                        setViewsColors(resource);
                     }
 
                     @Override
@@ -263,7 +271,17 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
      */
     private void setArtworkFromBitmap(Bitmap artworkBitmap) {
         binding.bottomMusicPlayerSongArtwork.setImageBitmap(artworkBitmap);
+
+        MultiTransformation<Bitmap> multiTransformation = new MultiTransformation<>(
+                new BlurTransformation(6, 5),
+                new BrightnessFilterTransformation(-0.15f));
+        Glide.with(activity)
+                .load(artworkBitmap)
+                .apply(RequestOptions.bitmapTransform(multiTransformation))
+                .into(binding.bottomMusicPlayerSongArtworkBackground);
         Log.d(LOG_TAG, "Song's artwork loaded from bitmap");
+
+        setViewsColors(artworkBitmap);
     }
 
     /**
@@ -273,6 +291,42 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
         Drawable defaultArtwork = AppCompatResources.getDrawable(activity,
                 R.drawable.default_song_artwork_bottom_music_player);
         binding.bottomMusicPlayerSongArtwork.setImageDrawable(defaultArtwork);
+        binding.bottomMusicPlayerSongArtworkBackground.setImageDrawable(null);
+        setDefaultViewsColors();
+    }
+
+    /**
+     * Set colors of views on the UI based on song's artwork.
+     * @param artworkBitmap Artwork's bitmap
+     */
+    private void setViewsColors(Bitmap artworkBitmap) {
+        Palette.from(artworkBitmap).generate(palette -> {
+            if (palette == null)
+                return;
+            int color = palette.getLightVibrantColor(
+                    ContextCompat.getColor(activity, R.color.white));
+            binding.bottomMusicPlayerSongTitle.setTextColor(color);
+            binding.bottomMusicPlayerSongArtist.setTextColor(color);
+            binding.bottomMusicPlayerStopBtn.setColorFilter(color);
+            binding.bottomMusicPlayerPlayPauseBtn.setColorFilter(color);
+            binding.bottomMusicPlayerSkipNextBtn.setColorFilter(color);
+            binding.bottomMusicPlayerSkipPrevBtn.setColorFilter(color);
+            Log.d(LOG_TAG, "Updated views' colors using song artwork's palette");
+        });
+    }
+
+    /**
+     * Set views' colors back to default values.
+     */
+    private void setDefaultViewsColors() {
+        int color = ContextCompat.getColor(activity, R.color.black);
+        binding.bottomMusicPlayerSongTitle.setTextColor(color);
+        binding.bottomMusicPlayerSongArtist.setTextColor(color);
+        binding.bottomMusicPlayerStopBtn.setColorFilter(color);
+        binding.bottomMusicPlayerPlayPauseBtn.setColorFilter(color);
+        binding.bottomMusicPlayerSkipNextBtn.setColorFilter(color);
+        binding.bottomMusicPlayerSkipPrevBtn.setColorFilter(color);
+        Log.d(LOG_TAG, "Updated views' colors to default");
     }
 
     @Override
