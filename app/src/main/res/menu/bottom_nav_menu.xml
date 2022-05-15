@@ -1,22 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <item
         android:id="@+id/navigation_music_library"
         android:icon="@drawable/ic_music"
-        android:orderInCategory="10"
+        android:orderInCategory="1"
         android:title="@string/title_music" />
-
 
     <item
         android:id="@+id/navigation_video_library"
         android:icon="@drawable/ic_video"
-        android:orderInCategory="30"
+        android:orderInCategory="2"
         android:title="@string/title_video" />
 
     <item
         android:id="@+id/navigation_playlist"
         android:icon="@drawable/ic_playlist_blue_24dp"
-        android:orderInCategory="20"
+        android:orderInCategory="3"
         android:title="@string/title_playlist" />
 </menu>
