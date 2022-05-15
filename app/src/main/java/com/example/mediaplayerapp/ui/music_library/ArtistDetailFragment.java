@@ -62,12 +62,13 @@ public class ArtistDetailFragment extends Fragment {
         collapsingToolbarLayout = view.findViewById(R.id.artistcollapsinglayout);
         recyclerView = view.findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        //set artist detail
         artist = MusicLibraryRepository.ArtistLoader.getArtis(getActivity(),artistId);
         collapsingToolbarLayout.setTitle(artist.ArtistName);
         anaam.setText(artist.ArtistName);
-
         Glide.with(getContext()).load(artistId).skipMemoryCache(true).into(img);
         Glide.with(getContext()).load(artistId).skipMemoryCache(true).into(img2);
+        //set song list of artist
         songList = (ArrayList<Song>) MusicLibraryRepository.ArtistSongLoader.getAllArtistSongs(getActivity(), artistId);
         ade.setText(" songs: " + songList.size());
         adapter = new SongAdapter(getActivity(), songList);

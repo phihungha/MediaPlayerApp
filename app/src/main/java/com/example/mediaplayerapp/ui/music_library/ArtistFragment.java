@@ -24,7 +24,7 @@ import android.widget.SearchView;
 
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.Album;
+
 import com.example.mediaplayerapp.data.Artist;
 import com.example.mediaplayerapp.data.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.data.MusicLibraryRepository;
@@ -37,7 +37,7 @@ public class ArtistFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ArtistAdapter artistAdapter;
-    private ArrayList<Artist> artists = new ArrayList<Artist>();
+    private ArrayList<Artist> artists = new ArrayList<>();
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
     private int currentType= Artist.TYPE_GRID;
@@ -53,7 +53,7 @@ public class ArtistFragment extends Fragment {
         if(view==null) {
             view = inflater.inflate(R.layout.fragment_artist, container, false);
             setHasOptionsMenu(true);
-            recyclerView = (RecyclerView) view.findViewById(R.id.arr);
+            recyclerView = view.findViewById(R.id.arr);
             gridLayoutManager= new GridLayoutManager(getActivity(),2);
             linearLayoutManager= new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(gridLayoutManager);

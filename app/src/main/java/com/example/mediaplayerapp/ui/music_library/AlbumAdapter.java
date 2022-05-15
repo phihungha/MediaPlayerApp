@@ -22,7 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Album;
-import com.example.mediaplayerapp.data.Song;
+
 
 import java.util.ArrayList;
 

@@ -45,17 +45,12 @@ public class SongsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         if (view==null) {
-
-            // Inflate the layout for this fragment
             view = inflater.inflate(R.layout.fragment_songs, container, false);
             setHasOptionsMenu(true);
             recyclerView = (RecyclerView) view.findViewById(R.id.sr);
             gridLayoutManager= new GridLayoutManager(getActivity(),2);
             linearLayoutManager= new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(gridLayoutManager);
-            //LinearLayoutManager linearLayoutManager = new
-                   // LinearLayoutManager(getContext());
-            //recyclerView.setLayoutManager(linearLayoutManager);//
             SongList= (ArrayList<Song>) MusicLibraryRepository.SongLoder.getAllSongs(getActivity());
             setTypeDisplayRecycleView(Song.TYPE_GRID);
             songAdapter = new SongAdapter(getContext(), SongList);

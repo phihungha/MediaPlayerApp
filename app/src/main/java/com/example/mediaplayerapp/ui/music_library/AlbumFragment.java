@@ -24,13 +24,13 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Album;
 import com.example.mediaplayerapp.data.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.data.MusicLibraryRepository;
-import com.example.mediaplayerapp.data.Song;
+
 
 import java.util.ArrayList;
 
 
 public class AlbumFragment extends Fragment {
-    private ArrayList<Album> albums= new ArrayList<Album>();
+    private ArrayList<Album> albums= new ArrayList<>();
     private RecyclerView recyclerView;
     private AlbumAdapter albumAdapter;
     private GridLayoutManager gridLayoutManager;

@@ -2,7 +2,7 @@ package com.example.mediaplayerapp.ui.music_library;
 
 import android.content.ContentUris;
 import android.content.Context;
-import android.media.Image;
+
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +23,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.Album;
+
 import com.example.mediaplayerapp.data.Artist;
 
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> implements Filterable {
 
@@ -54,7 +54,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> imple
     @NonNull
     @Override
     public ARV onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view =view = LayoutInflater.from(context).inflate(R.layout.artist_list,
+        View view = LayoutInflater.from(context).inflate(R.layout.artist_list,
                 parent, false);
         switch (viewType){
             case Artist.TYPE_LIST:view = LayoutInflater.from(context).inflate(R.layout.artist_list2,

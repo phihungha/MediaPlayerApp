@@ -1,11 +1,14 @@
 package com.example.mediaplayerapp.ui.music_library;
 
+
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -14,7 +17,9 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +28,7 @@ import com.example.mediaplayerapp.data.Song;
 
 
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> implements Filterable {
     ArrayList<Song> SongList = new ArrayList<>();
@@ -100,7 +106,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                SongList=(ArrayList<Song>) filterResults.values;
+                SongList= (ArrayList<Song>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
@@ -116,9 +122,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         public SongHolder(@NonNull View itemView)    {
             super(itemView);
             albumart=itemView.findViewById(R.id.songthumb);
-            sogname = (TextView)itemView.findViewById(R.id.sogname);
-            artistname= (TextView)itemView.findViewById(R.id.artistname);
+            sogname = itemView.findViewById(R.id.sogname);
+            artistname= itemView.findViewById(R.id.artistname);
             contextmenu=itemView.findViewById(R.id.contextmenu);
+            //Click event of context menu
             contextmenu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -126,9 +133,58 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
                     MenuInflater inflater = popup.getMenuInflater();
                     inflater.inflate(R.menu.song_option, popup.getMenu());
                     popup.show();
+                    //Click event of item of song context menu
+                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem menuItem) {
+                            switch (menuItem.getItemId()) {
+                                case R.id.add_playlist:
+
+                                    break;
+                                case R.id.song_detail:
+                                    String name = sogname.getText().toString();
+                                    Song selectSong = new Song();
+                                    for(Song song : SongList)
+                                    {
+                                        if(name == song.songTitle)
+                                        {
+                                            selectSong=song;
+                                            break;
+                                        }
+                                    }
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                    builder.setTitle("Song detail")
+                                            .setMessage("Song title: "+ selectSong.songTitle
+                                            +"\nArtist name: " + selectSong.songArtist
+                                            +"\nAlbum name: "+selectSong.albumName
+                                            +"\nDuration: "+convertDurationToAudioTime(selectSong.duration));
+                                    builder.setCancelable(true);
+                                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            //  Cancel
+                                            dialog.cancel();
+                                        }
+                                    });
+                                    AlertDialog alert = builder.create();
+                                    alert.show();
+                                    break;
+                                case R.id.delete_song:
+                                    break;
+                                default:
+                                    break;
+                            }
+                            return true;
+                        }
+                    });
                 }
             });
-
+        }
+        private String convertDurationToAudioTime(long duration) {
+            return String.format("%02d:%02d",
+                    TimeUnit.MILLISECONDS.toMinutes(duration),
+                    TimeUnit.MILLISECONDS.toSeconds(duration) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))
+            );
         }
     }
 }
