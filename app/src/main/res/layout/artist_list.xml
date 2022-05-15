@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardElevation="3dp"
-    >
+    app:cardCornerRadius="8dp">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -12,7 +12,7 @@
         <ImageView
             android:id="@+id/artthum"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="140dp"
             android:background="@color/blue2"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"

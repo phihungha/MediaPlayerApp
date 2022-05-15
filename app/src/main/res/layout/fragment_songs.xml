@@ -6,9 +6,9 @@
     tools:context=".ui.music_library.SongsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/sr"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/sr"
-        android:layout_margin="4dp"/>
+        android:layout_margin="4dp" />
 
 </FrameLayout>
