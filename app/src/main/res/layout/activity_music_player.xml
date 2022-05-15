@@ -39,6 +39,7 @@
         android:id="@+id/music_player_visualizer"
         android:layout_width="0dp"
         android:layout_height="150dp"
+        android:alpha="0.75"
         app:layout_constraintBottom_toBottomOf="@+id/music_player_song_artwork"
         app:layout_constraintEnd_toEndOf="@+id/music_player_song_artwork"
         app:layout_constraintStart_toStartOf="@+id/music_player_song_artwork" />
