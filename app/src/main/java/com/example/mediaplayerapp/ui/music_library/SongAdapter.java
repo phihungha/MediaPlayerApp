@@ -1,14 +1,15 @@
 package com.example.mediaplayerapp.ui.music_library;
 
 
+import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.DialogInterface;
+
 import android.net.Uri;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
-import android.view.MenuItem;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -31,8 +32,8 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> implements Filterable {
-    ArrayList<Song> SongList = new ArrayList<>();
-    ArrayList<Song> SongListOld = new ArrayList<>();
+    ArrayList<Song> SongList;
+    ArrayList<Song> SongListOld;
     Context context;
 
 
@@ -126,60 +127,51 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
             artistname= itemView.findViewById(R.id.artistname);
             contextmenu=itemView.findViewById(R.id.contextmenu);
             //Click event of context menu
-            contextmenu.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    popup = new PopupMenu(context, view, Gravity.END);
-                    MenuInflater inflater = popup.getMenuInflater();
-                    inflater.inflate(R.menu.song_option, popup.getMenu());
-                    popup.show();
-                    //Click event of item of song context menu
-                    popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem menuItem) {
-                            switch (menuItem.getItemId()) {
-                                case R.id.add_playlist:
+            contextmenu.setOnClickListener(view -> {
+                popup = new PopupMenu(context, view, Gravity.END);
+                MenuInflater inflater = popup.getMenuInflater();
+                inflater.inflate(R.menu.song_option, popup.getMenu());
+                popup.show();
+                //Click event of item of song context menu
+                popup.setOnMenuItemClickListener(menuItem -> {
+                    switch (menuItem.getItemId()) {
+                        case R.id.add_playlist:
 
+                            break;
+                        case R.id.song_detail:
+                            //find info selected song in song list
+                            String name = sogname.getText().toString();
+                            Song selectSong = new Song();
+                            for(Song song : SongList)
+                            {
+                                if(name.equals(song.songTitle))
+                                {
+                                    selectSong=song;
                                     break;
-                                case R.id.song_detail:
-                                    //find info selected song in song list
-                                    String name = sogname.getText().toString();
-                                    Song selectSong = new Song();
-                                    for(Song song : SongList)
-                                    {
-                                        if(name.equals(song.songTitle))
-                                        {
-                                            selectSong=song;
-                                            break;
-                                        }
-                                    }
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                    builder.setTitle("Song detail")
-                                            .setMessage("Song title: "+ selectSong.songTitle
-                                            +"\nArtist name: " + selectSong.songArtist
-                                            +"\nAlbum name: "+selectSong.albumName
-                                            +"\nDuration: "+convertDurationToAudioTime(selectSong.duration));
-                                    builder.setCancelable(true);
-                                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            //  Cancel
-                                            dialog.cancel();
-                                        }
-                                    });
-                                    AlertDialog alert = builder.create();
-                                    alert.show();
-                                    break;
-                                case R.id.delete_song:
-                                    break;
-                                default:
-                                    break;
+                                }
                             }
-                            return true;
-                        }
-                    });
-                }
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle("Song detail")
+                                    .setMessage("Song title: "+ selectSong.songTitle
+                                    +"\nArtist name: " + selectSong.songArtist
+                                    +"\nAlbum name: "+selectSong.albumName
+                                    +"\nDuration: "+convertDurationToAudioTime(selectSong.duration));
+                            builder.setCancelable(true);
+                            builder.setNegativeButton("Cancel", (dialog, id) -> {
+                                //  Cancel
+                                dialog.cancel();
+                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                            break;
+                        case R.id.delete_song:
+                            break;
+                    }
+                    return true;
+                });
             });
         }
+        @SuppressLint("DefaultLocale")
         private String convertDurationToAudioTime(long duration) {
             return String.format("%02d:%02d",
                     TimeUnit.MILLISECONDS.toMinutes(duration),

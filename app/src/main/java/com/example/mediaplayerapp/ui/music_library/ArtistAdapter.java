@@ -32,9 +32,9 @@ import java.util.ArrayList;
 
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> implements Filterable {
 
-    private Context context;
+    private final Context context;
     private ArrayList<Artist> artisList;
-    private ArrayList<Artist> artisListOld;
+    private final ArrayList<Artist> artisListOld;
 
     @Override
     public int getItemViewType(int position) {
@@ -118,8 +118,8 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> imple
     public class ARV extends RecyclerView.ViewHolder implements View.OnClickListener{
 
 
-        private TextView artNaam;
-        private ImageView artthum;
+        private final TextView artNaam;
+        private final ImageView artthum;
         public ARV(View itemView) {
             super(itemView);
             artNaam = itemView.findViewById(R.id.artname);

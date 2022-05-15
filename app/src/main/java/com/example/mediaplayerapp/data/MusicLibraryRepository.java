@@ -23,9 +23,7 @@ public class MusicLibraryRepository {
                 do {
                     list.add(new Artist(cursor.getLong(0), cursor.getString(1), cursor.getInt(2), cursor.getInt(3)));
                 } while (cursor.moveToNext());
-                if (cursor != null) {
-                    cursor.close();
-                }
+                cursor.close();
             }
 
             return list;
@@ -38,14 +36,12 @@ public class MusicLibraryRepository {
 
         private static Artist artis(Cursor cursor) {
             Artist artis = new Artist();
-            if (cursor.moveToFirst() && cursor != null) {
+            if (cursor.moveToFirst()) {
 
                 artis = new Artist(cursor.getLong(0), cursor.getString(1), cursor.getInt(2), cursor.getInt(3));
 
             }
-            if (cursor != null) {
-                cursor.close();
-            }
+            cursor.close();
             return artis;
         }
 
@@ -64,8 +60,7 @@ public class MusicLibraryRepository {
                     MediaStore.Audio.Artists.NUMBER_OF_TRACKS,//3
             };
             String sortOrder = MediaStore.Audio.Artists.DEFAULT_SORT_ORDER;
-            Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArg, sortOrder);
-            return cursor;
+            return context.getContentResolver().query(uri, projection, selection, selectionArg, sortOrder);
         }
     }
 
@@ -102,9 +97,7 @@ public class MusicLibraryRepository {
                             artist_id, cursor.getString(4), cursor.getInt(5), trackNumber));
                 } while (cursor.moveToNext());
 
-                if (cursor != null) {
-                    cursor.close();
-                }
+                cursor.close();
 
             }
             return artistSongList;
@@ -115,18 +108,16 @@ public class MusicLibraryRepository {
 
         public static ArrayList<Album> getAlbums(Cursor cursor) {
 
-            List<Album> list = new ArrayList<>();
+            ArrayList<Album> list = new ArrayList<>();
             if (cursor != null && cursor.moveToFirst()) {
                 do {
                     list.add(new Album(cursor.getLong(0), cursor.getString(1), cursor.getLong(2),
                             cursor.getString(3), cursor.getInt(4), cursor.getInt(5)));
                 } while (cursor.moveToNext());
-                if (cursor != null) {
-                    cursor.close();
-                }
+                cursor.close();
             }
 
-            return (ArrayList<Album>) list;
+            return list;
         }
 
         public Album getAlbum(Context context, long id) {
@@ -136,15 +127,13 @@ public class MusicLibraryRepository {
 
         private static Album album(Cursor cursor) {
             Album album = new Album();
-            if (cursor.moveToFirst() && cursor != null) {
+            if (cursor.moveToFirst()) {
 
                 album = new Album(cursor.getLong(0), cursor.getString(1), cursor.getLong(2),
                         cursor.getString(3), cursor.getInt(4), cursor.getInt(5));
 
             }
-            if (cursor != null) {
-                cursor.close();
-            }
+            cursor.close();
             return album;
         }
 
@@ -165,15 +154,14 @@ public class MusicLibraryRepository {
                     MediaStore.Audio.Albums.FIRST_YEAR,//5
             };
             String sortOrder = MediaStore.Audio.Albums.DEFAULT_SORT_ORDER;
-            Cursor cursor = context.getContentResolver().query(uri, projection, selection, selectionArg, sortOrder);
-            return cursor;
+            return context.getContentResolver().query(uri, projection, selection, selectionArg, sortOrder);
         }
     }
     public static class AlbumSongLoder {
 
         public static ArrayList<Song> getAllAlbumSongs(Context context, long _id){
 
-            List<Song> albumSongList = new ArrayList<>();
+            ArrayList<Song> albumSongList = new ArrayList<>();
 
             Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
             String[] projection = new String[]{
@@ -202,13 +190,11 @@ public class MusicLibraryRepository {
                             cursor.getLong(3),cursor.getString(4),cursor.getInt(5),trackNumber));
                 }while (cursor.moveToNext());
 
-                if (cursor!=null) {
-                    cursor.close();
-                }
+                cursor.close();
 
             }
 
-            return (ArrayList<Song>) albumSongList;
+            return albumSongList;
         }
     }
 
@@ -240,9 +226,7 @@ public class MusicLibraryRepository {
                             cursor.getLong(4),cursor.getString(5),cursor.getInt(6),cursor.getInt(7)));
                 }while (cursor.moveToNext());
 
-                if (cursor!=null) {
-                    cursor.close();
-                }
+                cursor.close();
 
             }
 

@@ -27,9 +27,9 @@ import com.example.mediaplayerapp.data.Album;
 import java.util.ArrayList;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder> implements Filterable {
-    private Context context;
+    private final Context context;
     private ArrayList<Album> albumList;
-    private ArrayList<Album> albumListOld;
+    private final ArrayList<Album> albumListOld;
 
     @Override
     public int getItemViewType(int position) {
@@ -110,8 +110,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
 
     public class AlbumViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private ImageView img;
-        private TextView albumT,albumA;
+        private final ImageView img;
+        private final TextView albumT;
+        private final TextView albumA;
 
         public AlbumViewHolder(@NonNull View itemView) {
             super(itemView);

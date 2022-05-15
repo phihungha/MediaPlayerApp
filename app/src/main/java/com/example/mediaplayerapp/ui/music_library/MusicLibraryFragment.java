@@ -22,9 +22,7 @@ public class MusicLibraryFragment extends Fragment {
     private FragmentMusicLibraryBinding binding;
     private MusicLibraryViewModel viewModel;
 
-    public static MusicLibraryFragment newInstance() {
-        return new MusicLibraryFragment();
-    }
+
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

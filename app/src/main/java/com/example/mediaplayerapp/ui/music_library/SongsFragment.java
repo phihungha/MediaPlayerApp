@@ -16,7 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+
 import android.widget.SearchView;
 
 import com.example.mediaplayerapp.R;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 public class SongsFragment extends Fragment {
     private SongAdapter songAdapter;
     private RecyclerView recyclerView;
-    private ArrayList<Song> SongList = new ArrayList<Song>();
+    private ArrayList<Song> SongList = new ArrayList<>();
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
     private int currentType=Song.TYPE_GRID;
@@ -41,7 +41,7 @@ public class SongsFragment extends Fragment {
 
     View view;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         if (view==null) {
@@ -72,11 +72,11 @@ public class SongsFragment extends Fragment {
         }
     }
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
+    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.search, menu);
         SearchManager searchManager = (SearchManager)getContext().getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        Button switch_view = (Button) menu.findItem(R.id.switch_view).getActionView();
+
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

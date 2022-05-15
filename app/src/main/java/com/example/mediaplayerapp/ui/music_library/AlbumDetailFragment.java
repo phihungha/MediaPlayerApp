@@ -1,5 +1,6 @@
 package com.example.mediaplayerapp.ui.music_library;
 
+import android.annotation.SuppressLint;
 import android.content.ContentUris;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,14 +27,8 @@ import java.util.ArrayList;
 
 
 public class AlbumDetailFragment extends Fragment {
-    private CollapsingToolbarLayout collapsingToolbarLayout;
     private long album_id;
-    private ArrayList<Song> songList = new ArrayList<>();
-    private Album album;
-    private TextView anaam, ade;
-    private ImageView img,img2;
-    private RecyclerView recyclerView;
-    private SongAdapter adapter;
+
     public AlbumDetailFragment() {
         // Required empty public constructor
     }
@@ -49,23 +44,25 @@ public class AlbumDetailFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        assert getArguments() != null;
         album_id = getArguments().getLong("_ID");
         super.onCreate(savedInstanceState);
 
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView=inflater.inflate(R.layout.fragment_album_detail, container, false);
-        anaam = rootView.findViewById(R.id.atrnaam);
-        ade = rootView.findViewById(R.id.albumDetails);
-        img =rootView.findViewById(R.id.album_art);
-        img2= rootView.findViewById(R.id.aaimg);
-        collapsingToolbarLayout = rootView.findViewById(R.id.collapsed_layout);
-        recyclerView = rootView.findViewById(R.id.recycler);
+        TextView anaam = rootView.findViewById(R.id.atrnaam);
+        TextView ade = rootView.findViewById(R.id.albumDetails);
+        ImageView img = rootView.findViewById(R.id.album_art);
+        ImageView img2 = rootView.findViewById(R.id.aaimg);
+        CollapsingToolbarLayout collapsingToolbarLayout = rootView.findViewById(R.id.collapsed_layout);
+        RecyclerView recyclerView = rootView.findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        album = new MusicLibraryRepository.AlbumLoader().getAlbum(getActivity(), album_id);
+        Album album = new MusicLibraryRepository.AlbumLoader().getAlbum(getActivity(), album_id);
         //set album detail
         collapsingToolbarLayout.setTitle(album.albumName);
         anaam.setText(album.albumName);
@@ -73,8 +70,8 @@ public class AlbumDetailFragment extends Fragment {
         Glide.with(getContext()).load(getImage(album_id)).skipMemoryCache(true).into(img);
         Glide.with(getContext()).load(getImage(album_id)).skipMemoryCache(true).into(img2);
         //set song list of a album
-        songList = MusicLibraryRepository.AlbumSongLoder.getAllAlbumSongs(getActivity(), album_id);
-        adapter = new SongAdapter(getActivity(), songList);
+        ArrayList<Song> songList = MusicLibraryRepository.AlbumSongLoder.getAllAlbumSongs(getActivity(), album_id);
+        SongAdapter adapter = new SongAdapter(getActivity(), songList);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(adapter);
         return rootView;

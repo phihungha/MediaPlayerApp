@@ -39,9 +39,7 @@ public class Song {
     public void setId(long id) {
         this.songId = id;
     }
-    public void setTitle(String title) {
-        this.songTitle = title;
-    }
+
 
 
     public void setTypeDisplay(int typeDisplay) {
