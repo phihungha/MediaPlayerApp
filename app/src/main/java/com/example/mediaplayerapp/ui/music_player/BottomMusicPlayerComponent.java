@@ -47,7 +47,7 @@ import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
 
     private static final String LOG_TAG = BottomMusicPlayerComponent.class.getSimpleName();
-    private static final int AUTOSCROLL_DELAY = 4000;
+    private static final int AUTOSCROLL_DELAY = 4500;
     private boolean isDisplayed = false;
     private boolean firstDisplayTime = true;
 

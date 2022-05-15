@@ -45,6 +45,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MusicPlayerActivity.class.getSimpleName();
     private static final String PLAYBACK_TIME_FORMAT = "%02d:%02d";
+    private static final int AUTOSCROLL_DELAY = 4500;
 
     private MediaBrowserCompat mediaBrowser;
     MediaBrowserCompat.ConnectionCallback connectionCallback =
@@ -158,6 +159,13 @@ public class MusicPlayerActivity extends AppCompatActivity {
         binding.musicPlayerMenuBtn.setOnClickListener(view -> openMenu());
 
         binding.musicPlayerVisualizer.setDensity(70);
+
+        // Delay text auto-scroll
+        Handler handler = new Handler(getMainLooper());
+        handler.postDelayed(() -> {
+            binding.musicPlayerSongTitle.setSelected(true);
+            binding.musicPlayerSongArtist.setSelected(true);
+        }, AUTOSCROLL_DELAY);
     }
 
     /**
