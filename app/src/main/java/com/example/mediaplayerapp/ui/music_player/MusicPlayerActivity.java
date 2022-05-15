@@ -21,12 +21,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.mediaplayerapp.R;
@@ -35,6 +35,8 @@ import com.example.mediaplayerapp.services.MusicPlaybackService;
 import com.google.android.exoplayer2.ui.TimeBar;
 
 import java.util.Locale;
+
+import jp.wasabeef.glide.transformations.BlurTransformation;
 
 /**
  * Music player UI.
@@ -298,7 +300,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
      * @param artworkUri Artwork's uri
      */
     private void setArtworkFromArtworkUri(Uri artworkUri) {
-        Glide.with(MusicPlayerActivity.this)
+        Glide.with(this)
                 .asBitmap()
                 .load(artworkUri)
                 .into(new CustomTarget<Bitmap>() {
@@ -323,7 +325,10 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private void setArtworkFromBitmap(Bitmap artworkBitmap) {
         binding.getRoot().setBackground(new ColorDrawable(Color.BLACK));
         binding.musicPlayerSongArtwork.setImageBitmap(artworkBitmap);
-        binding.musicPlayerSongArtworkBackground.setImageBitmap(artworkBitmap);
+        Glide.with(this)
+                .load(artworkBitmap)
+                .apply(RequestOptions.bitmapTransform(new BlurTransformation(7, 5)))
+                .into(binding.musicPlayerSongArtworkBackground);
         Log.d(LOG_TAG, "Song's artwork loaded from bitmap");
         setViewsColors(artworkBitmap);
     }
@@ -349,11 +354,9 @@ public class MusicPlayerActivity extends AppCompatActivity {
             if (palette == null)
                 return;
             int color = palette.getLightVibrantColor(
-                    ContextCompat.getColor(MusicPlayerActivity.this,
-                            R.color.white));
+                    ContextCompat.getColor(this, R.color.white));
             int darkerColor = palette.getDarkMutedColor(
-                    ContextCompat.getColor(MusicPlayerActivity.this,
-                    R.color.black));
+                    ContextCompat.getColor(this, R.color.bright_grey));
             binding.musicPlayerSongTitle.setTextColor(color);
             binding.musicPlayerSongArtist.setTextColor(color);
             binding.musicPlayerRepeatBtn.setColorFilter(color);
@@ -370,7 +373,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             binding.musicPlayerMenuBtn.setColorFilter(color);
             binding.musicPlayerCloseBtn.setColorFilter(color);
             binding.musicPlayerVisualizer.setColor(color);
-            Log.d(LOG_TAG, "Updated views' colors");
+            Log.d(LOG_TAG, "Updated views' colors using song artwork's palette");
         });
     }
 
