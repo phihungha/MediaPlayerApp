@@ -29,7 +29,7 @@
                 android:layout_centerInParent="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_home_black_24dp"
+                android:src="@drawable/ic_video"
                 app:shapeAppearanceOverlay="@style/roundedCornerImageView" />
 
             <ImageView
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:contentDescription="@string/description_play_arrow_icon"
-                android:src="@drawable/ic_music" />
+                android:src="@drawable/ic_play_arrow_white_24dp" />
         </RelativeLayout>
 
         <LinearLayout
@@ -48,7 +48,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="50"
                 android:orientation="vertical">
 
                 <TextView
@@ -73,6 +73,7 @@
             </LinearLayout>
 
             <ImageView
+                android:layout_weight="-2"
                 android:id="@+id/video_options_imageview"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -80,7 +81,7 @@
                 android:contentDescription="@string/description_options_icon"
                 android:focusable="true"
                 android:foreground="?android:attr/selectableItemBackground"
-                android:src="@drawable/ic_notifications_black_24dp" />
+                android:src="@drawable/ic_dots_black_24dp" />
 
         </LinearLayout>
     </LinearLayout>

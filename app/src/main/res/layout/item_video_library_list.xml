@@ -34,7 +34,7 @@
                 android:layout_centerInParent="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_home_black_24dp"
+                android:src="@drawable/ic_video"
                 app:shapeAppearanceOverlay="@style/roundedCornerImageView" />
 
             <ImageView
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:contentDescription="@string/description_play_arrow_icon"
-                android:src="@drawable/ic_music" />
+                android:src="@drawable/ic_play_arrow_white_24dp" />
         </RelativeLayout>
 
         <LinearLayout
@@ -81,7 +81,7 @@
         android:contentDescription="@string/description_options_icon"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:src="@drawable/ic_notifications_black_24dp"
+        android:src="@drawable/ic_dots_black_24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

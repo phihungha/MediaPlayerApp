@@ -26,7 +26,7 @@
             android:layout_height="24dp"
             android:layout_margin="8dp"
             android:contentDescription="@string/dialog_bottom_option_information_ic"
-            android:src="@drawable/ic_notifications_black_24dp" />
+            android:src="@drawable/ic_info_blue1_24dp" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -49,7 +49,7 @@
             android:layout_height="24dp"
             android:layout_margin="8dp"
             android:contentDescription="@string/dialog_bottom_option_playlist_ic"
-            android:src="@drawable/ic_video" />
+            android:src="@drawable/ic_playlist" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
             android:layout_height="24dp"
             android:layout_margin="8dp"
             android:contentDescription="@string/dialog_bottom_option_share_ic"
-            android:src="@drawable/ic_playlist" />
+            android:src="@drawable/ic_share_blue1_24dp" />
 
         <TextView
             android:layout_width="wrap_content"
