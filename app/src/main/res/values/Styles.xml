@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="roundedCornerImageView">
-        <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">8dp</item>
-    </style>
+
     <style name="BottomNavigation">
         <item name="fontFamily">@font/poppins_medium</item>
     </style>
