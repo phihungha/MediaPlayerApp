@@ -36,11 +36,7 @@ public class VideoLibraryFragment extends Fragment {
         String path = Environment.getExternalStorageDirectory().getPath();
         binding.videoPlayButton.setOnClickListener(view -> {
             Intent startPlayback = new Intent(requireActivity(), VideoPlayerActivity.class);
-            ArrayList<String> videoUris = new ArrayList<>();
-            videoUris.add(Uri.fromFile(new File(path + "/Download/video_sample.mp4")).toString());
-            videoUris.add(Uri.fromFile(new File(path + "/Download/video_sample_2.mp4")).toString());
-            videoUris.add(Uri.fromFile(new File(path + "/Download/video_sample_3.mp4")).toString());
-            startPlayback.putStringArrayListExtra(VideoPlayerActivity.VIDEO_URI_LIST, videoUris);
+            startPlayback.setData(Uri.fromFile(new File(path + "/Download/video_sample_1.mp4")));
             startActivity(startPlayback);
         });
         return binding.getRoot();

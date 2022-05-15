@@ -23,7 +23,7 @@
             @transition/change_image_transform</item>
     </style>
 
-    <style name="Theme.MediaPlayerApp.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.MediaPlayerApp.ImmersivePlayer" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Transparent status bar -->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <!-- Gesture navigation bar -->

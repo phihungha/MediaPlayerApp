@@ -18,12 +18,12 @@ package="com.example.mediaplayerapp">
         android:supportsPictureInPicture="true"
         android:configChanges="orientation|screenSize|layoutDirection|screenLayout"
         android:launchMode="singleTask"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:theme="@style/Theme.MediaPlayerApp.ImmersivePlayer"
         android:exported="false" />
 
     <activity
         android:name=".ui.music_player.MusicPlayerActivity"
-        android:theme="@style/Theme.MediaPlayerApp.NoActionBar"
+        android:theme="@style/Theme.MediaPlayerApp.ImmersivePlayer"
         android:exported="false" />
 
     <activity

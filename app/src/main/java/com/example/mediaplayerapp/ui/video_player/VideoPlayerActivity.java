@@ -23,7 +23,6 @@ import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
 
 public class VideoPlayerActivity extends AppCompatActivity {
 
-    public final static String VIDEO_URI_LIST = "VideoPlayerActivity.VIDEO_URI_LIST";
     private final static String LOG_TAG = VideoPlayerActivity.class.getSimpleName();
 
     ActivityVideoPlayerBinding binding;
