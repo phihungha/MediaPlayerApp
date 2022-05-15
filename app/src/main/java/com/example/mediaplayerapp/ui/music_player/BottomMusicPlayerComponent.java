@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
@@ -50,6 +51,7 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
     private static final int AUTOSCROLL_DELAY = 4500;
     private boolean isDisplayed = false;
     private boolean firstDisplayTime = true;
+    private boolean isUsingDefaultArtwork = true;
 
     private MediaBrowserCompat mediaBrowser;
     MediaBrowserCompat.ConnectionCallback connectionCallback =
@@ -151,11 +153,14 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
         binding.getRoot().setVisibility(View.INVISIBLE);
         binding.getRoot().setOnClickListener(view -> {
                     Intent intent = new Intent(activity, MusicPlayerActivity.class);
-                    ActivityOptions options = ActivityOptions
-                            .makeSceneTransitionAnimation(activity,
-                                    binding.bottomMusicPlayerSongArtwork,
-                                    "song_artwork");
-                    activity.startActivity(intent, options.toBundle());
+                    Bundle extras = null;
+                    if (!isUsingDefaultArtwork) {
+                        extras = ActivityOptions
+                                .makeSceneTransitionAnimation(activity,
+                                        binding.bottomMusicPlayerSongArtwork,
+                                        "song_artwork").toBundle();
+                    }
+                    activity.startActivity(intent, extras);
                 }
         );
 
@@ -291,6 +296,8 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
         Log.d(LOG_TAG, "Song's artwork loaded from bitmap");
 
         setViewsColors(artworkBitmap);
+
+        isUsingDefaultArtwork = false;
     }
 
     /**
@@ -302,6 +309,7 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
         binding.bottomMusicPlayerSongArtwork.setImageDrawable(defaultArtwork);
         binding.bottomMusicPlayerSongArtworkBackground.setImageDrawable(null);
         setDefaultViewsColors();
+        isUsingDefaultArtwork = true;
     }
 
     /**

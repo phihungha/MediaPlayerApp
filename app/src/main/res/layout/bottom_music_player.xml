@@ -7,6 +7,16 @@
     android:layout_height="@dimen/bottom_music_player_height" >
 
     <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:src="@drawable/shape_bottom_music_player_border"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="ContentDescription" />
+
+    <ImageView
         android:id="@+id/bottom_music_player_song_artwork_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -56,7 +66,7 @@
         android:contentDescription="@string/skip_next_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:layout_constraintVertical_bias="0.52"
         app:srcCompat="@drawable/ic_cancel_thin_gray_24dp"
         tools:ignore="TouchTargetSizeCheck" />
@@ -80,13 +90,11 @@
         android:layout_width="@dimen/bottom_music_player_song_artwork_size"
         android:layout_height="@dimen/bottom_music_player_song_artwork_size"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:contentDescription="@string/music_artwork"
         android:transitionName="song_artwork"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView"
         app:shapeAppearanceOverlay="@style/ImageViewRoundedCorner"
         app:srcCompat="@drawable/default_song_artwork_bottom_music_player" />
 
@@ -96,7 +104,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:text="@string/default_song_name"
         android:textColor="@color/black"
@@ -105,7 +112,7 @@
         app:layout_constraintEnd_toStartOf="@+id/bottom_music_player_skip_prev_btn"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toEndOf="@+id/bottom_music_player_song_artwork"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
         android:id="@+id/bottom_music_player_song_artist"
@@ -119,4 +126,5 @@
         app:layout_constraintEnd_toEndOf="@+id/bottom_music_player_song_title"
         app:layout_constraintStart_toStartOf="@+id/bottom_music_player_song_title"
         app:layout_constraintTop_toBottomOf="@+id/bottom_music_player_song_title" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

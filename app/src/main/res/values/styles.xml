@@ -17,7 +17,7 @@
     <style name="HorizontalAutoScrollTextView">
         <item name="android:singleLine">true</item>
         <item name="android:scrollHorizontally">true</item>
-        <item name="android:marqueeRepeatLimit">1</item>
+        <item name="android:marqueeRepeatLimit">marquee_forever</item>
         <item name="android:ellipsize">marquee</item>
         <item name="android:focusable">true</item>
         <item name="android:focusableInTouchMode">true</item>
