@@ -2,6 +2,8 @@ package com.example.mediaplayerapp.ui.music_player;
 
 import android.content.ComponentName;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -100,8 +102,11 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
                 @Override
                 public void onPlaybackStateChanged(PlaybackStateCompat state) {
-                    if (state.getState() == PlaybackStateCompat.STATE_PLAYING)
+                    if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
+                        // Bind visualizer to new audio session id if it changes.
+                        bindAudioVisualizerToAudio();
                         binding.musicPlayerPlayPauseBtn.setImageLevel(1);
+                    }
                     else
                         binding.musicPlayerPlayPauseBtn.setImageLevel(0);
                     Log.d(LOG_TAG, "Playback state changed");
@@ -152,6 +157,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
             finish();
         });
         binding.musicPlayerMenuBtn.setOnClickListener(view -> openMenu());
+
+        binding.musicPlayerVisualizer.setDensity(70);
     }
 
     /**
@@ -314,6 +321,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
      * @param artworkBitmap Artwork's bitmap
      */
     private void setArtworkFromBitmap(Bitmap artworkBitmap) {
+        binding.getRoot().setBackground(new ColorDrawable(Color.BLACK));
         binding.musicPlayerSongArtwork.setImageBitmap(artworkBitmap);
         binding.musicPlayerSongArtworkBackground.setImageBitmap(artworkBitmap);
         Log.d(LOG_TAG, "Song's artwork loaded from bitmap");
@@ -324,9 +332,11 @@ public class MusicPlayerActivity extends AppCompatActivity {
      * Set default artwork.
      */
     private void setDefaultArtwork() {
-        Drawable defaultArtwork = AppCompatResources.getDrawable(this, R.drawable.ic_music_note_white_24dp);
-        binding.musicPlayerSongArtwork.setImageDrawable(defaultArtwork);
-        binding.musicPlayerSongArtworkBackground.setImageResource(android.R.color.transparent);
+        binding.getRoot().setBackground(
+                ContextCompat.getDrawable(this,
+                        R.drawable.shape_music_player_default_background));
+        binding.musicPlayerSongArtwork.setImageDrawable(null);
+        binding.musicPlayerSongArtworkBackground.setImageDrawable(null);
         setDefaultViewsColorsDefault();
     }
 
@@ -359,6 +369,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             binding.musicPlayerScreenTitle.setTextColor(color);
             binding.musicPlayerMenuBtn.setColorFilter(color);
             binding.musicPlayerCloseBtn.setColorFilter(color);
+            binding.musicPlayerVisualizer.setColor(color);
             Log.d(LOG_TAG, "Updated views' colors");
         });
     }
@@ -384,7 +395,16 @@ public class MusicPlayerActivity extends AppCompatActivity {
         binding.musicPlayerScreenTitle.setTextColor(color);
         binding.musicPlayerMenuBtn.setColorFilter(color);
         binding.musicPlayerCloseBtn.setColorFilter(color);
+        binding.musicPlayerVisualizer.setColor(color);
         Log.d(LOG_TAG, "Updated views' colors to default");
+    }
+
+    private void bindAudioVisualizerToAudio() {
+        int audioSessionId = MediaControllerCompat
+                .getMediaController(this)
+                .getExtras()
+                .getInt(MusicPlaybackService.AUDIO_SESSION_ID_KEY);
+        binding.musicPlayerVisualizer.setPlayer(audioSessionId);
     }
 
     @Override

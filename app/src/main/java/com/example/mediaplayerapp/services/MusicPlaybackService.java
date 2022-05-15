@@ -22,6 +22,7 @@ import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.MediaMetadata;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
@@ -32,6 +33,7 @@ import java.util.List;
 public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
     private static final String LOG_TAG = MusicPlaybackService.class.getSimpleName();
+    public static final String AUDIO_SESSION_ID_KEY = "com.example.mediaplayerapp.services.MusicPlaybackService.AudioSessionId";
     private static final String NOTIFICATION_CHANNEL_ID = "com.example.mediaplayerapp.services.MUSIC_PLAYBACK";
     private static final int NOTIFICATION_ID = 1;
 
@@ -49,10 +51,27 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         mediaSession = new MediaSessionCompat(this, "MusicPlaybackService");
         setSessionToken(mediaSession.getSessionToken());
 
+        setAudioSessionIdOnMediaSession();
+        setupAnalyticsListener();
         setupMetadataSyncListener();
         setupMediaSessionConnector();
         setupNotification();
         mediaSession.setActive(true);
+    }
+
+    private void setAudioSessionIdOnMediaSession() {
+        Bundle extras = new Bundle();
+        extras.putInt(AUDIO_SESSION_ID_KEY, player.getAudioSessionId());
+        mediaSession.setExtras(extras);
+    }
+
+    private void setupAnalyticsListener() {
+        player.addAnalyticsListener(new AnalyticsListener() {
+            @Override
+            public void onAudioSessionIdChanged(@NonNull EventTime eventTime, int audioSessionId) {
+                setAudioSessionIdOnMediaSession();
+            }
+        });
     }
 
     private void setupMetadataSyncListener() {

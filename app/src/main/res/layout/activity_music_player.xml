@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
+    android:background="@drawable/shape_music_player_default_background"
     tools:context=".ui.music_player.MusicPlayerActivity">
 
     <ImageView
@@ -15,7 +15,6 @@
         android:contentDescription="@string/music_artwork_background"
         android:scaleType="centerCrop"
         android:alpha="0.4"
-        android:src="#818181"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,20 +22,28 @@
 
     <ImageView
         android:id="@+id/music_player_song_artwork"
-        android:transitionName="song_artwork"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="24dp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        android:scaleType="fitCenter"
         android:contentDescription="@string/music_artwork"
+        android:cropToPadding="false"
+        android:scaleType="fitCenter"
+        android:transitionName="song_artwork"
         app:layout_constraintBottom_toTopOf="@+id/music_player_song_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/music_player_screen_title"
-        app:srcCompat="@drawable/ic_music_note_white_24dp" />
+        app:layout_constraintTop_toBottomOf="@+id/music_player_screen_title" />
+
+    <com.chibde.visualizer.BarVisualizer
+        android:id="@+id/music_player_visualizer"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        app:layout_constraintBottom_toBottomOf="@+id/music_player_song_artwork"
+        app:layout_constraintEnd_toEndOf="@+id/music_player_song_artwork"
+        app:layout_constraintStart_toStartOf="@+id/music_player_song_artwork" />
 
     <ImageButton
         android:id="@+id/music_player_play_pause_btn"
@@ -174,7 +181,8 @@
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/music_player_song_current_position"
-        app:layout_constraintTop_toBottomOf="@+id/music_player_song_title" />
+        app:layout_constraintTop_toBottomOf="@+id/music_player_song_title"
+        tools:ignore="TextContrastCheck" />
 
     <ImageButton
         android:id="@+id/music_player_menu_btn"

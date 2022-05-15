@@ -36,7 +36,7 @@ public class MusicLibraryFragment extends Fragment {
         final TextView textView = binding.textMusicLibrary;
         viewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
-        Uri uri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "Download/music_sample.flac"));
+        Uri uri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), "Download/music_sample_2.mp3"));
         binding.playMusicBtn.setOnClickListener(view -> MainActivity.playMusic(requireActivity(), uri));
 
         return binding.getRoot();

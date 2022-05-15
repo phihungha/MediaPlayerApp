@@ -51,6 +51,8 @@
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_watch_later_white_24dp.xml" value="0.245" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/selector_music_play_pause_btn.xml" value="0.244" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/selector_play_pause_button.xml" value="0.244" />
+        <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/shape_imageview_border_white.xml" value="0.2555" />
+        <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/shape_music_player_default_background.xml" value="0.2275" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/layout/activity_music_player.xml" value="0.264" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/layout/activity_video_player.xml" value="0.25" />
