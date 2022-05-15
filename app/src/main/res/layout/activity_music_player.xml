@@ -55,7 +55,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/level_list_play_pause_button" />
+        app:srcCompat="@drawable/play_pause_button" />
 
     <ImageButton
         android:id="@+id/music_player_skip_next_btn"
@@ -93,7 +93,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/music_player_play_pause_btn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/music_player_play_pause_btn"
-        app:srcCompat="@drawable/level_list_repeat_btn"
+        app:srcCompat="@drawable/repeat_btn"
         tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
 
     <ImageButton
@@ -106,7 +106,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/music_player_play_pause_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/music_player_play_pause_btn"
-        app:srcCompat="@drawable/level_list_shuffle_btn"
+        app:srcCompat="@drawable/shuffle_btn"
         tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
 
     <com.google.android.exoplayer2.ui.DefaultTimeBar
