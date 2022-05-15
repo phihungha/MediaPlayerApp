@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
 import com.example.mediaplayerapp.data.video.Video;
-import com.example.mediaplayerapp.databinding.DialogBottomSheetBinding;
+import com.example.mediaplayerapp.databinding.DialogVideoBottomSheetBinding;
 import com.example.mediaplayerapp.databinding.DialogVideoInfoBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -37,11 +37,10 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        DialogBottomSheetBinding bottomSheetBinding
-                = DialogBottomSheetBinding.inflate(inflater, container, false);
+        DialogVideoBottomSheetBinding bottomSheetBinding
+                = DialogVideoBottomSheetBinding.inflate(inflater, container, false);
 
         bottomSheetBinding.bottomSheetVideoNameTextview.setText(currentVideo.getName());
-
 
         LinearLayout optionInfo = bottomSheetBinding.bottomSheetOptionInfo;
         optionInfo.setOnClickListener(view1 -> {
@@ -56,9 +55,10 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
                     Locale.US,
                     "%02d:%02d",
                     TimeUnit.MILLISECONDS.toMinutes(duration),
-                    TimeUnit.MILLISECONDS.toSeconds(duration)
+                    TimeUnit.MILLISECONDS.toSeconds(duration) % 60
             );
             videoInfoBinding.dialogVideoInfoVideoLengthTextview.setText(durationFormatted);
+
             videoInfoBinding.dialogVideoInfoVideoPathTextview.setText(currentVideo.getPath());
 
             videoInfoBinding.dialogVideoInfoVideoSizeTextview
@@ -93,7 +93,7 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     /**
-     * Convert a file size from type long to an easy-to-look string format
+     * Convert a file size from type "long" to an easy-to-look "String"
      *
      * @param size The file size that needs converting
      * @return The result string

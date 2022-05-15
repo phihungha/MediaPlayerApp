@@ -83,7 +83,7 @@ public class VideoLibraryItemAdapter
                 Locale.US,
                 "%02d:%02d",
                 TimeUnit.MILLISECONDS.toMinutes(duration),
-                TimeUnit.MILLISECONDS.toSeconds(duration)
+                TimeUnit.MILLISECONDS.toSeconds(duration) % 60
         );
         holder.videoDuration.setText(durationFormatted);
 

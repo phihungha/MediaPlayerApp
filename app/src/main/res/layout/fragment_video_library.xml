@@ -8,22 +8,22 @@
     tools:context=".ui.video_library.VideoLibraryFragment">
 
     <TextView
-        android:layout_margin="10dp"
         android:id="@+id/all_videos_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
         android:gravity="top"
         android:text="@string/all_videos_textView"
         android:textColor="#474646"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/all_videos_recyclerview"
+        app:layout_constraintBottom_toTopOf="@id/video_library_recyclerview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/all_videos_recyclerview"
+        android:id="@+id/video_library_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="24dp"

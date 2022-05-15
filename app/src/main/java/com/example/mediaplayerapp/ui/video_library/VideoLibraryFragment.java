@@ -28,7 +28,7 @@ public class VideoLibraryFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "recycler_column_count";
     public static int recyclerViewColumnCount = 2;
     private FragmentVideoLibraryBinding binding;
-    private RecyclerView recyclerViewAllVideos;
+    private RecyclerView videoLibraryRecyclerView;
     private VideoLibraryItemAdapter videoLibraryItemAdapter;
     private SortArgs sortArgs = SortArgs.VIDEO_NAME;
     private SortOrder sortOrder = SortOrder.ASC;
@@ -67,15 +67,15 @@ public class VideoLibraryFragment extends Fragment {
         if (itemId == R.id.grid_list_change_menu_item) {
             if (recyclerViewColumnCount <= 1) {
                 recyclerViewColumnCount = 2;
-                recyclerViewAllVideos.setLayoutManager(new GridLayoutManager
+                videoLibraryRecyclerView.setLayoutManager(new GridLayoutManager
                         (binding.getRoot().getContext(), recyclerViewColumnCount));
 
             } else {
                 recyclerViewColumnCount = 1;
-                recyclerViewAllVideos.setLayoutManager(new LinearLayoutManager
+                videoLibraryRecyclerView.setLayoutManager(new LinearLayoutManager
                         ((binding.getRoot().getContext())));
             }
-            recyclerViewAllVideos.setAdapter(videoLibraryItemAdapter);
+            videoLibraryRecyclerView.setAdapter(videoLibraryItemAdapter);
             return true;
 
         } else if (itemId == R.id.sort_by_name_menu_item) {
@@ -102,19 +102,19 @@ public class VideoLibraryFragment extends Fragment {
             recyclerViewColumnCount = savedInstanceState.getInt(ARG_COLUMN_COUNT);
         }
         binding = FragmentVideoLibraryBinding.inflate(inflater, container, false);
-        recyclerViewAllVideos = binding.allVideosRecyclerview;
+        videoLibraryRecyclerView = binding.videoLibraryRecyclerview;
 
         if (recyclerViewColumnCount <= 1) {
-            recyclerViewAllVideos.setLayoutManager(new LinearLayoutManager
+            videoLibraryRecyclerView.setLayoutManager(new LinearLayoutManager
                     (binding.getRoot().getContext()));
         } else {
-            recyclerViewAllVideos.setLayoutManager(new GridLayoutManager
+            videoLibraryRecyclerView.setLayoutManager(new GridLayoutManager
                     (binding.getRoot().getContext(), recyclerViewColumnCount));
         }
 
         videoLibraryItemAdapter = new VideoLibraryItemAdapter(requireActivity());
-        recyclerViewAllVideos.setAdapter(videoLibraryItemAdapter);
-        recyclerViewAllVideos.setHasFixedSize(true);
+        videoLibraryRecyclerView.setAdapter(videoLibraryItemAdapter);
+        videoLibraryRecyclerView.setHasFixedSize(true);
 
         VideoLibraryViewModel videoLibraryViewModel = new ViewModelProvider
                 (requireActivity()).get(VideoLibraryViewModel.class);
