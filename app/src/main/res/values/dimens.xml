@@ -7,5 +7,6 @@
     <dimen name="music_small_control_btn_size">45dp</dimen>
 
     <dimen name="bottom_music_player_btn_size">42dp</dimen>
-    <dimen name="bottom_music_player_height">65dp</dimen>
+    <dimen name="bottom_music_player_height">75dp</dimen>
+    <dimen name="bottom_music_player_song_artwork_size">60dp</dimen>
 </resources>
