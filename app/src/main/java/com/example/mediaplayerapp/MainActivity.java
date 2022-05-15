@@ -1,6 +1,7 @@
 package com.example.mediaplayerapp;
 
 import android.app.Activity;
+import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.session.MediaControllerCompat;
@@ -40,5 +41,11 @@ public class MainActivity extends AppCompatActivity {
         MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(activity);
         if (mediaController != null)
             mediaController.getTransportControls().playFromUri(uri, null);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 }

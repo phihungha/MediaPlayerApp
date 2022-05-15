@@ -352,11 +352,6 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
     }
 
     @Override
-    public void onResume(@NonNull LifecycleOwner owner) {
-        activity.setVolumeControlStream(AudioManager.STREAM_MUSIC);
-    }
-
-    @Override
     public void onStop(@NonNull LifecycleOwner owner) {
         if (MediaControllerCompat.getMediaController(activity) != null)
             MediaControllerCompat.getMediaController(activity).unregisterCallback(controllerCallback);
