@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,15 +28,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class VideoLibraryItemAdapter extends
-        RecyclerView.Adapter<VideoLibraryItemAdapter.ViewHolder> {
+public class VideoLibraryItemAdapter
+        extends RecyclerView.Adapter<VideoLibraryItemAdapter.ViewHolder> implements Filterable {
 
-    private final List<Video> videos;
-    private Context context;
+    private final List<Video> displayedVideos;
+    private final List<Video> allVideos;
+    private final Context context;
 
     public VideoLibraryItemAdapter(Context context) {
         this.context = context;
-        videos = new ArrayList<>();
+        displayedVideos = new ArrayList<>();
+        allVideos = new ArrayList<>();
     }
 
     @NonNull
@@ -54,7 +58,7 @@ public class VideoLibraryItemAdapter extends
 
         Glide
                 .with(holder.videoThumbnail.getContext())
-                .load(videos.get(position).getUri())
+                .load(displayedVideos.get(position).getUri())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .override(holder.videoThumbnail.getWidth(), holder.videoThumbnail.getHeight())
                 .centerCrop()
@@ -62,7 +66,7 @@ public class VideoLibraryItemAdapter extends
 
         holder.videoClickArea.setOnClickListener(view -> {
             ArrayList<String> videoUris = new ArrayList<>();
-            videoUris.add(videos.get(position).getUri().toString());
+            videoUris.add(displayedVideos.get(position).getUri().toString());
 
             Intent startPlaybackIntent = new Intent(
                     view.getContext(), VideoPlayerActivity.class);
@@ -72,9 +76,9 @@ public class VideoLibraryItemAdapter extends
             view.getContext().startActivity(startPlaybackIntent);
         });
 
-        holder.videoName.setText(videos.get(position).getName());
+        holder.videoName.setText(displayedVideos.get(position).getName());
 
-        int duration = videos.get(position).getDuration();
+        int duration = displayedVideos.get(position).getDuration();
         String durationFormatted = String.format(
                 Locale.US,
                 "%02d:%02d",
@@ -86,7 +90,7 @@ public class VideoLibraryItemAdapter extends
         holder.videoOptions.setOnClickListener(view -> {
 
             VideoLibraryBottomSheetDialog bottomSheetDialog =
-                    new VideoLibraryBottomSheetDialog(videos.get(position));
+                    new VideoLibraryBottomSheetDialog(displayedVideos.get(position));
 
             bottomSheetDialog.show(((AppCompatActivity) context).getSupportFragmentManager(),
                     bottomSheetDialog.getTag());
@@ -96,7 +100,7 @@ public class VideoLibraryItemAdapter extends
 
     @Override
     public int getItemCount() {
-        return videos.size();
+        return displayedVideos.size();
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -123,9 +127,46 @@ public class VideoLibraryItemAdapter extends
             default:
                 break;
         }
-        this.videos.clear();
-        this.videos.addAll(updatedVideoList);
+        this.displayedVideos.clear();
+        this.displayedVideos.addAll(updatedVideoList);
+
+        this.allVideos.clear();
+        this.allVideos.addAll(updatedVideoList);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+
+                List<Video> filteredVideos = new ArrayList<>();
+
+                if (charSequence == null || charSequence.length() == 0) {
+                    filteredVideos.addAll(allVideos);
+                } else {
+                    String filterPattern = charSequence.toString().toLowerCase().trim();
+                    for (Video video : allVideos) {
+                        if (video.getName().toLowerCase().contains(filterPattern))
+                            filteredVideos.add(video);
+                    }
+                }
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = filteredVideos;
+                return filterResults;
+            }
+
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                displayedVideos.clear();
+
+                // Using Android refactoring with Alt + Enter doesn't resolve this warning
+                displayedVideos.addAll((List<Video>) filterResults.values);
+                notifyDataSetChanged();
+            }
+        };
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

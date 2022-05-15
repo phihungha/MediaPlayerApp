@@ -22,4 +22,5 @@
     <string name="dialog_bottom_option_rename_ic">Bottom dialog option - Rename</string>
     <string name="dialog_bottom_option_share_ic">Bottom dialog option - Share</string>
     <string name="dialog_bottom_option_delete_ic">Bottom dialog option - Delete</string>
+    <string name="item_search">Search</string>
 </resources>
