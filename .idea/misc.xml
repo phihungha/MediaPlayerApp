@@ -19,10 +19,12 @@
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_cancel_thin_black_24dp.xml" value="0.252" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_cancel_thin_gray_24dp.xml" value="0.252" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_circle_translucent_white_24dp.xml" value="0.244" />
+        <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.184" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_favorite_dark_grey_24dp.xml" value="0.245" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_favorite_white_24dp.xml" value="0.245" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.244" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_music.xml" value="0.244" />
+        <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_music_note_blue_24dp.xml" value="0.184" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_music_note_white_24dp.xml" value="0.252" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_music_player_close.xml" value="0.2435" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_music_player_play.xml" value="0.2435" />
@@ -44,6 +46,8 @@
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_repeat_white_24dp.xml" value="0.244" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_skip_next_dark_24dp.xml" value="0.25" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_skip_prev_dark_24dp.xml" value="0.25" />
+        <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_video.xml" value="0.184" />
+        <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_video_blue_24dp.xml" value="0.184" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_watch_later_dark_grey_24dp.xml" value="0.245" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/ic_watch_later_white_24dp.xml" value="0.245" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/drawable/layer_list_default_song_artwork_bottom_music_player.xml" value="0.1845" />
@@ -55,7 +59,7 @@
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/layout/activity_main.xml" value="0.264" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/layout/activity_music_player.xml" value="0.264" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/layout/activity_video_player.xml" value="0.25" />
-        <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/layout/bottom_music_player.xml" value="0.6" />
+        <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/layout/bottom_music_player.xml" value="0.25" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/layout/fragment_music_library.xml" value="0.264" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/layout/fragment_playlist.xml" value="0.25" />
         <entry key="..\:/Dev/Learn/MediaPlayerApp/app/src/main/res/layout/fragment_video_library.xml" value="0.25" />
