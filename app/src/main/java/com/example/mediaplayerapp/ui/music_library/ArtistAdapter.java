@@ -35,6 +35,13 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> imple
     private Context context;
     private ArrayList<Artist> artisList;
     private ArrayList<Artist> artisListOld;
+
+    @Override
+    public int getItemViewType(int position) {
+        Artist artist= artisList.get(position);
+        return artist.getTypeDisplay();
+    }
+
     public static Uri getImage(long albumId) {
         return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
     }
@@ -47,7 +54,17 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> imple
     @NonNull
     @Override
     public ARV onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ARV(LayoutInflater.from(parent.getContext()).inflate(R.layout.artist_list, parent, false));
+        View view =view = LayoutInflater.from(context).inflate(R.layout.artist_list,
+                parent, false);
+        switch (viewType){
+            case Artist.TYPE_LIST:view = LayoutInflater.from(context).inflate(R.layout.artist_list2,
+                    parent, false);
+                break;
+            case Artist.TYPE_GRID:view = LayoutInflater.from(context).inflate(R.layout.artist_list,
+                    parent, false);
+                break;
+        }
+        return new ARV(view);
     }
 
     @Override
@@ -103,7 +120,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> imple
 
         private TextView artNaam;
         private ImageView artthum;
-        public ARV(@NonNull View itemView) {
+        public ARV(View itemView) {
             super(itemView);
             artNaam = itemView.findViewById(R.id.artname);
             artthum=itemView.findViewById(R.id.artthum);

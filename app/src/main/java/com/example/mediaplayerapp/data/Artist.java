@@ -1,6 +1,9 @@
 package com.example.mediaplayerapp.data;
 
 public class Artist {
+    public static final int TYPE_LIST=2;
+    public static final int TYPE_GRID=1;
+    public int typeDisplay;
     public long ArtistId;
     public String ArtistName;
     public long num_tracks;
@@ -30,6 +33,14 @@ public class Artist {
     }
     public void setNum_albums(long num_albums) {
         this.num_albums = num_albums;
+    }
+
+    public void setTypeDisplay(int typeDisplay) {
+        this.typeDisplay = typeDisplay;
+    }
+
+    public int getTypeDisplay() {
+        return typeDisplay;
     }
 
     public long getArtistId() {

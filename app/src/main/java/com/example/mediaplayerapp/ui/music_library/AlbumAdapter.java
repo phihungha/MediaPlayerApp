@@ -31,6 +31,12 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
     private ArrayList<Album> albumList;
     private ArrayList<Album> albumListOld;
 
+    @Override
+    public int getItemViewType(int position) {
+        Album album = albumList.get(position);
+        return album.getTypeDisplay();
+    }
+
     public static Uri getImage(long albumId) {
         return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
     }
@@ -42,7 +48,17 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
     @NonNull
     @Override
     public AlbumAdapter.AlbumViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new AlbumAdapter.AlbumViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.album_list, parent, false));
+        View view = LayoutInflater.from(context).inflate(R.layout.album_list,
+                parent, false);
+        switch (viewType){
+            case Album.TYPE_GRID:view = LayoutInflater.from(context).inflate(R.layout.album_list,
+                    parent, false);
+                break;
+            case Album.TYPE_LIST:view = LayoutInflater.from(context).inflate(R.layout.album_list2,
+                    parent, false);
+                break;
+        }
+        return new AlbumViewHolder(view);
     }
 
     @Override

@@ -1,6 +1,10 @@
 package com.example.mediaplayerapp.data;
 
-public class Album {public  long id;
+public class Album {
+    public static final int TYPE_LIST=2;
+    public static final int TYPE_GRID=1;
+    public int typeDisplay;
+    public  long id;
     public String albumName;
     public long artistId;
     public String artistName;
@@ -43,6 +47,14 @@ public class Album {public  long id;
     }
     public void setYear(int num) {
         this.year = num;
+    }
+
+    public int getTypeDisplay() {
+        return typeDisplay;
+    }
+
+    public void setTypeDisplay(int typeDisplay) {
+        this.typeDisplay = typeDisplay;
     }
 
     public long getId() {

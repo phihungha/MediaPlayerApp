@@ -6,21 +6,25 @@ import android.content.Context;
 import android.os.Bundle;
 
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.Album;
 import com.example.mediaplayerapp.data.Artist;
 import com.example.mediaplayerapp.data.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.data.MusicLibraryRepository;
@@ -34,6 +38,9 @@ public class ArtistFragment extends Fragment {
     private RecyclerView recyclerView;
     private ArtistAdapter artistAdapter;
     private ArrayList<Artist> artists = new ArrayList<Artist>();
+    private GridLayoutManager gridLayoutManager;
+    private LinearLayoutManager linearLayoutManager;
+    private int currentType= Artist.TYPE_GRID;
     public ArtistFragment() {
         // Required empty public constructor
     }
@@ -47,8 +54,11 @@ public class ArtistFragment extends Fragment {
             view = inflater.inflate(R.layout.fragment_artist, container, false);
             setHasOptionsMenu(true);
             recyclerView = (RecyclerView) view.findViewById(R.id.arr);
-            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
+            gridLayoutManager= new GridLayoutManager(getActivity(),2);
+            linearLayoutManager= new LinearLayoutManager(getContext());
+            recyclerView.setLayoutManager(gridLayoutManager);
             artists= (ArrayList<Artist>) MusicLibraryRepository.ArtistLoader.artisList(getActivity());
+            setTypeDisplayRecycleView(Artist.TYPE_GRID);
             artistAdapter = new ArtistAdapter(getContext(), artists);
             recyclerView.setAdapter(artistAdapter);
             if(getActivity()!=null)
@@ -58,6 +68,32 @@ public class ArtistFragment extends Fragment {
         }
         return view;
     }
+
+    private void setTypeDisplayRecycleView(int typeDisplay){
+        if(artists == null || artists.isEmpty()){
+            return;
+        }
+        currentType=typeDisplay;
+        for(Artist artist : artists){
+            artist.setTypeDisplay(typeDisplay);
+        }
+    }
+    private void onClickChangeTypeDisplay() {
+        if(currentType==Artist.TYPE_LIST){
+            setTypeDisplayRecycleView(Artist.TYPE_GRID);
+            recyclerView.setLayoutManager(gridLayoutManager);
+            if(getActivity()!=null)
+            {
+                recyclerView.addItemDecoration(new GridSpacingItemDecoration(2,30,true));
+            }
+        }else {
+            setTypeDisplayRecycleView(Artist.TYPE_LIST);
+            recyclerView.setLayoutManager(linearLayoutManager);
+            recyclerView.removeItemDecorationAt(0);
+        }
+        artistAdapter.notifyDataSetChanged();
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.search, menu);
@@ -77,6 +113,14 @@ public class ArtistFragment extends Fragment {
                 return false;
             }
         });
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id= item.getItemId();
+        if(id == R.id.switch_view){
+            onClickChangeTypeDisplay();
+        }
+        return true;
     }
 }

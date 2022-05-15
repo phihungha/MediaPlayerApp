@@ -8,4 +8,9 @@
         app:showAsAction="always"
         app:actionViewClass="android.widget.SearchView"
         />
+    <item
+        android:id="@+id/switch_view"
+        android:icon="@android:drawable/ic_menu_today"
+        android:title=""
+        app:showAsAction="always" />
 </menu>

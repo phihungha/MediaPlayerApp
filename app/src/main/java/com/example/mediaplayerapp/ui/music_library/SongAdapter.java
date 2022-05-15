@@ -29,6 +29,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
     ArrayList<Song> SongListOld = new ArrayList<>();
     Context context;
 
+
+    @Override
+    public int getItemViewType(int position) {
+        Song song = SongList.get(position);
+        return song.getTypeDisplay();
+    }
+
     public static Uri getImage(long albumId) {
         return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
     }
@@ -42,6 +49,15 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
     public SongAdapter.SongHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.song_list,
                 parent, false);
+        switch (viewType)
+        {
+            case Song.TYPE_GRID:view = LayoutInflater.from(context).inflate(R.layout.song_list_grid,
+                    parent, false);
+                break;
+            case Song.TYPE_LIST:view = LayoutInflater.from(context).inflate(R.layout.song_list,
+                    parent, false);
+                break;
+        }
         return new SongHolder(view);
     }
 
@@ -97,8 +113,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         ImageView albumart;
         private PopupMenu popup;
 
-        public SongHolder(View itemView)    {
-
+        public SongHolder(@NonNull View itemView)    {
             super(itemView);
             albumart=itemView.findViewById(R.id.songthumb);
             sogname = (TextView)itemView.findViewById(R.id.sogname);

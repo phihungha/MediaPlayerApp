@@ -3,6 +3,9 @@ package com.example.mediaplayerapp.data;
 import android.graphics.Bitmap;
 
 public class Song {
+    public static final int TYPE_LIST=1;
+    public static final int TYPE_GRID=2;
+    public int typeDisplay;
     public long songId;
     public String songTitle;
     public String songArtist;
@@ -54,8 +57,16 @@ public class Song {
     public void setDuration(long duration){this.duration=duration;}
     public void setTrackNumber(int trackNumber){this.trackNumber=trackNumber;}
 
+    public void setTypeDisplay(int typeDisplay) {
+        this.typeDisplay = typeDisplay;
+    }
+
     public long getAlbumId() {
         return albumId;
+    }
+
+    public int getTypeDisplay() {
+        return typeDisplay;
     }
 
     public String getSongTitle() {
