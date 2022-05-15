@@ -79,6 +79,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                         controllerCallback.onMetadataChanged(metadata);
                     if (playbackState != null)
                         controllerCallback.onPlaybackStateChanged(playbackState);
+                    playFromIntent();
                 }
 
                 @Override
@@ -181,6 +182,17 @@ public class MusicPlayerActivity extends AppCompatActivity {
             binding.musicPlayerSongTitle.setSelected(true);
             binding.musicPlayerSongArtist.setSelected(true);
         }, AUTOSCROLL_DELAY);
+    }
+
+    /**
+     * Play music from intent if there is one.
+     */
+    private void playFromIntent() {
+        Uri uri = getIntent().getData();
+        if (uri != null)
+            MediaControllerCompat.getMediaController(this)
+                    .getTransportControls()
+                    .playFromUri(uri, null);
     }
 
     /**
