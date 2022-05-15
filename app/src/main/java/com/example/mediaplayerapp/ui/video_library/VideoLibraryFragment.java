@@ -27,7 +27,6 @@ public class VideoLibraryFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "recycler_column_count";
     public static int recyclerViewColumnCount = 2;
-    private VideoLibraryViewModel videoLibraryViewModel;
     private FragmentVideoLibraryBinding binding;
     private RecyclerView recyclerViewAllVideos;
     private VideoLibraryItemAdapter videoLibraryItemAdapter;
@@ -103,7 +102,6 @@ public class VideoLibraryFragment extends Fragment {
             recyclerViewColumnCount = savedInstanceState.getInt(ARG_COLUMN_COUNT);
         }
         binding = FragmentVideoLibraryBinding.inflate(inflater, container, false);
-
         recyclerViewAllVideos = binding.allVideosRecyclerview;
 
         if (recyclerViewColumnCount <= 1) {
@@ -118,7 +116,7 @@ public class VideoLibraryFragment extends Fragment {
         recyclerViewAllVideos.setAdapter(videoLibraryItemAdapter);
         recyclerViewAllVideos.setHasFixedSize(true);
 
-        videoLibraryViewModel = new ViewModelProvider
+        VideoLibraryViewModel videoLibraryViewModel = new ViewModelProvider
                 (requireActivity()).get(VideoLibraryViewModel.class);
 
         videoLibraryViewModel.getAllVideos().observe(requireActivity(), videoList -> {

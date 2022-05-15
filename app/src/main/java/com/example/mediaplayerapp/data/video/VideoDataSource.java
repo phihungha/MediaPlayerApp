@@ -5,12 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.loader.content.CursorLoader;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,14 +79,5 @@ public class VideoDataSource {
         }
 
         return new MutableLiveData<>(videoList);
-    }
-
-
-    public void deleteVideo(Video video) {
-        File videoFile = new File(video.getUri().getPath());
-        boolean deleteResult = videoFile.delete();
-        if (deleteResult) Log.d("[DATABASE] - (INFO)", "Deleted video successfully !");
-        else Log.d("[DATABASE] - (ERROR)", "Failed to delete video !");
-        context.getContentResolver().delete(video.getUri(), null, null);
     }
 }

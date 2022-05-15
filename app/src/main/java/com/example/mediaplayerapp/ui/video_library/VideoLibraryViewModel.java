@@ -13,17 +13,14 @@ import java.util.List;
 public class VideoLibraryViewModel extends AndroidViewModel {
 
     private final MutableLiveData<List<Video>> allVideos;
-    private final VideoLibraryRepository videoLibraryRepository;
 
     public VideoLibraryViewModel(Application application) {
         super(application);
-        videoLibraryRepository = new VideoLibraryRepository(application);
+        VideoLibraryRepository videoLibraryRepository = new VideoLibraryRepository(application);
         allVideos = videoLibraryRepository.getAllVideos();
     }
 
     public MutableLiveData<List<Video>> getAllVideos() {
         return allVideos;
     }
-    public void deleteVideo(Video video){videoLibraryRepository.deleteVideo(video);}
-
 }

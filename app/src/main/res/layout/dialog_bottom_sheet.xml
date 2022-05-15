@@ -61,30 +61,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/bottom_sheet_option_rename"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:orientation="horizontal"
-        android:padding="8dp">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_margin="8dp"
-            android:contentDescription="@string/dialog_bottom_option_rename_ic"
-            android:src="@drawable/ic_music" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:padding="8dp"
-            android:text="@string/dialog_bottom_option_rename" />
-
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/bottom_sheet_option_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -107,26 +83,4 @@
             android:text="@string/dialog_bottom_option_share" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/bottom_sheet_option_delete"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/selectableItemBackground"
-        android:orientation="horizontal"
-        android:padding="8dp">
-
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_margin="8dp"
-            android:contentDescription="@string/dialog_bottom_option_delete_ic"
-            android:src="@drawable/ic_home_black_24dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:padding="8dp"
-            android:text="@string/dialog_bottom_option_delete" />
-    </LinearLayout>
 </LinearLayout>
