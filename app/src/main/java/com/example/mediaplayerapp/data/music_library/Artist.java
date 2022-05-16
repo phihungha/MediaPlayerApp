@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.data;
+package com.example.mediaplayerapp.data.music_library;
 
 public class Artist {
     public static final int TYPE_LIST=2;

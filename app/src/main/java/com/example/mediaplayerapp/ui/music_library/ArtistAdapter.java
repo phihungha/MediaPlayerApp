@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 
-import com.example.mediaplayerapp.data.Artist;
+import com.example.mediaplayerapp.data.music_library.Artist;
 import com.google.android.material.imageview.ShapeableImageView;
 
 

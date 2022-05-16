@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -21,16 +20,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.Album;
+import com.example.mediaplayerapp.data.music_library.Album;
 import com.google.android.material.imageview.ShapeableImageView;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder> implements Filterable {
     private final Context context;
-    private ArrayList<Album> albumList;
-    private final ArrayList<Album> albumListOld;
+    private List<Album> albumList;
+    private final List<Album> albumListOld;
 
     @Override
     public int getItemViewType(int position) {
@@ -41,7 +41,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
     public static Uri getImage(long albumId) {
         return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
     }
-    public AlbumAdapter(Context context, ArrayList<Album> albumList) {
+    public AlbumAdapter(Context context, List<Album> albumList) {
         this.albumList = albumList;
         this.context = context;
         this.albumListOld=albumList;

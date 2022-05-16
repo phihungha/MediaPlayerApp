@@ -1,6 +1,5 @@
 package com.example.mediaplayerapp.ui.music_library;
 
-
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
@@ -25,13 +24,11 @@ import android.widget.SearchView;
 
 import com.example.mediaplayerapp.R;
 
-import com.example.mediaplayerapp.data.Artist;
-import com.example.mediaplayerapp.data.GridSpacingItemDecoration;
-import com.example.mediaplayerapp.data.MusicLibraryRepository;
+import com.example.mediaplayerapp.data.music_library.Artist;
+import com.example.mediaplayerapp.data.music_library.ArtistRepository;
 
 
 import java.util.ArrayList;
-
 
 public class ArtistFragment extends Fragment {
 
@@ -41,6 +38,7 @@ public class ArtistFragment extends Fragment {
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
     private int currentType= Artist.TYPE_GRID;
+
     public ArtistFragment() {
         // Required empty public constructor
     }
@@ -49,6 +47,7 @@ public class ArtistFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ArtistRepository artistRepository = new ArtistRepository(requireActivity().getApplicationContext());
         // Inflate the layout for this fragment
         if(view==null) {
             view = inflater.inflate(R.layout.fragment_artist, container, false);
@@ -57,7 +56,7 @@ public class ArtistFragment extends Fragment {
             gridLayoutManager= new GridLayoutManager(getActivity(),2);
             linearLayoutManager= new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(gridLayoutManager);
-            artists= (ArrayList<Artist>) MusicLibraryRepository.ArtistLoader.artisList(getActivity());
+            artists = (ArrayList<Artist>) artistRepository.getAllArtists();
             setTypeDisplayRecycleView(Artist.TYPE_GRID);
             artistAdapter = new ArtistAdapter(getContext(), artists);
             recyclerView.setAdapter(artistAdapter);
@@ -96,7 +95,7 @@ public class ArtistFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater){
-        inflater.inflate(R.menu.search, menu);
+        inflater.inflate(R.menu.music_library_options_menu, menu);
         SearchManager searchManager = (SearchManager)getContext().getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
@@ -118,7 +117,7 @@ public class ArtistFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id= item.getItemId();
-        if(id == R.id.switch_view){
+        if(id == R.id.change_display_mode){
             onClickChangeTypeDisplay();
         }
         return true;

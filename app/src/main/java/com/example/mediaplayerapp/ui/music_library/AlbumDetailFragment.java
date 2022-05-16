@@ -18,12 +18,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.Album;
-import com.example.mediaplayerapp.data.MusicLibraryRepository;
-import com.example.mediaplayerapp.data.Song;
+import com.example.mediaplayerapp.data.music_library.Album;
+import com.example.mediaplayerapp.data.music_library.AlbumRepository;
+import com.example.mediaplayerapp.data.music_library.Song;
+import com.example.mediaplayerapp.data.music_library.SongRepository;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class AlbumDetailFragment extends Fragment {
@@ -54,6 +56,8 @@ public class AlbumDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        AlbumRepository albumRepository = new AlbumRepository(requireActivity().getApplicationContext());
+        SongRepository songRepository = new SongRepository(requireActivity().getApplicationContext());
         View rootView=inflater.inflate(R.layout.fragment_album_detail, container, false);
         TextView anaam = rootView.findViewById(R.id.atrnaam);
         TextView ade = rootView.findViewById(R.id.albumDetails);
@@ -62,15 +66,15 @@ public class AlbumDetailFragment extends Fragment {
         CollapsingToolbarLayout collapsingToolbarLayout = rootView.findViewById(R.id.collapsed_layout);
         RecyclerView recyclerView = rootView.findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        Album album = new MusicLibraryRepository.AlbumLoader().getAlbum(getActivity(), album_id);
+        Album album = albumRepository.getAlbum(album_id);
         //set album detail
         collapsingToolbarLayout.setTitle(album.albumName);
         anaam.setText(album.albumName);
-        ade.setText("songs: " + album.numSong);
+        ade.setText("songs: " + album.numberOfSongs);
         Glide.with(getContext()).load(getImage(album_id)).skipMemoryCache(true).into(img);
         Glide.with(getContext()).load(getImage(album_id)).skipMemoryCache(true).into(img2);
         //set song list of a album
-        ArrayList<Song> songList = MusicLibraryRepository.AlbumSongLoder.getAllAlbumSongs(getActivity(), album_id);
+        List<Song> songList = songRepository.getAllSongsFromAlbum(album_id);
         SongAdapter adapter = new SongAdapter(getActivity(), songList);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         recyclerView.setAdapter(adapter);

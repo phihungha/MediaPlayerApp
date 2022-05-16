@@ -10,4 +10,5 @@
     <string name="delete">Delete</string>
     <string name="add_to_playlist">Add to playlist</string>
     <string name="switch_view">Switch View</string>
+    <string name="open_song_item_context_menu">Open song item context menu</string>
 </resources>

@@ -21,16 +21,16 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.Album;
-import com.example.mediaplayerapp.data.GridSpacingItemDecoration;
-import com.example.mediaplayerapp.data.MusicLibraryRepository;
+import com.example.mediaplayerapp.data.music_library.Album;
+import com.example.mediaplayerapp.data.music_library.AlbumRepository;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class AlbumFragment extends Fragment {
-    private ArrayList<Album> albums= new ArrayList<>();
+    private List<Album> albums = new ArrayList<>();
     private RecyclerView recyclerView;
     private AlbumAdapter albumAdapter;
     private GridLayoutManager gridLayoutManager;
@@ -43,19 +43,20 @@ public class AlbumFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        AlbumRepository albumRepository = new AlbumRepository(requireActivity().getApplicationContext());
         if(view==null)
         {
             view = inflater.inflate(R.layout.fragment_album, container, false);
             setHasOptionsMenu(true);
             recyclerView = view.findViewById(R.id.ar);
-            gridLayoutManager= new GridLayoutManager(getActivity(),2);
-            linearLayoutManager= new LinearLayoutManager(getContext());
+            gridLayoutManager = new GridLayoutManager(getActivity(),2);
+            linearLayoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(gridLayoutManager);
-            albums= (ArrayList<Album>) MusicLibraryRepository.AlbumLoader.albumList(getActivity());
+            albums = albumRepository.getAllAlbums();
             setTypeDisplayRecycleView(Album.TYPE_GRID);
             albumAdapter = new AlbumAdapter(getContext(),albums);
             recyclerView.setAdapter(albumAdapter);
-            if(getActivity()!=null)
+            if(getActivity() != null)
             {
                 recyclerView.addItemDecoration(new GridSpacingItemDecoration(2,30,true));
             }
@@ -91,7 +92,7 @@ public class AlbumFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id= item.getItemId();
-        if(id == R.id.switch_view){
+        if(id == R.id.change_display_mode){
             onClickChangeTypeDisplay();
         }
         return true;
@@ -99,7 +100,7 @@ public class AlbumFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater){
-        inflater.inflate(R.menu.search, menu);
+        inflater.inflate(R.menu.music_library_options_menu, menu);
         SearchManager searchManager = (SearchManager)getContext().getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));

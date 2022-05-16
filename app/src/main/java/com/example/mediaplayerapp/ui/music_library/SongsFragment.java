@@ -1,83 +1,77 @@
 package com.example.mediaplayerapp.ui.music_library;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.SearchView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.GridSpacingItemDecoration;
-import com.example.mediaplayerapp.data.MusicLibraryRepository;
-import com.example.mediaplayerapp.data.Song;
+import com.example.mediaplayerapp.data.music_library.Song;
+import com.example.mediaplayerapp.data.music_library.SongRepository;
+import com.example.mediaplayerapp.databinding.FragmentSongsBinding;
 
-import java.util.ArrayList;
-
+import java.util.List;
 
 public class SongsFragment extends Fragment {
+
+    public enum DisplayMode {
+        GRID,
+        LIST
+    }
+
+    private static final int GRID_MODE_COLUMN_NUM = 2;
+    private static final int GRID_MODE_SPACING = 30;
+
     private SongAdapter songAdapter;
-    private RecyclerView recyclerView;
-    private ArrayList<Song> SongList = new ArrayList<>();
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
-    private int currentType=Song.TYPE_GRID;
+    private DisplayMode currentDisplayMode = DisplayMode.GRID;
+
+    private FragmentSongsBinding binding;
+
     public SongsFragment() {
         // Required empty public constructor
     }
 
-
-    View view;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        binding = FragmentSongsBinding.inflate(getLayoutInflater(), container, false);
+        SongRepository songRepository = new SongRepository(requireActivity().getApplicationContext());
 
-        if (view==null) {
-            view = inflater.inflate(R.layout.fragment_songs, container, false);
-            setHasOptionsMenu(true);
-            recyclerView = (RecyclerView) view.findViewById(R.id.sr);
-            gridLayoutManager= new GridLayoutManager(getActivity(),2);
-            linearLayoutManager= new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(gridLayoutManager);
-            SongList= (ArrayList<Song>) MusicLibraryRepository.SongLoder.getAllSongs(getActivity());
-            setTypeDisplayRecycleView(Song.TYPE_GRID);
-            songAdapter = new SongAdapter(getContext(), SongList);
-            recyclerView.setAdapter(songAdapter);
-            if(getActivity()!=null)
-            {
-                recyclerView.addItemDecoration(new GridSpacingItemDecoration(2,30,true));
-            }
-        }
-        return view;
+        setHasOptionsMenu(true);
+
+        List<Song> songs = songRepository.getAllSongs();
+        songAdapter = new SongAdapter(getContext(), songs);
+        binding.songList.setAdapter(songAdapter);
+
+        gridLayoutManager = new GridLayoutManager(getContext(),GRID_MODE_COLUMN_NUM);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        setDisplayModeAsGrid(); // Default display mode is grid
+
+        return binding.getRoot();
     }
-    private void setTypeDisplayRecycleView(int typeDisplay){
-        if(SongList == null || SongList.isEmpty()){
-            return;
-        }
-        currentType=typeDisplay;
-        for(Song song : SongList){
-            song.setTypeDisplay(typeDisplay);
-        }
-    }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater){
-        inflater.inflate(R.menu.search, menu);
-        SearchManager searchManager = (SearchManager)getContext().getSystemService(Context.SEARCH_SERVICE);
+        inflater.inflate(R.menu.music_library_options_menu, menu);
+
+        SearchManager searchManager = (SearchManager) requireContext().getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
 
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -95,26 +89,42 @@ public class SongsFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id= item.getItemId();
-        if(id == R.id.switch_view){
-            onClickChangeTypeDisplay();
-        }
+        if (item.getItemId() == R.id.change_display_mode)
+            changeDisplayMode();
+
         return true;
     }
 
-    private void onClickChangeTypeDisplay() {
-        if(currentType==Song.TYPE_LIST){
-            setTypeDisplayRecycleView(Song.TYPE_GRID);
-            recyclerView.setLayoutManager(gridLayoutManager);
-            if(getActivity()!=null)
-            {
-                recyclerView.addItemDecoration(new GridSpacingItemDecoration(2,30,true));
-            }
-        }else {
-            setTypeDisplayRecycleView(Song.TYPE_LIST);
-            recyclerView.setLayoutManager(linearLayoutManager);
-            recyclerView.removeItemDecorationAt(0);
+    @SuppressLint("NotifyDataSetChanged")
+    private void changeDisplayMode() {
+        if (currentDisplayMode == DisplayMode.LIST) {
+            setDisplayModeAsGrid();
+            currentDisplayMode = DisplayMode.GRID;
+        } else {
+            setDisplayModeAsList();
+            currentDisplayMode = DisplayMode.LIST;
         }
         songAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * Change display mode to grid.
+     */
+    private void setDisplayModeAsGrid() {
+        binding.songList.setLayoutManager(gridLayoutManager);
+        binding.songList.addItemDecoration(
+                new GridSpacingItemDecoration(GRID_MODE_COLUMN_NUM,
+                        GRID_MODE_SPACING,
+                        true));
+        songAdapter.setDisplayMode(DisplayMode.GRID);
+    }
+
+    /**
+     * Change display mode to list.
+     */
+    private void setDisplayModeAsList() {
+        binding.songList.setLayoutManager(linearLayoutManager);
+        binding.songList.removeItemDecorationAt(0);
+        songAdapter.setDisplayMode(DisplayMode.LIST);
     }
 }

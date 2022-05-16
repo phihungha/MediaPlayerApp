@@ -1,85 +1,76 @@
 package com.example.mediaplayerapp.ui.music_library;
 
-
 import android.annotation.SuppressLint;
-import android.content.ContentUris;
 import android.content.Context;
-
-import android.net.Uri;
+import android.graphics.Bitmap;
+import android.util.Size;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ImageView;
+import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
-
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.Song;
+import com.example.mediaplayerapp.data.music_library.Song;
+import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> implements Filterable {
-    ArrayList<Song> SongList;
-    ArrayList<Song> SongListOld;
+public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHolder> implements Filterable {
+    SongsFragment.DisplayMode displayMode;
     Context context;
 
+    List<Song> displayedSongs;
+    List<Song> songs;
 
-    @Override
-    public int getItemViewType(int position) {
-        Song song = SongList.get(position);
-        return song.getTypeDisplay();
-    }
-
-    public static Uri getImage(long albumId) {
-        return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
-    }
-    public SongAdapter(Context context, ArrayList<Song> SongList) {
+    public SongAdapter(Context context, List<Song> songs) {
         this.context = context;
-        this.SongList = SongList;
-        this.SongListOld=SongList;
+        this.displayedSongs = songs;
+        this.songs = songs;
     }
+
+    public void setDisplayMode(SongsFragment.DisplayMode displayMode) {
+        this.displayMode = displayMode;
+    }
+
     @NonNull
     @Override
-    public SongAdapter.SongHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.song_list,
-                parent, false);
-        switch (viewType)
-        {
-            case Song.TYPE_GRID:view = LayoutInflater.from(context).inflate(R.layout.song_list_grid,
-                    parent, false);
-                break;
-            case Song.TYPE_LIST:view = LayoutInflater.from(context).inflate(R.layout.song_list,
-                    parent, false);
-                break;
+    public SongItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView;
+        if (displayMode == SongsFragment.DisplayMode.GRID) {
+            itemView = LayoutInflater.from(context).inflate(
+                    R.layout.song_grid_item,
+                    parent,
+                    false);
+        } else {
+            itemView = LayoutInflater.from(context).inflate(
+                    R.layout.song_list_item,
+                    parent,
+                    false);
         }
-        return new SongHolder(view);
+        return new SongItemViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SongAdapter.SongHolder holder, int position) {
-        final Song songInfoModel = SongList.get(position);
-        holder.sogname.setText(songInfoModel.songTitle);
-        holder.artistname.setText(songInfoModel.songArtist);
-        Glide.with(context).load(getImage(songInfoModel.getAlbumId())).skipMemoryCache(true).into(holder.albumart);
+    public void onBindViewHolder(@NonNull SongItemViewHolder holder, int position) {
+        Song currentSong = displayedSongs.get(position);
+        holder.updateCurrentSong(currentSong);
     }
 
     @Override
     public int getItemCount() {
-        return SongList.size();
+        return displayedSongs.size();
     }
 
     @Override
@@ -87,98 +78,102 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
-                String strsearch= charSequence.toString();
-                if (strsearch.isEmpty())
-                {
-                    SongList=SongListOld;
-                }else {
-                    ArrayList<Song> NewList = new ArrayList<>();
-                    for(Song song : SongListOld){
-                        if(song.getSongTitle().toLowerCase().contains(strsearch.toLowerCase()))
-                        {
-                            NewList.add(song);
-                        }
-                    }
-                    SongList=NewList;
-                }
+                List<Song> filteredSongs = songs.stream()
+                        .filter(s -> s.getTitle()
+                                .toLowerCase()
+                                .contains(charSequence))
+                        .collect(Collectors.toList());
                 FilterResults filterResults = new FilterResults();
-                filterResults.values=SongList;
+                filterResults.values= filteredSongs;
                 return filterResults;
             }
 
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                SongList= (ArrayList<Song>) filterResults.values;
+                //noinspection unchecked
+                displayedSongs = (List<Song>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
     }
 
-    public class SongHolder extends RecyclerView.ViewHolder  {
-        TextView sogname;
-        TextView artistname;
-        ImageView contextmenu;
-        ShapeableImageView albumart;
-        private PopupMenu popup;
-
-        public SongHolder(@NonNull View itemView)    {
+    public class SongItemViewHolder extends RecyclerView.ViewHolder  {
+        Song currentSong;
+        private final ShapeableImageView songThumbnail;
+        private final TextView songTitle;
+        private final TextView artistName;
+        
+        public SongItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            albumart=itemView.findViewById(R.id.songthumb);
-            sogname = itemView.findViewById(R.id.sogname);
-            artistname= itemView.findViewById(R.id.artistname);
-            contextmenu=itemView.findViewById(R.id.contextmenu);
-            //Click event of context menu
-            contextmenu.setOnClickListener(view -> {
-                popup = new PopupMenu(context, view, Gravity.END);
-                MenuInflater inflater = popup.getMenuInflater();
-                inflater.inflate(R.menu.song_option, popup.getMenu());
-                popup.show();
-                //Click event of item of song context menu
-                popup.setOnMenuItemClickListener(menuItem -> {
-                    switch (menuItem.getItemId()) {
-                        case R.id.add_playlist:
 
-                            break;
-                        case R.id.song_detail:
-                            //find info selected song in song list
-                            String name = sogname.getText().toString();
-                            Song selectSong = new Song();
-                            for(Song song : SongList)
-                            {
-                                if(name.equals(song.songTitle))
-                                {
-                                    selectSong=song;
-                                    break;
-                                }
-                            }
-                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                            builder.setTitle("Song detail")
-                                    .setMessage("Song title: "+ selectSong.songTitle
-                                    +"\nArtist name: " + selectSong.songArtist
-                                    +"\nAlbum name: "+selectSong.albumName
-                                    +"\nDuration: "+convertDurationToAudioTime(selectSong.duration));
-                            builder.setCancelable(true);
-                            builder.setNegativeButton("Cancel", (dialog, id) -> {
-                                //  Cancel
-                                dialog.cancel();
-                            });
-                            AlertDialog alert = builder.create();
-                            alert.show();
-                            break;
-                        case R.id.delete_song:
-                            break;
-                    }
-                    return true;
-                });
-            });
+            songThumbnail = itemView.findViewById(R.id.song_thumbnail);
+            songTitle = itemView.findViewById(R.id.song_title);
+            artistName = itemView.findViewById(R.id.song_artist);
+            
+            ImageButton contextMenuBtn = itemView.findViewById(R.id.context_menu_btn);
+
+            contextMenuBtn.setOnClickListener(this::openContextMenu);
         }
-        @SuppressLint("DefaultLocale")
-        private String convertDurationToAudioTime(long duration) {
-            return String.format("%02d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(duration),
-                    TimeUnit.MILLISECONDS.toSeconds(duration) -
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(duration))
-            );
+
+        /**
+         * Set current song and update the views.
+         * @param song Current song
+         */
+        public void updateCurrentSong(Song song) {
+            this.currentSong = song;
+            updateViewsWithCurrentSong();
+        }
+
+        /**
+         * Update the views using current song's info.
+         */
+        private void updateViewsWithCurrentSong() {
+            songTitle.setText(currentSong.getTitle());
+            artistName.setText(currentSong.getArtistName());
+            updateThumbnailWithCurrentSong();
+        }
+
+        /**
+         * Update item thumbnail with current song's artwork.
+         */
+        private void updateThumbnailWithCurrentSong() {
+            try {
+                Bitmap songArtwork = context.getApplicationContext().getContentResolver()
+                        .loadThumbnail(currentSong.getUri(),
+                                new Size(500, 500),
+                                null);
+                songThumbnail.setImageBitmap(songArtwork);
+            } catch (IOException e) {
+                songThumbnail.setImageBitmap(null);
+            }
+        }
+
+        private void openContextMenu(View view) {
+            PopupMenu popupMenu = new PopupMenu(context, view, Gravity.END);
+            popupMenu.getMenuInflater().inflate(
+                    R.menu.song_context_menu,
+                    popupMenu.getMenu());
+
+            popupMenu.setOnMenuItemClickListener(menuItem -> {
+                if (menuItem.getItemId() == R.id.song_detail)
+                    showSongDetails();
+                return true;
+            });
+
+            popupMenu.show();
+        }
+
+        private void showSongDetails() {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Song detail")
+                    .setMessage("Song title: "+ currentSong.getTitle()
+                            + "\nArtist name: " + currentSong.getArtistName()
+                            + "\nAlbum name: "+ currentSong.getAlbumName()
+                            + "\nDuration: "+ MediaTimeUtils.getFormattedTime(currentSong.getDuration()));
+            builder.setCancelable(true);
+            builder.setNegativeButton("Cancel", (dialog, id) -> dialog.cancel());
+            builder.create().show();
         }
     }
 }

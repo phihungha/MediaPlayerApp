@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.data;
+package com.example.mediaplayerapp.data.music_library;
 
 public class Album {
     public static final int TYPE_LIST=2;
@@ -6,28 +6,15 @@ public class Album {
     public int typeDisplay;
     public  long id;
     public String albumName;
-    public long artistId;
     public String artistName;
-    public int numSong;
+    public int numberOfSongs;
     public int year;
 
-
-    public Album() {
-        id = -1;
-        albumName = "";
-        artistId = -1;
-        artistName = "";
-        numSong = -1;
-        year = -1;
-    }
-
-    public Album(long id, String albumName, long artistId,
-                 String artistName, int numSong, int year) {
+    public Album(long id, String albumName, String artistName, int numberOfSongs, int year) {
         this.id = id;
         this.albumName = albumName;
-        this.artistId = artistId;
         this.artistName = artistName;
-        this.numSong = numSong;
+        this.numberOfSongs = numberOfSongs;
         this.year = year;
     }
     public void setId(long id) {

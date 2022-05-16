@@ -16,12 +16,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.Artist;
-import com.example.mediaplayerapp.data.MusicLibraryRepository;
-import com.example.mediaplayerapp.data.Song;
+import com.example.mediaplayerapp.data.music_library.Artist;
+import com.example.mediaplayerapp.data.music_library.ArtistRepository;
+import com.example.mediaplayerapp.data.music_library.Song;
+import com.example.mediaplayerapp.data.music_library.SongRepository;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ArtistDetailFragment extends Fragment {
@@ -50,6 +52,8 @@ public class ArtistDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ArtistRepository artistRepository = new ArtistRepository(requireActivity().getApplicationContext());
+        SongRepository songRepository = new SongRepository(requireActivity().getApplicationContext());
         View view = inflater.inflate(R.layout.fragment_artist_detail, container, false);
         TextView anaam = view.findViewById(R.id.artistnaam);
         TextView ade = view.findViewById(R.id.artistDetails);
@@ -59,13 +63,13 @@ public class ArtistDetailFragment extends Fragment {
         RecyclerView recyclerView = view.findViewById(R.id.recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         //set artist detail
-        Artist artist = MusicLibraryRepository.ArtistLoader.getArtis(getActivity(), artistId);
+        Artist artist = artistRepository.getArtist(artistId);
         collapsingToolbarLayout.setTitle(artist.ArtistName);
         anaam.setText(artist.ArtistName);
         Glide.with(getContext()).load(artistId).skipMemoryCache(true).into(img);
         Glide.with(getContext()).load(artistId).skipMemoryCache(true).into(img2);
         //set song list of artist
-        ArrayList<Song> songList = (ArrayList<Song>) MusicLibraryRepository.ArtistSongLoader.getAllArtistSongs(getActivity(), artistId);
+        List<Song> songList = songRepository.getAllSongsFromArtist(artistId);
         ade.setText(" songs: " + songList.size());
         SongAdapter adapter = new SongAdapter(getActivity(), songList);
         recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
