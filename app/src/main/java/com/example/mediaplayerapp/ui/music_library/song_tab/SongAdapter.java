@@ -3,7 +3,6 @@ package com.example.mediaplayerapp.ui.music_library.song_tab;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Size;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,10 +15,13 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Song;
+import com.example.mediaplayerapp.ui.music_library.DisplayMode;
+import com.example.mediaplayerapp.ui.music_library.ThumbnailUtils;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -30,24 +32,24 @@ import java.util.stream.Collectors;
 
 @SuppressLint("NotifyDataSetChanged")
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHolder> implements Filterable {
-    SongsFragment.DisplayMode displayMode;
+    DisplayMode displayMode;
     Context context;
 
-    List<Song> displayedSongs;
     List<Song> songs = new ArrayList<>();
+    List<Song> displayedSongs = new ArrayList<>();
 
     public SongAdapter(Context context) {
         this.context = context;
-        this.displayedSongs = songs;
     }
 
     public void updateSongs(List<Song> newSongs) {
-        songs.clear();
-        songs.addAll(newSongs);
+        songs = newSongs;
+        displayedSongs.clear();
+        displayedSongs.addAll(songs);
         notifyDataSetChanged();
     }
 
-    public void setDisplayMode(SongsFragment.DisplayMode displayMode) {
+    public void setDisplayMode(DisplayMode displayMode) {
         this.displayMode = displayMode;
     }
 
@@ -55,7 +57,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
     @Override
     public SongItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView;
-        if (displayMode == SongsFragment.DisplayMode.GRID) {
+        if (displayMode == DisplayMode.GRID) {
             itemView = LayoutInflater.from(context).inflate(
                     R.layout.song_grid_item,
                     parent,
@@ -97,6 +99,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                // Java can't check generic types
                 //noinspection unchecked
                 displayedSongs = (List<Song>) filterResults.values;
                 notifyDataSetChanged();
@@ -108,14 +111,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
         Song currentSong;
         private final ShapeableImageView songThumbnail;
         private final TextView songTitle;
-        private final TextView artistName;
+        private final TextView songArtist;
         
         public SongItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
             songThumbnail = itemView.findViewById(R.id.song_thumbnail);
             songTitle = itemView.findViewById(R.id.song_title);
-            artistName = itemView.findViewById(R.id.song_artist);
+            songArtist = itemView.findViewById(R.id.song_artist);
             
             ImageButton contextMenuBtn = itemView.findViewById(R.id.context_menu_btn);
 
@@ -136,7 +139,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
          */
         private void updateViewsWithCurrentSong() {
             songTitle.setText(currentSong.getTitle());
-            artistName.setText(currentSong.getArtistName());
+            songArtist.setText(currentSong.getArtistName());
             updateThumbnailWithCurrentSong();
         }
 
@@ -145,13 +148,12 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
          */
         private void updateThumbnailWithCurrentSong() {
             try {
-                Bitmap songArtwork = context.getApplicationContext().getContentResolver()
-                        .loadThumbnail(currentSong.getUri(),
-                                new Size(500, 500),
-                                null);
-                songThumbnail.setImageBitmap(songArtwork);
+                Bitmap songThumbnailBitmap = ThumbnailUtils.getThumbnailFromUri(context, currentSong.getUri());
+                songThumbnail.setImageBitmap(songThumbnailBitmap);
             } catch (IOException e) {
-                songThumbnail.setImageBitmap(null);
+                songThumbnail.setImageDrawable(
+                        ContextCompat.getDrawable(context,
+                                R.drawable.default_song_artwork));
             }
         }
 

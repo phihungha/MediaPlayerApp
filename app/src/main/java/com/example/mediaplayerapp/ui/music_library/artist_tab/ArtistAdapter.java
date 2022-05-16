@@ -1,86 +1,79 @@
 package com.example.mediaplayerapp.ui.music_library.artist_tab;
 
-import android.content.ContentUris;
+import android.annotation.SuppressLint;
 import android.content.Context;
-
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
-
 import com.example.mediaplayerapp.data.music_library.Artist;
-import com.google.android.material.imageview.ShapeableImageView;
-
+import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@SuppressLint("NotifyDataSetChanged")
+public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistItemViewHolder> implements Filterable {
+    DisplayMode displayMode;
+    Context context;
 
-public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> implements Filterable {
+    List<Artist> artists = new ArrayList<>();
+    List<Artist> displayedArtists = new ArrayList<>();
 
-    private final Context context;
-    private ArrayList<Artist> artisList;
-    private final ArrayList<Artist> artisListOld;
-
-    @Override
-    public int getItemViewType(int position) {
-        Artist artist= artisList.get(position);
-        return artist.getTypeDisplay();
-    }
-
-    public static Uri getImage(long albumId) {
-        return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
-    }
-    public ArtistAdapter(Context context, ArrayList<Artist> artisList) {
+    public ArtistAdapter(Context context) {
         this.context = context;
-        this.artisList = artisList;
-        this.artisListOld=artisList;
+    }
+
+    public void updateSongs(List<Artist> newArtists) {
+        artists = newArtists;
+        displayedArtists.clear();
+        displayedArtists.addAll(artists);
+        notifyDataSetChanged();
+    }
+
+    public void setDisplayMode(DisplayMode displayMode) {
+        this.displayMode = displayMode;
     }
 
     @NonNull
     @Override
-    public ARV onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.artist_grid_item,
-                parent, false);
-        switch (viewType){
-            case Artist.TYPE_LIST:view = LayoutInflater.from(context).inflate(R.layout.artist_list_item,
-                    parent, false);
-                break;
-            case Artist.TYPE_GRID:view = LayoutInflater.from(context).inflate(R.layout.artist_grid_item,
-                    parent, false);
-                break;
+    public ArtistItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView;
+        if (displayMode == DisplayMode.GRID) {
+            itemView = LayoutInflater.from(context).inflate(
+                    R.layout.artist_grid_item,
+                    parent,
+                    false);
+        } else {
+            itemView = LayoutInflater.from(context).inflate(
+                    R.layout.artist_list_item,
+                    parent,
+                    false);
         }
-        return new ARV(view);
+        return new ArtistItemViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ARV holder, int position) {
-
-        Artist artis = artisList.get(position);
-        if (artis != null) {
-            holder.artNaam.setText(artis.ArtistName);
-            Glide.with(context).load(getImage(artis.getArtistId())).skipMemoryCache(true).into(holder.artthum);
-        }
-
+    public void onBindViewHolder(@NonNull ArtistItemViewHolder holder, int position) {
+        Artist currentArtist = artists.get(position);
+        holder.updateCurrentArtist(currentArtist);
     }
 
     @Override
     public int getItemCount() {
-        return artisList.size();
+        return displayedArtists.size();
     }
 
     @Override
@@ -88,55 +81,62 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> imple
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
-                String strsearch= charSequence.toString();
-                if (strsearch.isEmpty())
-                {
-                    artisList=artisListOld;
-                }else {
-                    ArrayList<Artist> NewList = new ArrayList<>();
-                    for(Artist artist : artisListOld){
-                        if(artist.getArtistName().toLowerCase().contains(strsearch.toLowerCase()))
-                        {
-                            NewList.add(artist);
-                        }
-                    }
-                    artisList=NewList;
-                }
+                List<Artist> filteredSongs = artists.stream()
+                        .filter(s -> s.getArtistName()
+                                .toLowerCase()
+                                .contains(charSequence))
+                        .collect(Collectors.toList());
                 FilterResults filterResults = new FilterResults();
-                filterResults.values=artisList;
+                filterResults.values= filteredSongs;
                 return filterResults;
             }
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                artisList= (ArrayList<Artist>) filterResults.values;
+                // Java can't check generic types
+                //noinspection unchecked
+                displayedArtists = (List<Artist>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
     }
 
-    public class ARV extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ArtistItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        Artist currentArtist;
+        private final TextView artistName;
 
-
-        private final TextView artNaam;
-        private final ShapeableImageView artthum;
-        public ARV(View itemView) {
+        public ArtistItemViewHolder(View itemView) {
             super(itemView);
-            artNaam = itemView.findViewById(R.id.artname);
-            artthum=itemView.findViewById(R.id.artthum);
+            artistName = itemView.findViewById(R.id.artist_name);
             itemView.setOnClickListener(this);
+        }
+
+        /**
+         * Set current artist and update the views.
+         * @param artist Current artist
+         */
+        public void updateCurrentArtist(Artist artist) {
+            currentArtist = artist;
+            updateViewsWithCurrentArtist();
+        }
+
+        /**
+         * Update the views using current artist's info.
+         */
+        private void updateViewsWithCurrentArtist() {
+            artistName.setText(currentArtist.getArtistName());
         }
 
         @Override
         public void onClick(View view) {
-            long artistId = artisList.get(getAbsoluteAdapterPosition()).ArtistId;
+            long artistId = artists.get(getAbsoluteAdapterPosition()).ArtistId;
             FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             Fragment fragment;
             transaction.setCustomAnimations(R.anim.layout_fad_in, R.anim.layout_fad_out,
                     R.anim.layout_fad_in, R.anim.layout_fad_out);
             fragment = ArtistDetailFragment.newInstance(artistId);
-            transaction.add(R.id.song_container,fragment);
+            transaction.replace(R.id.nav_host_fragment_activity_main, fragment);
             transaction.addToBackStack(null);
             transaction.commit();
         }

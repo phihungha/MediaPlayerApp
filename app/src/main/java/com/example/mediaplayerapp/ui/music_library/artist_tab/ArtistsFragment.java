@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.music_library.song_tab;
+package com.example.mediaplayerapp.ui.music_library.artist_tab;
 
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
@@ -19,39 +19,39 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.databinding.FragmentSongsBinding;
+import com.example.mediaplayerapp.databinding.FragmentArtistBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 
 @SuppressLint("NotifyDataSetChanged")
-public class SongsFragment extends Fragment {
+public class ArtistsFragment extends Fragment {
 
     private static final int GRID_MODE_COLUMN_NUM = 2;
     private static final int GRID_MODE_SPACING = 30;
 
-    private SongAdapter songAdapter;
+    private ArtistAdapter artistAdapter;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
     private DisplayMode currentDisplayMode = DisplayMode.GRID;
 
-    private FragmentSongsBinding binding;
+    private FragmentArtistBinding binding;
 
-    public SongsFragment() {
+    public ArtistsFragment() {
         // Required empty public constructor
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentSongsBinding.inflate(getLayoutInflater(), container, false);
-        SongsViewModel viewModel = new ViewModelProvider(this).get(SongsViewModel.class);
+        binding = FragmentArtistBinding.inflate(getLayoutInflater(), container, false);
+        ArtistsViewModel viewModel = new ViewModelProvider(this).get(ArtistsViewModel.class);
 
         setHasOptionsMenu(true);
 
-        songAdapter = new SongAdapter(getContext());
-        binding.songList.setAdapter(songAdapter);
+        artistAdapter = new ArtistAdapter(getContext());
+        binding.artistList.setAdapter(artistAdapter);
 
-        viewModel.getAllSongs().observe(getViewLifecycleOwner(), newSongs -> songAdapter.updateSongs(newSongs));
+        viewModel.getAllArtists().observe(getViewLifecycleOwner(), newArtists -> artistAdapter.updateSongs(newArtists));
 
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -71,13 +71,13 @@ public class SongsFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                songAdapter.getFilter().filter(s);
+                artistAdapter.getFilter().filter(s);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                songAdapter.getFilter().filter(s);
+                artistAdapter.getFilter().filter(s);
                 return false;
             }
         });
@@ -102,27 +102,27 @@ public class SongsFragment extends Fragment {
             setDisplayModeAsList();
             currentDisplayMode = DisplayMode.LIST;
         }
-        songAdapter.notifyDataSetChanged();
+        artistAdapter.notifyDataSetChanged();
     }
 
     /**
      * Change display mode to grid.
      */
     private void setDisplayModeAsGrid() {
-        binding.songList.setLayoutManager(gridLayoutManager);
-        binding.songList.addItemDecoration(
+        binding.artistList.setLayoutManager(gridLayoutManager);
+        binding.artistList.addItemDecoration(
                 new GridSpacingItemDecoration(GRID_MODE_COLUMN_NUM,
                         GRID_MODE_SPACING,
                         true));
-        songAdapter.setDisplayMode(DisplayMode.GRID);
+        artistAdapter.setDisplayMode(DisplayMode.GRID);
     }
 
     /**
      * Change display mode to list.
      */
     private void setDisplayModeAsList() {
-        binding.songList.setLayoutManager(linearLayoutManager);
-        binding.songList.removeItemDecorationAt(0);
-        songAdapter.setDisplayMode(DisplayMode.LIST);
+        binding.artistList.setLayoutManager(linearLayoutManager);
+        binding.artistList.removeItemDecorationAt(0);
+        artistAdapter.setDisplayMode(DisplayMode.LIST);
     }
 }
