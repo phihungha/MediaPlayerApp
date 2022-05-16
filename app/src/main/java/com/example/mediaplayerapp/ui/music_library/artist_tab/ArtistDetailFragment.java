@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.music_library;
+package com.example.mediaplayerapp.ui.music_library.artist_tab;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -20,9 +20,9 @@ import com.example.mediaplayerapp.data.music_library.Artist;
 import com.example.mediaplayerapp.data.music_library.ArtistRepository;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.music_library.SongRepository;
+import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -71,9 +71,9 @@ public class ArtistDetailFragment extends Fragment {
         //set song list of artist
         List<Song> songList = songRepository.getAllSongsFromArtist(artistId);
         ade.setText(" songs: " + songList.size());
-        SongAdapter adapter = new SongAdapter(getActivity(), songList);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(adapter);
+//        SongAdapter adapter = new SongAdapter(getActivity(), songList);
+//        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+//        recyclerView.setAdapter(adapter);
         return view;
     }
 }

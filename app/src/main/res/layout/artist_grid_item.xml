@@ -13,7 +13,7 @@
             android:id="@+id/artthum"
             android:layout_width="0dp"
             android:layout_height="140dp"
-            android:background="@color/blue2"
+            android:background="@color/cyan"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

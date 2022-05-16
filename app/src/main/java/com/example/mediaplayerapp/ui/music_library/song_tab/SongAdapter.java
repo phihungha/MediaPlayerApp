@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.music_library;
+package com.example.mediaplayerapp.ui.music_library.song_tab;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -24,20 +24,27 @@ import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@SuppressLint("NotifyDataSetChanged")
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHolder> implements Filterable {
     SongsFragment.DisplayMode displayMode;
     Context context;
 
     List<Song> displayedSongs;
-    List<Song> songs;
+    List<Song> songs = new ArrayList<>();
 
-    public SongAdapter(Context context, List<Song> songs) {
+    public SongAdapter(Context context) {
         this.context = context;
         this.displayedSongs = songs;
-        this.songs = songs;
+    }
+
+    public void updateSongs(List<Song> newSongs) {
+        songs.clear();
+        songs.addAll(newSongs);
+        notifyDataSetChanged();
     }
 
     public void setDisplayMode(SongsFragment.DisplayMode displayMode) {
@@ -88,7 +95,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
                 return filterResults;
             }
 
-            @SuppressLint("NotifyDataSetChanged")
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 //noinspection unchecked

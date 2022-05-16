@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.music_library;
+package com.example.mediaplayerapp.ui.music_library.album_tab;
 
 import android.annotation.SuppressLint;
 import android.content.ContentUris;
@@ -22,9 +22,9 @@ import com.example.mediaplayerapp.data.music_library.Album;
 import com.example.mediaplayerapp.data.music_library.AlbumRepository;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.music_library.SongRepository;
+import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -75,9 +75,9 @@ public class AlbumDetailFragment extends Fragment {
         Glide.with(getContext()).load(getImage(album_id)).skipMemoryCache(true).into(img2);
         //set song list of a album
         List<Song> songList = songRepository.getAllSongsFromAlbum(album_id);
-        SongAdapter adapter = new SongAdapter(getActivity(), songList);
-        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-        recyclerView.setAdapter(adapter);
+//        SongAdapter adapter = new SongAdapter(getActivity(), songList);
+//        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+//        recyclerView.setAdapter(adapter);
         return rootView;
     }
     public static Uri getImage(long albumId) {

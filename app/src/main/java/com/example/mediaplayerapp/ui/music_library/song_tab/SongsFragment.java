@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.music_library;
+package com.example.mediaplayerapp.ui.music_library.song_tab;
 
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
@@ -14,16 +14,15 @@ import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.music_library.Song;
-import com.example.mediaplayerapp.data.music_library.SongRepository;
 import com.example.mediaplayerapp.databinding.FragmentSongsBinding;
+import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 
-import java.util.List;
-
+@SuppressLint("NotifyDataSetChanged")
 public class SongsFragment extends Fragment {
 
     public enum DisplayMode {
@@ -49,13 +48,14 @@ public class SongsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSongsBinding.inflate(getLayoutInflater(), container, false);
-        SongRepository songRepository = new SongRepository(requireActivity().getApplicationContext());
+        SongsViewModel viewModel = new ViewModelProvider(this).get(SongsViewModel.class);
 
         setHasOptionsMenu(true);
 
-        List<Song> songs = songRepository.getAllSongs();
-        songAdapter = new SongAdapter(getContext(), songs);
+        songAdapter = new SongAdapter(getContext());
         binding.songList.setAdapter(songAdapter);
+
+        viewModel.getAllSongs().observe(getViewLifecycleOwner(), newSongs -> songAdapter.updateSongs(newSongs));
 
         gridLayoutManager = new GridLayoutManager(getContext(),GRID_MODE_COLUMN_NUM);
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -95,7 +95,6 @@ public class SongsFragment extends Fragment {
         return true;
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private void changeDisplayMode() {
         if (currentDisplayMode == DisplayMode.LIST) {
             setDisplayModeAsGrid();

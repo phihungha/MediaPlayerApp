@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.music_library;
+package com.example.mediaplayerapp.ui.music_library.artist_tab;
 
 import android.content.ContentUris;
 import android.content.Context;
@@ -54,13 +54,13 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> imple
     @NonNull
     @Override
     public ARV onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.artist_list,
+        View view = LayoutInflater.from(context).inflate(R.layout.artist_grid_item,
                 parent, false);
         switch (viewType){
-            case Artist.TYPE_LIST:view = LayoutInflater.from(context).inflate(R.layout.artist_list2,
+            case Artist.TYPE_LIST:view = LayoutInflater.from(context).inflate(R.layout.artist_list_item,
                     parent, false);
                 break;
-            case Artist.TYPE_GRID:view = LayoutInflater.from(context).inflate(R.layout.artist_list,
+            case Artist.TYPE_GRID:view = LayoutInflater.from(context).inflate(R.layout.artist_grid_item,
                     parent, false);
                 break;
         }

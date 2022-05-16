@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.music_library;
+package com.example.mediaplayerapp.ui.music_library.album_tab;
 
 
 import android.content.ContentUris;
@@ -49,13 +49,13 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
     @NonNull
     @Override
     public AlbumAdapter.AlbumViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.album_list,
+        View view = LayoutInflater.from(context).inflate(R.layout.album_list_item,
                 parent, false);
         switch (viewType){
-            case Album.TYPE_GRID:view = LayoutInflater.from(context).inflate(R.layout.album_list,
+            case Album.TYPE_GRID:view = LayoutInflater.from(context).inflate(R.layout.album_list_item,
                     parent, false);
                 break;
-            case Album.TYPE_LIST:view = LayoutInflater.from(context).inflate(R.layout.album_list2,
+            case Album.TYPE_LIST:view = LayoutInflater.from(context).inflate(R.layout.album_grid_item,
                     parent, false);
                 break;
         }

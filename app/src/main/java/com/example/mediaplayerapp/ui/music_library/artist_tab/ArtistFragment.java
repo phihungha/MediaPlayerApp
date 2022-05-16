@@ -1,13 +1,14 @@
-package com.example.mediaplayerapp.ui.music_library;
-
+package com.example.mediaplayerapp.ui.music_library.artist_tab;
 
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,82 +21,77 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
+
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.music_library.Album;
-import com.example.mediaplayerapp.data.music_library.AlbumRepository;
+
+import com.example.mediaplayerapp.data.music_library.Artist;
+import com.example.mediaplayerapp.data.music_library.ArtistRepository;
+import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 
 
 import java.util.ArrayList;
-import java.util.List;
 
+public class ArtistFragment extends Fragment {
 
-public class AlbumFragment extends Fragment {
-    private List<Album> albums = new ArrayList<>();
     private RecyclerView recyclerView;
-    private AlbumAdapter albumAdapter;
+    private ArtistAdapter artistAdapter;
+    private ArrayList<Artist> artists = new ArrayList<>();
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
-    private int currentType= Album.TYPE_GRID;
-    public AlbumFragment() {
+    private int currentType= Artist.TYPE_GRID;
+
+    public ArtistFragment() {
         // Required empty public constructor
     }
+
     View view;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        AlbumRepository albumRepository = new AlbumRepository(requireActivity().getApplicationContext());
-        if(view==null)
-        {
-            view = inflater.inflate(R.layout.fragment_album, container, false);
+        ArtistRepository artistRepository = new ArtistRepository(requireActivity().getApplicationContext());
+        // Inflate the layout for this fragment
+        if(view==null) {
+            view = inflater.inflate(R.layout.fragment_artist, container, false);
             setHasOptionsMenu(true);
-            recyclerView = view.findViewById(R.id.ar);
-            gridLayoutManager = new GridLayoutManager(getActivity(),2);
-            linearLayoutManager = new LinearLayoutManager(getContext());
+            recyclerView = view.findViewById(R.id.arr);
+            gridLayoutManager= new GridLayoutManager(getActivity(),2);
+            linearLayoutManager= new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(gridLayoutManager);
-            albums = albumRepository.getAllAlbums();
-            setTypeDisplayRecycleView(Album.TYPE_GRID);
-            albumAdapter = new AlbumAdapter(getContext(),albums);
-            recyclerView.setAdapter(albumAdapter);
-            if(getActivity() != null)
+            artists = (ArrayList<Artist>) artistRepository.getAllArtists();
+            setTypeDisplayRecycleView(Artist.TYPE_GRID);
+            artistAdapter = new ArtistAdapter(getContext(), artists);
+            recyclerView.setAdapter(artistAdapter);
+            if(getActivity()!=null)
             {
                 recyclerView.addItemDecoration(new GridSpacingItemDecoration(2,30,true));
             }
         }
-        // Inflate the layout for this fragment
         return view;
     }
+
     private void setTypeDisplayRecycleView(int typeDisplay){
-        if(albums == null || albums.isEmpty()){
+        if(artists == null || artists.isEmpty()){
             return;
         }
         currentType=typeDisplay;
-        for(Album album : albums){
-            album.setTypeDisplay(typeDisplay);
+        for(Artist artist : artists){
+            artist.setTypeDisplay(typeDisplay);
         }
     }
     private void onClickChangeTypeDisplay() {
-        if(currentType==Album.TYPE_LIST){
-            setTypeDisplayRecycleView(Album.TYPE_GRID);
+        if(currentType==Artist.TYPE_LIST){
+            setTypeDisplayRecycleView(Artist.TYPE_GRID);
             recyclerView.setLayoutManager(gridLayoutManager);
             if(getActivity()!=null)
             {
                 recyclerView.addItemDecoration(new GridSpacingItemDecoration(2,30,true));
             }
         }else {
-            setTypeDisplayRecycleView(Album.TYPE_LIST);
+            setTypeDisplayRecycleView(Artist.TYPE_LIST);
             recyclerView.setLayoutManager(linearLayoutManager);
             recyclerView.removeItemDecorationAt(0);
         }
-        albumAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        int id= item.getItemId();
-        if(id == R.id.change_display_mode){
-            onClickChangeTypeDisplay();
-        }
-        return true;
+        artistAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -107,16 +103,24 @@ public class AlbumFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                albumAdapter.getFilter().filter(s);
+                artistAdapter.getFilter().filter(s);
                 return false;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                albumAdapter.getFilter().filter(s);
+                artistAdapter.getFilter().filter(s);
                 return false;
             }
         });
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id= item.getItemId();
+        if(id == R.id.change_display_mode){
+            onClickChangeTypeDisplay();
+        }
+        return true;
     }
 }
