@@ -13,6 +13,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.FragmentMusicLibraryBinding;
+import com.example.mediaplayerapp.ui.music_library.album_tab.AlbumFragment;
+import com.example.mediaplayerapp.ui.music_library.artist_tab.ArtistFragment;
+import com.example.mediaplayerapp.ui.music_library.song_tab.SongsFragment;
 import com.google.android.material.tabs.TabLayout;
 
 

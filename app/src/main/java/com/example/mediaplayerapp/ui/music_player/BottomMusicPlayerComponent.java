@@ -304,7 +304,7 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
      */
     private void setDefaultArtwork() {
         Drawable defaultArtwork = AppCompatResources.getDrawable(activity,
-                R.drawable.default_song_artwork_bottom_music_player);
+                R.drawable.default_song_artwork);
         binding.bottomMusicPlayerSongArtwork.setImageDrawable(defaultArtwork);
         binding.bottomMusicPlayerSongArtworkBackground.setImageDrawable(null);
         setDefaultViewsColors();
