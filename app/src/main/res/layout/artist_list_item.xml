@@ -5,7 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/artthum"
+        android:id="@+id/artist_thumbnail"
         android:layout_width="60dp"
         android:layout_height="60dp"
         app:shapeAppearanceOverlay="@style/rounded_corner_img"
@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <TextView
-        android:id="@+id/artname"
+        android:id="@+id/artist_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -30,6 +30,6 @@
         android:singleLine="true"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/artthum"
+        app:layout_constraintStart_toEndOf="@+id/artist_thumbnail"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
