@@ -9,8 +9,6 @@
     android:id="@+id/song_container"
     tools:context=".ui.music_library.MusicLibraryFragment">
 
-
-
     <LinearLayout
         android:id="@+id/music_container"
         android:layout_width="match_parent"

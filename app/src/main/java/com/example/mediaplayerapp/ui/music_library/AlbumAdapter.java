@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Album;
+import com.google.android.material.imageview.ShapeableImageView;
 
 
 import java.util.ArrayList;
@@ -110,7 +111,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
 
     public class AlbumViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private final ImageView img;
+        private final ShapeableImageView img;
         private final TextView albumT;
         private final TextView albumA;
 

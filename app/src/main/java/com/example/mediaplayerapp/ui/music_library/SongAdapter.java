@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.Song;
+import com.google.android.material.imageview.ShapeableImageView;
 
 
 import java.util.ArrayList;
@@ -117,7 +118,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongHolder> im
         TextView sogname;
         TextView artistname;
         ImageView contextmenu;
-        ImageView albumart;
+        ShapeableImageView albumart;
         private PopupMenu popup;
 
         public SongHolder(@NonNull View itemView)    {

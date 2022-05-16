@@ -25,6 +25,7 @@ import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 
 import com.example.mediaplayerapp.data.Artist;
+import com.google.android.material.imageview.ShapeableImageView;
 
 
 import java.util.ArrayList;
@@ -119,7 +120,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ARV> imple
 
 
         private final TextView artNaam;
-        private final ImageView artthum;
+        private final ShapeableImageView artthum;
         public ARV(View itemView) {
             super(itemView);
             artNaam = itemView.findViewById(R.id.artname);
