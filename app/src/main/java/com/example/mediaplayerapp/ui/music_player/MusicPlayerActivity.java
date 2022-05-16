@@ -36,6 +36,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.ActivityMusicPlayerBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
+import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.google.android.exoplayer2.ui.TimeBar;
 
 import java.util.Locale;
@@ -310,7 +311,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 MediaControllerCompat controller = MediaControllerCompat.getMediaController(MusicPlayerActivity.this);
                 long currentPlaybackPosition = controller.getPlaybackState().getPosition();
                 binding.musicPlayerSeekbar.setPosition(currentPlaybackPosition);
-                binding.musicPlayerSongCurrentPosition.setText(getFormattedPlaybackPosition(currentPlaybackPosition));
+                binding.musicPlayerSongCurrentPosition.setText(MediaTimeUtils.getFormattedTime(currentPlaybackPosition));
                 handler.postDelayed(this, 100);
             }
         });
