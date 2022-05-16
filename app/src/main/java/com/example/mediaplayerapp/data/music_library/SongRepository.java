@@ -17,7 +17,6 @@ public class SongRepository {
      */
     public SongRepository(Context context) {
         this.mediaStore = new SongMediaStoreDataSource(context);
-
     }
 
     /**
