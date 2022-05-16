@@ -25,14 +25,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
+import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
-import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
-import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
-import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -204,8 +203,9 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
             PlaylistDetailsPropertiesDialog dialog = PlaylistDetailsPropertiesDialog.newInstance(mediaInfo);
             dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_DETAIL_PROPERTY_DIALOG);
+
         });
-        
+
     }
 
     private void PlayAll(MediaItemAdapter adapter) {

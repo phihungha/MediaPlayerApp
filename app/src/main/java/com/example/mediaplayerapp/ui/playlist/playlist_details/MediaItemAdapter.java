@@ -1,6 +1,5 @@
 package com.example.mediaplayerapp.ui.playlist.playlist_details;
 
-
 import android.content.Context;
 import android.view.ViewGroup;
 

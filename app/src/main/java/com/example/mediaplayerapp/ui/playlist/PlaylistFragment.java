@@ -183,7 +183,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                     makeToast("Please check type for playlist!");
                 } else {
                     int idResource=-1;
-                    if (radioAudio.isChecked()){
+                    if (!radioAudio.isChecked()){
                         idResource=R.drawable.ic_round_ondemand_video_24;
                     }
                     else {

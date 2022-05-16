@@ -2,6 +2,7 @@ package com.example.mediaplayerapp.ui.playlist.playlist_details;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -17,7 +18,6 @@ import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
 import com.example.mediaplayerapp.databinding.ItemMediaBinding;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-
 
 public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     private static Context mContext;
@@ -41,7 +41,6 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
         MediaInfo mediaInfo=MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
         String duration=MediaUtils.convertDuration(mediaInfo.getDuration());
         binding.tvDurationMedia.setText(duration);
-
         Glide.with(mContext)
                 .load(media.getMediaUri())
                 .skipMemoryCache(false)

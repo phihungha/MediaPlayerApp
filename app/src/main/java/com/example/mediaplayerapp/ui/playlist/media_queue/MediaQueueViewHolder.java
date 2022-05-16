@@ -2,6 +2,7 @@ package com.example.mediaplayerapp.ui.playlist.media_queue;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Build;
 import android.view.LayoutInflater;
 
 import android.view.View;
@@ -32,9 +33,12 @@ public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements Vie
 
     public void setBinding(MediaQueue media) {
         binding.tvNameMediaQueue.setText(media.getName());
+
         MediaInfo mediaInfo= MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
         String duration=MediaUtils.convertDuration(mediaInfo.getDuration());
+
         binding.tvDurationMediaQueue.setText(duration);
+
 
         Glide.with(mContext)
                 .load(media.getMediaUri())
