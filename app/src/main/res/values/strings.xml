@@ -31,4 +31,10 @@
     <string name="disable_music_visual">Disable music visual</string>
     <string name="audio_visualizer_permission_denied_notice_title">Audio visualizer disabled</string>
     <string name="audio_visualizer_permission_denied_notice_message">Audio visualizer disabled because audio recording permission is denied</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_search">Search</string>
+    <string name="detail">Detail</string>
+    <string name="delete">Delete</string>
+    <string name="switch_view">Switch View</string>
+    <string name="open_song_item_context_menu">Open song item context menu</string>
 </resources>
