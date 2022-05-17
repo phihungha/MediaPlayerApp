@@ -60,14 +60,6 @@ public class AlbumsFragment extends Fragment {
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.change_display_mode)
-            changeDisplayMode();
-
-        return true;
-    }
-
-    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater){
         inflater.inflate(R.menu.music_library_options_menu, menu);
 
@@ -90,15 +82,25 @@ public class AlbumsFragment extends Fragment {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.change_display_mode)
+            changeDisplayMode(item);
+
+        return true;
+    }
+
     /**
      * Change display mode of the list.
      */
-    private void changeDisplayMode() {
+    private void changeDisplayMode(MenuItem item) {
         if (currentDisplayMode == DisplayMode.LIST) {
             setDisplayModeAsGrid();
+            item.setIcon(R.drawable.ic_gridview_24dp);
             currentDisplayMode = DisplayMode.GRID;
         } else {
             setDisplayModeAsList();
+            item.setIcon(R.drawable.ic_list_24dp);
             currentDisplayMode = DisplayMode.LIST;
         }
         albumAdapter.notifyDataSetChanged();
