@@ -113,7 +113,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
     }
 
     public class SongItemViewHolder extends RecyclerView.ViewHolder  {
-        Song currentSong;
+
+        private Song currentSong;
         private final ShapeableImageView songThumbnail;
         private final TextView songTitle;
         private final TextView songArtist;

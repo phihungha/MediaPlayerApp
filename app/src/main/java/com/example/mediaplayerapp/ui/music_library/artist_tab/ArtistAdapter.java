@@ -107,7 +107,8 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistItem
     }
 
     public class ArtistItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        Artist currentArtist;
+
+        private Artist currentArtist;
         private final TextView artistName;
 
         public ArtistItemViewHolder(View itemView) {
