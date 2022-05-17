@@ -18,6 +18,11 @@ import androidx.annotation.Nullable;
 import androidx.media.MediaBrowserServiceCompat;
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.music_library.Song;
+import com.example.mediaplayerapp.data.music_library.SongsRepository;
+import com.example.mediaplayerapp.utils.MediaItemUtils;
+import com.example.mediaplayerapp.utils.MediaUriUtils;
+import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.MediaMetadata;
@@ -37,9 +42,10 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     private static final String NOTIFICATION_CHANNEL_ID = "com.example.mediaplayerapp.services.MUSIC_PLAYBACK";
     private static final int NOTIFICATION_ID = 1;
 
-    ExoPlayer player;
+    private ExoPlayer player;
     private MediaSessionCompat mediaSession;
     private PlayerNotificationManager notificationManager;
+    private SongsRepository songsRepository;
     private boolean isForeground = false;
 
     @Override
@@ -50,6 +56,8 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
         mediaSession = new MediaSessionCompat(this, "MusicPlaybackService");
         setSessionToken(mediaSession.getSessionToken());
+
+        songsRepository = new SongsRepository(getApplicationContext());
 
         setAudioSessionIdOnMediaSession();
         setupAnalyticsListener();
@@ -152,16 +160,23 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
                     @Override
                     public void onPrepareFromUri(@NonNull Uri uri, boolean playWhenReady, @Nullable Bundle extras) {
-                        if (uri.getScheme().equals(PlaylistUriUtils.PLAYLIST_URI_SCHEME)) {
+                        if (uri.getScheme().equals(MediaUriUtils.PLAYLIST_URI_SCHEME)) {
                             // TODO: Load all music items from playlist
                             long playlistId = Long.parseLong(uri.getPathSegments().get(0));
                             Log.i(LOG_TAG, "Loaded media from playlist id: " + playlistId);
+                        } else if (uri.getScheme().equals(MediaUriUtils.LIBRARY_URI_SCHEME)) {
+                            List<Song> librarySongs = songsRepository.getAllSongs();
+                            player.addMediaItems(MediaItemUtils.getMediaItemsFromSongs(librarySongs));
+                            int libraryIndex = Integer.parseInt(uri.getPathSegments().get(0));
+                            player.seekTo(libraryIndex, C.INDEX_UNSET);
+                            Log.i(LOG_TAG, "Loaded media from library ID: " + libraryIndex);
                         } else {
                             player.setMediaItem(MediaItem.fromUri(uri));
-                            // TODO: Load all music items from media store
-                            Log.i(LOG_TAG, "Loaded media from uri: " + uri);
+                            Log.i(LOG_TAG, "Loaded media from URI: " + uri);
                         }
+
                         player.setPlayWhenReady(playWhenReady);
+                        player.setPlaybackSpeed(1f);
                         player.prepare();
                         Log.i(LOG_TAG, "ExoPlayer prepared");
                     }

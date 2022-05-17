@@ -29,7 +29,6 @@ public class SongMediaStoreDataSource extends MediaStoreDataSource {
                 MediaStore.Audio.Media.ARTIST_ID,
                 MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.DURATION,
-                MediaStore.Audio.Media.TRACK,
         };
 
         Cursor cursor = getMediaItems(
@@ -45,8 +44,8 @@ public class SongMediaStoreDataSource extends MediaStoreDataSource {
         int artistId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST_ID);
         int artist = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST);
         int duration = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
-        int track = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TRACK);
 
+        int libraryIndex = 0;
         if (cursor.moveToFirst()) {
             do {
                 songs.add(new Song(
@@ -58,7 +57,8 @@ public class SongMediaStoreDataSource extends MediaStoreDataSource {
                         cursor.getLong(artistId),
                         cursor.getString(artist),
                         cursor.getInt(duration),
-                        cursor.getInt(track)));
+                        libraryIndex));
+                libraryIndex++;
             } while (cursor.moveToNext());
             cursor.close();
         }

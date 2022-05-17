@@ -8,7 +8,6 @@
         android:id="@+id/album_thumbnail"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        app:shapeAppearanceOverlay="@style/rounded_corner_img"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
@@ -16,7 +15,8 @@
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/ImageViewRoundedCorner" />
 
     <TextView
         android:id="@+id/album_title"

@@ -2,7 +2,9 @@ package com.example.mediaplayerapp.ui.music_library.song_tab;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +24,9 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.ThumbnailUtils;
+import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
+import com.example.mediaplayerapp.utils.MediaUriUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.io.IOException;
@@ -125,10 +129,16 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
             songThumbnail = itemView.findViewById(R.id.song_thumbnail);
             songTitle = itemView.findViewById(R.id.song_title);
             songArtist = itemView.findViewById(R.id.song_artist);
-            
-            ImageButton contextMenuBtn = itemView.findViewById(R.id.context_menu_btn);
 
+            ImageButton contextMenuBtn = itemView.findViewById(R.id.context_menu_btn);
             contextMenuBtn.setOnClickListener(this::openContextMenu);
+
+            itemView.setOnClickListener(view -> {
+                Intent startPlaybackIntent = new Intent(context, MusicPlayerActivity.class);
+                Uri libraryUri = MediaUriUtils.getLibraryUri(currentSong.getLibraryIndex());
+                startPlaybackIntent.setData(libraryUri);
+                context.startActivity(startPlaybackIntent);
+            });
         }
 
         /**
