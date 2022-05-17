@@ -86,7 +86,7 @@ public class SongsFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.change_display_mode)
-            changeDisplayMode();
+            changeDisplayMode(item);
 
         return true;
     }
@@ -94,12 +94,14 @@ public class SongsFragment extends Fragment {
     /**
      * Change display mode of the list.
      */
-    private void changeDisplayMode() {
+    private void changeDisplayMode(MenuItem item) {
         if (currentDisplayMode == DisplayMode.LIST) {
             setDisplayModeAsGrid();
+            item.setIcon(R.drawable.ic_gridview_24dp);
             currentDisplayMode = DisplayMode.GRID;
         } else {
             setDisplayModeAsList();
+            item.setIcon(R.drawable.ic_list_24dp);
             currentDisplayMode = DisplayMode.LIST;
         }
         songAdapter.notifyDataSetChanged();
