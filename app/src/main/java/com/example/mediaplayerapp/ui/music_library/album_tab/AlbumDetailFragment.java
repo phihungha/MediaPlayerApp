@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,7 +21,6 @@ import com.example.mediaplayerapp.data.music_library.Album;
 import com.example.mediaplayerapp.data.music_library.AlbumRepository;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.music_library.SongRepository;
-import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 
 import java.util.List;
@@ -59,12 +57,12 @@ public class AlbumDetailFragment extends Fragment {
         AlbumRepository albumRepository = new AlbumRepository(requireActivity().getApplicationContext());
         SongRepository songRepository = new SongRepository(requireActivity().getApplicationContext());
         View rootView=inflater.inflate(R.layout.fragment_album_detail, container, false);
-        TextView anaam = rootView.findViewById(R.id.atrnaam);
-        TextView ade = rootView.findViewById(R.id.albumDetails);
-        ImageView img = rootView.findViewById(R.id.album_art);
-        ImageView img2 = rootView.findViewById(R.id.aaimg);
+        TextView anaam = rootView.findViewById(R.id.album_details_name);
+        TextView ade = rootView.findViewById(R.id.album_details_description);
+        ImageView img = rootView.findViewById(R.id.album_details_artwork);
+        ImageView img2 = rootView.findViewById(R.id.album_details_small_artwork);
         CollapsingToolbarLayout collapsingToolbarLayout = rootView.findViewById(R.id.collapsed_layout);
-        RecyclerView recyclerView = rootView.findViewById(R.id.recycler);
+        RecyclerView recyclerView = rootView.findViewById(R.id.album_details_song_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         Album album = albumRepository.getAlbum(album_id);
         //set album detail

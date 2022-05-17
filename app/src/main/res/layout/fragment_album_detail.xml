@@ -25,19 +25,15 @@
             app:statusBarScrim="@android:color/transparent">
 
             <ImageView
-                android:id="@+id/album_art"
+                android:id="@+id/album_details_artwork"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:contentDescription="TODO"
+                android:contentDescription="@string/album_details_artwork"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 android:transitionName="transition_album_art"
-                app:layout_collapseMode="parallax" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="#22000000" />
+                app:layout_collapseMode="parallax"
+                tools:ignore="ImageContrastCheck" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -47,7 +43,6 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -62,20 +57,20 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/aaimg"
+                    android:id="@+id/album_details_small_artwork"
                     android:layout_width="55dp"
                     android:layout_height="55dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="2dp"
                     android:background="#E9E9E9"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/album_details_s_small_artwork" />
 
                 <TextView
-                    android:id="@+id/atrnaam"
+                    android:id="@+id/album_details_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -83,32 +78,32 @@
                     android:layout_marginEnd="60dp"
                     android:ellipsize="end"
                     android:singleLine="true"
+                    android:text="@string/default_album_name"
                     android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/aaimg"
+                    app:layout_constraintStart_toEndOf="@+id/album_details_small_artwork"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/albumDetails"
+                    android:id="@+id/album_details_description"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginLeft="8dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginEnd="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginBottom="2dp"
                     android:ellipsize="end"
                     android:singleLine="true"
+                    android:text="@string/default_album_details_description"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/aaimg"
-                    app:layout_constraintTop_toBottomOf="@+id/atrnaam" />
+                    app:layout_constraintStart_toEndOf="@+id/album_details_small_artwork"
+                    app:layout_constraintTop_toBottomOf="@+id/album_details_name" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler"
+                android:id="@+id/album_details_song_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
@@ -121,7 +116,9 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/play_all_songs_from_this_album"
         android:src="@android:drawable/ic_media_play"
         app:layout_anchor="@id/app_bar"
-        app:layout_anchorGravity="bottom|right|end" />
+        app:layout_anchorGravity="bottom|right|end"
+        tools:ignore="ImageContrastCheck" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
