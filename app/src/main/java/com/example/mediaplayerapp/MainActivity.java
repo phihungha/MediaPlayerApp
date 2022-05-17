@@ -1,13 +1,10 @@
 package com.example.mediaplayerapp;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.media.AudioManager;
-import android.net.Uri;
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
+import android.media.AudioManager;
 import android.os.Bundle;
-import android.support.v4.media.session.MediaControllerCompat;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -52,12 +49,6 @@ public class MainActivity extends AppCompatActivity {
         getLifecycle().addObserver(bottomMusicPlayer);
 
         checkAndRequestReadExternalStoragePermission();
-    }
-
-    public static void playMusic(Activity activity, Uri uri) {
-        MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(activity);
-        if (mediaController != null)
-            mediaController.getTransportControls().playFromUri(uri, null);
     }
 
     @Override
