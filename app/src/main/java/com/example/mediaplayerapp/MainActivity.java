@@ -6,15 +6,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.session.MediaControllerCompat;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.WindowCompat;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.mediaplayerapp.databinding.ActivityMainBinding;
 import com.example.mediaplayerapp.ui.music_player.BottomMusicPlayerComponent;
+
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,13 +25,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbar);
-        ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null)
-            supportActionBar.setTitle(null);
+        Objects.requireNonNull(getSupportActionBar()).setTitle("");
 
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_main);
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.nav_host_fragment_activity_main);
+        NavController navController = Objects.requireNonNull(navHostFragment).getNavController();
         NavigationUI.setupWithNavController(binding.bottomNavigation, navController);
 
         BottomMusicPlayerComponent bottomMusicPlayer = new BottomMusicPlayerComponent(this, binding);
