@@ -14,13 +14,48 @@ import java.util.List;
 
 public class VideoDataSource {
 
-    private Context context;
+    private final Context context;
 
     public VideoDataSource(Context context) {
         this.context = context;
     }
 
     public MutableLiveData<List<Video>> getAllVideos() {
+        return getVideosWithSomeCondition(null, null, null);
+    }
+
+    public MutableLiveData<List<Video>> getVideosSortByNameASC() {
+        return getVideosWithSomeCondition(null, null,
+                MediaStore.MediaColumns.DISPLAY_NAME + " ASC");
+    }
+
+    public MutableLiveData<List<Video>> getVideosSortByNameDESC() {
+        return getVideosWithSomeCondition(null, null,
+                MediaStore.MediaColumns.DISPLAY_NAME + " DESC");
+    }
+
+    public MutableLiveData<List<Video>> getVideosSortByDurationASC() {
+        return getVideosWithSomeCondition(null, null,
+                MediaStore.Video.Media.DURATION + " ASC");
+
+    }
+
+    public MutableLiveData<List<Video>> getVideosSortByDurationDESC() {
+        return getVideosWithSomeCondition(null, null,
+                MediaStore.Video.Media.DURATION + " DESC");
+    }
+
+    /**
+     * Get videos that satisfy certain conditions
+     *
+     * @param selection     sql "where" clause with placeholder variables
+     * @param selectionArgs values of placeholder variables
+     * @param sortOrder     sql "order by" clause
+     * @return The MutableLiveData form for list of video that satisfies the conditions
+     */
+    private MutableLiveData<List<Video>> getVideosWithSomeCondition(
+            String selection, String[] selectionArgs, String sortOrder) {
+
         List<Video> videoList = new ArrayList<>();
 
         String[] projection = new String[]{
@@ -32,10 +67,6 @@ public class VideoDataSource {
                 MediaStore.Video.Media.RESOLUTION,
                 MediaStore.Video.Media.DATE_TAKEN,
         };
-        String selection = null;
-        String[] selectionArgs = null;
-        String sortOrder = null;
-
         //Using a cursorLoader with loadInBackground() method to do the loading in a worker thread,
         //this reduces freezing when loading videos from MediaStore
         CursorLoader cursorLoader = new CursorLoader(
