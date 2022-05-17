@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.FragmentAlbumDetailBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
-import com.example.mediaplayerapp.ui.music_library.ThumbnailUtils;
+import com.example.mediaplayerapp.utils.ThumbnailUtils;
 import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
 
 import java.io.IOException;

@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Album;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
-import com.example.mediaplayerapp.ui.music_library.ThumbnailUtils;
+import com.example.mediaplayerapp.utils.ThumbnailUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.io.IOException;

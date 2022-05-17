@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.music_library;
+package com.example.mediaplayerapp.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
