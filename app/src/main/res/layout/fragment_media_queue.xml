@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    android:paddingBottom="60dp"
+    tools:context=".ui.playlist.media_queue.MediaQueueFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <View
+            android:id="@+id/view_queue"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:background="@color/blue1"/>
+
+        <TextView
+            android:id="@+id/tv_queue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:text="@string/queue"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="20dp"
+            app:layout_constraintStart_toStartOf="@id/view_queue"
+            app:layout_constraintTop_toTopOf="@id/view_queue"
+            />
+
+        <LinearLayout
+            android:id="@+id/layout_playQueue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+
+            android:padding="8dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_queue"
+            app:layout_constraintBottom_toBottomOf="@id/view_queue"
+            app:layout_constraintStart_toStartOf="@id/view_queue">
+
+            <ImageView
+                android:id="@+id/img_playQueue"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+
+                android:layout_gravity="center"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/ic_round_play_circle_outline_24"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/tv_playQueue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+
+                android:text="@string/play_all"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_clearQueue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+
+            android:padding="8dp"
+            app:layout_constraintTop_toTopOf="@id/layout_playQueue"
+            app:layout_constraintBottom_toBottomOf="@id/layout_playQueue"
+            app:layout_constraintEnd_toEndOf="@id/view_queue">
+
+            <ImageView
+                android:id="@+id/img_clearQueue"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+
+                android:layout_gravity="center"
+                android:backgroundTint="@color/white"
+                android:src="@drawable/ic_round_clear_all_24" />
+
+            <TextView
+                android:id="@+id/tv_clearQueue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+
+                android:text="@string/clear"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rcv_queue"
+        android:layout_width="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:clipToPadding="true"
+        />
+
+</LinearLayout>
