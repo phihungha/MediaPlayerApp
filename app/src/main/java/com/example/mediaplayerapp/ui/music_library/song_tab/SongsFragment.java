@@ -48,7 +48,7 @@ public class SongsFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        songAdapter = new SongAdapter(getContext());
+        songAdapter = new SongAdapter(requireContext());
         binding.songList.setAdapter(songAdapter);
 
         viewModel.getAllSongs().observe(getViewLifecycleOwner(), newSongs -> songAdapter.updateSongs(newSongs));

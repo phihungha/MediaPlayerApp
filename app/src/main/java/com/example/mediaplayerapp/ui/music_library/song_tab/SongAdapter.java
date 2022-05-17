@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 
 @SuppressLint("NotifyDataSetChanged")
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHolder> implements Filterable {
-    DisplayMode displayMode;
+    DisplayMode displayMode = DisplayMode.LIST;
     Context context;
 
     List<Song> songs = new ArrayList<>();
@@ -51,6 +51,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
 
     public void setDisplayMode(DisplayMode displayMode) {
         this.displayMode = displayMode;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return displayMode.getValue();
     }
 
     @NonNull
