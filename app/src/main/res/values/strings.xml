@@ -50,4 +50,6 @@
     <string name="songs">Songs</string>
     <string name="artists">Artists</string>
     <string name="albums">Albums</string>
+    <string name="read_external_storage_permission_denied_notice_title">Cannot read media files</string>
+    <string name="read_external_storage_permission_denied_notice_message">This app cannot read media files on your device because the permission has been denied.</string>
 </resources>

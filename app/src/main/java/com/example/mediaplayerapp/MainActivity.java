@@ -1,6 +1,7 @@
 package com.example.mediaplayerapp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.Manifest;
@@ -23,10 +24,13 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ActivityResultLauncher<String> permissionRequestLauncher =
+    private final ActivityResultLauncher<String> permissionRequestLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.RequestPermission(),
-                    isGranted -> {}
+                    isGranted -> {
+                        if (!isGranted)
+                            showReadExternalStoragePermissionDeniedNotice();
+                    }
             );
 
     @Override
@@ -70,5 +74,17 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED)
             permissionRequestLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
+    }
+
+    /**
+     * Notices the user that the on-device media files won't be found
+     * because READ_EXTERNAL_STORAGE permission is denied.
+     */
+    private void showReadExternalStoragePermissionDeniedNotice() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setMessage(R.string.read_external_storage_permission_denied_notice_message)
+                .setTitle(R.string.read_external_storage_permission_denied_notice_title)
+                .setPositiveButton(R.string.ok, (dialogInterface, i) -> {});
+        dialogBuilder.create().show();
     }
 }
