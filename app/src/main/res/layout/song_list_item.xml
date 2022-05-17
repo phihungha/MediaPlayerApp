@@ -16,7 +16,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:shapeAppearanceOverlay="@style/rounded_corner_img"/>
+        app:shapeAppearanceOverlay="@style/ImageViewRoundedCorner"/>
 
     <TextView
         android:id="@+id/song_title"
@@ -26,7 +26,9 @@
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:singleLine="true"
+        android:text="@string/default_song_name"
         android:textSize="18sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         app:layout_constraintEnd_toStartOf="@+id/context_menu_btn"
         app:layout_constraintStart_toEndOf="@+id/song_thumbnail"
         app:layout_constraintTop_toTopOf="parent" />
@@ -39,6 +41,8 @@
         android:layout_marginBottom="8dp"
         android:ellipsize="end"
         android:singleLine="true"
+        android:text="@string/default_artist_name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/context_menu_btn"
         app:layout_constraintHorizontal_bias="0.0"
