@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,7 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
@@ -30,7 +28,6 @@ import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
-import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 
 import java.util.ArrayList;
@@ -71,12 +68,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         adapter.setContext(getContext());
         mediaItemViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
                 getViewLifecycleOwner(),
-                new Observer<List<MediaItem>>() {
-                    @Override
-                    public void onChanged(List<MediaItem> media) {
-                        adapter.submitList(media);
-                    }
-                }
+                media -> adapter.submitList(media)
         );
         binding.rcvPlaylistsDetails.setAdapter(adapter);
         binding.imgThumbnailPlaylistDetails.setImageResource(playlist.getIdResource());
@@ -182,24 +174,22 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         });
         
         //click add to queue bottom sheet
-        adapter.setBsAddQueueListener(new IOnItemClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                MediaItem media=adapter.getPlaylistMediaItemAt(position);
+        adapter.setBsAddQueueListener((view, position) -> {
+            MediaItem media=adapter.getPlaylistMediaItemAt(position);
 
-                MediaQueueViewModel mediaQueueViewModel=new ViewModelProvider(getActivity())
-                        .get(MediaQueueViewModel.class);
+            MediaQueueViewModel mediaQueueViewModel=new ViewModelProvider(requireActivity())
+                    .get(MediaQueueViewModel.class);
 
-                MediaQueue mediaQueue=new MediaQueue(media.getMediaUri(),media.getName());
-                mediaQueueViewModel.insert(mediaQueue);
-                Toast.makeText(getContext(), "Add to queue completed!!!", Toast.LENGTH_SHORT).show();
-            }
+            MediaQueue mediaQueue=new MediaQueue(media.getMediaUri(),media.getName());
+            mediaQueueViewModel.insert(mediaQueue);
+            Toast.makeText(getContext(), "Add to queue completed!!!", Toast.LENGTH_SHORT).show();
         });
 
         //click properties bottom sheet
         adapter.setBsPropertiesListener((view, position) -> {
             MediaItem media = adapter.getPlaylistMediaItemAt(position);
-            MediaInfo mediaInfo=MediaUtils.getInfoWithUri(getContext(),Uri.parse(media.getMediaUri()));
+            MediaInfo mediaInfo=MediaUtils.getInfoWithUri(requireContext(),
+                    Uri.parse(media.getMediaUri()));
 
             PlaylistDetailsPropertiesDialog dialog = PlaylistDetailsPropertiesDialog.newInstance(mediaInfo);
             dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_DETAIL_PROPERTY_DIALOG);
@@ -213,14 +203,9 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         List<Uri> listUriMedia = new ArrayList<>();
         mediaItemViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
                 getViewLifecycleOwner(),
-                new Observer<List<MediaItem>>() {
-                    @Override
-                    public void onChanged(List<MediaItem> media) {
-                        media.forEach(item ->{
-                            listUriMedia.add(Uri.parse(item.getMediaUri()));
-                        });
-                    }
-                }
+                media -> media.forEach(item ->{
+                    listUriMedia.add(Uri.parse(item.getMediaUri()));
+                })
         );
 
         if (playlist.isVideo()){
@@ -296,8 +281,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     }
 
     private void AddMoreMedia() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT,
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         if (playlist.getId()==1){
             intent.setType("*/*");

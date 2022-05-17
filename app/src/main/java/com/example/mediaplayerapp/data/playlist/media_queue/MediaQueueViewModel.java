@@ -6,13 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
-import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueRepository;
-
 import java.util.List;
 
 public class MediaQueueViewModel extends AndroidViewModel {
-    private MediaQueueRepository mRepository;
+    private final MediaQueueRepository mRepository;
 
     public MediaQueueViewModel(@NonNull Application application) {
         super(application);

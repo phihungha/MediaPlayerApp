@@ -5,8 +5,8 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class PlaylistRepository {
-    private PlaylistDao mPlaylistDao;
-    private LiveData<List<Playlist>> mAllPlaylists;
+    private final PlaylistDao mPlaylistDao;
+    private final LiveData<List<Playlist>> mAllPlaylists;
 
     public PlaylistRepository(Application application) {
         PlaylistRoomDatabase database = PlaylistRoomDatabase.getDatabase(application);
@@ -15,27 +15,19 @@ public class PlaylistRepository {
     }
 
     public void insert(Playlist playlist) {
-        PlaylistRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mPlaylistDao.insert(playlist);
-        });
+        PlaylistRoomDatabase.databaseWriteExecutor.execute(() -> mPlaylistDao.insert(playlist));
     }
 
     public void delete(Playlist playlist) {
-        PlaylistRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mPlaylistDao.delete(playlist);
-        });
+        PlaylistRoomDatabase.databaseWriteExecutor.execute(() -> mPlaylistDao.delete(playlist));
     }
 
     public void update(Playlist playlist) {
-        PlaylistRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mPlaylistDao.update(playlist);
-        });
+        PlaylistRoomDatabase.databaseWriteExecutor.execute(() -> mPlaylistDao.update(playlist));
     }
 
     public void deleteAll() {
-        PlaylistRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mPlaylistDao.deleteAll();
-        });
+        PlaylistRoomDatabase.databaseWriteExecutor.execute(mPlaylistDao::deleteAll);
     }
 
     public LiveData<List<Playlist>> getPlaylistWithID(int id){

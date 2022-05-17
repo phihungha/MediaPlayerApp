@@ -1,5 +1,6 @@
 package com.example.mediaplayerapp.ui.playlist;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     BottomSheetDialog bottomSheetDialog;
-    private ItemPlaylistBinding binding;
+    private final ItemPlaylistBinding binding;
     private static IOnItemClickListener bsRenameListener;
     private static IOnItemClickListener bsDeleteListener;
     private static IOnItemClickListener bsPlayListener;
@@ -29,6 +30,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         this.binding.layoutItemPlaylist.setOnClickListener(this);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

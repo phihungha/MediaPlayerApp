@@ -15,7 +15,6 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 
 public class PlaylistDetailsPropertiesDialog extends AppCompatDialogFragment {
-    private MediaInfo mInfo;
 
     public static PlaylistDetailsPropertiesDialog newInstance(MediaInfo info) {
         PlaylistDetailsPropertiesDialog f = new PlaylistDetailsPropertiesDialog();
@@ -31,18 +30,18 @@ public class PlaylistDetailsPropertiesDialog extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         assert getArguments() != null;
-        mInfo=(MediaInfo) getArguments().getSerializable(PlaylistConstants.KEY_PLAYLIST_DETAIL);
+        MediaInfo mInfo = (MediaInfo) getArguments().getSerializable(PlaylistConstants.KEY_PLAYLIST_DETAIL);
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-        View view= getActivity().getLayoutInflater().inflate(R.layout.dialog_properties_playlist_layout,null);
+        View view= requireActivity().getLayoutInflater().inflate(R.layout.dialog_properties_playlist_layout,null);
 
         TextView tvName=view.findViewById(R.id.tv_nameProp);
         TextView tvDuration=view.findViewById(R.id.tv_durationProp);
         TextView tvSize=view.findViewById(R.id.tv_fileSizeProp);
         TextView tvLocation=view.findViewById(R.id.tv_locationProp);
 
-        String name=mInfo.getFileName();
-        String duration=mInfo.getDuration();
-        String size=mInfo.getFileSize();
+        String name= mInfo.getFileName();
+        String duration= mInfo.getDuration();
+        String size= mInfo.getFileSize();
         String location=Uri.parse(mInfo.getLocation()).getPath();
 
         size=MediaUtils.convertToSizeMb(size);

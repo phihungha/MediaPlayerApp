@@ -5,7 +5,6 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.net.URI;
 
 @Entity(tableName = "playlist_table")
 public class Playlist implements Serializable {

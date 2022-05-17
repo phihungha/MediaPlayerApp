@@ -1,5 +1,6 @@
 package com.example.mediaplayerapp.ui.playlist;
 
+import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.net.Uri;
@@ -19,17 +20,15 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
-import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
+import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment;
-import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
@@ -37,8 +36,8 @@ import java.util.List;
 
 public class PlaylistFragment extends Fragment implements View.OnClickListener {
     private FragmentPlaylistBinding binding;
-    private PlaylistDetailsFragment detailsFragment = new PlaylistDetailsFragment();
-    private MediaQueueFragment mediaQueueFragment=new MediaQueueFragment();
+    private final PlaylistDetailsFragment detailsFragment = new PlaylistDetailsFragment();
+    private final MediaQueueFragment mediaQueueFragment=new MediaQueueFragment();
     private PlaylistAdapter adapter;
     private PlaylistViewModel playlistViewModel;
 
@@ -61,12 +60,9 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         binding.rcvPlaylists.setAdapter(adapter);
         playlistViewModel.getAllPlaylists().observe(
                 getViewLifecycleOwner(),
-                new Observer<List<Playlist>>() {
-                    @Override
-                    public void onChanged(List<Playlist> playlists) {
-                        // Update the cached copy of the playlist in the adapter.
-                        adapter.submitList(playlists);
-                    }
+                playlists -> {
+                    // Update the cached copy of the playlist in the adapter.
+                    adapter.submitList(playlists);
                 }
         );
         setListenerForAdapter();
@@ -76,7 +72,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         binding.layoutItemAddPlaylist.setOnClickListener(this);
         binding.layoutItemWatchLater.setOnClickListener(this);
 
-        adapter.setApplication(getActivity().getApplication());
+        adapter.setApplication(requireActivity().getApplication());
         //set click item listener for recyclerview
         adapter.setListener((v, position) -> {
             Bundle bundle = new Bundle();
@@ -97,24 +93,19 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                     .get(MediaItemViewModel.class);
             mediaItemViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
                     getViewLifecycleOwner(),
-                    new Observer<List<MediaItem>>() {
-                        @Override
-                        public void onChanged(List<MediaItem> media) {
-                            //list uri of Media need to play
-                            List<Uri> listUriMedia = new ArrayList<>();
-                            media.forEach(item ->{
-                                listUriMedia.add(Uri.parse(item.getMediaUri()));
-                            });
-                            /**
-                             *
-                             *
-                             *        Play LINEAR playlists with listUriMedia HERE
-                             *
-                             *
-                             *
-                             * */
-                            makeToast("Play at pos " + position);
-                        }
+                    media -> {
+                        //list uri of Media need to play
+                        List<Uri> listUriMedia = new ArrayList<>();
+                        media.forEach(item -> listUriMedia.add(Uri.parse(item.getMediaUri())));
+                        /**
+                         *
+                         *
+                         *        Play LINEAR playlists with listUriMedia HERE
+                         *
+                         *
+                         *
+                         * */
+                        makeToast("Play at pos " + position);
                     }
             );
         });
@@ -132,6 +123,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         }));
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -163,39 +155,36 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
      * Open BottomSheet Dialog Add playlist
      */
     private void openBottomSheetDialogAddPlaylist() {
-        bottomSheetDialog = new BottomSheetDialog(getContext(), R.style.BottomSheetTheme);
+        bottomSheetDialog = new BottomSheetDialog(requireContext(), R.style.BottomSheetTheme);
         View bsAddView = LayoutInflater.from(getContext()).inflate(
                 R.layout.playlist_create_bs_layout,
-                getActivity().findViewById(R.id.bs_playlist_create)
+                requireActivity().findViewById(R.id.bs_playlist_create)
         );
         //set click event here
         EditText edtName = bsAddView.findViewById(R.id.edt_playlistNameCreate);
         Button btnCreate = bsAddView.findViewById(R.id.btn_createPlaylist);
         RadioButton radioAudio = bsAddView.findViewById(R.id.radio_audio);
         RadioButton radioVideo = bsAddView.findViewById(R.id.radio_video);
-        btnCreate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnCreate.setOnClickListener(view -> {
 
-                if (edtName.getText().toString().trim().isEmpty()) {
-                    makeToast("Name is empty!");
-                } else if (!radioAudio.isChecked() && !radioVideo.isChecked()) {
-                    makeToast("Please check type for playlist!");
-                } else {
-                    int idResource=-1;
-                    if (!radioAudio.isChecked()){
-                        idResource=R.drawable.ic_round_ondemand_video_24;
-                    }
-                    else {
-                        idResource=R.drawable.ic_round_music_video_24;
-                    }
-                    Playlist playlist = new Playlist(idResource,
-                            edtName.getText().toString().trim(), radioVideo.isChecked());
-                    playlistViewModel.insert(playlist);
-
-                    bottomSheetDialog.dismiss();
-                    makeToast("Create Playlist Success!");
+            if (edtName.getText().toString().trim().isEmpty()) {
+                makeToast("Name is empty!");
+            } else if (!radioAudio.isChecked() && !radioVideo.isChecked()) {
+                makeToast("Please check type for playlist!");
+            } else {
+                int idResource;
+                if (!radioAudio.isChecked()){
+                    idResource=R.drawable.ic_round_ondemand_video_24;
                 }
+                else {
+                    idResource=R.drawable.ic_round_music_video_24;
+                }
+                Playlist playlist = new Playlist(idResource,
+                        edtName.getText().toString().trim(), radioVideo.isChecked());
+                playlistViewModel.insert(playlist);
+
+                bottomSheetDialog.dismiss();
+                makeToast("Create Playlist Success!");
             }
         });
 
@@ -217,8 +206,8 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         searchView.setIconified(true);
         searchView.setQueryHint(PlaylistConstants.STRING_HINT_SEARCH);
 
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -235,6 +224,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {

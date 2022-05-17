@@ -2,7 +2,6 @@ package com.example.mediaplayerapp.ui.playlist.media_queue;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -43,7 +42,7 @@ public class MediaQueueDeleteDialog extends AppCompatDialogFragment {
                 .get(MediaQueueViewModel.class);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View view = getActivity().getLayoutInflater().inflate(R.layout.dialog_delete_item_queue, null);
+        View view = requireActivity().getLayoutInflater().inflate(R.layout.dialog_delete_item_queue, null);
 
         TextView tv_title = view.findViewById(R.id.tv_title_delete_queue);
         if (mMedia == null) {
@@ -53,21 +52,15 @@ public class MediaQueueDeleteDialog extends AppCompatDialogFragment {
         }
 
         builder.setView(view)
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
+                .setNegativeButton("cancel", (dialogInterface, i) -> {
                 })
-                .setPositiveButton("delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (mMedia != null) {
-                            viewModel.delete(mMedia);
-                            Toast.makeText(getActivity(), "Item deleted!", Toast.LENGTH_SHORT).show();
-                        } else {
-                            viewModel.deleteAll();
-                            Toast.makeText(getActivity(), "All items deleted!", Toast.LENGTH_SHORT).show();
-                        }
+                .setPositiveButton("delete", (dialogInterface, i) -> {
+                    if (mMedia != null) {
+                        viewModel.delete(mMedia);
+                        Toast.makeText(getActivity(), "Item deleted!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        viewModel.deleteAll();
+                        Toast.makeText(getActivity(), "All items deleted!", Toast.LENGTH_SHORT).show();
                     }
                 });
 

@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class MediaItemRepository {
-    private MediaItemDao mMediaItemDao;
-    private LiveData<List<MediaItem>> mAllMedias;
+    private final MediaItemDao mMediaItemDao;
+    private final LiveData<List<MediaItem>> mAllMedias;
 
     public MediaItemRepository(Application application) {
         MediaItemRoomDatabase database = MediaItemRoomDatabase.getDatabase(application);
@@ -17,33 +17,23 @@ public class MediaItemRepository {
     }
 
     public void insert(MediaItem media) {
-        MediaItemRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mMediaItemDao.insert(media);
-        });
+        MediaItemRoomDatabase.databaseWriteExecutor.execute(() -> mMediaItemDao.insert(media));
     }
 
     public void delete(MediaItem media) {
-        MediaItemRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mMediaItemDao.delete(media);
-        });
+        MediaItemRoomDatabase.databaseWriteExecutor.execute(() -> mMediaItemDao.delete(media));
     }
 
     public void update(MediaItem media) {
-        MediaItemRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mMediaItemDao.update(media);
-        });
+        MediaItemRoomDatabase.databaseWriteExecutor.execute(() -> mMediaItemDao.update(media));
     }
 
     public void deleteAll() {
-        MediaItemRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mMediaItemDao.deleteAll();
-        });
+        MediaItemRoomDatabase.databaseWriteExecutor.execute(mMediaItemDao::deleteAll);
     }
 
     public void deleteAllWithID(int id){
-        MediaItemRoomDatabase.databaseWriteExecutor.execute(() -> {
-            mMediaItemDao.deleteAllWithID(id);
-        });
+        MediaItemRoomDatabase.databaseWriteExecutor.execute(() -> mMediaItemDao.deleteAllWithID(id));
     }
 
     public int getCountPlaylistWithID(int id) {

@@ -93,38 +93,6 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     public Playlist getPlaylistItemAt(int position){
         return getItem(position);
     }
-/*
-    public void setData(List<Playlist> list){
-        this.mPlaylists=list;
-        notifyDataSetChanged();
-    }
-*/
 
-
-
-
-/*
-    public void filter(String queryText)
-    {
-        listFilter.clear();
-
-        if(queryText.isEmpty())
-        {
-            listFilter.addAll(mPlaylists);
-        }
-        else
-        {
-
-            for(Playlist playlist: mPlaylists)
-            {
-                if(playlist.getName().toLowerCase().contains(queryText.toLowerCase()))
-                {
-                    listFilter.add(playlist);
-                }
-            }
-        }
-
-        notifyDataSetChanged();
-    }*/
 
 }

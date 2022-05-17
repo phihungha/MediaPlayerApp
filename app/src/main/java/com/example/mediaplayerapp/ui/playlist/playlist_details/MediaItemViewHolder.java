@@ -1,10 +1,9 @@
 package com.example.mediaplayerapp.ui.playlist.playlist_details;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.view.LayoutInflater;
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -20,8 +19,9 @@ import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
-    private ItemMediaBinding binding;
+    private final ItemMediaBinding binding;
     private BottomSheetDialog bottomSheetDialog;
     private static IOnItemClickListener itemClickListener;
     private static IOnItemClickListener bsPlayListener;
@@ -72,6 +72,7 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
             itemClickListener.onClick(itemView.getRootView(), getBindingAdapterPosition());
         }
     }
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()){

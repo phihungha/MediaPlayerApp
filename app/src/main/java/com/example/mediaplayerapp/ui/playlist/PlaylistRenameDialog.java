@@ -2,7 +2,6 @@ package com.example.mediaplayerapp.ui.playlist;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -35,31 +34,26 @@ public class PlaylistRenameDialog extends AppCompatDialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        assert getArguments() != null;
         playlist=(Playlist) getArguments().getSerializable(PlaylistConstants.KEY_PLAYLIST);
 
         PlaylistViewModel viewModel= new ViewModelProvider(this)
                 .get(PlaylistViewModel.class);
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
 
-        View view= getActivity().getLayoutInflater().inflate(R.layout.dialog_rename_playlist_layout,null);
+        View view= requireActivity().getLayoutInflater().inflate(R.layout.dialog_rename_playlist_layout,null);
         edtRename=view.findViewById(R.id.edt_renamePlaylist);
         edtRename.setText(playlist.getName());
 
         builder.setView(view)
-                .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
+                .setNegativeButton("cancel", (dialogInterface, i) -> {
                 })
-                .setPositiveButton("rename", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        String name=edtRename.getText().toString().trim();
-                        if (!name.isEmpty()){
-                            playlist.setName(edtRename.getText().toString());
-                            viewModel.update(playlist);
-                            Toast.makeText(getActivity(), "Playlist updated!", Toast.LENGTH_SHORT).show();
-                        }
+                .setPositiveButton("rename", (dialogInterface, i) -> {
+                    String name=edtRename.getText().toString().trim();
+                    if (!name.isEmpty()){
+                        playlist.setName(edtRename.getText().toString());
+                        viewModel.update(playlist);
+                        Toast.makeText(getActivity(), "Playlist updated!", Toast.LENGTH_SHORT).show();
                     }
                 });
 

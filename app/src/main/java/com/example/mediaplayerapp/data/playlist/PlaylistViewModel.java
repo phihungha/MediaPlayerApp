@@ -6,13 +6,10 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
-import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.PlaylistRepository;
-
 import java.util.List;
 
 public class PlaylistViewModel extends AndroidViewModel {
-    private PlaylistRepository mRepository;
+    private final PlaylistRepository mRepository;
     private final LiveData<List<Playlist>> mAllPlaylists;
 
     public PlaylistViewModel(@NonNull Application application) {

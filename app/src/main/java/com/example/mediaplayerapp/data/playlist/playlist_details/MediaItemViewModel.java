@@ -9,8 +9,8 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class MediaItemViewModel extends AndroidViewModel{
-    private MediaItemRepository mRepository;
-    private LiveData<List<MediaItem>> mAllMedias;
+    private final MediaItemRepository mRepository;
+    private final LiveData<List<MediaItem>> mAllMedias;
 
     public MediaItemViewModel(@NonNull Application application) {
         super(application);

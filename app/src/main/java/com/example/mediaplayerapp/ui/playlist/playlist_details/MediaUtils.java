@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
-import androidx.loader.content.CursorLoader;
 
 public class MediaUtils {
     public static MediaInfo getInfoWithUri(@NonNull Context context, Uri uri) {
@@ -18,12 +16,10 @@ public class MediaUtils {
             String[] proj = {MediaStore.MediaColumns.DISPLAY_NAME,
                     MediaStore.Video.Media.SIZE};
 
-/*            context.grantUriPermission(context.getPackageName(),uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-            final int takeFlags = Intent.FLAG_GRANT_READ_URI_PERMISSION;
-            context.getContentResolver().takePersistableUriPermission(uri, takeFlags);*/
+            context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             cursor = context.getContentResolver().query(uri, proj, null, null, null);
+            cursor.moveToFirst();
 
             int column_name = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
             int column_size = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE);
@@ -49,7 +45,7 @@ public class MediaUtils {
     }
 
     public static String convertDuration(String duration) {
-        long l = Long.valueOf(duration);
+        long l = Long.parseLong(duration);
         long hour = l / (1000 * 60 * 60);
         long min = l / (1000 * 60) % 60;
         long sec = l / 1000 % 60;
@@ -72,25 +68,23 @@ public class MediaUtils {
     }
 
     public static String convertToSizeMb(String size) {
-        long s = Long.valueOf(size) / (1024 * 1024);
+        long s = Long.parseLong(size) / (1024 * 1024);
         if (s > 0) {
             double d = (double) Math.round(s * 1000) / 1000;
-            size = String.valueOf(d) + " Mb";
-            return size;
+            size = d + " Mb";
         } else {
-            s = Long.valueOf(size) / 1024;
+            s = Long.parseLong(size) / 1024;
             if (s > 0) {
                 double d = (double) Math.round(s * 1000) / 1000;
-                size = String.valueOf(d) + " Kb";
-                return size;
+                size = d + " Kb";
             } else {
-                s = Long.valueOf(size);
+                s = Long.parseLong(size);
                 double d = (double) Math.round(s * 1000) / 1000;
-                size = String.valueOf(d) + " byte";
-                return size;
+                size = d + " byte";
             }
 
         }
+        return size;
 
     }
 

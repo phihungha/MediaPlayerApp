@@ -1,5 +1,6 @@
 package com.example.mediaplayerapp.ui.playlist.media_queue;
 
+import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,14 +11,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.databinding.FragmentMediaQueueBinding;
-import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ public class MediaQueueFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentMediaQueueBinding.inflate(inflater, container, false);
@@ -50,12 +49,7 @@ public class MediaQueueFragment extends Fragment implements View.OnClickListener
         setListeners();
         mediaQueueViewModel.getAllMediaQueue().observe(
                 getViewLifecycleOwner(),
-                new Observer<List<MediaQueue>>() {
-                    @Override
-                    public void onChanged(List<MediaQueue> mediaQueues) {
-                        adapter.submitList(mediaQueues);
-                    }
-                }
+                mediaQueues -> adapter.submitList(mediaQueues)
         );
     }
 
@@ -63,19 +57,9 @@ public class MediaQueueFragment extends Fragment implements View.OnClickListener
         binding.layoutClearQueue.setOnClickListener(this);
         binding.layoutPlayQueue.setOnClickListener(this);
 
-        adapter.setDeleteItemListener(new IOnItemClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                DeleteItemQueue(view, position);
-            }
-        });
+        adapter.setDeleteItemListener(this::DeleteItemQueue);
 
-        adapter.setItemClickListener(new IOnItemClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                ClickItem(view, position);
-            }
-        });
+        adapter.setItemClickListener(this::ClickItem);
     }
 
     private void ClickItem(View view, int position) {
@@ -91,6 +75,7 @@ public class MediaQueueFragment extends Fragment implements View.OnClickListener
         makeToast("Play item at " + position);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()) {

@@ -1,10 +1,9 @@
 package com.example.mediaplayerapp.ui.playlist.media_queue;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
-import android.os.Build;
 import android.view.LayoutInflater;
-
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,7 +19,8 @@ import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaInfo;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaUtils;
 
 public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-    private ItemMediaQueueBinding binding;
+    private final ItemMediaQueueBinding binding;
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
     private static IOnItemClickListener deleteItemListener;
     private static IOnItemClickListener itemClickListener;
@@ -60,6 +60,7 @@ public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements Vie
         return new MediaQueueViewHolder(binding);
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         switch (view.getId()){

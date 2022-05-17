@@ -12,7 +12,6 @@ import java.io.Serializable;
 @Entity(tableName = "media_table",
         primaryKeys = {"MediaId","MediaUri"})
 public class MediaItem implements Serializable {
-    @NonNull
     @ColumnInfo(name = "MediaId")
     private int id;
 
@@ -23,7 +22,7 @@ public class MediaItem implements Serializable {
     @ColumnInfo(name = "MediaName")
     private String name;
 
-    public MediaItem(int id, String mediaUri, String name) {
+    public MediaItem(int id, @NonNull String mediaUri, String name) {
         this.id = id;
         this.mediaUri = mediaUri;
         this.name = name;
@@ -37,11 +36,12 @@ public class MediaItem implements Serializable {
         this.id = id;
     }
 
+    @NonNull
     public String getMediaUri() {
         return mediaUri;
     }
 
-    public void setMediaUri(String mediaUri) {
+    public void setMediaUri(@NonNull String mediaUri) {
         this.mediaUri = mediaUri;
     }
 

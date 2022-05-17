@@ -1,7 +1,6 @@
 package com.example.mediaplayerapp.data.playlist;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -39,7 +38,7 @@ public abstract class PlaylistRoomDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static RoomDatabase.Callback sRoomDatabaseCallBack= new RoomDatabase.Callback(){
+    private static final RoomDatabase.Callback sRoomDatabaseCallBack= new RoomDatabase.Callback(){
         @Override
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
