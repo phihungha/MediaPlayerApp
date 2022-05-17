@@ -43,14 +43,11 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
     ViewPager viewPager = view.findViewById(R.id.viewpager);
     TabLayout tabLayout = view.findViewById(R.id.tablayout);
 
-    // attach tablayout with viewpager
     tabLayout.setupWithViewPager(viewPager);
     ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-    // add your fragments
     adapter.addFrag(new SongsFragment(), "Song");
     adapter.addFrag(new AlbumFragment(), "Album");
     adapter.addFrag(new ArtistsFragment(), "Artist");
-    // set adapter on viewpager
     viewPager.setAdapter(adapter);
 
 }
