@@ -62,4 +62,7 @@ dependencies {
     implementation "jp.wasabeef:glide-transformations:$glide_transformations_version"
     implementation "jp.co.cyberagent.android:gpuimage:$gpuimage_version"
 
+    implementation "io.reactivex.rxjava3:rxjava:$rxjava_version"
+    implementation "io.reactivex.rxjava3:rxandroid:$rxandroid_version"
+
 }

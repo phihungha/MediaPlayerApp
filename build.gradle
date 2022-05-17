@@ -15,4 +15,6 @@ project.ext {
     audiovisualizer_version = '2.2.5'
     glide_transformations_version = '4.3.0'
     gpuimage_version = '2.1.0'
+    rxjava_version = '3.1.4'
+    rxandroid_version = '3.0.0'
 }
