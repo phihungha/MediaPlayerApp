@@ -37,4 +37,14 @@
     <string name="delete">Delete</string>
     <string name="switch_view">Switch View</string>
     <string name="open_song_item_context_menu">Open song item context menu</string>
+    <string name="show_as">Show as</string>
+    <string name="artist_artwork">Artist artwork</string>
+    <string name="small_artist_artwork">Small artist artwork</string>
+    <string name="play_all_songs_from_this_artist">Play all songs from this artist</string>
+    <string name="default_artist_details_description">This artist has 0 song(s) and 0 album(s)</string>
+    <string name="default_album_name">Album name</string>
+    <string name="default_album_details_description">Number of songs: 0</string>
+    <string name="play_all_songs_from_this_album">Play all songs from this album</string>
+    <string name="album_details_artwork">Album details\' artwork</string>
+    <string name="album_details_s_small_artwork">Album details\'s small artwork</string>
 </resources>

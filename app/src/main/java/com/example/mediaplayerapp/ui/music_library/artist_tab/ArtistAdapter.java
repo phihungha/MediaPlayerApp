@@ -47,6 +47,11 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistItem
         this.displayMode = displayMode;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return displayMode.getValue();
+    }
+
     @NonNull
     @Override
     public ArtistItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -129,7 +134,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistItem
 
         @Override
         public void onClick(View view) {
-            long artistId = artists.get(getAbsoluteAdapterPosition()).ArtistId;
+            long artistId = artists.get(getAbsoluteAdapterPosition()).getArtistId();
             FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             Fragment fragment;

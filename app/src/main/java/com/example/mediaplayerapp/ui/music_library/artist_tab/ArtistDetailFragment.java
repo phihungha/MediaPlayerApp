@@ -1,79 +1,82 @@
 package com.example.mediaplayerapp.ui.music_library.artist_tab;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.music_library.Artist;
-import com.example.mediaplayerapp.data.music_library.ArtistRepository;
-import com.example.mediaplayerapp.data.music_library.Song;
-import com.example.mediaplayerapp.data.music_library.SongRepository;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.example.mediaplayerapp.databinding.FragmentArtistDetailBinding;
+import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
-import com.google.android.material.appbar.CollapsingToolbarLayout;
-
-import java.util.List;
-
 
 public class ArtistDetailFragment extends Fragment {
-    private long artistId;
+    private long currentArtistId;
+    private String currentArtistNumberOfSongs;
+    private String currentArtistNumberOfAlbums;
+
+    FragmentArtistDetailBinding binding;
 
     public ArtistDetailFragment() {
         // Required empty public constructor
     }
 
     public static ArtistDetailFragment newInstance(long artist_id) {
-
         Bundle args = new Bundle();
-        args.putLong("_ID", artist_id);
+        args.putLong("CURRENT_ARTIST_ID", artist_id);
         ArtistDetailFragment fragment = new ArtistDetailFragment();
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        assert getArguments() != null;
-        artistId = getArguments().getLong("_ID");
+        currentArtistId = requireArguments().getLong("CURRENT_ARTIST_ID");
         super.onCreate(savedInstanceState);
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        ArtistRepository artistRepository = new ArtistRepository(requireActivity().getApplicationContext());
-        SongRepository songRepository = new SongRepository(requireActivity().getApplicationContext());
-        View view = inflater.inflate(R.layout.fragment_artist_detail, container, false);
-        TextView anaam = view.findViewById(R.id.artistnaam);
-        TextView ade = view.findViewById(R.id.artistDetails);
-        ImageView img = view.findViewById(R.id.bigartist);
-        ImageView img2 = view.findViewById(R.id.artistimg);
-        CollapsingToolbarLayout collapsingToolbarLayout = view.findViewById(R.id.artistcollapsinglayout);
-        RecyclerView recyclerView = view.findViewById(R.id.recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        //set artist detail
-        Artist artist = artistRepository.getArtist(artistId);
-        collapsingToolbarLayout.setTitle(artist.ArtistName);
-        anaam.setText(artist.ArtistName);
-        Glide.with(getContext()).load(artistId).skipMemoryCache(true).into(img);
-        Glide.with(getContext()).load(artistId).skipMemoryCache(true).into(img2);
-        //set song list of artist
-        List<Song> songList = songRepository.getAllSongsFromArtist(artistId);
-        ade.setText(" songs: " + songList.size());
-//        SongAdapter adapter = new SongAdapter(getActivity(), songList);
-//        recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
-//        recyclerView.setAdapter(adapter);
-        return view;
+        binding = FragmentArtistDetailBinding.inflate(inflater, container, false);
+        ArtistDetailsViewModel viewModel = new ViewModelProvider(this).get(ArtistDetailsViewModel.class);
+
+        binding.artistDetailsSongList.setLayoutManager(new LinearLayoutManager(requireActivity()));
+
+        SongAdapter adapter = new SongAdapter(requireContext());
+        adapter.setDisplayMode(DisplayMode.LIST);
+        binding.artistDetailsSongList.addItemDecoration(new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL));
+        binding.artistDetailsSongList.setAdapter(adapter);
+
+        viewModel.getArtistName().observe(getViewLifecycleOwner(), s -> {
+            binding.artistDetailsCollapsingLayout.setTitle(s);
+            binding.artistDetailsName.setText(s);
+        });
+        viewModel.getNumberOfSongs().observe(getViewLifecycleOwner(), s -> {
+            currentArtistNumberOfSongs = s;
+            updateDescription();
+        });
+        viewModel.getNumberOfAlbums().observe(getViewLifecycleOwner(), s -> {
+            currentArtistNumberOfAlbums = s;
+            updateDescription();
+        });
+        viewModel.getArtistSongs().observe(getViewLifecycleOwner(), adapter::updateSongs);
+        viewModel.setCurrentArtistId(currentArtistId);
+
+        return binding.getRoot();
+    }
+
+    private void updateDescription() {
+        String description = "This artist has "
+                                + currentArtistNumberOfSongs
+                                + " song(s) and "
+                                + currentArtistNumberOfAlbums
+                                + " album(s)";
+        binding.artistDetailsDescription.setText(description);
     }
 }
