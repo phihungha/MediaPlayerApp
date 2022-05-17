@@ -8,16 +8,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mediaplayerapp.data.music_library.Artist;
-import com.example.mediaplayerapp.data.music_library.ArtistRepository;
+import com.example.mediaplayerapp.data.music_library.ArtistsRepository;
 import com.example.mediaplayerapp.data.music_library.Song;
-import com.example.mediaplayerapp.data.music_library.SongRepository;
+import com.example.mediaplayerapp.data.music_library.SongsRepository;
 
 import java.util.List;
 
 public class ArtistDetailsViewModel extends AndroidViewModel {
 
-    private final ArtistRepository artistRepository;
-    private final SongRepository songRepository;
+    private final ArtistsRepository artistRepository;
+    private final SongsRepository songRepository;
 
     private final MutableLiveData<List<Song>> artistSongs = new MutableLiveData<>();
     private final MutableLiveData<String> artistName = new MutableLiveData<>();
@@ -26,8 +26,8 @@ public class ArtistDetailsViewModel extends AndroidViewModel {
 
     public ArtistDetailsViewModel(@NonNull Application application) {
         super(application);
-        artistRepository  = new ArtistRepository(application);
-        songRepository  = new SongRepository(application);
+        artistRepository  = new ArtistsRepository(application);
+        songRepository  = new SongsRepository(application);
     }
 
     public LiveData<List<Song>> getArtistSongs() {

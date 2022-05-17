@@ -8,14 +8,14 @@ import java.util.List;
 /**
  * Get songs.
  */
-public class SongRepository {
+public class SongsRepository {
     SongMediaStoreDataSource mediaStore;
 
     /**
      * Construct song repository.
      * @param context Application context
      */
-    public SongRepository(Context context) {
+    public SongsRepository(Context context) {
         this.mediaStore = new SongMediaStoreDataSource(context);
     }
 

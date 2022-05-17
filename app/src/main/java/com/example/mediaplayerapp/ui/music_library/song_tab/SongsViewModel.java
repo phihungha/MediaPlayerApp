@@ -7,7 +7,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mediaplayerapp.data.music_library.Song;
-import com.example.mediaplayerapp.data.music_library.SongRepository;
+import com.example.mediaplayerapp.data.music_library.SongsRepository;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class SongsViewModel extends AndroidViewModel {
 
     public SongsViewModel(Application application) {
         super(application);
-        SongRepository songRepository = new SongRepository(application);
+        SongsRepository songRepository = new SongsRepository(application);
         songs.setValue(songRepository.getAllSongs());
     }
 

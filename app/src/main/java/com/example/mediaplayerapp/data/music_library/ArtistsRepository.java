@@ -8,14 +8,14 @@ import java.util.List;
 /**
  * Get artists.
  */
-public class ArtistRepository {
+public class ArtistsRepository {
     ArtistMediaStoreDataSource dataSource;
 
     /**
      * Construct artist repository.
      * @param context Application context
      */
-    public ArtistRepository(Context context) {
+    public ArtistsRepository(Context context) {
         this.dataSource = new ArtistMediaStoreDataSource(context);
     }
 

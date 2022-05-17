@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mediaplayerapp.data.music_library.Album;
-import com.example.mediaplayerapp.data.music_library.AlbumRepository;
+import com.example.mediaplayerapp.data.music_library.AlbumsRepository;
 
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class AlbumsViewModel extends AndroidViewModel {
 
     public AlbumsViewModel(@NonNull Application application) {
         super(application);
-        AlbumRepository albumRepository = new AlbumRepository(application);
+        AlbumsRepository albumRepository = new AlbumsRepository(application);
         albums.setValue(albumRepository.getAllAlbums());
     }
 

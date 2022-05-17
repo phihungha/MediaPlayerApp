@@ -8,14 +8,14 @@ import java.util.List;
 /**
  * Get albums.
  */
-public class AlbumRepository {
+public class AlbumsRepository {
     AlbumMediaStoreDataSource mediaStore;
 
     /**
      * Construct album repository.
      * @param context Application context
      */
-    public AlbumRepository(Context context) {
+    public AlbumsRepository(Context context) {
         this.mediaStore = new AlbumMediaStoreDataSource(context);
     }
 

@@ -9,16 +9,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mediaplayerapp.data.music_library.Album;
-import com.example.mediaplayerapp.data.music_library.AlbumRepository;
+import com.example.mediaplayerapp.data.music_library.AlbumsRepository;
 import com.example.mediaplayerapp.data.music_library.Song;
-import com.example.mediaplayerapp.data.music_library.SongRepository;
+import com.example.mediaplayerapp.data.music_library.SongsRepository;
 
 import java.util.List;
 
 public class AlbumDetailsViewModel extends AndroidViewModel {
 
-    private final AlbumRepository albumRepository;
-    private final SongRepository songRepository;
+    private final AlbumsRepository albumRepository;
+    private final SongsRepository songRepository;
 
     private final MutableLiveData<List<Song>> albumSongs = new MutableLiveData<>();
     private final MutableLiveData<String> albumName = new MutableLiveData<>();
@@ -27,8 +27,8 @@ public class AlbumDetailsViewModel extends AndroidViewModel {
 
     public AlbumDetailsViewModel(@NonNull Application application) {
         super(application);
-        albumRepository  = new AlbumRepository(application);
-        songRepository  = new SongRepository(application);
+        albumRepository  = new AlbumsRepository(application);
+        songRepository  = new SongsRepository(application);
     }
 
     public LiveData<List<Song>> getAlbumSongs() {
