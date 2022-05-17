@@ -13,15 +13,21 @@
         <entry key="..\:/Dev/Learn/Android/MediaPlayerApp/app/src/main/res/layout/fragment_video_library.xml" value="0.25" />
         <entry key="..\:/Dev/Learn/Android/MediaPlayerApp/app/src/main/res/layout/fragment_video_player.xml" value="0.25" />
         <entry key="..\:/Dev/Learn/Android/MediaPlayerApp/app/src/main/res/layout/music_library_fragment.xml" value="0.25" />
+        <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/drawable-anydpi/ic_info_blue1_24dp.xml" value="0.1" />
         <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/drawable-anydpi/ic_play_arrow_white_24dp.xml" value="0.154" />
+        <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.1" />
+        <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/drawable-xhdpi/ic_play_arrow_white_24dp.xml" value="0.1" />
         <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/drawable/ic_music.xml" value="0.154" />
+        <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/drawable/ic_notifications_black_24dp.xml" value="0.1" />
+        <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/drawable/ic_playlist.xml" value="0.1" />
         <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/drawable/ic_video.xml" value="0.154" />
+        <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/layout/activity_main.xml" value="0.12" />
         <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/layout/dialog_video_bottom_sheet.xml" value="0.4466666666666667" />
         <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/layout/dialog_video_info.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/layout/fragment_playlist.xml" value="0.1" />
         <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/layout/fragment_video_library.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/layout/item_video_library_grid.xml" value="0.3333333333333333" />
-        <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/layout/item_video_library_list.xml" value="0.22" />
+        <entry key="..\:/Users/phamm/AndroidStudioProjects/MediaPlayerApp/app/src/main/res/layout/item_video_library_list.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_dashboard_black_24dp.xml" value="0.1" />
         <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_home_black_24dp.xml" value="0.1" />
         <entry key="..\:/Users/qvuqv/MediaPlayerApp/app/src/main/res/drawable/ic_icon_video.xml" value="0.1" />
