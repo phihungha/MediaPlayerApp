@@ -154,7 +154,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumItemVie
             } catch (IOException e) {
                 albumThumbnail.setImageDrawable(
                         ContextCompat.getDrawable(context,
-                                R.drawable.default_song_artwork));
+                                R.drawable.default_album_artwork));
             }
         }
 

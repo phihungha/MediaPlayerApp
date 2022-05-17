@@ -9,12 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.bumptech.glide.Glide;
+import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.FragmentAlbumDetailBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.ThumbnailUtils;
@@ -44,8 +45,8 @@ public class AlbumDetailFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        currentAlbumId = requireArguments().getLong("CURRENT_ALBUM_ID");
         super.onCreate(savedInstanceState);
+        currentAlbumId = requireArguments().getLong("CURRENT_ALBUM_ID");
     }
 
     @SuppressLint("SetTextI18n")
@@ -79,18 +80,20 @@ public class AlbumDetailFragment extends Fragment {
 
     /**
      * Update main and small album's artwork.
-     * @param artworkUri URI of the artwork
+     * @param uri URI of the album
      */
-    private void updateArtwork(Uri artworkUri) {
-        Glide.with(this)
-                .load(artworkUri)
-                .into(binding.albumDetailsArtwork);
-
+    private void updateArtwork(Uri uri) {
         try {
-            Bitmap smallArtwork = ThumbnailUtils.getThumbnailFromUri(requireContext(), artworkUri);
-            binding.albumDetailsSmallArtwork.setImageBitmap(smallArtwork);
+            Bitmap artwork = ThumbnailUtils.getThumbnailFromUri(requireContext(), uri);
+            binding.albumDetailsArtwork.setImageBitmap(artwork);
+            binding.albumDetailsSmallArtwork.setImageBitmap(artwork);
         } catch (IOException e) {
-            e.printStackTrace();
+            binding.albumDetailsSmallArtwork.setImageDrawable(
+                    ContextCompat.getDrawable(requireContext(),
+                            R.drawable.default_album_artwork));
+            binding.albumDetailsArtwork.setImageDrawable(
+                    ContextCompat.getDrawable(requireContext(),
+                            R.drawable.default_album_artwork));
         }
     }
 
@@ -98,7 +101,7 @@ public class AlbumDetailFragment extends Fragment {
      * Update album's description.
      */
     private void updateDescription() {
-        String description = "This album has " + currentAlbumNumberOfSongs;
+        String description = "This album has " + currentAlbumNumberOfSongs + " song(s)";
         binding.albumDetailsDescription.setText(description);
     }
 }
