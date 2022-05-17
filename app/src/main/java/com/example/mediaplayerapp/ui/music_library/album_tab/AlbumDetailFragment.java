@@ -23,7 +23,6 @@ import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
 
 import java.io.IOException;
 
-
 public class AlbumDetailFragment extends Fragment {
     private long currentAlbumId;
     private String currentAlbumNumberOfSongs;
@@ -33,7 +32,6 @@ public class AlbumDetailFragment extends Fragment {
     public AlbumDetailFragment() {
         // Required empty public constructor
     }
-
 
     public static AlbumDetailFragment newInstance(long id) {
         Bundle args = new Bundle();
