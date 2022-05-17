@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 
 @SuppressLint("NotifyDataSetChanged")
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistItemViewHolder> implements Filterable {
-    DisplayMode displayMode;
+    DisplayMode displayMode = DisplayMode.LIST;
     Context context;
 
     List<Artist> artists = new ArrayList<>();
