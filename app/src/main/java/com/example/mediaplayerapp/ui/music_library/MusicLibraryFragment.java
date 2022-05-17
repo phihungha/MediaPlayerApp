@@ -40,8 +40,8 @@ public class MusicLibraryFragment extends Fragment {
 @Override
 public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
 
-    ViewPager viewPager = view.findViewById(R.id.viewpager);
-    TabLayout tabLayout = view.findViewById(R.id.tablayout);
+    ViewPager viewPager = view.findViewById(R.id.music_library_viewpager);
+    TabLayout tabLayout = view.findViewById(R.id.music_library_tab_layout);
 
     tabLayout.setupWithViewPager(viewPager);
     ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());

@@ -4,13 +4,13 @@
     <item
         android:id="@+id/search"
         android:title="@string/action_search"
-        android:icon="@drawable/ic_search_24dp"
         app:showAsAction="always"
         app:actionViewClass="android.widget.SearchView" />
 
     <item
         android:id="@+id/change_display_mode"
         android:icon="@drawable/ic_gridview_24dp"
-        android:title=""
+        android:title="@string/show_as"
+        app:iconTint="@color/cyan"
         app:showAsAction="ifRoom" />
 </menu>
