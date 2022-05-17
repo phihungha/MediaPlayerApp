@@ -154,10 +154,10 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
                     Intent intent = new Intent(activity, MusicPlayerActivity.class);
                     Bundle extras = null;
                     if (!isUsingDefaultArtwork) {
-                        extras = ActivityOptions
-                                .makeSceneTransitionAnimation(activity,
-                                        binding.bottomMusicPlayerSongArtwork,
-                                        "song_artwork").toBundle();
+                        extras = ActivityOptions.makeSceneTransitionAnimation(
+                                activity,
+                                binding.bottomMusicPlayerSongArtwork,
+                                "song_artwork").toBundle();
                     }
                     activity.startActivity(intent, extras);
                 }
@@ -284,7 +284,6 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
      */
     private void setArtworkFromBitmap(Bitmap artworkBitmap) {
         binding.bottomMusicPlayerSongArtwork.setImageBitmap(artworkBitmap);
-
         MultiTransformation<Bitmap> multiTransformation = new MultiTransformation<>(
                 new BlurTransformation(6, 5),
                 new BrightnessFilterTransformation(-0.15f));
@@ -295,6 +294,7 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
         Log.d(LOG_TAG, "Song's artwork loaded from bitmap");
 
         setViewsColors(artworkBitmap);
+        binding.bottomMusicPlayerUpperBorder.setVisibility(View.GONE);
 
         isUsingDefaultArtwork = false;
     }
@@ -303,11 +303,14 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
      * Set default artwork.
      */
     private void setDefaultArtwork() {
-        Drawable defaultArtwork = AppCompatResources.getDrawable(activity,
+        Drawable defaultArtwork = ContextCompat.getDrawable(activity,
                 R.drawable.default_song_artwork);
         binding.bottomMusicPlayerSongArtwork.setImageDrawable(defaultArtwork);
         binding.bottomMusicPlayerSongArtworkBackground.setImageDrawable(null);
+
         setDefaultViewsColors();
+        binding.bottomMusicPlayerUpperBorder.setVisibility(View.VISIBLE);
+
         isUsingDefaultArtwork = true;
     }
 
