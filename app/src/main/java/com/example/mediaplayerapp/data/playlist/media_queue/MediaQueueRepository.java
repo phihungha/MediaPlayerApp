@@ -3,6 +3,8 @@ package com.example.mediaplayerapp.data.playlist.media_queue;
 import android.app.Application;
 import androidx.lifecycle.LiveData;
 
+import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemRoomDatabase;
+
 import java.util.List;
 
 public class MediaQueueRepository {
@@ -23,6 +25,11 @@ public class MediaQueueRepository {
     public void deleteAll() {
         MediaQueueRoomDatabase.databaseWriteExecutor.execute(mMediaQueueDao::deleteAll);
     }
+
+    public void deleteItemWithUri(String uri){
+        MediaQueueRoomDatabase.databaseWriteExecutor.execute(() -> mMediaQueueDao.deleteItemWithUri(uri));
+    }
+
     public int getCountMediaQueue(){
         return mMediaQueueDao.getCountMediaQueue();
     }

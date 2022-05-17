@@ -8,6 +8,9 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
+import androidx.documentfile.provider.DocumentFile;
+
+import java.util.Objects;
 
 public class MediaUtils {
     public static MediaInfo getInfoWithUri(@NonNull Context context, Uri uri) {
@@ -42,6 +45,10 @@ public class MediaUtils {
                 cursor.close();
             }
         }
+    }
+
+    public static boolean isUriExists(Context context,Uri uri){
+        return Objects.requireNonNull(DocumentFile.fromSingleUri(context, uri)).exists();
     }
 
     public static String convertDuration(String duration) {

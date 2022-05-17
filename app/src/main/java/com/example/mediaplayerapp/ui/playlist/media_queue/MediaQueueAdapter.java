@@ -1,6 +1,8 @@
 package com.example.mediaplayerapp.ui.playlist.media_queue;
 
+import android.app.Application;
 import android.content.Context;
+import android.net.Uri;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -8,12 +10,19 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
+import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaUtils;
 
 public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHolder> {
     private Context mContext;
     private IOnItemClickListener deleteItemListener;
     private IOnItemClickListener itemClickListener;
+    private Application mApplication;
+
+    public void setApplication(Application mApplication) {
+        this.mApplication = mApplication;
+    }
 
     public void setItemClickListener(IOnItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
@@ -42,8 +51,13 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
         if (current==null){
             return;
         }
-
-        holder.setBinding(current);
+        Uri uri=Uri.parse(current.getMediaUri());
+        if (MediaUtils.isUriExists(mContext,uri)){
+            holder.setBinding(current);
+        } else {
+            MediaQueueViewModel mediaQueueViewModel=new MediaQueueViewModel(mApplication);
+            mediaQueueViewModel.deleteItemWithUri(uri.toString());
+        }
     }
 
     public static class MediaQueueDiff extends DiffUtil.ItemCallback<MediaQueue> {

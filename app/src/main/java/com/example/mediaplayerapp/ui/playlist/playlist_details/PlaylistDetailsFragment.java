@@ -32,6 +32,7 @@ import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 public class PlaylistDetailsFragment extends Fragment implements View.OnClickListener {
@@ -66,6 +67,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
         adapter = new MediaItemAdapter(new MediaItemAdapter.PlaylistMediaDiff());
         adapter.setContext(getContext());
+        adapter.setApplication(requireActivity().getApplication());
         mediaItemViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
                 getViewLifecycleOwner(),
                 media -> adapter.submitList(media)
@@ -188,14 +190,13 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         //click properties bottom sheet
         adapter.setBsPropertiesListener((view, position) -> {
             MediaItem media = adapter.getPlaylistMediaItemAt(position);
+
             MediaInfo mediaInfo=MediaUtils.getInfoWithUri(requireContext(),
                     Uri.parse(media.getMediaUri()));
 
             PlaylistDetailsPropertiesDialog dialog = PlaylistDetailsPropertiesDialog.newInstance(mediaInfo);
             dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_DETAIL_PROPERTY_DIALOG);
-
         });
-
     }
 
     private void PlayAll(MediaItemAdapter adapter) {

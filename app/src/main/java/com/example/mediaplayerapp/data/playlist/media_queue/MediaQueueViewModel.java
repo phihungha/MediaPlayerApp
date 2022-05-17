@@ -38,6 +38,13 @@ public class MediaQueueViewModel extends AndroidViewModel {
     }
 
     /**
+     *  delete All MediaQueue object from database with Uri
+     * */
+    public void deleteItemWithUri(String uri){
+        mRepository.deleteItemWithUri(uri);
+    }
+
+    /**
      *  get count of MediaQueue object from database
      * */
     public int getCountMediaQueue() {

@@ -19,6 +19,9 @@ public interface MediaQueueDao {
     @Query("DELETE FROM mediaQueue_table")
     void deleteAll();
 
+    @Query("DELETE FROM mediaQueue_table WHERE mediaQueue_table.MediaQueueUri=:uri")
+    void deleteItemWithUri(String uri);
+
     @Query("SELECT * FROM mediaQueue_table ORDER BY MediaQueueId ASC")
     LiveData<List<MediaQueue>> getAllMediaQueue();
 

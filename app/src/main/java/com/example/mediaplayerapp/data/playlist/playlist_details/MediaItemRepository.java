@@ -36,6 +36,10 @@ public class MediaItemRepository {
         MediaItemRoomDatabase.databaseWriteExecutor.execute(() -> mMediaItemDao.deleteAllWithID(id));
     }
 
+    public void deleteItemWithUri(String uri){
+        MediaItemRoomDatabase.databaseWriteExecutor.execute(() -> mMediaItemDao.deleteItemWithUri(uri));
+    }
+
     public int getCountPlaylistWithID(int id) {
         return mMediaItemDao.getCountPlaylistWithID(id);
     }

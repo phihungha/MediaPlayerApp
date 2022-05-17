@@ -45,6 +45,7 @@ public class MediaQueueFragment extends Fragment implements View.OnClickListener
         super.onViewCreated(view, savedInstanceState);
         adapter = new MediaQueueAdapter(new MediaQueueAdapter.MediaQueueDiff());
         adapter.setContext(getContext());
+        adapter.setApplication(requireActivity().getApplication());
         binding.rcvQueue.setAdapter(adapter);
         setListeners();
         mediaQueueViewModel.getAllMediaQueue().observe(

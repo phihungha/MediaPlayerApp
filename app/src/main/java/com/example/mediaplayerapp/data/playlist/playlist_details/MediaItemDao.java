@@ -24,6 +24,9 @@ public interface MediaItemDao {
     @Query("DELETE FROM media_table")
     void deleteAll();
 
+    @Query("DELETE FROM media_table WHERE media_table.MediaUri=:uri")
+    void deleteItemWithUri(String uri);
+
     @Query("SELECT * FROM media_table WHERE media_table.MediaId= :id")
     LiveData<List<MediaItem>> getAllPlaylistMediasWithID(int id);
 

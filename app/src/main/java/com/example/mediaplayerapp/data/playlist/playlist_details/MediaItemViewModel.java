@@ -94,4 +94,12 @@ public class MediaItemViewModel extends AndroidViewModel{
     public void deleteAll(){
         mRepository.deleteAll();
     }
+
+    /**
+     *  delete MediaItem object from database with Uri
+     * */
+    public void deleteItemWithUri(String uri){
+        mRepository.deleteItemWithUri(uri);
+    }
+
 }
