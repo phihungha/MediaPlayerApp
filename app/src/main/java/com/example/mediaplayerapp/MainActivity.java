@@ -3,10 +3,15 @@ package com.example.mediaplayerapp;
 import android.app.Activity;
 import android.media.AudioManager;
 import android.net.Uri;
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.media.session.MediaControllerCompat;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -18,9 +23,16 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ActivityResultLauncher<String> permissionRequestLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.RequestPermission(),
+                    isGranted -> {}
+            );
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -34,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
 
         BottomMusicPlayerComponent bottomMusicPlayer = new BottomMusicPlayerComponent(this, binding);
         getLifecycle().addObserver(bottomMusicPlayer);
+
+        checkAndRequestReadExternalStoragePermission();
     }
 
     public static void playMusic(Activity activity, Uri uri) {
@@ -46,5 +60,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+    }
+
+    /**
+     * Check if user has already granted READ_EXTERNAL_STORAGE permission.
+     * If not request for that permission.
+     */
+    private void checkAndRequestReadExternalStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+            permissionRequestLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE);
     }
 }
