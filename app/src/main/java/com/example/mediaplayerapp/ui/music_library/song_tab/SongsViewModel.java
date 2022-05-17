@@ -16,7 +16,7 @@ public class SongsViewModel extends AndroidViewModel {
 
     public SongsViewModel(Application application) {
         super(application);
-        SongRepository songRepository = new SongRepository(application.getApplicationContext());
+        SongRepository songRepository = new SongRepository(application);
         songs.setValue(songRepository.getAllSongs());
     }
 
