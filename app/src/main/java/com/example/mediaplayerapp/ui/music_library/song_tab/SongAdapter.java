@@ -154,8 +154,8 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
          */
         private void updateThumbnailWithCurrentSong() {
             try {
-                Bitmap songThumbnailBitmap = ThumbnailUtils.getThumbnailFromUri(context, currentSong.getUri());
-                songThumbnail.setImageBitmap(songThumbnailBitmap);
+                Bitmap thumbnail = ThumbnailUtils.getThumbnailFromUri(context, currentSong.getUri());
+                songThumbnail.setImageBitmap(thumbnail);
             } catch (IOException e) {
                 songThumbnail.setImageDrawable(
                         ContextCompat.getDrawable(context,
