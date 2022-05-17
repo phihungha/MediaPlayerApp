@@ -1,43 +1,35 @@
 package com.example.mediaplayerapp.ui.music_library;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.example.mediaplayerapp.ui.music_library.album_tab.AlbumsFragment;
+import com.example.mediaplayerapp.ui.music_library.artist_tab.ArtistsFragment;
+import com.example.mediaplayerapp.ui.music_library.song_tab.SongsFragment;
 
+public class ViewPagerAdapter extends FragmentStateAdapter {
 
-public class ViewPagerAdapter extends FragmentStatePagerAdapter {
-    private final List<Fragment> mFragmentList = new ArrayList<>();
-    private final List<String> mFragmentTitleList = new ArrayList<>();
+    public ViewPagerAdapter(Fragment fragment) {
+        super(fragment);
+    }
 
-    public ViewPagerAdapter(FragmentManager manager) {
-        super(manager);
+    @NonNull
+    @Override
+    public Fragment createFragment(int position) {
+        switch (position) {
+            case 0:
+                return new SongsFragment();
+            case 1:
+                return new AlbumsFragment();
+            case 2:
+                return new ArtistsFragment();
+        }
+        return new Fragment();
     }
 
     @Override
-    public Fragment getItem(int position) {
-        return mFragmentList.get(position);
-    }
-
-    @Override
-    public int getCount() {
-        return mFragmentList.size();
-    }
-
-    @Override
-    public CharSequence getPageTitle(int position) {
-        return mFragmentTitleList.get(position);
-    }
-
-    public void addFrag(Fragment fragment) {
-        mFragmentList.add(fragment);
-        mFragmentTitleList.add("");
-    }
-
-    public void addFrag(Fragment fragment, String title) {
-        mFragmentList.add(fragment);
-        mFragmentTitleList.add(title);
+    public int getItemCount() {
+        return 3;
     }
 }

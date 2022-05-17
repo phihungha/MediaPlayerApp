@@ -8,51 +8,48 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.FragmentMusicLibraryBinding;
-import com.example.mediaplayerapp.ui.music_library.album_tab.AlbumsFragment;
-import com.example.mediaplayerapp.ui.music_library.artist_tab.ArtistsFragment;
-import com.example.mediaplayerapp.ui.music_library.song_tab.SongsFragment;
-import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 
 public class MusicLibraryFragment extends Fragment {
 
-
     private FragmentMusicLibraryBinding binding;
-    private MusicLibraryViewModel viewModel;
-
-
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        viewModel = new ViewModelProvider(this).get(MusicLibraryViewModel.class);
         binding = FragmentMusicLibraryBinding.inflate(inflater, container, false);
-
         return binding.getRoot();
     }
 
-@Override
-public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState){
+        ViewPager2 viewPager = binding.musicLibraryViewpager;
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
+        viewPager.setAdapter(adapter);
 
-    ViewPager viewPager = view.findViewById(R.id.music_library_viewpager);
-    TabLayout tabLayout = view.findViewById(R.id.music_library_tab_layout);
+        new TabLayoutMediator(binding.musicLibraryTabLayout, viewPager,
+                (tab, position) -> {
+                    switch (position) {
+                        case 0:
+                            tab.setText(R.string.songs);
+                            break;
+                        case 1:
+                            tab.setText(R.string.albums);
+                            break;
+                        case 2:
+                            tab.setText(R.string.artists);
+                            break;
+                    }
+        }).attach();
+    }
 
-    tabLayout.setupWithViewPager(viewPager);
-    ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-    adapter.addFrag(new SongsFragment(), "Song");
-    adapter.addFrag(new AlbumsFragment(), "Album");
-    adapter.addFrag(new ArtistsFragment(), "Artist");
-    viewPager.setAdapter(adapter);
-
-}
-
-@Override
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
