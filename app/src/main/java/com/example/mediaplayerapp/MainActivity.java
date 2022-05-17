@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbar);
+        setSupportActionBar(binding.appToolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("");
 
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
