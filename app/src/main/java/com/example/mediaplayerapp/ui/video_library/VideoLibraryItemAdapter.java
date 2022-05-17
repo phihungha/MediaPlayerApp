@@ -12,7 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -30,16 +33,21 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class VideoLibraryItemAdapter
-        extends RecyclerView.Adapter<VideoLibraryItemAdapter.ViewHolder> implements Filterable {
+        extends ListAdapter<Video, VideoLibraryItemAdapter.ViewHolder>
+        implements Filterable {
 
     private final List<Video> displayedVideos;
     private final List<Video> allVideos;
-    private final Context context;
+    private Context context;
 
-    public VideoLibraryItemAdapter(Context context) {
-        this.context = context;
+    protected VideoLibraryItemAdapter(@NonNull DiffUtil.ItemCallback<Video> diffCallback) {
+        super(diffCallback);
         displayedVideos = new ArrayList<>();
         allVideos = new ArrayList<>();
+    }
+
+    public void setContext(Context context) {
+        this.context = context;
     }
 
     @NonNull
@@ -105,36 +113,15 @@ public class VideoLibraryItemAdapter
         return displayedVideos.size();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void updateVideoList(
-            final List<Video> updatedVideoList
-            , VideoLibraryFragment.SortArgs sortArgs
-            , VideoLibraryFragment.SortOrder sortOrder) {
-
-        switch (sortArgs) {
-            case VIDEO_NAME:
-                if (sortOrder == VideoLibraryFragment.SortOrder.ASC)
-                    updatedVideoList.sort(Video.VideoNameAZComparator);
-                else
-                    updatedVideoList.sort(Video.VideoNameZAComparator);
-                break;
-
-            case VIDEO_DURATION:
-                if (sortOrder == VideoLibraryFragment.SortOrder.ASC)
-                    updatedVideoList.sort(Video.VideoDurationAscendingComparator);
-                else
-                    updatedVideoList.sort(Video.VideoDurationDescendingComparator);
-                break;
-
-            default:
-                break;
-        }
+    @Override
+    public void submitList(@Nullable List<Video> list) {
+        assert list != null;
+        super.submitList(new ArrayList<>(list));
         this.displayedVideos.clear();
-        this.displayedVideos.addAll(updatedVideoList);
+        this.displayedVideos.addAll(list);
 
         this.allVideos.clear();
-        this.allVideos.addAll(updatedVideoList);
-        notifyDataSetChanged();
+        this.allVideos.addAll(list);
     }
 
     @Override
@@ -169,6 +156,18 @@ public class VideoLibraryItemAdapter
                 notifyDataSetChanged();
             }
         };
+    }
+
+    static class VideoDiff extends DiffUtil.ItemCallback<Video> {
+        @Override
+        public boolean areItemsTheSame(@NonNull Video oldItem, @NonNull Video newItem) {
+            return oldItem == newItem;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull Video oldItem, @NonNull Video newItem) {
+            return oldItem.getUri().equals(newItem.getUri());
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

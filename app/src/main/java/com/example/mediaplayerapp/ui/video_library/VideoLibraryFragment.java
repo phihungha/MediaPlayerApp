@@ -11,6 +11,7 @@ import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,13 +28,12 @@ public class VideoLibraryFragment extends Fragment {
 
     private static final String ARG_COLUMN_COUNT = "recycler_column_count";
     public static int recyclerViewColumnCount = 2;
+    private VideoLibraryViewModel videoLibraryViewModel;
     private FragmentVideoLibraryBinding binding;
     private RecyclerView videoLibraryRecyclerView;
     private VideoLibraryItemAdapter videoLibraryItemAdapter;
-    private SortArgs sortArgs = SortArgs.VIDEO_NAME;
-    private SortOrder sortOrder = SortOrder.ASC;
 
-    private List<Video> currentVideosList;
+    private SortOrder sortOrder = SortOrder.ASC;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,22 +79,46 @@ public class VideoLibraryFragment extends Fragment {
             return true;
 
         } else if (itemId == R.id.sort_by_name_menu_item) {
-            sortArgs = SortArgs.VIDEO_NAME;
-            sortOrder = sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
 
-            videoLibraryItemAdapter.updateVideoList(currentVideosList, sortArgs, sortOrder);
+            if (sortOrder == SortOrder.ASC) {
+
+                videoLibraryViewModel.getVideosSortByNameDESC().observe(
+                        getViewLifecycleOwner(),
+                        videos -> videoLibraryItemAdapter.submitList(videos));
+
+                sortOrder = SortOrder.DESC;
+            } else {
+
+                videoLibraryViewModel.getVideosSortByNameDESC().observe(
+                        getViewLifecycleOwner(),
+                        videos -> videoLibraryItemAdapter.submitList(videos));
+
+                sortOrder = SortOrder.ASC;
+            }
             return true;
 
         } else if (itemId == R.id.sort_by_length_menu_item) {
-            sortArgs = SortArgs.VIDEO_DURATION;
-            sortOrder = sortOrder == SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC;
+            if (sortOrder == SortOrder.ASC) {
 
-            videoLibraryItemAdapter.updateVideoList(currentVideosList, sortArgs, sortOrder);
+                videoLibraryViewModel.getVideosSortByDurationDESC().observe(
+                        getViewLifecycleOwner(),
+                        videos -> videoLibraryItemAdapter.submitList(videos));
+
+                sortOrder = SortOrder.DESC;
+            } else {
+
+                videoLibraryViewModel.getVideosSortByDurationASC().observe(
+                        getViewLifecycleOwner(),
+                        videos -> videoLibraryItemAdapter.submitList(videos));
+
+                sortOrder = SortOrder.ASC;
+            }
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -112,17 +136,19 @@ public class VideoLibraryFragment extends Fragment {
                     (binding.getRoot().getContext(), recyclerViewColumnCount));
         }
 
-        videoLibraryItemAdapter = new VideoLibraryItemAdapter(requireActivity());
+        videoLibraryItemAdapter = new VideoLibraryItemAdapter(
+                new VideoLibraryItemAdapter.VideoDiff());
+        videoLibraryItemAdapter.setContext(requireActivity());
         videoLibraryRecyclerView.setAdapter(videoLibraryItemAdapter);
         videoLibraryRecyclerView.setHasFixedSize(true);
 
-        VideoLibraryViewModel videoLibraryViewModel = new ViewModelProvider
+        videoLibraryViewModel = new ViewModelProvider
                 (requireActivity()).get(VideoLibraryViewModel.class);
 
-        videoLibraryViewModel.getAllVideos().observe(requireActivity(), videoList -> {
-            videoLibraryItemAdapter.updateVideoList(videoList, sortArgs, sortOrder);
-            currentVideosList = videoList;
-        });
+        videoLibraryViewModel.getAllVideos().observe(
+                requireActivity(),
+                (Observer<List<Video>>) videos -> videoLibraryItemAdapter.submitList(videos));
+
         return binding.getRoot();
     }
 
@@ -136,11 +162,6 @@ public class VideoLibraryFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(ARG_COLUMN_COUNT, recyclerViewColumnCount);
-    }
-
-    enum SortArgs {
-        VIDEO_NAME,
-        VIDEO_DURATION
     }
 
     enum SortOrder {
