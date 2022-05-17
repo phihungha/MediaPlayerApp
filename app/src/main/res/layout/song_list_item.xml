@@ -55,7 +55,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_more_vert_control_normal_24dp"
+        app:srcCompat="@drawable/ic_more_vert_24dp"
         android:contentDescription="@string/open_song_item_context_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

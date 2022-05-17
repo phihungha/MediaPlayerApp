@@ -54,7 +54,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/play_pause_button" />
+        app:srcCompat="@drawable/ic_play_pause_btn" />
 
     <ImageButton
         android:id="@+id/music_player_skip_next_btn"
@@ -66,7 +66,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/music_player_play_pause_btn"
         app:layout_constraintStart_toEndOf="@+id/music_player_play_pause_btn"
         app:layout_constraintTop_toTopOf="@+id/music_player_play_pause_btn"
-        app:srcCompat="@drawable/ic_skip_next_white_24dp"
+        app:srcCompat="@drawable/ic_skip_next_24dp"
         tools:ignore="TouchTargetSizeCheck" />
 
     <ImageButton
@@ -79,7 +79,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/music_player_play_pause_btn"
         app:layout_constraintEnd_toStartOf="@+id/music_player_play_pause_btn"
         app:layout_constraintTop_toTopOf="@+id/music_player_play_pause_btn"
-        app:srcCompat="@drawable/ic_skip_prev_white_24dp"
+        app:srcCompat="@drawable/ic_skip_prev_24dp"
         tools:ignore="TouchTargetSizeCheck" />
 
     <ImageButton
@@ -92,7 +92,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/music_player_play_pause_btn"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/music_player_play_pause_btn"
-        app:srcCompat="@drawable/repeat_btn"
+        app:srcCompat="@drawable/ic_repeat_btn"
         tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
 
     <ImageButton
@@ -105,7 +105,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/music_player_play_pause_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/music_player_play_pause_btn"
-        app:srcCompat="@drawable/shuffle_btn"
+        app:srcCompat="@drawable/ic_shuffle_btn"
         tools:ignore="TouchTargetSizeCheck,ImageContrastCheck" />
 
     <com.google.android.exoplayer2.ui.DefaultTimeBar
@@ -196,7 +196,7 @@
         android:minHeight="48dp"
         app:layout_constraintBottom_toTopOf="@+id/music_player_seekbar"
         app:layout_constraintEnd_toEndOf="@+id/music_player_song_duration"
-        app:srcCompat="@drawable/ic_more_white_24dp"
+        app:srcCompat="@drawable/ic_more_vert_24dp"
         tools:ignore="TouchTargetSizeCheck" />
 
     <ImageButton
@@ -211,7 +211,7 @@
         android:minHeight="48dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_arrow_down_white_24dp"
+        app:srcCompat="@drawable/ic_arrow_down_24dp"
         tools:ignore="ImageContrastCheck,ImageContrastCheck,TouchTargetSizeCheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

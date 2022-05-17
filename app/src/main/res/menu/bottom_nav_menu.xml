@@ -2,19 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/navigation_music_library"
-        android:icon="@drawable/ic_music_note_cyan_24dp"
+        android:icon="@drawable/ic_music_note_24dp"
         android:orderInCategory="1"
         android:title="@string/title_music" />
 
     <item
         android:id="@+id/navigation_video_library"
-        android:icon="@drawable/ic_video_cyan_24dp"
+        android:icon="@drawable/ic_video_24dp"
         android:orderInCategory="2"
         android:title="@string/title_video" />
 
     <item
         android:id="@+id/navigation_playlist"
-        android:icon="@drawable/ic_playlist_cyan_24dp"
+        android:icon="@drawable/ic_playlist_24dp"
         android:orderInCategory="3"
         android:title="@string/title_playlist" />
 </menu>

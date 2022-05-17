@@ -3,21 +3,21 @@
     <item
         android:id="@+id/music_player_playlist"
         android:title="@string/playlist"
-        android:icon="@drawable/ic_playlist_dark_grey_24dp"
+        android:icon="@drawable/ic_playlist_24dp"
         />
     <item
         android:id="@+id/music_player_add_to_favorites"
         android:title="@string/add_to_favorite"
-        android:icon="@drawable/ic_favorite_dark_grey_24dp"
+        android:icon="@drawable/ic_favorite_24dp"
         />
     <item
         android:id="@+id/music_player_add_to_listen_later"
         android:title="@string/add_to_listen_later"
-        android:icon="@drawable/ic_watch_later_dark_grey_24dp"
+        android:icon="@drawable/ic_watch_later_24dp"
         />
     <item
         android:id="@+id/music_player_add_to_playlist"
         android:title="@string/add_to_playlist"
-        android:icon="@drawable/ic_playlist_add_dark_grey_24dp"
+        android:icon="@drawable/ic_playlist_add_24dp"
         />
 </menu>
