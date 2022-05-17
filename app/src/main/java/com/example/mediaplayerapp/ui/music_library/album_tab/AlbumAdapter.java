@@ -1,9 +1,8 @@
 package com.example.mediaplayerapp.ui.music_library.album_tab;
 
-
-import android.content.ContentUris;
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,68 +12,78 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Album;
+import com.example.mediaplayerapp.ui.music_library.DisplayMode;
+import com.example.mediaplayerapp.ui.music_library.ThumbnailUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder> implements Filterable {
-    private final Context context;
-    private List<Album> albumList;
-    private final List<Album> albumListOld;
+@SuppressLint("NotifyDataSetChanged")
+public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumItemViewHolder> implements Filterable {
+    DisplayMode displayMode = DisplayMode.LIST;
+    Context context;
+
+    List<Album> albums = new ArrayList<>();
+    List<Album> displayedAlbums = new ArrayList<>();
+
+    public AlbumAdapter(Context context) {
+        this.context = context;
+    }
+
+    public void updateAlbums(List<Album> newAlbums) {
+        albums = newAlbums;
+        displayedAlbums.clear();
+        displayedAlbums.addAll(albums);
+        notifyDataSetChanged();
+    }
+
+    public void setDisplayMode(DisplayMode displayMode) {
+        this.displayMode = displayMode;
+    }
 
     @Override
     public int getItemViewType(int position) {
-        Album album = albumList.get(position);
-        return album.getTypeDisplay();
+        return displayMode.getValue();
     }
 
-    public static Uri getImage(long albumId) {
-        return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
-    }
-    public AlbumAdapter(Context context, List<Album> albumList) {
-        this.albumList = albumList;
-        this.context = context;
-        this.albumListOld=albumList;
-    }
     @NonNull
     @Override
-    public AlbumAdapter.AlbumViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.album_list_item,
-                parent, false);
-        switch (viewType){
-            case Album.TYPE_GRID:view = LayoutInflater.from(context).inflate(R.layout.album_list_item,
-                    parent, false);
-                break;
-            case Album.TYPE_LIST:view = LayoutInflater.from(context).inflate(R.layout.album_grid_item,
-                    parent, false);
-                break;
+    public AlbumItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView;
+        if (displayMode == DisplayMode.GRID) {
+            itemView = LayoutInflater.from(context).inflate(
+                    R.layout.album_grid_item,
+                    parent,
+                    false);
+        } else {
+            itemView = LayoutInflater.from(context).inflate(
+                    R.layout.album_list_item,
+                    parent,
+                    false);
         }
-        return new AlbumViewHolder(view);
+        return new AlbumItemViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AlbumAdapter.AlbumViewHolder holder, int position) {
-        Album album = albumList.get(position);
-        if (album != null) {
-            holder.albumT.setText(album.albumName);
-            holder.albumA.setText(album.artistName);
-            Glide.with(context).load(getImage(album.getId())).skipMemoryCache(true).into(holder.img);
-        }
+    public void onBindViewHolder(@NonNull AlbumItemViewHolder holder, int position) {
+        Album currentAlbum = albums.get(position);
+        holder.updateCurrentAlbum(currentAlbum);
     }
 
     @Override
     public int getItemCount() {
-        return albumList.size();
+        return albums.size();
     }
 
     @Override
@@ -82,60 +91,84 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
-                String strsearch= charSequence.toString();
-                if (strsearch.isEmpty())
-                {
-                    albumList=albumListOld;
-                }else {
-                    ArrayList<Album> NewList = new ArrayList<>();
-                    for(Album album : albumListOld){
-                        if(album.getAlbumName().toLowerCase().contains(strsearch.toLowerCase()))
-                        {
-                            NewList.add(album);
-                        }
-                    }
-                    albumList=NewList;
-                }
+                List<Album> filteredSongs = albums.stream()
+                        .filter(s -> s.getAlbumName()
+                                .toLowerCase()
+                                .contains(charSequence))
+                        .collect(Collectors.toList());
                 FilterResults filterResults = new FilterResults();
-                filterResults.values=albumList;
+                filterResults.values= filteredSongs;
                 return filterResults;
             }
 
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                albumList= (ArrayList<Album>) filterResults.values;
+                // Java can't check generic types
+                //noinspection unchecked
+                displayedAlbums = (List<Album>) filterResults.values;
                 notifyDataSetChanged();
             }
         };
     }
 
-    public class AlbumViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class AlbumItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final ShapeableImageView img;
-        private final TextView albumT;
-        private final TextView albumA;
+        private Album currentAlbum;
+        private final ShapeableImageView albumThumbnail;
+        private final TextView albumName;
+        private final TextView albumArtistName;
 
-        public AlbumViewHolder(@NonNull View itemView) {
+        public AlbumItemViewHolder(@NonNull View itemView) {
             super(itemView);
-            albumT = (TextView)itemView.findViewById(R.id.album_title);
-            albumA = (TextView)itemView.findViewById(R.id.album_artist);
-            img=itemView.findViewById(R.id.albumimg);
+            albumName = itemView.findViewById(R.id.album_title);
+            albumArtistName = itemView.findViewById(R.id.album_artist);
+            albumThumbnail = itemView.findViewById(R.id.album_thumbnail);
             itemView.setOnClickListener(this);
         }
 
+        /**
+         * Set current album and update the views.
+         * @param album Current album
+         */
+        public void updateCurrentAlbum(Album album) {
+            currentAlbum = album;
+            updateViewsWithCurrentArtist();
+        }
+
+        /**
+         * Update the views using current album's info.
+         */
+        private void updateViewsWithCurrentArtist() {
+            albumName.setText(currentAlbum.getAlbumName());
+            albumArtistName.setText(currentAlbum.getArtistName());
+            updateThumbnailWithCurrentSong();
+        }
+
+        /**
+         * Update item thumbnail with current album's artwork.
+         */
+        private void updateThumbnailWithCurrentSong() {
+            try {
+                Bitmap thumbnail = ThumbnailUtils.getThumbnailFromUri(context, currentAlbum.getUri());
+                albumThumbnail.setImageBitmap(thumbnail);
+            } catch (IOException e) {
+                albumThumbnail.setImageDrawable(
+                        ContextCompat.getDrawable(context,
+                                R.drawable.default_song_artwork));
+            }
+        }
 
         @Override
         public void onClick(View view) {
-            long albumId = albumList.get(getAbsoluteAdapterPosition()).id;
+            long albumId = albums.get(getAbsoluteAdapterPosition()).getId();
             FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             Fragment fragment;
             transaction.setCustomAnimations(R.anim.layout_fad_in, R.anim.layout_fad_out,
                     R.anim.layout_fad_in, R.anim.layout_fad_out);
             fragment = AlbumDetailFragment.newInstance(albumId);
-            String tag = fragment.getTag();
-            transaction.add(R.id.nav_host_fragment_activity_main,fragment);
-            transaction.addToBackStack(tag);
+            transaction.replace(R.id.nav_host_fragment_activity_main,fragment);
+            transaction.addToBackStack(null);
             transaction.commit();
         }
     }

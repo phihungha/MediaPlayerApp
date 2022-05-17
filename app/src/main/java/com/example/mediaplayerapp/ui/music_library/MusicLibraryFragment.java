@@ -13,7 +13,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.FragmentMusicLibraryBinding;
-import com.example.mediaplayerapp.ui.music_library.album_tab.AlbumFragment;
+import com.example.mediaplayerapp.ui.music_library.album_tab.AlbumsFragment;
 import com.example.mediaplayerapp.ui.music_library.artist_tab.ArtistsFragment;
 import com.example.mediaplayerapp.ui.music_library.song_tab.SongsFragment;
 import com.google.android.material.tabs.TabLayout;
@@ -46,7 +46,7 @@ public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceStat
     tabLayout.setupWithViewPager(viewPager);
     ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
     adapter.addFrag(new SongsFragment(), "Song");
-    adapter.addFrag(new AlbumFragment(), "Album");
+    adapter.addFrag(new AlbumsFragment(), "Album");
     adapter.addFrag(new ArtistsFragment(), "Artist");
     viewPager.setAdapter(adapter);
 

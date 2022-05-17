@@ -1,32 +1,22 @@
 package com.example.mediaplayerapp.data.music_library;
 
-public class Album {
-    public static final int TYPE_LIST=2;
-    public static final int TYPE_GRID=1;
-    public int typeDisplay;
-    public  long id;
-    public String albumName;
-    public String artistName;
-    public int numberOfSongs;
-    public int year;
+import android.net.Uri;
 
-    public Album(long id, String albumName, String artistName, int numberOfSongs, int year) {
+public class Album {
+    private long id;
+    private final Uri uri;
+    private final String albumName;
+    private final String artistName;
+    private final int numberOfSongs;
+    private final int year;
+
+    public Album(long id, Uri uri, String albumName, String artistName, int numberOfSongs, int year) {
         this.id = id;
+        this.uri = uri;
         this.albumName = albumName;
         this.artistName = artistName;
         this.numberOfSongs = numberOfSongs;
         this.year = year;
-    }
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public int getTypeDisplay() {
-        return typeDisplay;
-    }
-
-    public void setTypeDisplay(int typeDisplay) {
-        this.typeDisplay = typeDisplay;
     }
 
     public long getId() {
@@ -35,5 +25,21 @@ public class Album {
 
     public String getAlbumName() {
         return albumName;
+    }
+
+    public String getArtistName() {
+        return artistName;
+    }
+
+    public int getNumberOfSongs() {
+        return numberOfSongs;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public Uri getUri() {
+        return uri;
     }
 }

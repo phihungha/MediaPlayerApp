@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
-            android:id="@+id/collapsed_layout"
+            android:id="@+id/album_details_collapsing_layout"
             android:layout_width="match_parent"
             android:layout_height="370dp"
             android:theme="@style/Theme.AppCompat"

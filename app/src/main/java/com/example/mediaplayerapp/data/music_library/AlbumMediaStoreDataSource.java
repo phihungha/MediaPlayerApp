@@ -52,6 +52,7 @@ public class AlbumMediaStoreDataSource extends MediaStoreDataSource {
             do {
                 albums.add(new Album(
                         cursor.getLong(idColumn),
+                        getMediaItemUri(cursor.getLong(idColumn)),
                         cursor.getString(albumColumn),
                         cursor.getString(artistColumn),
                         cursor.getInt(numberOfSongsColumn),

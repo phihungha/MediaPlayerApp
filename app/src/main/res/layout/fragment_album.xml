@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.music_library.album_tab.AlbumFragment">
+    tools:context=".ui.music_library.album_tab.AlbumsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ar"
+        android:id="@+id/album_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

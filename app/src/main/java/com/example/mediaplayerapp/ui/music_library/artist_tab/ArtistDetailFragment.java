@@ -71,6 +71,9 @@ public class ArtistDetailFragment extends Fragment {
         return binding.getRoot();
     }
 
+    /**
+     * Update artist's description.
+     */
     private void updateDescription() {
         String description = "This artist has "
                                 + currentArtistNumberOfSongs
