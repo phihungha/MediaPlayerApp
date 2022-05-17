@@ -51,7 +51,7 @@ public class ArtistsFragment extends Fragment {
         artistAdapter = new ArtistAdapter(getContext());
         binding.artistList.setAdapter(artistAdapter);
 
-        viewModel.getAllArtists().observe(getViewLifecycleOwner(), newArtists -> artistAdapter.updateSongs(newArtists));
+        viewModel.getAllArtists().observe(getViewLifecycleOwner(), newArtists -> artistAdapter.updateArtists(newArtists));
 
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
         linearLayoutManager = new LinearLayoutManager(getContext());

@@ -36,7 +36,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistItem
         this.context = context;
     }
 
-    public void updateSongs(List<Artist> newArtists) {
+    public void updateArtists(List<Artist> newArtists) {
         artists = newArtists;
         displayedArtists.clear();
         displayedArtists.addAll(artists);
