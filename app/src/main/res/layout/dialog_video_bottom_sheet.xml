@@ -49,7 +49,7 @@
             android:layout_height="24dp"
             android:layout_margin="8dp"
             android:contentDescription="@string/dialog_bottom_option_playlist_ic"
-            android:src="@drawable/ic_playlist" />
+            android:src="@drawable/ic_playlist_add_24dp" />
 
         <TextView
             android:layout_width="wrap_content"

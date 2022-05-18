@@ -34,7 +34,7 @@
                 android:layout_centerInParent="true"
                 android:foreground="?android:attr/selectableItemBackground"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_video"
+                android:src="@drawable/ic_video_24dp"
                 app:shapeAppearanceOverlay="@style/roundedCornerImageView" />
 
             <ImageView

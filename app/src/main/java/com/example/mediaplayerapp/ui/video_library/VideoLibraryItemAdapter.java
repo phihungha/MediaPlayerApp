@@ -69,19 +69,15 @@ public class VideoLibraryItemAdapter
                 .with(holder.videoThumbnail.getContext())
                 .load(displayedVideos.get(position).getUri())
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .error(R.drawable.ic_video)
+                .error(R.drawable.ic_video_24dp)
                 .override(holder.videoThumbnail.getWidth(), holder.videoThumbnail.getHeight())
                 .centerCrop()
                 .into(holder.videoThumbnail);
 
         holder.videoClickArea.setOnClickListener(view -> {
-            ArrayList<String> videoUris = new ArrayList<>();
-            videoUris.add(displayedVideos.get(position).getUri().toString());
-
             Intent startPlaybackIntent = new Intent(
                     view.getContext(), VideoPlayerActivity.class);
-            startPlaybackIntent.putStringArrayListExtra(
-                    VideoPlayerActivity.VIDEO_URI_LIST, videoUris);
+            startPlaybackIntent.setData(displayedVideos.get(position).getUri());
 
             view.getContext().startActivity(startPlaybackIntent);
         });
@@ -151,7 +147,8 @@ public class VideoLibraryItemAdapter
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 displayedVideos.clear();
 
-                // Using Android refactoring with Alt + Enter doesn't resolve this warning
+                // Java cannot ensure safe casting of generic types
+                //noinspection unchecked
                 displayedVideos.addAll((List<Video>) filterResults.values);
                 notifyDataSetChanged();
             }
