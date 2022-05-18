@@ -157,7 +157,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
     private void openBottomSheetDialogAddPlaylist() {
         bottomSheetDialog = new BottomSheetDialog(requireContext(), R.style.BottomSheetTheme);
         View bsAddView = LayoutInflater.from(getContext()).inflate(
-                R.layout.playlist_create_bs_layout,
+                R.layout.playlist_create_bottom_sheet,
                 requireActivity().findViewById(R.id.bs_playlist_create)
         );
         //set click event here
