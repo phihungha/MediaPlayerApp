@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.video.Video;
+import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryGridBinding;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryListBinding;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;

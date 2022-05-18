@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.video.Video;
+import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.databinding.FragmentVideoLibraryBinding;
 
 import java.util.List;

@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 
-import com.example.mediaplayerapp.data.video.Video;
+import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.databinding.DialogVideoBottomSheetBinding;
 import com.example.mediaplayerapp.databinding.DialogVideoInfoBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;

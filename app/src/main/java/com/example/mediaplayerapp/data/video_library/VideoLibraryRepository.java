@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.data.video;
+package com.example.mediaplayerapp.data.video_library;
 
 import android.app.Application;
 
