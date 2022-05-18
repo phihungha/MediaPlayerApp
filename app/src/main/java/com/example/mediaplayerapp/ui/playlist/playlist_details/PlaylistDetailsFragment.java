@@ -32,7 +32,6 @@ import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 
 public class PlaylistDetailsFragment extends Fragment implements View.OnClickListener {
@@ -341,7 +340,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.option_menu_playlist, menu);
+        inflater.inflate(R.menu.playlist_options_menu, menu);
         MenuItem menuItemSearch = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) menuItemSearch.getActionView();
         searchView.setIconified(true);

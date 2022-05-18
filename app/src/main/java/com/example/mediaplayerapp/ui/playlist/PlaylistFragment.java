@@ -200,7 +200,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.option_menu_playlist, menu);
+        inflater.inflate(R.menu.playlist_options_menu, menu);
         MenuItem menuItemSearch = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) menuItemSearch.getActionView();
         searchView.setIconified(true);

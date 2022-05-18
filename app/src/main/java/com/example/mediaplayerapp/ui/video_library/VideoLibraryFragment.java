@@ -43,7 +43,7 @@ public class VideoLibraryFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_video_library, menu);
+        inflater.inflate(R.menu.video_library_options_menu, menu);
 
         MenuItem searchOption = menu.findItem(R.id.search_menu_item);
         SearchView searchView = (SearchView) searchOption.getActionView();
