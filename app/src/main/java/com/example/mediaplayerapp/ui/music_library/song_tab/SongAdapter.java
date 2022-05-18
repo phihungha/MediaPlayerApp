@@ -26,7 +26,7 @@ import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
-import com.example.mediaplayerapp.utils.MediaUriUtils;
+import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.io.IOException;
@@ -135,7 +135,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
 
             itemView.setOnClickListener(view -> {
                 Intent startPlaybackIntent = new Intent(context, MusicPlayerActivity.class);
-                Uri libraryUri = MediaUriUtils.getLibraryUri(currentSong.getLibraryIndex());
+                Uri libraryUri = GetPlaybackUriUtils.forLibrary(currentSong.getLibraryIndex());
                 startPlaybackIntent.setData(libraryUri);
                 context.startActivity(startPlaybackIntent);
             });

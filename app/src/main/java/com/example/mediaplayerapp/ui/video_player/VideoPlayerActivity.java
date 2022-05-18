@@ -14,7 +14,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.example.mediaplayerapp.databinding.ActivityVideoPlayerBinding;
-import com.example.mediaplayerapp.utils.MediaUriUtils;
+import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
@@ -61,8 +61,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
      * Load media items from intent into player.
      */
     private void loadMediaItemsFromIntent(Intent intent) {
-        if (intent.getScheme().equals(MediaUriUtils.PLAYLIST_URI_SCHEME)) {
-            // TODO: Load all media items from playlist
+        if (intent.getScheme().equals(GetPlaybackUriUtils.PLAYBACK_URI_SCHEME)) {
+            // TODO: Load all media items from library
         }
         else {
             // TODO: Load all media items from repository

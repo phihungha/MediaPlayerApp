@@ -20,8 +20,9 @@ import androidx.media.MediaBrowserServiceCompat;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.music_library.SongsRepository;
-import com.example.mediaplayerapp.utils.MediaItemUtils;
-import com.example.mediaplayerapp.utils.MediaUriUtils;
+import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemRepository;
+import com.example.mediaplayerapp.utils.GetMediaItemsUtils;
+import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
@@ -33,6 +34,7 @@ import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MusicPlaybackService extends MediaBrowserServiceCompat {
@@ -46,6 +48,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     private MediaSessionCompat mediaSession;
     private PlayerNotificationManager notificationManager;
     private SongsRepository songsRepository;
+    private MediaItemRepository playlistItemRepository;
     private boolean isForeground = false;
 
     @Override
@@ -58,6 +61,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         setSessionToken(mediaSession.getSessionToken());
 
         songsRepository = new SongsRepository(getApplicationContext());
+        playlistItemRepository = new MediaItemRepository(getApplication());
 
         setAudioSessionIdOnMediaSession();
         setupAnalyticsListener();
@@ -160,16 +164,15 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
                     @Override
                     public void onPrepareFromUri(@NonNull Uri uri, boolean playWhenReady, @Nullable Bundle extras) {
-                        if (uri.getScheme().equals(MediaUriUtils.PLAYLIST_URI_SCHEME)) {
-                            // TODO: Load all music items from playlist
-                            long playlistId = Long.parseLong(uri.getPathSegments().get(0));
-                            Log.i(LOG_TAG, "Loaded media from playlist id: " + playlistId);
-                        } else if (uri.getScheme().equals(MediaUriUtils.LIBRARY_URI_SCHEME)) {
-                            List<Song> librarySongs = songsRepository.getAllSongs();
-                            player.addMediaItems(MediaItemUtils.getMediaItemsFromSongs(librarySongs));
-                            int libraryIndex = Integer.parseInt(uri.getPathSegments().get(0));
-                            player.seekTo(libraryIndex, C.INDEX_UNSET);
-                            Log.i(LOG_TAG, "Loaded media from library ID: " + libraryIndex);
+                        player.clearMediaItems();
+
+                        if (uri.getScheme().equals(GetPlaybackUriUtils.PLAYBACK_URI_SCHEME)) {
+                            if (uri.getPathSegments()
+                                    .get(0).equals(GetPlaybackUriUtils.PLAYLIST_URI_SEGMENT))
+                                loadMediaItemsFromPlaylist(uri);
+                            else
+                                loadMediaItemsFromLibrary(uri);
+                            Log.i(LOG_TAG, "Loaded media from playback URI: " + uri);
                         } else {
                             player.setMediaItem(MediaItem.fromUri(uri));
                             Log.i(LOG_TAG, "Loaded media from URI: " + uri);
@@ -238,6 +241,47 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         notificationManager.setUseStopAction(true);
         notificationManager.setPlayer(player);
         notificationManager.setMediaSessionToken(mediaSession.getSessionToken());
+    }
+
+    /**
+     * Load media items specified by this app's playback URI from library.
+     * @param uri Playback URI
+     */
+    private void loadMediaItemsFromLibrary(Uri uri) {
+        List<Song> songsToPlay = new ArrayList<>();
+        int playbackStartIndex = 0;
+        List<String> uriSegments = uri.getPathSegments();
+        String type = uriSegments.get(0);
+
+        if (type.equals(GetPlaybackUriUtils.LIBRARY_URI_SEGMENT)) {
+            songsToPlay = songsRepository.getAllSongs();
+            playbackStartIndex = Integer.parseInt(uriSegments.get(1));
+        } else if (type.equals(GetPlaybackUriUtils.ARTIST_URI_SEGMENT)) {
+            long artistId = Long.parseLong(uriSegments.get(1));
+            songsToPlay = songsRepository.getAllSongsFromArtist(artistId);
+            playbackStartIndex = Integer.parseInt(uriSegments.get(2));
+        } else if (type.equals(GetPlaybackUriUtils.ALBUM_URI_SEGMENT)) {
+            long albumId = Long.parseLong(uriSegments.get(1));
+            songsToPlay = songsRepository.getAllSongsFromArtist(albumId);
+            playbackStartIndex = Integer.parseInt(uriSegments.get(2));
+        }
+
+        player.addMediaItems(GetMediaItemsUtils.fromLibrarySongs(songsToPlay));
+        player.seekTo(playbackStartIndex, C.INDEX_UNSET);
+    }
+
+    /**
+     * Load media items specified by this app's playback URI from playlist.
+     * @param uri Playback URI
+     */
+    private void loadMediaItemsFromPlaylist(Uri uri) {
+        int playlistId = Integer.parseInt(uri.getPathSegments().get(1));
+        int playbackStartIndex = Integer.parseInt(uri.getPathSegments().get(2));
+        playlistItemRepository.getAllPlaylistMediasWithID(playlistId)
+                        .observeForever(playlistItems -> {
+                            player.addMediaItems(GetMediaItemsUtils.fromPlaylistItems(playlistItems));
+                            player.seekTo(playbackStartIndex, C.INDEX_UNSET);
+                        });
     }
 
     @Override
