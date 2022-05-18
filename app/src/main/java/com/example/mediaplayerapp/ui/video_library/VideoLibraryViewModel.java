@@ -1,19 +1,43 @@
 package com.example.mediaplayerapp.ui.video_library;
 
-import androidx.lifecycle.LiveData;
+import android.app.Application;
+
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-public class VideoLibraryViewModel extends ViewModel {
+import com.example.mediaplayerapp.data.video.Video;
+import com.example.mediaplayerapp.data.video.VideoLibraryRepository;
 
-    private final MutableLiveData<String> mText;
+import java.util.List;
 
-    public VideoLibraryViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("This is video library fragment");
+public class VideoLibraryViewModel extends AndroidViewModel {
+
+    private final VideoLibraryRepository videoLibraryRepository;
+    private final MutableLiveData<List<Video>> allVideos;
+
+    public VideoLibraryViewModel(Application application) {
+        super(application);
+        videoLibraryRepository = new VideoLibraryRepository(application);
+        allVideos = videoLibraryRepository.getAllVideos();
     }
 
-    public LiveData<String> getText() {
-        return mText;
+    public MutableLiveData<List<Video>> getAllVideos() {
+        return allVideos;
+    }
+
+    public MutableLiveData<List<Video>> getVideosSortByNameASC() {
+        return videoLibraryRepository.getVideosSortByNameASC();
+    }
+
+    public MutableLiveData<List<Video>> getVideosSortByNameDESC() {
+        return videoLibraryRepository.getVideosSortByNameDESC();
+    }
+
+    public MutableLiveData<List<Video>> getVideosSortByDurationASC() {
+        return videoLibraryRepository.getVideosSortByDurationASC();
+    }
+
+    public MutableLiveData<List<Video>> getVideosSortByDurationDESC() {
+        return videoLibraryRepository.getVideosSortByDurationDESC();
     }
 }

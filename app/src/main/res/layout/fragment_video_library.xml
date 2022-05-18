@@ -4,29 +4,32 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.video_library.VideoLibraryFragment">
 
     <TextView
-        android:id="@+id/text_video_library"
+        android:id="@+id/all_videos_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="10dp"
+        android:gravity="top"
+        android:text="@string/all_videos_textView"
+        android:textColor="#474646"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/video_library_recyclerview"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/videoPlayButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:text="Playback"
-        app:layout_constraintBottom_toTopOf="@+id/text_video_library"
-        app:layout_constraintEnd_toEndOf="@+id/text_video_library"
-        app:layout_constraintStart_toStartOf="parent" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/video_library_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/all_videos_textview" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -27,4 +27,9 @@
         <item name="android:focusable">true</item>
         <item name="android:focusableInTouchMode">true</item>
     </style>
+
+    <style name="roundedCornerImageView">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">8dp</item>
+    </style>
 </resources>
