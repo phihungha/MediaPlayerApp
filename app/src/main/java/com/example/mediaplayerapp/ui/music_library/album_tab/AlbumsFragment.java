@@ -96,7 +96,7 @@ public class AlbumsFragment extends Fragment {
     private void changeDisplayMode(MenuItem item) {
         if (currentDisplayMode == DisplayMode.LIST) {
             setDisplayModeAsGrid();
-            item.setIcon(R.drawable.ic_gridview_24dp);
+            item.setIcon(R.drawable.ic_grid_24dp);
             currentDisplayMode = DisplayMode.GRID;
         } else {
             setDisplayModeAsList();

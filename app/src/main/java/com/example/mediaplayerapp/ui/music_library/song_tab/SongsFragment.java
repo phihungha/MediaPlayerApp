@@ -32,7 +32,6 @@ public class SongsFragment extends Fragment {
     private SongAdapter songAdapter;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
-    private DisplayMode currentDisplayMode = DisplayMode.GRID;
 
     private FragmentSongsBinding binding;
 
@@ -85,26 +84,12 @@ public class SongsFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.change_display_mode)
-            changeDisplayMode(item);
+        if (item.getItemId() == R.id.show_as_grid)
+            setDisplayModeAsGrid();
+        else if (item.getItemId() == R.id.show_as_list)
+            setDisplayModeAsList();
 
         return true;
-    }
-
-    /**
-     * Change display mode of the list.
-     */
-    private void changeDisplayMode(MenuItem item) {
-        if (currentDisplayMode == DisplayMode.LIST) {
-            setDisplayModeAsGrid();
-            item.setIcon(R.drawable.ic_gridview_24dp);
-            currentDisplayMode = DisplayMode.GRID;
-        } else {
-            setDisplayModeAsList();
-            item.setIcon(R.drawable.ic_list_24dp);
-            currentDisplayMode = DisplayMode.LIST;
-        }
-        songAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -117,6 +102,8 @@ public class SongsFragment extends Fragment {
                         GRID_MODE_SPACING,
                         true));
         songAdapter.setDisplayMode(DisplayMode.GRID);
+        songAdapter.notifyDataSetChanged();
+
     }
 
     /**
@@ -126,5 +113,6 @@ public class SongsFragment extends Fragment {
         binding.songList.setLayoutManager(linearLayoutManager);
         binding.songList.removeItemDecorationAt(0);
         songAdapter.setDisplayMode(DisplayMode.LIST);
+        songAdapter.notifyDataSetChanged();
     }
 }

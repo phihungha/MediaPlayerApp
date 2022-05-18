@@ -86,8 +86,8 @@
     <string name="watch_later_list">Watch later list</string>
     <string name="item_sort_by_length">Sort by length</string>
     <string name="item_sort_by_name">Sort by name</string>
-    <string name="item_list_grid_change">Change to list/grid</string>
     <string name="description_options_icon">A gray options icon</string>
+    <string name="item_list_grid_change">Change to list/grid</string>
     <string name="video_duration_placeholder">-01:00</string>
     <string name="video_name_placeholder">VIDEO.MP4</string>
     <string name="description_play_arrow_icon">A white play arrow icon</string>
@@ -110,4 +110,6 @@
     <string name="dialog_video_info_date_textview">Date taken:</string>
     <string name="dialog_video_info_resolution_textview">Resolution:</string>
     <string name="dialog_video_info_length_textview">Length:</string>
+    <string name="list">List</string>
+    <string name="grid">Grid</string>
 </resources>

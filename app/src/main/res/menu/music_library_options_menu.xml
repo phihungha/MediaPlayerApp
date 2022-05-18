@@ -4,13 +4,26 @@
     <item
         android:id="@+id/search"
         android:title="@string/action_search"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         app:actionViewClass="android.widget.SearchView" />
 
     <item
         android:id="@+id/change_display_mode"
-        android:icon="@drawable/ic_gridview_24dp"
         android:title="@string/show_as"
         app:iconTint="@color/cyan"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/show_as_list"
+                android:title="@string/list"
+                android:icon="@drawable/ic_list_24dp"
+                app:iconTint="@color/cyan" />
+
+            <item
+                android:id="@+id/show_as_grid"
+                android:title="@string/grid"
+                android:icon="@drawable/ic_grid_24dp"
+                app:iconTint="@color/cyan" />
+        </menu>
+    </item>
 </menu>
