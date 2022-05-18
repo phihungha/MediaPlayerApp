@@ -157,7 +157,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
     private void openBottomSheetDialogAddPlaylist() {
         bottomSheetDialog = new BottomSheetDialog(requireContext(), R.style.BottomSheetTheme);
         View bsAddView = LayoutInflater.from(getContext()).inflate(
-                R.layout.playlist_create_bottom_sheet,
+                R.layout.bottom_sheet_playlist_create,
                 requireActivity().findViewById(R.id.bs_playlist_create)
         );
         //set click event here
@@ -227,11 +227,8 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_sort:
-                SortByName();
-                break;
-        }
+        if (item.getItemId() == R.id.action_sort)
+            SortByName();
         return super.onOptionsItemSelected(item);
     }
 

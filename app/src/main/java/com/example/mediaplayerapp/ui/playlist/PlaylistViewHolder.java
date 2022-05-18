@@ -58,7 +58,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
      */
     private void openBottomSheetDialog() {
         bottomSheetDialog = new BottomSheetDialog(itemView.getContext(), R.style.BottomSheetTheme);
-        View bsView = LayoutInflater.from(itemView.getContext()).inflate(R.layout.playlist_bs_layout,
+        View bsView = LayoutInflater.from(itemView.getContext()).inflate(R.layout.bottom_sheet_playlist,
                 itemView.findViewById(R.id.bs_playlist));
 
         TextView tv_name = bsView.findViewById(R.id.tv_playlist_name);

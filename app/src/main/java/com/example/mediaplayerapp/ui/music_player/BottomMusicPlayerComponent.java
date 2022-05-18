@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.content.res.AppCompatResources;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.DefaultLifecycleObserver;
 import androidx.lifecycle.LifecycleOwner;
@@ -35,7 +34,7 @@ import com.bumptech.glide.request.transition.Transition;
 import com.example.mediaplayerapp.MainActivity;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.ActivityMainBinding;
-import com.example.mediaplayerapp.databinding.BottomMusicPlayerBinding;
+import com.example.mediaplayerapp.databinding.ComponentBottomMusicPlayerBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -134,7 +133,7 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
 
     MainActivity activity;
     ActivityMainBinding activityMainBinding;
-    BottomMusicPlayerBinding binding;
+    ComponentBottomMusicPlayerBinding binding;
 
     public BottomMusicPlayerComponent(MainActivity activity, ActivityMainBinding binding) {
         this.activity = activity;

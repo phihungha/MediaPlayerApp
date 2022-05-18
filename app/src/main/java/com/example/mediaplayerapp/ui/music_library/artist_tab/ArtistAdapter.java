@@ -58,12 +58,12 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistItem
         View itemView;
         if (displayMode == DisplayMode.GRID) {
             itemView = LayoutInflater.from(context).inflate(
-                    R.layout.artist_grid_item,
+                    R.layout.item_artist_grid,
                     parent,
                     false);
         } else {
             itemView = LayoutInflater.from(context).inflate(
-                    R.layout.artist_list_item,
+                    R.layout.item_artist_list,
                     parent,
                     false);
         }

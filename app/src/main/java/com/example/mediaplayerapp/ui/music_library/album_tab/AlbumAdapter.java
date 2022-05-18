@@ -63,12 +63,12 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumItemVie
         View itemView;
         if (displayMode == DisplayMode.GRID) {
             itemView = LayoutInflater.from(context).inflate(
-                    R.layout.album_grid_item,
+                    R.layout.item_album_grid,
                     parent,
                     false);
         } else {
             itemView = LayoutInflater.from(context).inflate(
-                    R.layout.album_list_item,
+                    R.layout.item_album_list,
                     parent,
                     false);
         }

@@ -68,12 +68,12 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
         View itemView;
         if (displayMode == DisplayMode.GRID) {
             itemView = LayoutInflater.from(context).inflate(
-                    R.layout.song_grid_item,
+                    R.layout.item_song_grid,
                     parent,
                     false);
         } else {
             itemView = LayoutInflater.from(context).inflate(
-                    R.layout.song_list_item,
+                    R.layout.item_song_list,
                     parent,
                     false);
         }

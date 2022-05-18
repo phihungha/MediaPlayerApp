@@ -127,7 +127,7 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
      */
     private void openBottomSheetDialog() {
         bottomSheetDialog = new BottomSheetDialog(itemView.getContext(), R.style.BottomSheetTheme);
-        View bsView = LayoutInflater.from(itemView.getContext()).inflate(R.layout.playlist_details_bottom_sheet,
+        View bsView = LayoutInflater.from(itemView.getContext()).inflate(R.layout.bottom_sheet_playlist_details,
                 itemView.findViewById(R.id.bs_playlist_detail));
 
         TextView tv_name = bsView.findViewById(R.id.tv_playlist_details_name);

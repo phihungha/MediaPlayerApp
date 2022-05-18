@@ -47,7 +47,7 @@
 
     <include
         android:id="@+id/bottom_music_player"
-        layout="@layout/bottom_music_player"
+        layout="@layout/component_bottom_music_player"
         android:layout_width="0dp"
         android:layout_height="@dimen/bottom_music_player_height"
         android:foregroundGravity="bottom"
