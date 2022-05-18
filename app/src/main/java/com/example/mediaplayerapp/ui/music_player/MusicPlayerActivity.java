@@ -39,8 +39,6 @@ import com.example.mediaplayerapp.services.MusicPlaybackService;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.google.android.exoplayer2.ui.TimeBar;
 
-import java.util.Locale;
-
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 
@@ -50,7 +48,6 @@ import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 public class MusicPlayerActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MusicPlayerActivity.class.getSimpleName();
-    private static final String PLAYBACK_TIME_FORMAT = "%02d:%02d";
     private static final int AUTOSCROLL_DELAY = 4500;
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
@@ -105,7 +102,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     binding.musicPlayerSongArtist.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_ARTIST));
 
                     long duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
-                    binding.musicPlayerSongDuration.setText(getFormattedPlaybackPosition(duration));
+                    binding.musicPlayerSongDuration.setText(MediaTimeUtils.getFormattedTime(duration));
                     binding.musicPlayerSeekbar.setDuration(duration);
 
                     String artworkUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI);
@@ -272,7 +269,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             @Override
             public void onScrubMove(TimeBar timeBar, long position) {
                 timeBar.setPosition(position);
-                binding.musicPlayerSongCurrentPosition.setText(getFormattedPlaybackPosition(position));
+                binding.musicPlayerSongCurrentPosition.setText(MediaTimeUtils.getFormattedTime(position));
             }
 
             @Override
@@ -315,17 +312,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 handler.postDelayed(this, 100);
             }
         });
-    }
-
-    /**
-     * Get formatted playback position from a milisecond value for display.
-     * @param position Playback position as miliseconds
-     * @return String Formatted playback position
-     */
-    private String getFormattedPlaybackPosition(long position) {
-        long playedSeconds = position / 1000;
-        return String.format(Locale.getDefault(), PLAYBACK_TIME_FORMAT,
-                (playedSeconds % 3600) / 60, playedSeconds % 60);
     }
 
     /**

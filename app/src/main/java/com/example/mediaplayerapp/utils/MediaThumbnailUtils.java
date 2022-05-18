@@ -7,7 +7,7 @@ import android.util.Size;
 
 import java.io.IOException;
 
-public class ThumbnailUtils {
+public class MediaThumbnailUtils {
     /**
      * Get a Bitmap of thumbnail for the specified URI's content.
      * @param context Application context

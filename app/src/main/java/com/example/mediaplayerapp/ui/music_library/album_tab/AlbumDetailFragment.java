@@ -18,7 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.FragmentAlbumDetailBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
-import com.example.mediaplayerapp.utils.ThumbnailUtils;
+import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
 
 import java.io.IOException;
@@ -82,7 +82,7 @@ public class AlbumDetailFragment extends Fragment {
      */
     private void updateArtwork(Uri uri) {
         try {
-            Bitmap artwork = ThumbnailUtils.getThumbnailFromUri(requireContext(), uri);
+            Bitmap artwork = MediaThumbnailUtils.getThumbnailFromUri(requireContext(), uri);
             binding.albumDetailsArtwork.setImageBitmap(artwork);
             binding.albumDetailsSmallArtwork.setImageBitmap(artwork);
         } catch (IOException e) {

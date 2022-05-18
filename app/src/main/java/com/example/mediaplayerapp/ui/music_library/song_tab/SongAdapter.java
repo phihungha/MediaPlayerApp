@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
-import com.example.mediaplayerapp.utils.ThumbnailUtils;
+import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.example.mediaplayerapp.utils.MediaUriUtils;
@@ -164,7 +164,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
          */
         private void updateThumbnailWithCurrentSong() {
             try {
-                Bitmap thumbnail = ThumbnailUtils.getThumbnailFromUri(context, currentSong.getUri());
+                Bitmap thumbnail = MediaThumbnailUtils.getThumbnailFromUri(context, currentSong.getUri());
                 songThumbnail.setImageBitmap(thumbnail);
             } catch (IOException e) {
                 songThumbnail.setImageDrawable(

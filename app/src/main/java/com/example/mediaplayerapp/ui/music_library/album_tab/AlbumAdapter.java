@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Album;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
-import com.example.mediaplayerapp.utils.ThumbnailUtils;
+import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.io.IOException;
@@ -149,7 +149,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumItemVie
          */
         private void updateThumbnailWithCurrentSong() {
             try {
-                Bitmap thumbnail = ThumbnailUtils.getThumbnailFromUri(context, currentAlbum.getUri());
+                Bitmap thumbnail = MediaThumbnailUtils.getThumbnailFromUri(context, currentAlbum.getUri());
                 albumThumbnail.setImageBitmap(thumbnail);
             } catch (IOException e) {
                 albumThumbnail.setImageDrawable(
