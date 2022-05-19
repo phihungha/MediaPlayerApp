@@ -5,8 +5,9 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.music_library.artist_tab.ArtistDetailFragment">
+
     <com.google.android.material.appbar.AppBarLayout
-        android:id="@+id/app_bar"
+        android:id="@+id/artist_details_appbar"
         style="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,7 +47,6 @@
         android:layout_height="match_parent"
         android:background="@color/white"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -117,11 +117,14 @@
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/play_all_songs_from_artist_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="15dp"
+        app:tint="@color/white"
+        android:src="@drawable/ic_play_arrow_24dp"
         android:contentDescription="@string/play_all_songs_from_this_artist"
-        app:layout_anchor="@id/app_bar"
+        app:layout_anchor="@id/artist_details_appbar"
         app:layout_anchorGravity="bottom|right|end"
         tools:ignore="ImageContrastCheck" />
 
