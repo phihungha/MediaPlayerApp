@@ -1,6 +1,5 @@
 package com.example.mediaplayerapp.ui.playlist;
 
-import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
-
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.databinding.ItemPlaylistBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -30,26 +28,19 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         this.binding.layoutItemPlaylist.setOnClickListener(this);
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.imgBtn_more:
-                openBottomSheetDialog();
-                break;
-            case R.id.bs_startPlaylist:
-                StartPlaylist();
-                break;
-            case R.id.bs_renamePlaylist:
-                RenamePlaylist();
-                break;
-            case R.id.bs_deletePlaylist:
-                DeletePlaylist();
-                break;
-            case R.id.layoutItem_playlist:
-                OnClickItem();
-                break;
-
+        int id = view.getId();
+        if (id == R.id.imgBtn_more) {
+            openBottomSheetDialog();
+        } else if (id == R.id.bs_startPlaylist) {
+            StartPlaylist();
+        } else if (id == R.id.bs_renamePlaylist) {
+            RenamePlaylist();
+        } else if (id == R.id.bs_deletePlaylist) {
+            DeletePlaylist();
+        } else if (id == R.id.layoutItem_playlist) {
+            OnClickItem();
         }
     }
 
@@ -77,7 +68,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         binding.tvPlaylistName.setText(playlist.getName());
         binding.tvPlaylistNumbers.setText(textCount);
 
-        if (playlist.getId()==1){
+        if (playlist.getId() == 1){
             binding.imgBtnMore.setVisibility(View.GONE);
         }
     }

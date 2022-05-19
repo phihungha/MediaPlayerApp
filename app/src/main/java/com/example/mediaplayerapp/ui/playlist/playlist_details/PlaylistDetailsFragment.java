@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -30,6 +29,7 @@ import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewMo
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
+import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 
 public class PlaylistDetailsFragment extends Fragment implements View.OnClickListener {
@@ -112,36 +112,22 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
         //item detail (media) click
         adapter.setItemClickListener((v, position) -> {
+            Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), position);
             if (playlist.isVideo()){
-                /**
-                 *
-                 *
-                 *        CLICK TO OPEN VIDEO HERE (Play single media)
-                 *
-                 *
-                 *
-                 * */
+                VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
             }
             else {
-                Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), position);
                 MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
             }
         });
 
         // click play bottom sheet
         adapter.setBsPlayListener((view, position) -> {
+            Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
             if (playlist.isVideo()){
-                /**
-                 *
-                 *
-                 *        CLICK TO OPEN VIDEO HERE (Play background media)
-                 *
-                 *
-                 *
-                 * */
+                VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
             }
             else {
-                Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
                 MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
             }
         });
@@ -177,35 +163,21 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     }
 
     private void PlayAll() {
+        Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
         if (playlist.isVideo()){
-            /**
-             *
-             *
-             *        CLICK TO Linear Play video with list of uri media
-             *
-             *
-             *
-             * */
+            VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
         }
         else {
-            Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
             MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
         }
     }
 
     private void PlayShuffleAll() {
+        Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
         if (playlist.isVideo()){
-            /**
-             *
-             *
-             *        CLICK TO Shuffle Play video with UriMedia
-             *
-             *
-             *
-             * */
+            VideoPlayerActivity.launchWithUriAndShuffleAll(requireActivity(), playbackUri);
         }
         else {
-            Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
             MusicPlayerActivity.launchWithUriAndShuffleAll(requireActivity(), playbackUri);
         }
     }
@@ -307,7 +279,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_sort)

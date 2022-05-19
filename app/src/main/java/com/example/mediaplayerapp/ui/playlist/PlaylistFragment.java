@@ -29,6 +29,7 @@ import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment;
+import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -86,10 +87,10 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         //click bottom sheet play item recyclerview
         adapter.setBSPlayListener((view, position) -> {
             Playlist playlist = adapter.getPlaylistItemAt(position);
+            Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
             if (playlist.isVideo()) {
-                // TODO: Play all videos
+                VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
             } else {
-                Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
                 MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
             }
         });

@@ -41,7 +41,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
     private static final String LOG_TAG = MusicPlaybackService.class.getSimpleName();
     public static final String AUDIO_SESSION_ID_KEY = "com.example.mediaplayerapp.services.MusicPlaybackService.AudioSessionId";
-    private static final String NOTIFICATION_CHANNEL_ID = "com.example.mediaplayerapp.services.MUSIC_PLAYBACK";
+    private static final String NOTIFICATION_CHANNEL_ID = "com.example.mediaplayerapp.services.MusicPlaybackService.MUSIC_PLAYBACK";
     private static final int NOTIFICATION_ID = 1;
 
     private ExoPlayer player;

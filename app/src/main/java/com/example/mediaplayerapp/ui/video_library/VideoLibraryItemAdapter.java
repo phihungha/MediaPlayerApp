@@ -2,7 +2,7 @@ package com.example.mediaplayerapp.ui.video_library;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -25,6 +25,7 @@ import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryGridBinding;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryListBinding;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
+import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
@@ -65,21 +66,17 @@ public class VideoLibraryItemAdapter
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        Glide
-                .with(holder.videoThumbnail.getContext())
-                .load(displayedVideos.get(position).getUri())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .error(R.drawable.ic_video_24dp)
-                .override(holder.videoThumbnail.getWidth(), holder.videoThumbnail.getHeight())
-                .centerCrop()
-                .into(holder.videoThumbnail);
+        Glide.with(holder.videoThumbnail.getContext())
+            .load(displayedVideos.get(position).getUri())
+            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .error(R.drawable.ic_video_24dp)
+            .override(holder.videoThumbnail.getWidth(), holder.videoThumbnail.getHeight())
+            .centerCrop()
+            .into(holder.videoThumbnail);
 
         holder.videoClickArea.setOnClickListener(view -> {
-            Intent startPlaybackIntent = new Intent(
-                    view.getContext(), VideoPlayerActivity.class);
-            startPlaybackIntent.setData(displayedVideos.get(position).getUri());
-
-            view.getContext().startActivity(startPlaybackIntent);
+            Uri playbackUri = GetPlaybackUriUtils.forLibrary(position);
+            VideoPlayerActivity.launchWithUri(context, playbackUri);
         });
 
         holder.videoName.setText(displayedVideos.get(position).getName());

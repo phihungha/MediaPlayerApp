@@ -117,7 +117,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                         setArtworkFromArtworkUri(Uri.parse(artworkUri));
                     else
                         setDefaultArtwork();
-                    Log.d(LOG_TAG, "Media metadata displays updated");
+                    Log.d(LOG_TAG, "Media metadata views updated");
                 }
 
                 @Override
@@ -130,7 +130,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     }
                     else
                         binding.musicPlayerPlayPauseBtn.setImageLevel(0);
-                    Log.d(LOG_TAG, "Playback state changed");
+                    Log.d(LOG_TAG, "Playback state changed to " + state.getState());
                 }
 
                 @Override
@@ -198,7 +198,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     /**
-     * Randomly play song(s) specified by an URI with MusicPlayerActivity
+     * Randomly play song(s) specified by an URI with MusicPlayerActivity.
      * @param activity Current activity
      * @param uri URI of the media item to play
      */
@@ -385,7 +385,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 .load(artworkBitmap)
                 .apply(RequestOptions.bitmapTransform(multiTransformation))
                 .into(binding.musicPlayerSongArtworkBackground);
-        Log.d(LOG_TAG, "Song's artwork loaded from bitmap");
+        Log.d(LOG_TAG, "Loaded song's artwork from bitmap");
 
         setViewsColors(artworkBitmap);
     }
@@ -398,6 +398,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
         binding.musicPlayerSongArtworkBackground.setImageDrawable(
                 ContextCompat.getDrawable(this,
                     R.drawable.shape_default_artwork_background));
+        Log.d(LOG_TAG, "Loaded default song's artwork");
         setDefaultViewsColors();
     }
 

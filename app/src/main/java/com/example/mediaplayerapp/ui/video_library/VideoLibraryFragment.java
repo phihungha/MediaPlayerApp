@@ -11,18 +11,13 @@ import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.databinding.FragmentVideoLibraryBinding;
-
-import java.util.List;
-
 
 public class VideoLibraryFragment extends Fragment {
 
@@ -147,7 +142,7 @@ public class VideoLibraryFragment extends Fragment {
 
         videoLibraryViewModel.getAllVideos().observe(
                 requireActivity(),
-                (Observer<List<Video>>) videos -> videoLibraryItemAdapter.submitList(videos));
+                videos -> videoLibraryItemAdapter.submitList(videos));
 
         return binding.getRoot();
     }
