@@ -28,11 +28,9 @@ import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
+import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 
 public class PlaylistDetailsFragment extends Fragment implements View.OnClickListener {
     private Playlist playlist;
@@ -114,9 +112,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
         //item detail (media) click
         adapter.setItemClickListener((v, position) -> {
-            MediaItem media=adapter.getPlaylistMediaItemAt(position);
-            //uri of media need to play
-            Uri uriMedia=Uri.parse(media.getMediaUri());
             if (playlist.isVideo()){
                 /**
                  *
@@ -128,22 +123,14 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                  * */
             }
             else {
-                /**
-                 *
-                 *
-                 *        CLICK TO OPEN SONG HERE (Play single media)
-                 *
-                 *
-                 *
-                 * */
+                Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), position);
+                MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
             }
             Toast.makeText(getActivity(), "click + pos " + position, Toast.LENGTH_SHORT).show();
         });
 
         // click play bottom sheet
         adapter.setBsPlayListener((view, position) -> {
-            MediaItem media=adapter.getPlaylistMediaItemAt(position);
-            Uri uriMedia=Uri.parse(media.getMediaUri());
             if (playlist.isVideo()){
                 /**
                  *
@@ -155,14 +142,8 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                  * */
             }
             else {
-                /**
-                 *
-                 *
-                 *        CLICK TO OPEN SONG HERE (Play background media)
-                 *
-                 *
-                 *
-                 * */
+                Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
+                MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
             }
             Toast.makeText(getActivity(), "Play media pos " + position, Toast.LENGTH_SHORT).show();
         });
@@ -198,16 +179,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         });
     }
 
-    private void PlayAll(MediaItemAdapter adapter) {
-        //list uri of Media need to play
-        List<Uri> listUriMedia = new ArrayList<>();
-        mediaItemViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
-                getViewLifecycleOwner(),
-                media -> media.forEach(item ->{
-                    listUriMedia.add(Uri.parse(item.getMediaUri()));
-                })
-        );
-
+    private void PlayAll() {
         if (playlist.isVideo()){
             /**
              *
@@ -219,26 +191,12 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
              * */
         }
         else {
-            /**
-             *
-             *
-             *         CLICK TO Linear Play song with list of uri media
-             *
-             *
-             *
-             * */
+            Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
+            MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
         }
-        Toast.makeText(getActivity(), "Play all", Toast.LENGTH_SHORT).show();
     }
 
-    private void PlayShuffleAll(MediaItemAdapter adapter) {
-        Random random=new Random();
-        int int_rand = random.nextInt(adapter.getItemCount());
-        MediaItem media=adapter.getPlaylistMediaItemAt(int_rand);
-
-        //uri of media
-        Uri uriMedia= Uri.parse(media.getMediaUri());
-
+    private void PlayShuffleAll() {
         if (playlist.isVideo()){
             /**
              *
@@ -250,33 +208,21 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
              * */
         }
         else {
-            /**
-             *
-             *
-             *         CLICK TO Shuffle Play song with UriMedia
-             *
-             *
-             *
-             * */
+            Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
+            MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
         }
-        Toast.makeText(getActivity(), "Play Shuffle All ", Toast.LENGTH_SHORT).show();
     }
 
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.btn_addMore:
-                AddMoreMedia();
-                break;
-
-            case R.id.layout_playAll:
-                PlayAll(adapter);
-                break;
-
-            case R.id.layout_shuffleAll:
-                PlayShuffleAll(adapter);
-                break;
+        int id = view.getId();
+        if (id == R.id.btn_addMore) {
+            AddMoreMedia();
+        } else if (id == R.id.layout_playAll) {
+            PlayAll();
+        } else if (id == R.id.layout_shuffleAll) {
+            PlayShuffleAll();
         }
     }
 
@@ -346,8 +292,8 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         searchView.setIconified(true);
         searchView.setQueryHint(PlaylistConstants.STRING_HINT_SEARCH);
 
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+        SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -367,12 +313,8 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_sort:
-                SortByName();
-                break;
-
-        }
+        if (item.getItemId() == R.id.action_sort)
+            SortByName();
         return super.onOptionsItemSelected(item);
     }
 

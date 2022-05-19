@@ -87,13 +87,14 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
 
         //click bottom sheet play item recyclerview
         adapter.setBSPlayListener((view, position) -> {
-            Playlist playlist=adapter.getPlaylistItemAt(position);
+            Playlist playlist = adapter.getPlaylistItemAt(position);
 
             MediaItemViewModel mediaItemViewModel = new ViewModelProvider(this)
                     .get(MediaItemViewModel.class);
             mediaItemViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
                     getViewLifecycleOwner(),
                     media -> {
+
                         //list uri of Media need to play
                         List<Uri> listUriMedia = new ArrayList<>();
                         media.forEach(item -> listUriMedia.add(Uri.parse(item.getMediaUri())));
