@@ -363,7 +363,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
         binding.musicPlayerSongArtwork.setImageDrawable(null);
         binding.musicPlayerSongArtworkBackground.setImageDrawable(
                 ContextCompat.getDrawable(this,
-                    R.drawable.shape_music_player_default_background));
+                    R.drawable.shape_default_artwork_background));
         setDefaultViewsColors();
     }
 

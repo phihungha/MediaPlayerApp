@@ -13,7 +13,7 @@
         android:layout_gravity="center"
         android:contentDescription="@string/music_artwork_background"
         android:scaleType="centerCrop"
-        android:src="@drawable/shape_music_player_default_background"
+        android:src="@drawable/shape_default_artwork_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

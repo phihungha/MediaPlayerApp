@@ -18,7 +18,7 @@
             android:id="@+id/view_background"
             android:layout_width="match_parent"
             android:layout_height="120dp"
-            android:background="@drawable/background_gradient_playlist_details"
+            android:background="@drawable/shape_playlist_details_header_background"
 
             android:padding="8dp"
             app:layout_constraintEnd_toEndOf="parent"
