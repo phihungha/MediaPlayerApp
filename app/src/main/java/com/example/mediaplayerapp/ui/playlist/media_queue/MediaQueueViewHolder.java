@@ -43,7 +43,7 @@ public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements Vie
         Glide.with(mContext)
                 .load(media.getMediaUri())
                 .skipMemoryCache(false)
-                .error(R.drawable.ic_round_error_24)
+                .error(R.drawable.ic_error_24dp)
                 .centerCrop()
                 .into(binding.imgThumbnailMediaQueue);
     }

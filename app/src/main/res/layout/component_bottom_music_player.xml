@@ -59,7 +59,7 @@
     <ImageButton
         android:id="@+id/bottom_music_player_stop_btn"
         style="@style/BottomPlayerMusicControlBtn"
-        android:layout_width="30dp"
+        android:layout_width="@dimen/bottom_music_player_btn_size"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:background="@null"
@@ -68,7 +68,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottom_music_player_upper_border"
         app:layout_constraintVertical_bias="0.52"
-        app:srcCompat="@drawable/ic_cancel_24dp"
+        app:srcCompat="@drawable/ic_clear_24dp"
         tools:ignore="TouchTargetSizeCheck" />
 
     <ImageButton

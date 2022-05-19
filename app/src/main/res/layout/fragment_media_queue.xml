@@ -58,7 +58,7 @@
 
                 android:layout_gravity="center"
                 android:backgroundTint="@color/white"
-                android:src="@drawable/ic_round_play_circle_outline_24"
+                android:src="@drawable/ic_play_circle_outline_24dp"
                 app:tint="@color/white" />
 
             <TextView
@@ -95,7 +95,7 @@
 
                 android:layout_gravity="center"
                 android:backgroundTint="@color/white"
-                android:src="@drawable/ic_round_clear_all_24" />
+                android:src="@drawable/ic_clear_all_24dp" />
 
             <TextView
                 android:id="@+id/tv_clearQueue"

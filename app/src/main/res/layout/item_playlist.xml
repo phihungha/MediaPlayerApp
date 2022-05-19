@@ -71,7 +71,7 @@
 
         android:layout_marginEnd="10dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/ic_round_more_vert_24"
+        android:src="@drawable/ic_more_vert_24dp"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

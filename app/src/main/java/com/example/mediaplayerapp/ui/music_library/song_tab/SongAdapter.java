@@ -2,9 +2,7 @@ package com.example.mediaplayerapp.ui.music_library.song_tab;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,9 +23,7 @@ import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.utils.IStartPlayback;
 import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
-import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
-import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.io.IOException;

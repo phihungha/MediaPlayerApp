@@ -160,10 +160,10 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
             } else {
                 int idResource;
                 if (!radioAudio.isChecked()){
-                    idResource=R.drawable.ic_round_ondemand_video_24;
+                    idResource=R.drawable.ic_play_video_24dp;
                 }
                 else {
-                    idResource=R.drawable.ic_round_music_video_24;
+                    idResource=R.drawable.ic_music_video_24;
                 }
                 Playlist playlist = new Playlist(idResource,
                         edtName.getText().toString().trim(), radioVideo.isChecked());

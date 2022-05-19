@@ -46,7 +46,7 @@
                 android:contentDescription="@string/image_for_thumbnail"
 
                 android:scaleType="centerCrop"
-                android:src="@drawable/img_for_test" />
+                android:src="@drawable/ic_play_video_24dp" />
         </androidx.cardview.widget.CardView>
 
         <TextView
@@ -88,7 +88,7 @@
             android:backgroundTint="@color/white"
             android:clickable="true"
 
-            android:src="@drawable/ic_outline_add_circle_outline_24"
+            android:src="@drawable/ic_add_circle_outline_24dp"
             app:layout_constraintBottom_toBottomOf="@+id/view_background"
             app:layout_constraintEnd_toEndOf="@id/view_background"
             app:layout_constraintTop_toTopOf="@+id/view_background" />
@@ -125,7 +125,7 @@
 
                 android:layout_gravity="center"
                 android:backgroundTint="@color/black"
-                android:src="@drawable/ic_round_play_circle_outline_24" />
+                android:src="@drawable/ic_play_circle_outline_24dp" />
 
             <TextView
                 android:id="@+id/tv_playAll"
@@ -163,7 +163,7 @@
 
                 android:layout_gravity="center"
                 android:backgroundTint="@color/black"
-                android:src="@drawable/ic_round_shuffle_24" />
+                android:src="@drawable/ic_shuffle_24dp" />
 
             <TextView
                 android:id="@+id/tv_shuffleAll"

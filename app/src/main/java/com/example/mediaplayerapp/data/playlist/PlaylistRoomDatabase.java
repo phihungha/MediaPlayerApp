@@ -50,7 +50,7 @@ public abstract class PlaylistRoomDatabase extends RoomDatabase {
                 // If you want to start with more words, just add them.
                 PlaylistDao dao = INSTANCE.playlistDao();
 
-                Playlist favourite = new Playlist(R.drawable.ic_round_heart_24,"My Favourite",true);
+                Playlist favourite = new Playlist(R.drawable.ic_favorite_24dp,"My Favourite",true);
                 dao.insert(favourite);
             });
         }

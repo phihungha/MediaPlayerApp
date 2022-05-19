@@ -3,7 +3,7 @@
     android:id="@+id/bs_playlist_create"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/playlist_bs_background"
+    android:background="@drawable/shape_playlist_bottom_sheet_background"
     android:orientation="vertical"
     android:padding="10dp">
 
