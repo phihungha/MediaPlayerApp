@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
+import com.example.mediaplayerapp.utils.IStartPlayback;
 import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
@@ -36,14 +37,17 @@ import java.util.stream.Collectors;
 
 @SuppressLint("NotifyDataSetChanged")
 public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHolder> implements Filterable {
-    DisplayMode displayMode = DisplayMode.LIST;
-    Context context;
 
-    List<Song> songs = new ArrayList<>();
-    List<Song> displayedSongs = new ArrayList<>();
+    private DisplayMode displayMode = DisplayMode.LIST;
+    private final Context context;
 
-    public SongAdapter(Context context) {
+    private final IStartPlayback playbackStartMethod;
+    private List<Song> songs = new ArrayList<>();
+    private List<Song> displayedSongs = new ArrayList<>();
+
+    public SongAdapter(Context context, IStartPlayback playbackStartMethod) {
         this.context = context;
+        this.playbackStartMethod = playbackStartMethod;
     }
 
     public void updateSongs(List<Song> newSongs) {
@@ -133,12 +137,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
             ImageButton contextMenuBtn = itemView.findViewById(R.id.context_menu_btn);
             contextMenuBtn.setOnClickListener(this::openContextMenu);
 
-            itemView.setOnClickListener(view -> {
-                Intent startPlaybackIntent = new Intent(context, MusicPlayerActivity.class);
-                Uri libraryUri = GetPlaybackUriUtils.forLibrary(currentSong.getLibraryIndex());
-                startPlaybackIntent.setData(libraryUri);
-                context.startActivity(startPlaybackIntent);
-            });
+            itemView.setOnClickListener(view -> playbackStartMethod.play(currentSong.getOrderIndex()));
         }
 
         /**

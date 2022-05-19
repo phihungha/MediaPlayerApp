@@ -179,7 +179,6 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                         }
 
                         player.setPlayWhenReady(playWhenReady);
-                        player.setPlaybackSpeed(1f);
                         player.prepare();
                         Log.i(LOG_TAG, "ExoPlayer prepared");
                     }
@@ -262,7 +261,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
             playbackStartIndex = Integer.parseInt(uriSegments.get(2));
         } else if (type.equals(GetPlaybackUriUtils.ALBUM_URI_SEGMENT)) {
             long albumId = Long.parseLong(uriSegments.get(1));
-            songsToPlay = songsRepository.getAllSongsFromArtist(albumId);
+            songsToPlay = songsRepository.getAllSongsFromAlbum(albumId);
             playbackStartIndex = Integer.parseInt(uriSegments.get(2));
         }
 

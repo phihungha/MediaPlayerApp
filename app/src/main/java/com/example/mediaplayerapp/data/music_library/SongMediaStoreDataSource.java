@@ -24,9 +24,7 @@ public class SongMediaStoreDataSource extends MediaStoreDataSource {
         String[] projection = new String[]{
                 MediaStore.Audio.Media._ID,
                 MediaStore.Audio.Media.TITLE,
-                MediaStore.Audio.Media.ALBUM_ID,
                 MediaStore.Audio.Media.ALBUM,
-                MediaStore.Audio.Media.ARTIST_ID,
                 MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.DURATION,
         };
@@ -39,26 +37,21 @@ public class SongMediaStoreDataSource extends MediaStoreDataSource {
 
         int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID);
         int titleColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE);
-        int albumIdColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID);
         int albumColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM);
-        int artistId = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST_ID);
         int artist = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST);
         int duration = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
 
-        int libraryIndex = 0;
+        int orderIndex = 0;
         if (cursor.moveToFirst()) {
             do {
                 songs.add(new Song(
-                        cursor.getLong(idColumn),
                         getMediaItemUri(cursor.getLong(idColumn)),
                         cursor.getString(titleColumn),
-                        cursor.getLong(albumIdColumn),
                         cursor.getString(albumColumn),
-                        cursor.getLong(artistId),
                         cursor.getString(artist),
                         cursor.getInt(duration),
-                        libraryIndex));
-                libraryIndex++;
+                        orderIndex));
+                orderIndex++;
             } while (cursor.moveToNext());
             cursor.close();
         }

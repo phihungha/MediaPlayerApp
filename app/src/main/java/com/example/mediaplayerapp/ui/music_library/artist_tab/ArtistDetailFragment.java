@@ -1,5 +1,6 @@
 package com.example.mediaplayerapp.ui.music_library.artist_tab;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.mediaplayerapp.databinding.FragmentArtistDetailBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
+import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
+import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 
 public class ArtistDetailFragment extends Fragment {
     private long currentArtistId;
@@ -48,10 +51,15 @@ public class ArtistDetailFragment extends Fragment {
 
         binding.artistDetailsSongList.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
-        SongAdapter adapter = new SongAdapter(requireContext());
+        SongAdapter adapter = new SongAdapter(requireContext(), orderIndex -> {
+            Uri playbackUri = GetPlaybackUriUtils.forArtist(currentArtistId, orderIndex);
+            MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
+        });
         adapter.setDisplayMode(DisplayMode.LIST);
         binding.artistDetailsSongList.addItemDecoration(new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL));
         binding.artistDetailsSongList.setAdapter(adapter);
+
+        binding.artistDetailsPlayAllSongs.setOnClickListener(v -> playAllSongs());
 
         viewModel.getArtistName().observe(getViewLifecycleOwner(), s -> {
             binding.artistDetailsCollapsingLayout.setTitle(s);
@@ -69,6 +77,14 @@ public class ArtistDetailFragment extends Fragment {
         viewModel.setCurrentArtistId(currentArtistId);
 
         return binding.getRoot();
+    }
+
+    /**
+     * Play all songs from this album by opening music player activity.
+     */
+    private void playAllSongs() {
+        Uri uri = GetPlaybackUriUtils.forArtist(currentArtistId, 0);
+        MusicPlayerActivity.launchWithUri(requireActivity(), uri);
     }
 
     /**

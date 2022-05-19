@@ -3,6 +3,7 @@ package com.example.mediaplayerapp.ui.music_library.song_tab;
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +23,8 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.FragmentSongsBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
+import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
+import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 
 @SuppressLint("NotifyDataSetChanged")
 public class SongsFragment extends Fragment {
@@ -47,7 +50,10 @@ public class SongsFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        songAdapter = new SongAdapter(requireContext());
+        songAdapter = new SongAdapter(requireContext(), orderIndex -> {
+            Uri playbackUri = GetPlaybackUriUtils.forLibrary(orderIndex);
+            MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
+        });
         binding.songList.setAdapter(songAdapter);
 
         viewModel.getAllSongs().observe(getViewLifecycleOwner(), newSongs -> songAdapter.updateSongs(newSongs));

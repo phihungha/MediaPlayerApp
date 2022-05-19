@@ -4,27 +4,21 @@ package com.example.mediaplayerapp.data.music_library;
 import android.net.Uri;
 
 public class Song {
-    public long songId;
-    private final int libraryIndex;
+    private final int orderIndex;
     private final Uri uri;
     private final String title;
     private final String artistName;
     private final String albumName;
-    public long artistId;
-    public long albumId;
     private final long duration;
 
-    public Song(long id, Uri uri, String title, long albumId, String albumName,
-                long artistId, String artistName, int duration, int libraryIndex) {
-        this.songId = id;
+    public Song(Uri uri, String title, String albumName,
+                String artistName, int duration, int orderIndex) {
         this.uri = uri;
         this.title = title;
-        this.albumId = albumId;
         this.albumName = albumName;
-        this.artistId = artistId;
         this.artistName = artistName;
         this.duration = duration;
-        this.libraryIndex = libraryIndex;
+        this.orderIndex = orderIndex;
     }
 
     public String getTitle() {
@@ -47,7 +41,7 @@ public class Song {
         return uri;
     }
 
-    public int getLibraryIndex() {
-        return libraryIndex;
+    public int getOrderIndex() {
+        return orderIndex;
     }
 }

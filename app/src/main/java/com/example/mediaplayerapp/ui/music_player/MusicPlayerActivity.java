@@ -1,8 +1,10 @@
 package com.example.mediaplayerapp.ui.music_player;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ComponentName;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -180,6 +182,17 @@ public class MusicPlayerActivity extends AppCompatActivity {
             binding.musicPlayerSongTitle.setSelected(true);
             binding.musicPlayerSongArtist.setSelected(true);
         }, AUTOSCROLL_DELAY);
+    }
+
+    /**
+     * Play media item specified by an URI with MusicPlayerActivity.
+     * @param activity Current activity
+     * @param uri URI of the media item to play
+     */
+    public static void launchWithUri(Activity activity, Uri uri) {
+        Intent playbackIntent = new Intent(activity, MusicPlayerActivity.class);
+        playbackIntent.setData(uri);
+        activity.startActivity(playbackIntent);
     }
 
     /**

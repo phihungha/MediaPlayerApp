@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.FragmentAlbumDetailBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
+import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
+import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
 
@@ -56,10 +58,15 @@ public class AlbumDetailFragment extends Fragment {
 
         binding.albumDetailsSongList.setLayoutManager(new LinearLayoutManager(requireActivity()));
 
-        SongAdapter adapter = new SongAdapter(requireContext());
+        SongAdapter adapter = new SongAdapter(requireContext(), orderIndex -> {
+            Uri playbackUri = GetPlaybackUriUtils.forAlbum(currentAlbumId, orderIndex);
+            MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
+        });
         adapter.setDisplayMode(DisplayMode.LIST);
         binding.albumDetailsSongList.addItemDecoration(new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL));
         binding.albumDetailsSongList.setAdapter(adapter);
+
+        binding.albumDetailsPlayAllSongs.setOnClickListener(v -> playAllSongs());
 
         viewModel.getAlbumName().observe(getViewLifecycleOwner(), s -> {
             binding.albumDetailsCollapsingLayout.setTitle(s);
@@ -74,6 +81,14 @@ public class AlbumDetailFragment extends Fragment {
         viewModel.setCurrentAlbumId(currentAlbumId);
 
         return binding.getRoot();
+    }
+
+    /**
+     * Play all songs from this album by opening music player activity.
+     */
+    private void playAllSongs() {
+        Uri uri = GetPlaybackUriUtils.forAlbum(currentAlbumId, 0);
+        MusicPlayerActivity.launchWithUri(requireActivity(), uri);
     }
 
     /**
