@@ -25,14 +25,12 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
-import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
+import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment;
+import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PlaylistFragment extends Fragment implements View.OnClickListener {
     private FragmentPlaylistBinding binding;
@@ -88,28 +86,14 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         //click bottom sheet play item recyclerview
         adapter.setBSPlayListener((view, position) -> {
             Playlist playlist = adapter.getPlaylistItemAt(position);
-
-            MediaItemViewModel mediaItemViewModel = new ViewModelProvider(this)
-                    .get(MediaItemViewModel.class);
-            mediaItemViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
-                    getViewLifecycleOwner(),
-                    media -> {
-
-                        //list uri of Media need to play
-                        List<Uri> listUriMedia = new ArrayList<>();
-                        media.forEach(item -> listUriMedia.add(Uri.parse(item.getMediaUri())));
-                        /**
-                         *
-                         *
-                         *        Play LINEAR playlists with listUriMedia HERE
-                         *
-                         *
-                         *
-                         * */
-                        makeToast("Play at pos " + position);
-                    }
-            );
+            if (playlist.isVideo()) {
+                // TODO: Play all videos
+            } else {
+                Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
+                MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
+            }
         });
+
         //click bottom sheet rename item recyclerview
         adapter.setBSRenameListener((view, position) -> {
             Playlist playlist = adapter.getPlaylistItemAt(position);

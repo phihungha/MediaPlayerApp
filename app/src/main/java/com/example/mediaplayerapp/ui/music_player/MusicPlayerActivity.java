@@ -50,6 +50,8 @@ import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 public class MusicPlayerActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MusicPlayerActivity.class.getSimpleName();
+    private static final String SHUFFLE_MODE_ALL_KEY =
+            "com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity.SHUFFLE_MODE_KEY";
     private static final int AUTOSCROLL_DELAY = 4500;
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
@@ -185,7 +187,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     /**
-     * Play media item specified by an URI with MusicPlayerActivity.
+     * Sequentially play song(s) specified by an URI with MusicPlayerActivity.
      * @param activity Current activity
      * @param uri URI of the media item to play
      */
@@ -196,7 +198,19 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     /**
-     * Play music from intent if there is one.
+     * Randomly play song(s) specified by an URI with MusicPlayerActivity
+     * @param activity Current activity
+     * @param uri URI of the media item to play
+     */
+    public static void launchWithUriAndShuffleAll(Activity activity, Uri uri) {
+        Intent playbackIntent = new Intent(activity, MusicPlayerActivity.class);
+        playbackIntent.setData(uri);
+        playbackIntent.putExtra(SHUFFLE_MODE_ALL_KEY, true);
+        activity.startActivity(playbackIntent);
+    }
+
+    /**
+     * Play music from intent's URI if there is one.
      */
     private void playFromIntent() {
         Uri uri = getIntent().getData();
@@ -204,6 +218,13 @@ public class MusicPlayerActivity extends AppCompatActivity {
             MediaControllerCompat.getMediaController(this)
                     .getTransportControls()
                     .playFromUri(uri, null);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null)
+            if (extras.getBoolean(SHUFFLE_MODE_ALL_KEY))
+                MediaControllerCompat.getMediaController(this)
+                        .getTransportControls()
+                        .setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
     }
 
     /**

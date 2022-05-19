@@ -126,7 +126,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), position);
                 MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
             }
-            Toast.makeText(getActivity(), "click + pos " + position, Toast.LENGTH_SHORT).show();
         });
 
         // click play bottom sheet
@@ -145,7 +144,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
                 MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
             }
-            Toast.makeText(getActivity(), "Play media pos " + position, Toast.LENGTH_SHORT).show();
         });
         // click delete bottom sheet
         adapter.setBsDeleteListener((view, position) -> {
@@ -164,7 +162,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
             MediaQueue mediaQueue=new MediaQueue(media.getMediaUri(),media.getName());
             mediaQueueViewModel.insert(mediaQueue);
-            Toast.makeText(getContext(), "Add to queue completed!!!", Toast.LENGTH_SHORT).show();
         });
 
         //click properties bottom sheet
@@ -209,7 +206,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         }
         else {
             Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
-            MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
+            MusicPlayerActivity.launchWithUriAndShuffleAll(requireActivity(), playbackUri);
         }
     }
 

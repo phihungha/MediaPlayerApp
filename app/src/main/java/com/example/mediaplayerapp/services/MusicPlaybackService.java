@@ -266,7 +266,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         }
 
         player.addMediaItems(GetMediaItemsUtils.fromLibrarySongs(songsToPlay));
-        player.seekTo(playbackStartIndex, C.INDEX_UNSET);
+        player.seekTo(playbackStartIndex, C.TIME_UNSET);
     }
 
     /**
@@ -279,7 +279,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         playlistItemRepository.getAllPlaylistMediasWithID(playlistId)
                         .observeForever(playlistItems -> {
                             player.addMediaItems(GetMediaItemsUtils.fromPlaylistItems(playlistItems));
-                            player.seekTo(playbackStartIndex, C.INDEX_UNSET);
+                            player.seekTo(playbackStartIndex, C.TIME_UNSET);
                         });
     }
 
