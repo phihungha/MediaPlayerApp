@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 
 public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     private IOnItemClickListener mListener;
@@ -34,10 +34,9 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
     public void onBindViewHolder(@NonNull PlaylistViewHolder holder, int position) {
         Playlist current=getItem(position);
 
-        MediaItemViewModel mediaItemViewModel =new MediaItemViewModel(application);
-        int count= mediaItemViewModel.getCountPlaylistWithID(current.getId());
+        PlaylistItemViewModel playlistItemViewModel =new PlaylistItemViewModel(application);
+        int count= playlistItemViewModel.getCountPlaylistWithID(current.getId());
         String textNumber=count+" ";
-
 
         if (current.getId()==1){
             if (count <= 1) {

@@ -15,7 +15,6 @@ public class PlaylistConstants {
 
     public static final int REQUEST_CODE_GALLERY=121;
 
-
     public static final String TAG_BS_RENAME_DIALOG="bsRenameDialog";
     public static final String TAG_BS_DELETE_DIALOG="bsDeleteDialog";
     public static final String TAG_BS_DETAIL_DELETE_DIALOG="bsDeleteDetailDialog";

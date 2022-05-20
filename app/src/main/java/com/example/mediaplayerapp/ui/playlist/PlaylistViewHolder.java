@@ -71,6 +71,9 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         if (playlist.getId() == 1){
             binding.imgBtnMore.setVisibility(View.GONE);
         }
+        else {
+            binding.imgBtnMore.setVisibility(View.VISIBLE);
+        }
     }
 
     static PlaylistViewHolder create(ViewGroup parent, IOnItemClickListener l,

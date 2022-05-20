@@ -227,14 +227,27 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
 
     private void SortByName() {
         if (isASC) {
-            playlistViewModel.sortPlaylistByNameDESC().observe(
+            playlistViewModel.getPlaylistWithID(1).observe(
                     getViewLifecycleOwner(),
-                    playlists -> adapter.submitList(playlists)
+                    playlists -> playlistViewModel.sortPlaylistByNameDESC().observe(
+                            getViewLifecycleOwner(),
+                            p -> {
+                                playlists.addAll(p);
+                                adapter.submitList(playlists);
+                            }
+                    )
             );
+
         } else {
-            playlistViewModel.sortPlaylistByNameASC().observe(
+            playlistViewModel.getPlaylistWithID(1).observe(
                     getViewLifecycleOwner(),
-                    playlists -> adapter.submitList(playlists)
+                    playlists -> playlistViewModel.sortPlaylistByNameASC().observe(
+                            getViewLifecycleOwner(),
+                            p -> {
+                                playlists.addAll(p);
+                                adapter.submitList(playlists);
+                            }
+                    )
             );
         }
         isASC = !isASC;

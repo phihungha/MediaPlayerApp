@@ -2,21 +2,34 @@ package com.example.mediaplayerapp.ui.playlist.playlist_details;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.CancellationSignal;
+import android.util.Log;
+import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.databinding.ItemMediaBinding;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
+import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     @SuppressLint("StaticFieldLeak")
@@ -31,22 +44,42 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
 
     public MediaItemViewHolder(@NonNull ItemMediaBinding binding) {
         super(binding.getRoot());
-        this.binding=binding;
+        this.binding = binding;
         this.binding.layoutItemPlaylistDetails.setOnClickListener(this);
         this.binding.imgBtnPlaylistDetailsMore.setOnClickListener(this);
     }
 
-    public void setBinding(MediaItem media) {
+    public void setBinding(PlaylistItem media) {
         binding.tvPlaylistNamePlaylistDetails.setText(media.getName());
-        MediaInfo mediaInfo=MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
-        String duration=MediaUtils.convertDuration(mediaInfo.getDuration());
+
+        MediaInfo mediaInfo = MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
+        String duration = MediaUtils.convertDuration(mediaInfo.getDuration());
         binding.tvDurationMedia.setText(duration);
-        Glide.with(mContext)
+
+        Bitmap thumb = MediaUtils.loadThumbnail(mContext, Uri.parse(media.getMediaUri()));
+        if (thumb != null) {
+            binding.imgThumbnailPlaylistDetails.setImageBitmap(thumb);
+        } else {
+            binding.imgThumbnailPlaylistDetails.setImageDrawable(
+                    ContextCompat.getDrawable(mContext,
+                            R.drawable.default_song_artwork));
+        }
+
+
+      /*  try {
+            Bitmap thumbnail = MediaThumbnailUtils.getThumbnailFromUri(mContext, Uri.parse(media.getMediaUri()));
+            binding.imgThumbnailPlaylistDetails.setImageBitmap(thumbnail);
+        } catch (IOException e) {
+            binding.imgThumbnailPlaylistDetails.setImageDrawable(
+                    ContextCompat.getDrawable(mContext,
+                            R.drawable.default_song_artwork));
+        }*/
+     /*   Glide.with(mContext)
                 .load(media.getMediaUri())
                 .skipMemoryCache(false)
                 .error(R.drawable.ic_error_24dp)
                 .centerCrop()
-                .into(binding.imgThumbnailPlaylistDetails);
+                .into(binding.imgThumbnailPlaylistDetails);*/
     }
 
     static MediaItemViewHolder create(ViewGroup parent,
@@ -58,24 +91,25 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
                                       IOnItemClickListener _bsAddQueueListener) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemMediaBinding binding = ItemMediaBinding.inflate(inflater, parent, false);
-        itemClickListener=_itemClickListener;
-        bsPlayListener=_bsPlayListener;
-        bsDeleteListener=_bsDeleteListener;
-        bsPropertiesListener=_bsPropertiesListener;
-        bsAddQueueListener=_bsAddQueueListener;
-        mContext=context;
+        itemClickListener = _itemClickListener;
+        bsPlayListener = _bsPlayListener;
+        bsDeleteListener = _bsDeleteListener;
+        bsPropertiesListener = _bsPropertiesListener;
+        bsAddQueueListener = _bsAddQueueListener;
+        mContext = context;
         return new MediaItemViewHolder(binding);
     }
 
-    private void onClickItem(){
+    private void onClickItem() {
         if (itemClickListener != null && getBindingAdapterPosition() != RecyclerView.NO_POSITION) {
             itemClickListener.onClick(itemView.getRootView(), getBindingAdapterPosition());
         }
     }
+
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.layoutItem_PlaylistDetails:
                 onClickItem();
                 break;
@@ -103,22 +137,22 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
     }
 
     private void addToQueue() {
-        bsAddQueueListener.onClick(itemView,getBindingAdapterPosition());
+        bsAddQueueListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void openProperties() {
-        bsPropertiesListener.onClick(itemView,getBindingAdapterPosition());
+        bsPropertiesListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void deleteItem() {
-        bsDeleteListener.onClick(itemView,getBindingAdapterPosition());
+        bsDeleteListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void playNext() {
-        bsPlayListener.onClick(itemView,getBindingAdapterPosition());
+        bsPlayListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 

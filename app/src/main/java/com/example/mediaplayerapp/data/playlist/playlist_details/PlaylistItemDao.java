@@ -11,15 +11,15 @@ import androidx.room.Update;
 import java.util.List;
 
 @Dao
-public interface MediaItemDao {
+public interface PlaylistItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(MediaItem media);
+    void insert(PlaylistItem media);
 
     @Update
-    void update(MediaItem media);
+    void update(PlaylistItem media);
 
     @Delete
-    void delete(MediaItem media);
+    void delete(PlaylistItem media);
 
     @Query("DELETE FROM media_table")
     void deleteAll();
@@ -28,19 +28,19 @@ public interface MediaItemDao {
     void deleteItemWithUri(String uri);
 
     @Query("SELECT * FROM media_table WHERE media_table.MediaId= :id")
-    LiveData<List<MediaItem>> getAllPlaylistMediasWithID(int id);
+    LiveData<List<PlaylistItem>> getAllPlaylistMediasWithID(int id);
 
     @Query("SELECT * FROM media_table ORDER BY MediaId ASC")
-    LiveData<List<MediaItem>> getAllPlaylistMedias();
+    LiveData<List<PlaylistItem>> getAllPlaylistMedias();
 
     @Query("SELECT * FROM media_table WHERE media_table.MediaName LIKE '%' || :text || '%'")
-    LiveData<List<MediaItem>> getAllMediaSearching(String text);
+    LiveData<List<PlaylistItem>> getAllMediaSearching(String text);
 
     @Query("SELECT * FROM media_table WHERE media_table.MediaId=:id ORDER BY media_table.MediaName ASC")
-    LiveData<List<MediaItem>> sortAllMediaByNameASCWithID(int id);
+    LiveData<List<PlaylistItem>> sortAllMediaByNameASCWithID(int id);
 
     @Query("SELECT * FROM media_table WHERE media_table.MediaId=:id ORDER BY media_table.MediaName DESC")
-    LiveData<List<MediaItem>> sortAllMediaByNameDESCWithID(int id);
+    LiveData<List<PlaylistItem>> sortAllMediaByNameDESCWithID(int id);
 
     @Query("DELETE FROM media_table WHERE media_table.MediaId=:id")
     void deleteAllWithID(int id);

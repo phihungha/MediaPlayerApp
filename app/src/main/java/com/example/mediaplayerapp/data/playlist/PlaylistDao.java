@@ -28,13 +28,14 @@ public interface PlaylistDao {
     @Query("SELECT * FROM playlist_table ORDER BY PlaylistID ASC")
     LiveData<List<Playlist>> getAllPlaylists();
 
-    @Query("SELECT * FROM playlist_table WHERE playlist_table.Name LIKE '%' || :text || '%'")
+    @Query("SELECT * FROM playlist_table WHERE playlist_table.PlaylistID=1 OR playlist_table.Name LIKE '%' || :text || '%'" +
+            "ORDER BY PlaylistID ASC")
     LiveData<List<Playlist>> getAllPlaylistSearching(String text);
 
-    @Query("SELECT * FROM playlist_table ORDER BY playlist_table.Name ASC")
+    @Query("SELECT * FROM playlist_table WHERE PlaylistID>1 ORDER BY playlist_table.Name ASC")
     LiveData<List<Playlist>> sortPlaylistByNameASC();
 
-    @Query("SELECT * FROM playlist_table ORDER BY playlist_table.Name DESC")
+    @Query("SELECT * FROM playlist_table WHERE PlaylistID>1 ORDER BY playlist_table.Name DESC")
     LiveData<List<Playlist>> sortPlaylistByNameDESC();
 
     @Query("SELECT * from playlist_table WHERE PlaylistID=:id")

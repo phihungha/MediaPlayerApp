@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="60dp"
 
     android:orientation="vertical"
     tools:context=".ui.playlist.playlist_details.PlaylistDetailsFragment">
@@ -31,12 +30,14 @@
             android:layout_height="wrap_content"
 
             android:layout_marginStart="20dp"
+            android:elevation="0dp"
+            app:cardElevation="0dp"
+
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="12dp"
-            app:cardElevation="2dp"
 
             app:layout_constraintBottom_toBottomOf="@+id/view_background"
             app:layout_constraintStart_toStartOf="@id/view_background"
-
             app:layout_constraintTop_toTopOf="@id/view_background">
 
             <ImageView
@@ -44,7 +45,8 @@
                 android:layout_width="90dp"
                 android:layout_height="90dp"
                 android:contentDescription="@string/image_for_thumbnail"
-
+                app:tint="@color/blue1"
+                android:layout_gravity="center"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_play_video_24dp" />
         </androidx.cardview.widget.CardView>
@@ -91,7 +93,8 @@
             android:src="@drawable/ic_add_circle_outline_24dp"
             app:layout_constraintBottom_toBottomOf="@+id/view_background"
             app:layout_constraintEnd_toEndOf="@id/view_background"
-            app:layout_constraintTop_toTopOf="@+id/view_background" />
+            app:layout_constraintTop_toTopOf="@+id/view_background"
+            app:tint="@color/white" />
 
         <TextView
             android:layout_width="wrap_content"

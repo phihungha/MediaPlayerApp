@@ -20,7 +20,7 @@ import androidx.media.MediaBrowserServiceCompat;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.music_library.SongsRepository;
-import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemRepository;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemRepository;
 import com.example.mediaplayerapp.utils.GetMediaItemsUtils;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.google.android.exoplayer2.C;
@@ -48,7 +48,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     private MediaSessionCompat mediaSession;
     private PlayerNotificationManager notificationManager;
     private SongsRepository songsRepository;
-    private MediaItemRepository playlistItemRepository;
+    private PlaylistItemRepository playlistItemRepository;
     private boolean isForeground = false;
 
     @Override
@@ -61,7 +61,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         setSessionToken(mediaSession.getSessionToken());
 
         songsRepository = new SongsRepository(getApplicationContext());
-        playlistItemRepository = new MediaItemRepository(getApplication());
+        playlistItemRepository = new PlaylistItemRepository(getApplication());
 
         setAudioSessionIdOnMediaSession();
         setupAnalyticsListener();

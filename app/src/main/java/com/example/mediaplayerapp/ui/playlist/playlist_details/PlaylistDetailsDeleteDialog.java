@@ -12,20 +12,20 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
-import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 
 public class PlaylistDetailsDeleteDialog extends AppCompatDialogFragment {
 
-    private MediaItem mMedia;
+    private PlaylistItem mMedia;
     private PlaylistDetailsFragment playlistDetailsFragment;
 
     public void setPlaylistDetailsFragment(PlaylistDetailsFragment playlistDetailsFragment) {
         this.playlistDetailsFragment = playlistDetailsFragment;
     }
 
-    public static PlaylistDetailsDeleteDialog newInstance(MediaItem media) {
+    public static PlaylistDetailsDeleteDialog newInstance(PlaylistItem media) {
         PlaylistDetailsDeleteDialog f = new PlaylistDetailsDeleteDialog();
 
         // Supply num input as an argument.
@@ -40,9 +40,9 @@ public class PlaylistDetailsDeleteDialog extends AppCompatDialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         assert getArguments() != null;
-        mMedia=(MediaItem) getArguments().getSerializable(PlaylistConstants.KEY_PLAYLIST_DETAIL);
-        MediaItemViewModel viewModel= new ViewModelProvider(this)
-                .get(MediaItemViewModel.class);
+        mMedia=(PlaylistItem) getArguments().getSerializable(PlaylistConstants.KEY_PLAYLIST_DETAIL);
+        PlaylistItemViewModel viewModel= new ViewModelProvider(this)
+                .get(PlaylistItemViewModel.class);
 
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
         View view= requireActivity().getLayoutInflater().inflate(R.layout.dialog_delete_playlist_layout,null);
