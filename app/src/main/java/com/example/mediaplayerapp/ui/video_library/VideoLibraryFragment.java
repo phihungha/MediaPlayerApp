@@ -59,21 +59,21 @@ public class VideoLibraryFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
-        if (itemId == R.id.grid_list_change_menu_item) {
-            if (recyclerViewColumnCount <= 1) {
-                recyclerViewColumnCount = 2;
-                videoLibraryRecyclerView.setLayoutManager(new GridLayoutManager
-                        (binding.getRoot().getContext(), recyclerViewColumnCount));
-
-            } else {
-                recyclerViewColumnCount = 1;
-                videoLibraryRecyclerView.setLayoutManager(new LinearLayoutManager
-                        ((binding.getRoot().getContext())));
-            }
+        if (itemId == R.id.video_library_show_as_list_menu_item) {
+            recyclerViewColumnCount = 1;
+            videoLibraryRecyclerView.setLayoutManager(new LinearLayoutManager
+                    ((binding.getRoot().getContext())));
             videoLibraryRecyclerView.setAdapter(videoLibraryItemAdapter);
             return true;
 
-        } else if (itemId == R.id.sort_by_name_menu_item) {
+        } else if (itemId == R.id.video_library_show_as_grid_menu_item) {
+            recyclerViewColumnCount = 2;
+            videoLibraryRecyclerView.setLayoutManager(new GridLayoutManager
+                    (binding.getRoot().getContext(), recyclerViewColumnCount));
+            videoLibraryRecyclerView.setAdapter(videoLibraryItemAdapter);
+            return true;
+
+        } else if (itemId == R.id.video_library_sort_by_name_menu_item) {
 
             if (sortOrder == SortOrder.ASC) {
 
@@ -84,7 +84,7 @@ public class VideoLibraryFragment extends Fragment {
                 sortOrder = SortOrder.DESC;
             } else {
 
-                videoLibraryViewModel.getVideosSortByNameDESC().observe(
+                videoLibraryViewModel.getVideosSortByNameASC().observe(
                         getViewLifecycleOwner(),
                         videos -> videoLibraryItemAdapter.submitList(videos));
 
@@ -92,7 +92,7 @@ public class VideoLibraryFragment extends Fragment {
             }
             return true;
 
-        } else if (itemId == R.id.sort_by_length_menu_item) {
+        } else if (itemId == R.id.video_library_sort_by_length_menu_item) {
             if (sortOrder == SortOrder.ASC) {
 
                 videoLibraryViewModel.getVideosSortByDurationDESC().observe(

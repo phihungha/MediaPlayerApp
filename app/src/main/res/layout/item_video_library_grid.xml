@@ -37,7 +37,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:contentDescription="@string/description_play_arrow_icon"
-                android:src="@drawable/ic_play_arrow_24dp" />
+                android:src="@drawable/ic_play_arrow_24dp"
+                app:tint="@color/white" />
         </RelativeLayout>
 
         <LinearLayout
@@ -73,10 +74,10 @@
             </LinearLayout>
 
             <ImageView
-                android:layout_weight="-2"
                 android:id="@+id/video_options_imageview"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_weight="-2"
                 android:clickable="true"
                 android:contentDescription="@string/description_options_icon"
                 android:focusable="true"
