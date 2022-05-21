@@ -38,6 +38,11 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
 
     public void setBinding(MediaItem media) {
         binding.tvPlaylistNamePlaylistDetails.setText(media.getName());
+
+         /* TODO: This causes exception when opening playlists with video added through video
+             library. To reproduce bug, create a video playlist then go to video library and
+             click on any video's 3 dot and choose "add to playlist". Then choose playlist
+             to add to and open that playlist. */
         MediaInfo mediaInfo=MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
         String duration=MediaUtils.convertDuration(mediaInfo.getDuration());
         binding.tvDurationMedia.setText(duration);

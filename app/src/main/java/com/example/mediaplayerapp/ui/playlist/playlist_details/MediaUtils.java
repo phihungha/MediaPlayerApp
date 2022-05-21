@@ -18,7 +18,10 @@ public class MediaUtils {
         try {
             String[] proj = {MediaStore.MediaColumns.DISPLAY_NAME,
                     MediaStore.Video.Media.SIZE};
-
+            /* TODO: This causes exception when opening playlists with video added through video
+                library. To reproduce bug, create a video playlist then go to video library and
+                 click on any video's 3 dot and choose "add to playlist". Then choose playlist
+                 to add to and open that playlist. */
             context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             cursor = context.getContentResolver().query(uri, proj, null, null, null);
