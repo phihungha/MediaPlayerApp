@@ -47,5 +47,4 @@ public interface PlaylistItemDao {
 
     @Query("SELECT COUNT(*) FROM media_table WHERE media_table.MediaId=:id")
     int getCountPlaylistWithID(int id);
-
 }

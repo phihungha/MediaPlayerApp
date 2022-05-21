@@ -22,10 +22,22 @@ public class PlaylistItem implements Serializable {
     @ColumnInfo(name = "MediaName")
     private String name;
 
-    public PlaylistItem(int id, @NonNull String mediaUri, String name) {
+    @ColumnInfo(name = "MediaIsVideo")
+    private boolean isVideo;
+
+    public PlaylistItem(int id, @NonNull String mediaUri, String name, boolean isVideo) {
         this.id = id;
         this.mediaUri = mediaUri;
         this.name = name;
+        this.isVideo = isVideo;
+    }
+
+    public boolean isVideo() {
+        return isVideo;
+    }
+
+    public void setVideo(boolean video) {
+        isVideo = video;
     }
 
     public int getId() {

@@ -25,6 +25,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
@@ -71,7 +73,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         binding.layoutItemAddPlaylist.setOnClickListener(this);
         binding.layoutItemWatchLater.setOnClickListener(this);
 
-        adapter.setApplication(requireActivity().getApplication());
+        adapter.setContext(requireContext());
         //set click item listener for recyclerview
         adapter.setListener((v, position) -> {
             Bundle bundle = new Bundle();
@@ -166,7 +168,10 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                     idResource=R.drawable.ic_music_video_24;
                 }
                 Playlist playlist = new Playlist(idResource,
-                        edtName.getText().toString().trim(), radioVideo.isChecked());
+                        edtName.getText().toString().trim(),
+                        radioVideo.isChecked(),
+                        0,
+                        null);
                 playlistViewModel.insert(playlist);
 
                 bottomSheetDialog.dismiss();

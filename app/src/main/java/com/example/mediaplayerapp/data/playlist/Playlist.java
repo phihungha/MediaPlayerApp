@@ -1,5 +1,7 @@
 package com.example.mediaplayerapp.data.playlist;
 
+import android.graphics.Bitmap;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -22,10 +24,34 @@ public class Playlist implements Serializable {
     @ColumnInfo(name = "IsVideo")
     private boolean isVideo;
 
-    public Playlist(int idResource, String name, boolean isVideo) {
+    @ColumnInfo(name = "Count")
+    private int count;
+
+    @ColumnInfo(name = "FirstMedia")
+    private String firstMediaUri;
+
+    public Playlist(int idResource, String name, boolean isVideo, int count, String firstMediaUri) {
         this.idResource = idResource;
         this.name = name;
         this.isVideo = isVideo;
+        this.count = count;
+        this.firstMediaUri = firstMediaUri;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
+
+    public String getFirstMediaUri() {
+        return firstMediaUri;
+    }
+
+    public void setFirstMediaUri(String firstMediaUri) {
+        this.firstMediaUri = firstMediaUri;
     }
 
     public int getId() {

@@ -3,12 +3,7 @@ package com.example.mediaplayerapp.ui.playlist.playlist_details;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
-import android.os.CancellationSignal;
-import android.util.Log;
-import android.util.Size;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +18,7 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.databinding.ItemMediaBinding;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
-import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     @SuppressLint("StaticFieldLeak")
@@ -56,30 +45,23 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
         String duration = MediaUtils.convertDuration(mediaInfo.getDuration());
         binding.tvDurationMedia.setText(duration);
 
-        Bitmap thumb = MediaUtils.loadThumbnail(mContext, Uri.parse(media.getMediaUri()));
-        if (thumb != null) {
-            binding.imgThumbnailPlaylistDetails.setImageBitmap(thumb);
+        if (media.isVideo()){
+            Glide.with(mContext)
+                    .load(media.getMediaUri())
+                    .skipMemoryCache(false)
+                    .error(R.drawable.default_song_artwork)
+                    .centerCrop()
+                    .into(binding.imgThumbnailPlaylistDetails);
         } else {
-            binding.imgThumbnailPlaylistDetails.setImageDrawable(
-                    ContextCompat.getDrawable(mContext,
-                            R.drawable.default_song_artwork));
+            Bitmap thumb = MediaUtils.loadThumbnail(mContext, Uri.parse(media.getMediaUri()));
+            if (thumb != null) {
+                binding.imgThumbnailPlaylistDetails.setImageBitmap(thumb);
+            } else {
+                binding.imgThumbnailPlaylistDetails.setImageDrawable(
+                        ContextCompat.getDrawable(mContext,
+                                R.drawable.default_song_artwork));
+            }
         }
-
-
-      /*  try {
-            Bitmap thumbnail = MediaThumbnailUtils.getThumbnailFromUri(mContext, Uri.parse(media.getMediaUri()));
-            binding.imgThumbnailPlaylistDetails.setImageBitmap(thumbnail);
-        } catch (IOException e) {
-            binding.imgThumbnailPlaylistDetails.setImageDrawable(
-                    ContextCompat.getDrawable(mContext,
-                            R.drawable.default_song_artwork));
-        }*/
-     /*   Glide.with(mContext)
-                .load(media.getMediaUri())
-                .skipMemoryCache(false)
-                .error(R.drawable.ic_error_24dp)
-                .centerCrop()
-                .into(binding.imgThumbnailPlaylistDetails);*/
     }
 
     static MediaItemViewHolder create(ViewGroup parent,

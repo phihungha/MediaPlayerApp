@@ -1,64 +1,66 @@
 package com.example.mediaplayerapp.ui.playlist;
 
 import android.app.Application;
+import android.content.Context;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment;
 
-public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
+public class PlaylistAdapter extends ListAdapter<Playlist, PlaylistViewHolder> {
     private IOnItemClickListener mListener;
-    private Application application;
+    private Context mContext;
     private IOnItemClickListener mBSRenameListener;
     private IOnItemClickListener mBSDeleteListener;
     private IOnItemClickListener mBSPlayListener;
+
     protected PlaylistAdapter(@NonNull DiffUtil.ItemCallback<Playlist> diffCallback) {
         super(diffCallback);
     }
 
-    public void setApplication(Application application) {
-        this.application = application;
+    public void setContext(Context mContext) {
+        this.mContext = mContext;
     }
 
     @NonNull
     @Override
     public PlaylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return PlaylistViewHolder.create(parent, mListener,mBSRenameListener,mBSDeleteListener,mBSPlayListener);
+        return PlaylistViewHolder.create(parent, mListener, mBSRenameListener, mBSDeleteListener, mBSPlayListener,
+                mContext);
     }
 
     @Override
     public void onBindViewHolder(@NonNull PlaylistViewHolder holder, int position) {
-        Playlist current=getItem(position);
+        Playlist current = getItem(position);
 
-        PlaylistItemViewModel playlistItemViewModel =new PlaylistItemViewModel(application);
-        int count= playlistItemViewModel.getCountPlaylistWithID(current.getId());
-        String textNumber=count+" ";
+        int count = current.getCount();
+        String textNumber = count + " ";
 
-        if (current.getId()==1){
+        if (current.getId() == 1) {
             if (count <= 1) {
                 textNumber += "media";
             } else
                 textNumber += "medias";
-        }
-        else {
-            if (current.isVideo()){
-                if (count<=1){
-                    textNumber+="video";
-                }else
-                    textNumber+="videos";
-            }
-            else {
-                if (count<=1){
-                    textNumber+="song";
-                }else
-                    textNumber+="songs";
+        } else {
+            if (current.isVideo()) {
+                if (count <= 1) {
+                    textNumber += "video";
+                } else
+                    textNumber += "videos";
+            } else {
+                if (count <= 1) {
+                    textNumber += "song";
+                } else
+                    textNumber += "songs";
             }
         }
-        holder.setBinding(current,textNumber);
+        holder.setBinding(current, textNumber, count);
     }
 
     static class PlaylistDiff extends DiffUtil.ItemCallback<Playlist> {
@@ -77,21 +79,19 @@ public class PlaylistAdapter extends ListAdapter<Playlist,PlaylistViewHolder> {
         this.mBSPlayListener = mBSPlayListener;
     }
 
-    public void setBSDeleteListener(IOnItemClickListener listener){
-        mBSDeleteListener=listener;
+    public void setBSDeleteListener(IOnItemClickListener listener) {
+        mBSDeleteListener = listener;
     }
 
-    public void setBSRenameListener(IOnItemClickListener listener){
-        mBSRenameListener=listener;
+    public void setBSRenameListener(IOnItemClickListener listener) {
+        mBSRenameListener = listener;
     }
 
-    public void setListener(IOnItemClickListener listener){
-        mListener=listener;
+    public void setListener(IOnItemClickListener listener) {
+        mListener = listener;
     }
 
-    public Playlist getPlaylistItemAt(int position){
+    public Playlist getPlaylistItemAt(int position) {
         return getItem(position);
     }
-
-
 }

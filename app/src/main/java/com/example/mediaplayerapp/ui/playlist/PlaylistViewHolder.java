@@ -1,20 +1,50 @@
 package com.example.mediaplayerapp.ui.playlist;
 
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.ItemPlaylistBinding;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaUtils;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     BottomSheetDialog bottomSheetDialog;
+    @SuppressLint("StaticFieldLeak")
+    private static Context mContext;
     private final ItemPlaylistBinding binding;
     private static IOnItemClickListener bsRenameListener;
     private static IOnItemClickListener bsDeleteListener;
@@ -63,15 +93,57 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         bottomSheetDialog.show();
     }
 
-    public void setBinding(Playlist playlist, String textCount) {
-        binding.imgThumbnail.setImageResource(playlist.getIdResource());
+    private void refreshThumb(Playlist playlist) {
+        if (playlist.isVideo()) {
+            Glide.with(mContext)
+                    .load(playlist.getFirstMediaUri())
+                    .skipMemoryCache(false)
+                    .error(playlist.getIdResource())
+                    .centerCrop()
+                    .into(binding.imgThumbnail);
+        } else {
+            if (playlist.getFirstMediaUri()!=null){
+                Bitmap thumb = MediaUtils.loadThumbnail(mContext, Uri.parse(playlist.getFirstMediaUri()));
+                if (thumb!=null){
+                    binding.imgThumbnail.setImageBitmap(thumb);
+                }
+                else {
+                    binding.imgThumbnail.setImageDrawable(
+                            ContextCompat.getDrawable(mContext,
+                                    playlist.getIdResource()));
+                }
+            } else {
+                binding.imgThumbnail.setImageDrawable(
+                        ContextCompat.getDrawable(mContext,
+                                playlist.getIdResource()));
+            }
+        }
+
+       /*     if (thumb != null) {
+                binding.imgThumbnail.setImageBitmap(thumb);
+            } else {
+                binding.imgThumbnail.setImageDrawable(
+                        ContextCompat.getDrawable(mContext,
+                                R.drawable.default_album_artwork));
+            }
+*/
+
+        //}
+    }
+
+    public void setBinding(Playlist playlist, String textCount, int count) {
+       /* if (playlist.getId() == 1 || count == 0) {
+            binding.imgThumbnail.setImageResource(playlist.getIdResource());
+        } else {
+            refreshThumb(playlist);
+        }*/
+        refreshThumb(playlist);
         binding.tvPlaylistName.setText(playlist.getName());
         binding.tvPlaylistNumbers.setText(textCount);
 
-        if (playlist.getId() == 1){
+        if (playlist.getId() == 1) {
             binding.imgBtnMore.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             binding.imgBtnMore.setVisibility(View.VISIBLE);
         }
     }
@@ -79,29 +151,31 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
     static PlaylistViewHolder create(ViewGroup parent, IOnItemClickListener l,
                                      IOnItemClickListener _bsRenameListener,
                                      IOnItemClickListener _bsDeleteListener,
-                                     IOnItemClickListener _bsPlayListener
-                                        ) {
+                                     IOnItemClickListener _bsPlayListener,
+                                     Context _context
+    ) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemPlaylistBinding binding = ItemPlaylistBinding.inflate(inflater, parent, false);
         listener = l;
         bsRenameListener = _bsRenameListener;
         bsDeleteListener = _bsDeleteListener;
-        bsPlayListener=_bsPlayListener;
+        bsPlayListener = _bsPlayListener;
+        mContext = _context;
         return new PlaylistViewHolder(binding);
     }
 
     private void StartPlaylist() {
-        bsPlayListener.onClick(itemView,getBindingAdapterPosition());
+        bsPlayListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void RenamePlaylist() {
-        bsRenameListener.onClick(itemView,getBindingAdapterPosition());
+        bsRenameListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void DeletePlaylist() {
-        bsDeleteListener.onClick(itemView,getBindingAdapterPosition());
+        bsDeleteListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
