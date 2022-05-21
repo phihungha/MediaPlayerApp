@@ -15,8 +15,9 @@ import com.example.mediaplayerapp.databinding.DialogVideoBottomSheetBinding;
 import com.example.mediaplayerapp.databinding.DialogVideoInfoBinding;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
@@ -67,8 +68,12 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
             videoInfoBinding.dialogVideoInfoVideoResolutionTextview
                     .setText(currentVideo.getResolution());
 
+            SimpleDateFormat formatter = new SimpleDateFormat(
+                    "dd/MM/yyyy - hh:mm a", Locale.US);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTimeInMillis(currentVideo.getDateTaken());
             videoInfoBinding.dialogVideoInfoVideoDateTakenTextview
-                    .setText(DateFormat.getDateInstance().format(currentVideo.getDateTaken()));
+                    .setText(formatter.format(calendar.getTime()));
 
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setView(videoInfoBinding.getRoot()).show();

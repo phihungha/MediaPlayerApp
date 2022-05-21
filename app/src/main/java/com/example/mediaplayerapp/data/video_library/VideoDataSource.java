@@ -100,7 +100,7 @@ public class VideoDataSource {
                 String videoPath = cursor.getString(pathColumnIndex);
                 long videoSize = cursor.getLong(sizeColumnIndex);
                 String videoResolution = cursor.getString(resolutionColumnIndex);
-                int videoDateTaken = cursor.getInt(dateTakenColumnIndex);
+                long videoDateTaken = cursor.getLong(dateTakenColumnIndex);
 
                 videoList.add(new Video(videoUri, videoName, videoDuration
                         , videoPath, videoSize, videoResolution, videoDateTaken));

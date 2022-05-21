@@ -24,9 +24,9 @@ public class Video {
     private final String path;
     private final long size;
     private final String resolution;
-    private final int dateTaken;
+    private final long dateTaken;
 
-    public Video(Uri uri, String name, int duration, String path, long size, String resolution, int dateTaken) {
+    public Video(Uri uri, String name, int duration, String path, long size, String resolution, long dateTaken) {
         this.uri = uri;
         this.name = name;
         this.duration = duration;
@@ -56,7 +56,7 @@ public class Video {
         return resolution;
     }
 
-    public int getDateTaken() {
+    public long getDateTaken() {
         return dateTaken;
     }
 
