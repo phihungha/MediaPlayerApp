@@ -17,7 +17,10 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.databinding.FragmentMediaQueueBinding;
+import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
+import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
+import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,15 +68,12 @@ public class MediaQueueFragment extends Fragment implements View.OnClickListener
 
     private void ClickItem(View view, int position) {
         MediaQueue media = adapter.getItemAt(position);
-        Uri uri = Uri.parse(media.getMediaUri());
-        /**
-         *
-         *              Click to play item queue
-         *
-         *
-         *
-         * */
-        makeToast("Play item at " + position);
+        Uri playbackUri = Uri.parse(media.getMediaUri());
+        if (media.isVideo()) {
+            VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
+        } else {
+            MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
+        }
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -97,14 +97,14 @@ public class MediaQueueFragment extends Fragment implements View.OnClickListener
             Uri uri = Uri.parse(item.getMediaUri());
             uriList.add(uri);
         });
-        /**
-         *
-         *              Click to play item queue
-         *
-         *
-         *
-         * */
-        makeToast("Play all");
+
+     /*   Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
+        if (playlist.isVideo()) {
+            VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
+        } else {
+            MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
+        }
+        makeToast("Play all");*/
 
     }
 

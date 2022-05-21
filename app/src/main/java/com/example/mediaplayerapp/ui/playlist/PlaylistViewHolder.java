@@ -81,12 +81,11 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
                     .centerCrop()
                     .into(binding.imgThumbnail);
         } else {
-            if (playlist.getFirstMediaUri()!=null){
+            if (playlist.getFirstMediaUri() != null) {
                 Bitmap thumb = MediaUtils.loadThumbnail(mContext, Uri.parse(playlist.getFirstMediaUri()));
-                if (thumb!=null){
+                if (thumb != null) {
                     binding.imgThumbnail.setImageBitmap(thumb);
-                }
-                else {
+                } else {
                     binding.imgThumbnail.setImageDrawable(
                             ContextCompat.getDrawable(mContext,
                                     playlist.getIdResource()));
@@ -99,33 +98,27 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         }
     }
 
-    private String getStringCountText(Playlist playlist){
+    private String getStringCountText(Playlist playlist) {
         int count = playlist.getCount();
         String textNumber = count + " ";
 
-        if (playlist.getId() == 1) {
+        if (playlist.isVideo()) {
             if (count <= 1) {
-                textNumber += "media";
+                textNumber += "video";
             } else
-                textNumber += "medias";
+                textNumber += "videos";
         } else {
-            if (playlist.isVideo()) {
-                if (count <= 1) {
-                    textNumber += "video";
-                } else
-                    textNumber += "videos";
-            } else {
-                if (count <= 1) {
-                    textNumber += "song";
-                } else
-                    textNumber += "songs";
-            }
+            if (count <= 1) {
+                textNumber += "song";
+            } else
+                textNumber += "songs";
         }
+
         return textNumber;
     }
 
     public void setBinding(Playlist playlist) {
-        if (playlist.getFirstMediaUri()==null) {
+        if (playlist.getFirstMediaUri() == null) {
             binding.imgThumbnail.setImageResource(playlist.getIdResource());
         } else {
             refreshThumb(playlist);

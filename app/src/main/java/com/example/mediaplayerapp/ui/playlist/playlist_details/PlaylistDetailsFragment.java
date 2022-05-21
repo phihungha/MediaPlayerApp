@@ -80,18 +80,18 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     }
 
     public void refresh(Playlist playlist) {
-        int count=playlistItemViewModel.getCountPlaylistWithID(playlist.getId());
+        int count = playlistItemViewModel.getCountPlaylistWithID(playlist.getId());
         playlist.setCount(count);
-        PlaylistViewModel playlistViewModel=new ViewModelProvider(this).get(PlaylistViewModel.class);
+        PlaylistViewModel playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
         playlistViewModel.update(playlist);
 
         binding.tvPlaylistDetailsName.setText(playlist.getName());
         binding.tvPlaylistDetailsNumbers.setText(getStringCountText(playlist));
     }
 
-    private String getStringCountText(Playlist playlist){
+    private String getStringCountText(Playlist playlist) {
         int count = playlist.getCount();
-        String textNumber = "Playlist "+count + " ";
+        String textNumber = "Playlist " + count + " ";
 
         if (playlist.getId() == 1) {
             if (count <= 1) {
@@ -121,7 +121,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
         //item click
         adapter.setItemClickListener((v, position) -> {
-            PlaylistItem playlistItem=adapter.getPlaylistMediaItemAt(position);
+            PlaylistItem playlistItem = adapter.getPlaylistMediaItemAt(position);
             Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlistItem.getId(), position);
             if (playlist.isVideo()) {
                 VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
@@ -132,7 +132,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
         // click play bottom sheet
         adapter.setBsPlayListener((view, position) -> {
-            PlaylistItem playlistItem=adapter.getPlaylistMediaItemAt(position);
+            PlaylistItem playlistItem = adapter.getPlaylistMediaItemAt(position);
             Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlistItem.getId(), position);
             if (playlist.isVideo()) {
                 VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
@@ -156,7 +156,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             MediaQueueViewModel mediaQueueViewModel = new ViewModelProvider(requireActivity())
                     .get(MediaQueueViewModel.class);
 
-            MediaQueue mediaQueue = new MediaQueue(media.getMediaUri(), media.getName());
+            MediaQueue mediaQueue = new MediaQueue(media.getMediaUri(), media.getName(), playlist.isVideo());
             mediaQueueViewModel.insert(mediaQueue);
         });
 
@@ -204,26 +204,26 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     }
 
     private void AddMoreMedia() {
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT,
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT,
                 MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        if (playlist.getId() == 1) {
-            intent.setType("*/*");
-            String[] mimetypes = {"audio/*", "video/*"};
-            intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
+        //intent.addCategory(Intent.CATEGORY_OPENABLE);
+        if (playlist.isVideo()) {
+            intent.setType("video/*");
         } else {
-            if (playlist.isVideo()) {
-                intent.setType("video/*");
-            } else {
-                intent.setType("audio/*");
-            }
+            intent.setType("audio/*");
         }
-        //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        //pickerLauncher.launch(intent);
-        startActivityForResult(Intent.createChooser(intent, "Select media"),PlaylistConstants.REQUEST_CODE_GALLERY);
-    }
 
+        /*
+        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        pickerLauncher.launch(intent);
+
+        //intent.setType("*\*");
+        String[] mimetypes = {"audio/*", "video/*"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);*/
+
+        startActivityForResult(Intent.createChooser(intent, "Select media"), PlaylistConstants.REQUEST_CODE_GALLERY);
+    }
 
 
     @Override
@@ -232,7 +232,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 && resultCode == Activity.RESULT_OK
                 && data != null) {
             try {
-                PlaylistViewModel playlistViewModel=new PlaylistViewModel(requireActivity().getApplication());
+                PlaylistViewModel playlistViewModel = new PlaylistViewModel(requireActivity().getApplication());
                 if (data.getClipData() != null) {
                     //pick multiple media file
                     int count = data.getClipData().getItemCount();
@@ -245,7 +245,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                         );
                         playlistItemViewModel.insert(media);
                     }
-                    if (playlist.getCount()==0){
+                    if (playlist.getCount() == 0) {
                         Uri uri = data.getClipData().getItemAt(0).getUri();
                         playlist.setFirstMediaUri(uri.toString());
                     }
@@ -259,7 +259,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                     );
                     playlistItemViewModel.insert(media);
 
-                    if (playlist.getCount()==0){
+                    if (playlist.getCount() == 0) {
                         playlist.setFirstMediaUri(uri.toString());
                     }
                 }

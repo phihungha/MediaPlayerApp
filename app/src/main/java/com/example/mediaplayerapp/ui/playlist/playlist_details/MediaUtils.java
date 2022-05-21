@@ -25,7 +25,7 @@ public class MediaUtils {
             String[] proj = {MediaStore.MediaColumns.DISPLAY_NAME,
                     MediaStore.Video.Media.SIZE};
 
-            context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            //context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             cursor = context.getContentResolver().query(uri, proj, null, null, null);
             cursor.moveToFirst();
