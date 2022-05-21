@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
@@ -20,9 +22,14 @@ public class PlaylistDetailsDeleteDialog extends AppCompatDialogFragment {
 
     private PlaylistItem mMedia;
     private PlaylistDetailsFragment playlistDetailsFragment;
+    private Playlist playlist;
 
     public void setPlaylistDetailsFragment(PlaylistDetailsFragment playlistDetailsFragment) {
         this.playlistDetailsFragment = playlistDetailsFragment;
+    }
+
+    public void setPlaylist(Playlist playlist) {
+        this.playlist = playlist;
     }
 
     public static PlaylistDetailsDeleteDialog newInstance(PlaylistItem media) {
@@ -53,7 +60,14 @@ public class PlaylistDetailsDeleteDialog extends AppCompatDialogFragment {
                 .setPositiveButton("delete", (dialogInterface, i) -> {
                     viewModel.delete(mMedia);
                     Toast.makeText(getActivity(), "Item deleted!", Toast.LENGTH_SHORT).show();
-                    playlistDetailsFragment.refresh();
+
+                    playlist.setCount(playlist.getCount()-1);
+                    if (playlist.getCount()==0)
+                        playlist.setFirstMediaUri(null);
+
+                    PlaylistViewModel playlistViewModel=new ViewModelProvider(this).get(PlaylistViewModel.class);
+                    playlistViewModel.update(playlist);
+                    playlistDetailsFragment.refresh(playlist);
                 });
 
         return builder.create();

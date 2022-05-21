@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.databinding.ItemMediaBinding;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
@@ -23,6 +24,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
+    private static Playlist mPlaylist;
     private final ItemMediaBinding binding;
     private BottomSheetDialog bottomSheetDialog;
     private static IOnItemClickListener itemClickListener;
@@ -45,7 +47,7 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
         String duration = MediaUtils.convertDuration(mediaInfo.getDuration());
         binding.tvDurationMedia.setText(duration);
 
-        if (media.isVideo()){
+        if (mPlaylist.isVideo()){
             Glide.with(mContext)
                     .load(media.getMediaUri())
                     .skipMemoryCache(false)
@@ -70,7 +72,8 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
                                       IOnItemClickListener _bsPlayListener,
                                       IOnItemClickListener _bsDeleteListener,
                                       IOnItemClickListener _bsPropertiesListener,
-                                      IOnItemClickListener _bsAddQueueListener) {
+                                      IOnItemClickListener _bsAddQueueListener,
+                                      Playlist playlist) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemMediaBinding binding = ItemMediaBinding.inflate(inflater, parent, false);
         itemClickListener = _itemClickListener;
@@ -79,6 +82,7 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
         bsPropertiesListener = _bsPropertiesListener;
         bsAddQueueListener = _bsAddQueueListener;
         mContext = context;
+        mPlaylist=playlist;
         return new MediaItemViewHolder(binding);
     }
 

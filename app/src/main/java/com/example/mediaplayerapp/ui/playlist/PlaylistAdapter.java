@@ -38,29 +38,7 @@ public class PlaylistAdapter extends ListAdapter<Playlist, PlaylistViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull PlaylistViewHolder holder, int position) {
         Playlist current = getItem(position);
-
-        int count = current.getCount();
-        String textNumber = count + " ";
-
-        if (current.getId() == 1) {
-            if (count <= 1) {
-                textNumber += "media";
-            } else
-                textNumber += "medias";
-        } else {
-            if (current.isVideo()) {
-                if (count <= 1) {
-                    textNumber += "video";
-                } else
-                    textNumber += "videos";
-            } else {
-                if (count <= 1) {
-                    textNumber += "song";
-                } else
-                    textNumber += "songs";
-            }
-        }
-        holder.setBinding(current, textNumber, count);
+        holder.setBinding(current);
     }
 
     static class PlaylistDiff extends DiffUtil.ItemCallback<Playlist> {

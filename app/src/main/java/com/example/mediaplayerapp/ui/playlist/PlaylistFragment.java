@@ -38,7 +38,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 public class PlaylistFragment extends Fragment implements View.OnClickListener {
     private FragmentPlaylistBinding binding;
     private final PlaylistDetailsFragment detailsFragment = new PlaylistDetailsFragment();
-    private final MediaQueueFragment mediaQueueFragment=new MediaQueueFragment();
+    private final MediaQueueFragment mediaQueueFragment = new MediaQueueFragment();
     private PlaylistAdapter adapter;
     private PlaylistViewModel playlistViewModel;
 
@@ -161,11 +161,10 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                 makeToast("Please check type for playlist!");
             } else {
                 int idResource;
-                if (!radioAudio.isChecked()){
-                    idResource=R.drawable.ic_play_video_24dp;
-                }
-                else {
-                    idResource=R.drawable.ic_music_video_24;
+                if (!radioAudio.isChecked()) {
+                    idResource = R.drawable.ic_play_video_24dp;
+                } else {
+                    idResource = R.drawable.ic_music_video_24;
                 }
                 Playlist playlist = new Playlist(idResource,
                         edtName.getText().toString().trim(),
@@ -232,30 +231,20 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
 
     private void SortByName() {
         if (isASC) {
-            playlistViewModel.getPlaylistWithID(1).observe(
+            playlistViewModel.sortPlaylistByNameDESC().observe(
                     getViewLifecycleOwner(),
-                    playlists -> playlistViewModel.sortPlaylistByNameDESC().observe(
-                            getViewLifecycleOwner(),
-                            p -> {
-                                playlists.addAll(p);
-                                adapter.submitList(playlists);
-                            }
-                    )
-            );
+                    playlists -> {
+                        adapter.submitList(playlists);
+                    });
 
         } else {
-            playlistViewModel.getPlaylistWithID(1).observe(
+            playlistViewModel.sortPlaylistByNameASC().observe(
                     getViewLifecycleOwner(),
-                    playlists -> playlistViewModel.sortPlaylistByNameASC().observe(
-                            getViewLifecycleOwner(),
-                            p -> {
-                                playlists.addAll(p);
-                                adapter.submitList(playlists);
-                            }
-                    )
-            );
+                    playlists -> {
+                        adapter.submitList(playlists);
+                    });
+            isASC = !isASC;
         }
-        isASC = !isASC;
     }
 
     private void Searching(String s) {

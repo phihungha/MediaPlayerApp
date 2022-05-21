@@ -1,11 +1,8 @@
 package com.example.mediaplayerapp.ui.playlist;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,33 +10,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestBuilder;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.ItemPlaylistBinding;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaUtils;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 
 public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     BottomSheetDialog bottomSheetDialog;
@@ -118,34 +97,42 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
                                 playlist.getIdResource()));
             }
         }
-
-       /*     if (thumb != null) {
-                binding.imgThumbnail.setImageBitmap(thumb);
-            } else {
-                binding.imgThumbnail.setImageDrawable(
-                        ContextCompat.getDrawable(mContext,
-                                R.drawable.default_album_artwork));
-            }
-*/
-
-        //}
     }
 
-    public void setBinding(Playlist playlist, String textCount, int count) {
-       /* if (playlist.getId() == 1 || count == 0) {
+    private String getStringCountText(Playlist playlist){
+        int count = playlist.getCount();
+        String textNumber = count + " ";
+
+        if (playlist.getId() == 1) {
+            if (count <= 1) {
+                textNumber += "media";
+            } else
+                textNumber += "medias";
+        } else {
+            if (playlist.isVideo()) {
+                if (count <= 1) {
+                    textNumber += "video";
+                } else
+                    textNumber += "videos";
+            } else {
+                if (count <= 1) {
+                    textNumber += "song";
+                } else
+                    textNumber += "songs";
+            }
+        }
+        return textNumber;
+    }
+
+    public void setBinding(Playlist playlist) {
+        if (playlist.getFirstMediaUri()==null) {
             binding.imgThumbnail.setImageResource(playlist.getIdResource());
         } else {
             refreshThumb(playlist);
-        }*/
-        refreshThumb(playlist);
-        binding.tvPlaylistName.setText(playlist.getName());
-        binding.tvPlaylistNumbers.setText(textCount);
-
-        if (playlist.getId() == 1) {
-            binding.imgBtnMore.setVisibility(View.GONE);
-        } else {
-            binding.imgBtnMore.setVisibility(View.VISIBLE);
         }
+
+        binding.tvPlaylistName.setText(playlist.getName());
+        binding.tvPlaylistNumbers.setText(getStringCountText(playlist));
     }
 
     static PlaylistViewHolder create(ViewGroup parent, IOnItemClickListener l,
