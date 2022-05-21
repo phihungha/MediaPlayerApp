@@ -9,7 +9,12 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
+import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
 import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.databinding.DialogVideoBottomSheetBinding;
 import com.example.mediaplayerapp.databinding.DialogVideoInfoBinding;
@@ -17,13 +22,16 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
 
     private final Video currentVideo;
+
 
     public VideoLibraryBottomSheetDialog(Video video) {
         currentVideo = video;
@@ -79,21 +87,51 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
             builder.setView(videoInfoBinding.getRoot()).show();
         });
 
+        PlaylistViewModel playlistViewModel
+                = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+
+        // Get all playlists that contain videos
+        //**** MUST **** do this before setOnClickListener for optionAddPlaylist, or else the first
+        // time user clicks, dialog only shows title, NO ITEMS
+        List<Playlist> allVideoPlaylists = new ArrayList<>();
+        playlistViewModel.getAllPlaylists().observe(
+                requireActivity(),
+                playlists -> {
+                    for (Playlist playlist : playlists) {
+                        if (playlist.isVideo())
+                            allVideoPlaylists.add(playlist);
+                    }
+                });
+
         LinearLayout optionAddPlaylist = bottomSheetBinding.bottomSheetOptionAddPlaylist;
         optionAddPlaylist.setOnClickListener(view1 -> {
+            MediaItemViewModel mediaItemViewModel
+                    = new ViewModelProvider(requireActivity()).get(MediaItemViewModel.class);
 
+            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+            builder
+                    .setTitle("Choose a playlist: ")
+                    .setItems(
+                            allVideoPlaylists.stream().map(Playlist::getName).toArray(CharSequence[]::new),
+                            (dialogInterface, i) -> {
+                                MediaItem newMediaItem = new MediaItem(
+                                        allVideoPlaylists.get(i).getId(),
+                                        currentVideo.getUri().toString(),
+                                        currentVideo.getName());
+                                mediaItemViewModel.insert(newMediaItem);
+                            })
+                    .show();
         });
 
-
         LinearLayout optionShare = bottomSheetBinding.bottomSheetOptionShare;
-        optionShare.setOnClickListener(view1 -> {
+        optionShare.setOnClickListener(view1 ->
+        {
             Intent shareVideoIntent = new Intent("android.intent.action.SEND");
             shareVideoIntent.setType("video/mp4");
             shareVideoIntent.putExtra("android.intent.extra.STREAM", currentVideo.getUri());
             startActivity(Intent.createChooser(shareVideoIntent,
                     "Share " + currentVideo.getName()));
         });
-
         return bottomSheetBinding.getRoot();
     }
 
