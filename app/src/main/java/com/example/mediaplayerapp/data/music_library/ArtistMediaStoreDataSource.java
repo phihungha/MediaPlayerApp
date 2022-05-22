@@ -95,13 +95,11 @@ public class ArtistMediaStoreDataSource extends MediaStoreDataSource {
     public MutableLiveData<List<Artist>> getArtistSortbyNameDESC()
     {
         return getArtistsWithOrder(null,null,
-                MediaStore.Audio.Artists.ARTIST +" ASC");
+                MediaStore.Audio.Artists.ARTIST +" DESC");
     }
     public MutableLiveData<List<Artist>> getArtistSortbyNameASC()
     {
         return getArtistsWithOrder(null,null,
-                MediaStore.Audio.Artists.ARTIST +" DESC");
+                MediaStore.Audio.Artists.ARTIST +" ASC");
     }
-
-
 }

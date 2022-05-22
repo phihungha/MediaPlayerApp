@@ -22,17 +22,18 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.FragmentAlbumBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
+import com.example.mediaplayerapp.ui.music_library.artist_tab.ArtistsFragment;
 
 @SuppressLint("NotifyDataSetChanged")
 public class AlbumsFragment extends Fragment {
     private static final int GRID_MODE_COLUMN_NUM = 2;
     private static final int GRID_MODE_SPACING = 30;
-
+    private SortOrder sortOrder= SortOrder.ASC;
     private AlbumAdapter albumAdapter;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
     private DisplayMode currentDisplayMode = DisplayMode.GRID;
-
+    private AlbumsViewModel viewModel;
     private FragmentAlbumBinding binding;
 
     public AlbumsFragment() {
@@ -43,7 +44,7 @@ public class AlbumsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentAlbumBinding.inflate(inflater, container, false);
-        AlbumsViewModel viewModel = new ViewModelProvider(this).get(AlbumsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(AlbumsViewModel.class);
 
         setHasOptionsMenu(true);
 
@@ -86,7 +87,10 @@ public class AlbumsFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.change_display_mode)
             changeDisplayMode(item);
-
+        else if(item.getItemId()== R.id.sort_by_title_ASC)
+            setSortOrderAsASC();
+        else if(item.getItemId()== R.id.sort_by_title_DESC)
+            setSortOrderAsDESC();
         return true;
     }
 
@@ -125,5 +129,20 @@ public class AlbumsFragment extends Fragment {
         binding.albumList.setLayoutManager(linearLayoutManager);
         binding.albumList.removeItemDecorationAt(0);
         albumAdapter.setDisplayMode(DisplayMode.LIST);
+    }
+
+    private void setSortOrderAsASC() {
+        viewModel.getAlbumSortByNameASC().observe(getViewLifecycleOwner(), newAlbums -> albumAdapter.updateAlbums(newAlbums));
+        sortOrder= SortOrder.ASC;
+    }
+
+    private void setSortOrderAsDESC() {
+        viewModel.getAlbumSortByNameDESC().observe(getViewLifecycleOwner(), newAlbums -> albumAdapter.updateAlbums(newAlbums));
+        sortOrder= SortOrder.DESC;
+    }
+
+    enum SortOrder {
+        ASC,
+        DESC
     }
 }
