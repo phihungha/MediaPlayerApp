@@ -1,13 +1,9 @@
 package com.example.mediaplayerapp.ui.playlist.playlist_details;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -38,11 +32,18 @@ import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 
+import java.util.List;
+
 public class PlaylistDetailsFragment extends Fragment implements View.OnClickListener {
     private Playlist playlist;
     private FragmentPlaylistDetailsBinding binding;
     private MediaItemAdapter adapter;
     private PlaylistItemViewModel playlistItemViewModel;
+
+    private final ActivityResultLauncher<String[]> mediaPickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.OpenMultipleDocuments(),
+            this::addPickedMediaItemsIntoPlaylist
+    );
 
     private boolean isASC = false;
 
@@ -194,7 +195,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         }
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -208,121 +208,26 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     }
 
     private void AddMoreMedia() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT,
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        //intent.addCategory(Intent.CATEGORY_OPENABLE);
         if (playlist.isVideo()) {
-            intent.setType("video/*");
+            mediaPickerLauncher.launch(new String[] { "video/*" });
         } else {
-            intent.setType("audio/*");
+            mediaPickerLauncher.launch(new String[] { "audio/*" });
         }
-
-        /*
-        intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-        pickerLauncher.launch(intent);
-
-        //intent.setType("*\*");
-        String[] mimetypes = {"audio/*", "video/*"};
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);*/
-        pickerLauncher.launch(intent);
-        //startActivityForResult(Intent.createChooser(intent, "Select media"), PlaylistConstants.REQUEST_CODE_GALLERY);
     }
 
-    ActivityResultLauncher<Intent> pickerLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    if (result!=null){
-                        Intent data=result.getData();
-                        try {
-                            PlaylistViewModel playlistViewModel = new PlaylistViewModel(requireActivity().getApplication());
-                            if (data.getClipData() != null) {
-                                //pick multiple media file
-                                int count = data.getClipData().getItemCount();
-                                for (int i = 0; i < count; i++) {
-                                    Uri uri = data.getClipData().getItemAt(i).getUri();
-                                    PlaylistItem media = new PlaylistItem(
-                                            playlist.getId(),
-                                            uri.toString(),
-                                            MediaUtils.getMediaNameFromURI(requireContext(), uri)
-                                    );
-                                    playlistItemViewModel.insert(media);
-                                }
-                                if (playlist.getCount() == 0) {
-                                    Uri uri = data.getClipData().getItemAt(0).getUri();
-                                    playlist.setFirstMediaUri(uri.toString());
-                                }
-                            } else {
-                                //pick single media file
-                                Uri uri = data.getData();
-                                PlaylistItem media = new PlaylistItem(
-                                        playlist.getId(),
-                                        uri.toString(),
-                                        MediaUtils.getMediaNameFromURI(requireContext(), uri)
-                                );
-                                playlistItemViewModel.insert(media);
+    private void addPickedMediaItemsIntoPlaylist(List<Uri> uris) {
+        if (uris.isEmpty())
+            return;
 
-                                if (playlist.getCount() == 0) {
-                                    playlist.setFirstMediaUri(uri.toString());
-                                }
-                            }
-                            playlistViewModel.update(playlist);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        } finally {
-                            refresh(playlist);
-                        }
-                    }
-                }
-            }
-    );
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (requestCode == PlaylistConstants.REQUEST_CODE_GALLERY
-                && resultCode == Activity.RESULT_OK
-                && data != null) {
-            try {
-                PlaylistViewModel playlistViewModel = new PlaylistViewModel(requireActivity().getApplication());
-                if (data.getClipData() != null) {
-                    //pick multiple media file
-                    int count = data.getClipData().getItemCount();
-                    for (int i = 0; i < count; i++) {
-                        Uri uri = data.getClipData().getItemAt(i).getUri();
-                        PlaylistItem media = new PlaylistItem(
-                                playlist.getId(),
-                                uri.toString(),
-                                MediaUtils.getMediaNameFromURI(requireContext(), uri)
-                        );
-                        playlistItemViewModel.insert(media);
-                    }
-                    if (playlist.getCount() == 0) {
-                        Uri uri = data.getClipData().getItemAt(0).getUri();
-                        playlist.setFirstMediaUri(uri.toString());
-                    }
-                } else {
-                    //pick single media file
-                    Uri uri = data.getData();
-                    PlaylistItem media = new PlaylistItem(
-                            playlist.getId(),
-                            uri.toString(),
-                            MediaUtils.getMediaNameFromURI(requireContext(), uri)
-                    );
-                    playlistItemViewModel.insert(media);
-
-                    if (playlist.getCount() == 0) {
-                        playlist.setFirstMediaUri(uri.toString());
-                    }
-                }
-                playlistViewModel.update(playlist);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                refresh(playlist);
-            }
-        }
+        playlist.setFirstMediaUri(uris.get(0).toString());
+        uris.forEach(uri -> {
+            PlaylistItem media = new PlaylistItem(
+                    playlist.getId(),
+                    uri.toString(),
+                    MediaUtils.getMediaNameFromURI(requireContext(), uri));
+            playlistItemViewModel.insert(media);
+        });
+        refresh(playlist);
     }
 
     @Override

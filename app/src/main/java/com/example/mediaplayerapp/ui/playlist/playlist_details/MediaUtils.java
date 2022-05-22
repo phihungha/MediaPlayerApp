@@ -54,6 +54,7 @@ public class MediaUtils {
     }
 
     public static Bitmap loadThumbnail(Context context, Uri uri) {
+        context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         retriever.setDataSource(context, uri);
         byte[] data = retriever.getEmbeddedPicture();
@@ -122,7 +123,7 @@ public class MediaUtils {
     }
 
     public static String getMediaNameFromURI(Context context, Uri uri) {
-
+        context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
         Cursor cursor = null;
         try {
             String[] projection = new String[]{
