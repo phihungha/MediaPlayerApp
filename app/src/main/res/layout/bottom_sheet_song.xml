@@ -2,10 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/bs_song"
+    android:background="@color/white">
 
     <TextView
-        android:id="@+id/bottom_sheet_app_name_textview"
+        android:id="@+id/bottom_sheet_song_name_textview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
@@ -14,7 +16,7 @@
         android:textStyle="bold" />
 
     <LinearLayout
-        android:id="@+id/bottom_sheet_detail"
+        android:id="@+id/bottom_sheet_song_detail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
@@ -37,7 +39,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/bottom_sheet_add_playlist"
+        android:id="@+id/bottom_sheet_add_song_playlist"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"

@@ -24,6 +24,7 @@ import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.utils.IStartPlayback;
 import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.io.IOException;
@@ -117,7 +118,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
     }
 
     public class SongItemViewHolder extends RecyclerView.ViewHolder  {
-
+        BottomSheetDialog bottomSheetDialog;
         private Song currentSong;
         private final ShapeableImageView songThumbnail;
         private final TextView songTitle;
@@ -131,7 +132,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
             songArtist = itemView.findViewById(R.id.song_artist);
 
             ImageButton contextMenuBtn = itemView.findViewById(R.id.context_menu_btn);
-            contextMenuBtn.setOnClickListener(this::openContextMenu);
+            contextMenuBtn.setOnClickListener(this::openBottomSheetDialog);
 
             itemView.setOnClickListener(view -> playbackStartMethod.play(currentSong.getOrderIndex()));
         }
@@ -182,7 +183,22 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
 
             popupMenu.show();
         }
-
+        private void openBottomSheetDialog(View view){
+            bottomSheetDialog = new BottomSheetDialog(view.getContext(), R.style.BottomSheetTheme);
+            View bsView = LayoutInflater.from(view.getContext()).inflate(R.layout.bottom_sheet_song,
+                    view.findViewById(R.id.bs_song));
+            TextView tv_name = bsView.findViewById(R.id.bottom_sheet_song_name_textview);
+            tv_name.setText(currentSong.getTitle());
+            bsView.findViewById(R.id.bottom_sheet_song_detail).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    showSongDetails();
+                    bottomSheetDialog.dismiss();
+                }
+            });
+            bottomSheetDialog.setContentView(bsView);
+            bottomSheetDialog.show();
+        }
         private void showSongDetails() {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("Song detail")
