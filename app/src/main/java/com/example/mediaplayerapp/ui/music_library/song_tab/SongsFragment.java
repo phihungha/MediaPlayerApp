@@ -24,6 +24,7 @@ import com.example.mediaplayerapp.databinding.FragmentSongsBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
+import com.example.mediaplayerapp.ui.video_library.VideoLibraryFragment;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 
 @SuppressLint("NotifyDataSetChanged")
@@ -35,9 +36,9 @@ public class SongsFragment extends Fragment {
     private SongAdapter songAdapter;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
-
+    private SortOrder sortOrder = SortOrder.ASC;
     private FragmentSongsBinding binding;
-
+    private SongsViewModel viewModel;
     public SongsFragment() {
         // Required empty public constructor
     }
@@ -46,7 +47,7 @@ public class SongsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSongsBinding.inflate(getLayoutInflater(), container, false);
-        SongsViewModel viewModel = new ViewModelProvider(this).get(SongsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(SongsViewModel.class);
 
         setHasOptionsMenu(true);
 
@@ -94,7 +95,10 @@ public class SongsFragment extends Fragment {
             setDisplayModeAsGrid();
         else if (item.getItemId() == R.id.show_as_list)
             setDisplayModeAsList();
-
+        else if(item.getItemId()== R.id.sort_by_title_ASC)
+            setSortOrderAsASC();
+        else if(item.getItemId()== R.id.sort_by_title_DESC)
+            setSortOrderAsDESC();
         return true;
     }
 
@@ -120,5 +124,20 @@ public class SongsFragment extends Fragment {
         binding.songList.removeItemDecorationAt(0);
         songAdapter.setDisplayMode(DisplayMode.LIST);
         songAdapter.notifyDataSetChanged();
+    }
+
+    private void setSortOrderAsASC() {
+        viewModel.getSongsSortByTitleASC().observe(getViewLifecycleOwner(),newSongs -> songAdapter.updateSongs(newSongs));
+        sortOrder= SortOrder.ASC;
+    }
+
+    private void setSortOrderAsDESC() {
+        viewModel.getSongsSortByTitleDESC().observe(getViewLifecycleOwner(),newSongs -> songAdapter.updateSongs(newSongs));
+        sortOrder= SortOrder.DESC;
+    }
+
+    enum SortOrder {
+        ASC,
+        DESC
     }
 }

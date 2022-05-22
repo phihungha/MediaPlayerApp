@@ -3,6 +3,8 @@ package com.example.mediaplayerapp.data.music_library;
 import android.content.Context;
 import android.provider.MediaStore;
 
+import androidx.lifecycle.MutableLiveData;
+
 import java.util.List;
 
 /**
@@ -45,5 +47,15 @@ public class SongsRepository {
     public List<Song> getAllSongsFromAlbum(long albumId) {
         return mediaStore.getSongs(MediaStore.Audio.Media.ALBUM_ID + " = ?",
                 new String[] { String.valueOf(albumId) });
+    }
+
+    public MutableLiveData<List<Song>> getSongSortbyTitleASC()
+    {
+        return mediaStore.getSongSortbyTitleASC();
+    }
+
+    public MutableLiveData<List<Song>> getSongSortbyTitleDESC()
+    {
+        return mediaStore.getSongSortbyTitleDESC();
     }
 }
