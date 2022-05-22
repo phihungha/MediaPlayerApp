@@ -5,6 +5,8 @@ import android.provider.MediaStore;
 
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.mediaplayerapp.utils.MediaTimeUtils;
+
 import java.util.List;
 
 /**
@@ -57,5 +59,14 @@ public class SongsRepository {
     public MutableLiveData<List<Song>> getSongSortbyTitleDESC()
     {
         return mediaStore.getSongSortbyTitleDESC();
+    }
+    public String getAlbumDurationById(long albumId){
+        long duration=0;
+        List<Song> AlbumSongs = getAllSongsFromAlbum(albumId);
+        for(Song song : AlbumSongs)
+        {
+            duration += song.getDuration();
+        }
+        return MediaTimeUtils.getFormattedTime(duration);
     }
 }

@@ -24,6 +24,7 @@ public class AlbumDetailsViewModel extends AndroidViewModel {
     private final MutableLiveData<String> albumName = new MutableLiveData<>();
     private final MutableLiveData<Uri> albumUri = new MutableLiveData<>();
     private final MutableLiveData<String> numberOfSongs = new MutableLiveData<>();
+    private final MutableLiveData<String> totalDuration = new MutableLiveData<>();
 
     public AlbumDetailsViewModel(@NonNull Application application) {
         super(application);
@@ -47,11 +48,16 @@ public class AlbumDetailsViewModel extends AndroidViewModel {
         return albumUri;
     }
 
+    public LiveData<String> getTotalDuration() {
+        return totalDuration;
+    }
+
     public void setCurrentAlbumId(long id) {
         Album currentAlbum = albumRepository.getAlbum(id);
         albumName.setValue(currentAlbum.getArtistName());
         albumUri.setValue(currentAlbum.getUri());
         numberOfSongs.setValue(String.valueOf(currentAlbum.getNumberOfSongs()));
         albumSongs.setValue(songRepository.getAllSongsFromAlbum(id));
+        totalDuration.setValue(songRepository.getAlbumDurationById(id));
     }
 }
