@@ -14,10 +14,10 @@ import java.util.List;
 
 public class ArtistsViewModel extends AndroidViewModel {
     private final MutableLiveData<List<Artist>> artists = new MutableLiveData<>();
-
+    private final ArtistsRepository artistRepository;
     public ArtistsViewModel(@NonNull Application application) {
         super(application);
-        ArtistsRepository artistRepository = new ArtistsRepository(application.getApplicationContext());
+        artistRepository = new ArtistsRepository(application.getApplicationContext());
         artists.setValue(artistRepository.getAllArtists());
     }
 
@@ -25,4 +25,11 @@ public class ArtistsViewModel extends AndroidViewModel {
         return artists;
     }
 
+    public MutableLiveData<List<Artist>> getArtistSortByNameASC() {
+        return artistRepository.getArtistSortbyNameASC();
+    }
+
+    public MutableLiveData<List<Artist>> getArtistSortByNameDESC() {
+        return artistRepository.getArtistSortbyNameDESC();
+    }
 }

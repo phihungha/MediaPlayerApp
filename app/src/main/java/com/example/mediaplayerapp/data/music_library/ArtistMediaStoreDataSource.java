@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 
+import androidx.lifecycle.MutableLiveData;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,7 +50,58 @@ public class ArtistMediaStoreDataSource extends MediaStoreDataSource {
             } while (cursor.moveToNext());
             cursor.close();
         }
-
         return artists;
     }
+
+    /**
+     * Get artists that satisfy selection conditions
+     * @param selection SQL selection conditions
+     * @param selectionArgs Selection arguments
+     * @param sortOrder sort order
+     * @return List of Artist objects
+     */
+    public MutableLiveData<List<Artist>> getArtistsWithOrder(String selection, String[] selectionArgs, String sortOrder) {
+        String[] projection = new String[]{
+                MediaStore.Audio.Artists._ID,
+                MediaStore.Audio.Artists.ARTIST,
+                MediaStore.Audio.Artists.NUMBER_OF_ALBUMS,
+                MediaStore.Audio.Artists.NUMBER_OF_TRACKS,
+        };
+
+        List<Artist> artists = new ArrayList<>();
+
+        Cursor cursor = getMediaItems(projection,
+                selection,
+                selectionArgs,
+                sortOrder);
+
+        int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists._ID);
+        int artistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST);
+        int numberOfAlbumsColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_ALBUMS);
+        int numberOfTracksColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_TRACKS);
+
+        if (cursor.moveToFirst()) {
+            do {
+                artists.add(new Artist(
+                        cursor.getLong(idColumn),
+                        cursor.getString(artistColumn),
+                        cursor.getInt(numberOfAlbumsColumn),
+                        cursor.getInt(numberOfTracksColumn)));
+            } while (cursor.moveToNext());
+            cursor.close();
+        }
+        return new MutableLiveData<>(artists);
+    }
+    public MutableLiveData<List<Artist>> getArtistSortbyNameDESC()
+    {
+        return getArtistsWithOrder(null,null,
+                MediaStore.Audio.Artists.ARTIST +" ASC");
+    }
+    public MutableLiveData<List<Artist>> getArtistSortbyNameASC()
+    {
+        return getArtistsWithOrder(null,null,
+                MediaStore.Audio.Artists.ARTIST +" DESC");
+    }
+
+
 }

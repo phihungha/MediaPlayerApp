@@ -34,14 +34,12 @@
         <menu>
             <item
                 android:id="@+id/sort_by_title_ASC"
-                android:title="Sort by title (A-Z)"
-                android:icon="@drawable/ic_list_24dp"
+                android:title="Sort by name (A-Z)"
                 app:iconTint="@color/cyan" />
 
             <item
                 android:id="@+id/sort_by_title_DESC"
-                android:title="Sort by title (Z-A)"
-                android:icon="@drawable/ic_grid_24dp"
+                android:title="Sort by name (Z-A)"
                 app:iconTint="@color/cyan" />
         </menu>
     </item>
