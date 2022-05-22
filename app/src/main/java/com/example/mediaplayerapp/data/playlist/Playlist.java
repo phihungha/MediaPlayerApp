@@ -27,15 +27,11 @@ public class Playlist implements Serializable {
     @ColumnInfo(name = "Count")
     private int count;
 
-    @ColumnInfo(name = "FirstMedia")
-    private String firstMediaUri;
-
-    public Playlist(int idResource, String name, boolean isVideo, int count, String firstMediaUri) {
+    public Playlist(int idResource, String name, boolean isVideo, int count) {
         this.idResource = idResource;
         this.name = name;
         this.isVideo = isVideo;
         this.count = count;
-        this.firstMediaUri = firstMediaUri;
     }
 
     public int getCount() {
@@ -44,14 +40,6 @@ public class Playlist implements Serializable {
 
     public void setCount(int count) {
         this.count = count;
-    }
-
-    public String getFirstMediaUri() {
-        return firstMediaUri;
-    }
-
-    public void setFirstMediaUri(String firstMediaUri) {
-        this.firstMediaUri = firstMediaUri;
     }
 
     public int getId() {

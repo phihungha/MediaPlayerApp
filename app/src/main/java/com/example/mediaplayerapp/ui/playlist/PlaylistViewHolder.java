@@ -1,6 +1,7 @@
 package com.example.mediaplayerapp.ui.playlist;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -11,11 +12,14 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.ItemPlaylistBinding;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -25,16 +29,19 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
     private final ItemPlaylistBinding binding;
+    private static Application mApplication;
     private static IOnItemClickListener bsRenameListener;
     private static IOnItemClickListener bsDeleteListener;
     private static IOnItemClickListener bsPlayListener;
     private static IOnItemClickListener listener;
+    private final PlaylistItemViewModel playlistItemViewModel;
 
     public PlaylistViewHolder(@NonNull ItemPlaylistBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
         this.binding.imgBtnMore.setOnClickListener(this);
         this.binding.layoutItemPlaylist.setOnClickListener(this);
+        playlistItemViewModel=new PlaylistItemViewModel(mApplication);
     }
 
     @Override
@@ -73,23 +80,23 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     private void refreshThumb(Playlist playlist) {
+        PlaylistItem playlistItem = playlistItemViewModel.findByItemId(playlist.getId());
+
+        if (playlistItem == null) {
+            binding.imgThumbnail.setImageResource(playlist.getIdResource());
+            return;
+        }
         if (playlist.isVideo()) {
             Glide.with(mContext)
-                    .load(playlist.getFirstMediaUri())
+                    .load(playlistItem.getMediaUri())
                     .skipMemoryCache(false)
                     .error(playlist.getIdResource())
                     .centerCrop()
                     .into(binding.imgThumbnail);
         } else {
-            if (playlist.getFirstMediaUri() != null) {
-                Bitmap thumb = MediaUtils.loadThumbnail(mContext, Uri.parse(playlist.getFirstMediaUri()));
-                if (thumb != null) {
-                    binding.imgThumbnail.setImageBitmap(thumb);
-                } else {
-                    binding.imgThumbnail.setImageDrawable(
-                            ContextCompat.getDrawable(mContext,
-                                    playlist.getIdResource()));
-                }
+            Bitmap thumb = MediaUtils.loadThumbnail(mContext, Uri.parse(playlistItem.getMediaUri()));
+            if (thumb != null) {
+                binding.imgThumbnail.setImageBitmap(thumb);
             } else {
                 binding.imgThumbnail.setImageDrawable(
                         ContextCompat.getDrawable(mContext,
@@ -118,11 +125,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     public void setBinding(Playlist playlist) {
-        if (playlist.getFirstMediaUri() == null) {
-            binding.imgThumbnail.setImageResource(playlist.getIdResource());
-        } else {
-            refreshThumb(playlist);
-        }
+        refreshThumb(playlist);
 
         binding.tvPlaylistName.setText(playlist.getName());
         binding.tvPlaylistNumbers.setText(getStringCountText(playlist));
@@ -132,7 +135,8 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
                                      IOnItemClickListener _bsRenameListener,
                                      IOnItemClickListener _bsDeleteListener,
                                      IOnItemClickListener _bsPlayListener,
-                                     Context _context
+                                     Context _context,
+                                     Application application
     ) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemPlaylistBinding binding = ItemPlaylistBinding.inflate(inflater, parent, false);
@@ -141,6 +145,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         bsDeleteListener = _bsDeleteListener;
         bsPlayListener = _bsPlayListener;
         mContext = _context;
+        mApplication=application;
         return new PlaylistViewHolder(binding);
     }
 

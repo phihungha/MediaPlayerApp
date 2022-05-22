@@ -50,6 +50,8 @@ public class PlaylistDetailsDeleteDialog extends AppCompatDialogFragment {
         mMedia=(PlaylistItem) getArguments().getSerializable(PlaylistConstants.KEY_PLAYLIST_DETAIL);
         PlaylistItemViewModel viewModel= new ViewModelProvider(this)
                 .get(PlaylistItemViewModel.class);
+        PlaylistViewModel playlistViewModel=new ViewModelProvider(this)
+                .get(PlaylistViewModel.class);
 
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
         View view= requireActivity().getLayoutInflater().inflate(R.layout.dialog_delete_playlist_layout,null);
@@ -62,12 +64,10 @@ public class PlaylistDetailsDeleteDialog extends AppCompatDialogFragment {
                     Toast.makeText(getActivity(), "Item deleted!", Toast.LENGTH_SHORT).show();
 
                     playlist.setCount(playlist.getCount()-1);
-                    if (playlist.getCount()==0)
-                        playlist.setFirstMediaUri(null);
 
-                    PlaylistViewModel playlistViewModel=new ViewModelProvider(this).get(PlaylistViewModel.class);
+
                     playlistViewModel.update(playlist);
-                    playlistDetailsFragment.refresh(playlist);
+                    playlistDetailsFragment.refresh();
                 });
 
         return builder.create();

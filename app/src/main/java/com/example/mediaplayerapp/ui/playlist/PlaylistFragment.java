@@ -74,6 +74,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         binding.layoutItemWatchLater.setOnClickListener(this);
 
         adapter.setContext(requireContext());
+        adapter.setApplication(requireActivity().getApplication());
         //set click item listener for recyclerview
         adapter.setListener((v, position) -> {
             Bundle bundle = new Bundle();
@@ -169,8 +170,8 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                 Playlist playlist = new Playlist(idResource,
                         edtName.getText().toString().trim(),
                         radioVideo.isChecked(),
-                        0,
-                        null);
+                        0
+                       );
                 playlistViewModel.insert(playlist);
 
                 bottomSheetDialog.dismiss();

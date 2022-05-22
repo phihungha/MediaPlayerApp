@@ -89,6 +89,13 @@ public class PlaylistItemViewModel extends AndroidViewModel{
     }
 
     /**
+     *  get first item with id
+     * */
+    public PlaylistItem findByItemId(int id) {
+        return mRepository.findByItemId(id);
+    }
+
+    /**
      *  delete MediaItem object from database
      * */
     public void deleteAll(){

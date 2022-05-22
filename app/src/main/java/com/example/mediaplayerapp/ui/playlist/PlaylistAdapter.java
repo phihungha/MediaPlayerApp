@@ -5,13 +5,10 @@ import android.content.Context;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment;
 
 public class PlaylistAdapter extends ListAdapter<Playlist, PlaylistViewHolder> {
     private IOnItemClickListener mListener;
@@ -19,6 +16,7 @@ public class PlaylistAdapter extends ListAdapter<Playlist, PlaylistViewHolder> {
     private IOnItemClickListener mBSRenameListener;
     private IOnItemClickListener mBSDeleteListener;
     private IOnItemClickListener mBSPlayListener;
+    private Application mApplication;
 
     protected PlaylistAdapter(@NonNull DiffUtil.ItemCallback<Playlist> diffCallback) {
         super(diffCallback);
@@ -28,11 +26,15 @@ public class PlaylistAdapter extends ListAdapter<Playlist, PlaylistViewHolder> {
         this.mContext = mContext;
     }
 
+    public void setApplication(Application mApplication) {
+        this.mApplication = mApplication;
+    }
+
     @NonNull
     @Override
     public PlaylistViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return PlaylistViewHolder.create(parent, mListener, mBSRenameListener, mBSDeleteListener, mBSPlayListener,
-                mContext);
+                mContext,mApplication);
     }
 
     @Override

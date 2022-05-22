@@ -10,6 +10,8 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.core.Single;
+
 @Dao
 public interface PlaylistItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -47,4 +49,8 @@ public interface PlaylistItemDao {
 
     @Query("SELECT COUNT(*) FROM media_table WHERE media_table.MediaId=:id")
     int getCountPlaylistWithID(int id);
+
+    @Query("SELECT * FROM media_table WHERE media_table.MediaId = :id ORDER BY media_table.MediaName ASC")
+    PlaylistItem findByItemId(int id);
+
 }

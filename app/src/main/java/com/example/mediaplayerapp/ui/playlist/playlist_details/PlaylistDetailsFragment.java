@@ -2,6 +2,7 @@ package com.example.mediaplayerapp.ui.playlist.playlist_details;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,9 +17,12 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
@@ -39,7 +43,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     private FragmentPlaylistDetailsBinding binding;
     private MediaItemAdapter adapter;
     private PlaylistItemViewModel playlistItemViewModel;
-
+    private PlaylistViewModel playlistViewModel;
     private ActivityResultLauncher<String[]> mediaPickerLauncher;
 
     private boolean isASC = false;
@@ -51,18 +55,16 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         // Activity result launcher needs to be register
         // again every time this fragment is re-created
         mediaPickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.OpenMultipleDocuments(),
                 this::addPickedMediaItemsIntoPlaylist
         );
-
         binding = FragmentPlaylistDetailsBinding.inflate(inflater, container, false);
         playlistItemViewModel = new ViewModelProvider(this).get(PlaylistItemViewModel.class);
+        playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
         // Inflate the layout for this fragment
-
         return binding.getRoot();
     }
 
@@ -84,43 +86,56 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 media -> adapter.submitList(media)
         );
         binding.rcvPlaylistsDetails.setAdapter(adapter);
-        binding.imgThumbnailPlaylistDetails.setImageResource(playlist.getIdResource());
-
         setListener();
-        refresh(playlist);
+        refresh();
     }
 
-    public void refresh(Playlist playlist) {
+    public void refresh() {
         int count = playlistItemViewModel.getCountPlaylistWithID(playlist.getId());
         playlist.setCount(count);
-        PlaylistViewModel playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
         playlistViewModel.update(playlist);
 
         binding.tvPlaylistDetailsName.setText(playlist.getName());
         binding.tvPlaylistDetailsNumbers.setText(getStringCountText(playlist));
+
+        PlaylistItem playlistItem = playlistItemViewModel.findByItemId(playlist.getId());
+        if (playlistItem == null) {
+            binding.imgThumbnailPlaylistDetails.setImageResource(playlist.getIdResource());
+            return;
+        }
+        if (playlist.isVideo()) {
+            Glide.with(requireContext())
+                    .load(playlistItem.getMediaUri())
+                    .skipMemoryCache(false)
+                    .error(playlist.getIdResource())
+                    .centerCrop()
+                    .into(binding.imgThumbnailPlaylistDetails);
+        } else {
+            Bitmap thumb = MediaUtils.loadThumbnail(requireContext(), Uri.parse(playlistItem.getMediaUri()));
+            if (thumb != null) {
+                binding.imgThumbnailPlaylistDetails.setImageBitmap(thumb);
+            } else {
+                binding.imgThumbnailPlaylistDetails.setImageDrawable(
+                        ContextCompat.getDrawable(requireContext(),
+                                playlist.getIdResource()));
+            }
+        }
     }
 
     private String getStringCountText(Playlist playlist) {
         int count = playlist.getCount();
         String textNumber = "Playlist " + count + " ";
 
-        if (playlist.getId() == 1) {
+        if (playlist.isVideo()) {
             if (count <= 1) {
-                textNumber += "media";
+                textNumber += "video";
             } else
-                textNumber += "medias";
+                textNumber += "videos";
         } else {
-            if (playlist.isVideo()) {
-                if (count <= 1) {
-                    textNumber += "video";
-                } else
-                    textNumber += "videos";
-            } else {
-                if (count <= 1) {
-                    textNumber += "song";
-                } else
-                    textNumber += "songs";
-            }
+            if (count <= 1) {
+                textNumber += "song";
+            } else
+                textNumber += "songs";
         }
         return textNumber;
     }
@@ -215,9 +230,9 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
     private void AddMoreMedia() {
         if (playlist.isVideo()) {
-            mediaPickerLauncher.launch(new String[] { "video/*" });
+            mediaPickerLauncher.launch(new String[]{"video/*"});
         } else {
-            mediaPickerLauncher.launch(new String[] { "audio/*" });
+            mediaPickerLauncher.launch(new String[]{"audio/*"});
         }
     }
 
@@ -225,7 +240,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         if (uris.isEmpty())
             return;
 
-        playlist.setFirstMediaUri(uris.get(0).toString());
         uris.forEach(uri -> {
             PlaylistItem media = new PlaylistItem(
                     playlist.getId(),
@@ -233,7 +247,8 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                     MediaUtils.getMediaNameFromURI(requireContext(), uri));
             playlistItemViewModel.insert(media);
         });
-        refresh(playlist);
+
+        refresh();
     }
 
     @Override

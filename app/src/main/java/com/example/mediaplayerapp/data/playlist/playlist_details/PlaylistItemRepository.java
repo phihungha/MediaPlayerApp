@@ -44,6 +44,10 @@ public class PlaylistItemRepository {
         return mPlaylistItemDao.getCountPlaylistWithID(id);
     }
 
+    public PlaylistItem findByItemId(int id) {
+        return mPlaylistItemDao.findByItemId(id);
+    }
+
     public LiveData<List<PlaylistItem>> getAllPlaylistMediasWithID(int id) {
         return mPlaylistItemDao.getAllPlaylistMediasWithID(id);
     }
