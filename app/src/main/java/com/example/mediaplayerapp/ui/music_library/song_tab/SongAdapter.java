@@ -3,14 +3,12 @@ package com.example.mediaplayerapp.ui.music_library.song_tab;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -169,32 +167,15 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
             }
         }
 
-        private void openContextMenu(View view) {
-            PopupMenu popupMenu = new PopupMenu(context, view, Gravity.END);
-            popupMenu.getMenuInflater().inflate(
-                    R.menu.song_context_menu,
-                    popupMenu.getMenu());
-
-            popupMenu.setOnMenuItemClickListener(menuItem -> {
-                if (menuItem.getItemId() == R.id.song_detail)
-                    showSongDetails();
-                return true;
-            });
-
-            popupMenu.show();
-        }
         private void openBottomSheetDialog(View view){
             bottomSheetDialog = new BottomSheetDialog(view.getContext(), R.style.BottomSheetTheme);
             View bsView = LayoutInflater.from(view.getContext()).inflate(R.layout.bottom_sheet_song,
                     view.findViewById(R.id.bs_song));
             TextView tv_name = bsView.findViewById(R.id.bottom_sheet_song_name_textview);
             tv_name.setText(currentSong.getTitle());
-            bsView.findViewById(R.id.bottom_sheet_song_detail).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    showSongDetails();
-                    bottomSheetDialog.dismiss();
-                }
+            bsView.findViewById(R.id.bottom_sheet_song_detail).setOnClickListener(view1 -> {
+                showSongDetails();
+                bottomSheetDialog.dismiss();
             });
             bottomSheetDialog.setContentView(bsView);
             bottomSheetDialog.show();
