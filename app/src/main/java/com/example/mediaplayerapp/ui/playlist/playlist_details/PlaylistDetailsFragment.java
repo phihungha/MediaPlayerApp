@@ -40,10 +40,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     private MediaItemAdapter adapter;
     private PlaylistItemViewModel playlistItemViewModel;
 
-    private final ActivityResultLauncher<String[]> mediaPickerLauncher = registerForActivityResult(
-            new ActivityResultContracts.OpenMultipleDocuments(),
-            this::addPickedMediaItemsIntoPlaylist
-    );
+    private ActivityResultLauncher<String[]> mediaPickerLauncher;
 
     private boolean isASC = false;
 
@@ -54,9 +51,18 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        // Activity result launcher needs to be register
+        // again every time this fragment is re-created
+        mediaPickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.OpenMultipleDocuments(),
+                this::addPickedMediaItemsIntoPlaylist
+        );
+
         binding = FragmentPlaylistDetailsBinding.inflate(inflater, container, false);
         playlistItemViewModel = new ViewModelProvider(this).get(PlaylistItemViewModel.class);
         // Inflate the layout for this fragment
+
         return binding.getRoot();
     }
 
