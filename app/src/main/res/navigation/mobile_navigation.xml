@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/navigation_playlist">
+    app:startDestination="@id/navigation_overview">
 
     <fragment
         android:id="@+id/navigation_playlist"
@@ -22,4 +22,9 @@
         android:name="com.example.mediaplayerapp.ui.music_library.MusicLibraryFragment"
         android:label="@string/title_music"
         tools:layout="@layout/fragment_music_library" />
+    <fragment
+        android:id="@+id/navigation_overview"
+        android:name="com.example.mediaplayerapp.ui.overview.OverviewFragment"
+        android:label="@string/title_overview"
+        tools:layout="@layout/fragment_overview" />
 </navigation>

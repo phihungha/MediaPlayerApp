@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_overview"
+        android:icon="@drawable/ic_overview_24dp"
+        android:orderInCategory="1"
+        android:title="@string/title_overview" />
     <item
         android:id="@+id/navigation_music_library"
         android:icon="@drawable/ic_music_note_24dp"
