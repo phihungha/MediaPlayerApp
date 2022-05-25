@@ -17,13 +17,17 @@ public class MediaPlaybackInfo {
     @ColumnInfo(name = "LastPlaybackTime")
     private long lastPlaybackTime;
 
+    @ColumnInfo(name = "LastPlaybackPosition")
+    private long lastPlaybackPosition;
+
     @ColumnInfo(name = "PlaybackAmount")
     private int playbackAmount;
 
     @ColumnInfo(name = "IsVideo")
     private boolean isVideo;
 
-    public MediaPlaybackInfo(String mediaUri, long lastPlaybackTime, int playbackAmount, boolean isVideo) {
+    public MediaPlaybackInfo(String mediaUri, long lastPlaybackTime, int playbackAmount, boolean isVideo, long lastPlaybackPosition) {
+        this.setLastPlaybackPosition(lastPlaybackPosition);
         this.setMediaUri(mediaUri);
         this.setLastPlaybackTime(lastPlaybackTime);
         this.setPlaybackAmount(playbackAmount);
@@ -68,5 +72,13 @@ public class MediaPlaybackInfo {
 
     public void setLastPlaybackTime(long lastPlaybackTime) {
         this.lastPlaybackTime = lastPlaybackTime;
+    }
+
+    public long getLastPlaybackPosition() {
+        return lastPlaybackPosition;
+    }
+
+    public void setLastPlaybackPosition(long lastPlaybackPosition) {
+        this.lastPlaybackPosition = lastPlaybackPosition;
     }
 }
