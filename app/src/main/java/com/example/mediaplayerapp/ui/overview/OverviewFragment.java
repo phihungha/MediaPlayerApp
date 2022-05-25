@@ -1,26 +1,33 @@
 package com.example.mediaplayerapp.ui.overview;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.mediaplayerapp.R;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.mediaplayerapp.databinding.FragmentOverviewBinding;
 
 public class OverviewFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
+    private FragmentOverviewBinding binding;
+    private RecyclerView recentVideosRecyclerView;
+    private OverviewItemAdapter recyclerViewAdapter;
+    private OverviewViewModel overviewViewModel;
     private String mParam1;
     private String mParam2;
 
     public OverviewFragment() {
         // Required empty public constructor
     }
+
     public static OverviewFragment newInstance(String param1, String param2) {
         OverviewFragment fragment = new OverviewFragment();
         Bundle args = new Bundle();
@@ -40,9 +47,21 @@ public class OverviewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_overview, container, false);
+        binding = FragmentOverviewBinding.inflate(inflater, container, false);
+
+        recentVideosRecyclerView = binding.recentVideosRecyclerview;
+        recyclerViewAdapter = new OverviewItemAdapter(new OverviewItemAdapter.MediaPlaybackInfoDiff());
+        recentVideosRecyclerView.setAdapter(recyclerViewAdapter);
+        recentVideosRecyclerView.setLayoutManager(new LinearLayoutManager
+                (binding.getRoot().getContext()));
+
+        overviewViewModel = new ViewModelProvider(requireActivity()).get(OverviewViewModel.class);
+        overviewViewModel.get5RecentVideos().observe(
+                requireActivity(),
+                mediaPlaybackInfoList -> recyclerViewAdapter.submitList(mediaPlaybackInfoList));
+        return binding.getRoot();
     }
 }
