@@ -114,4 +114,5 @@
     <string name="grid">Grid</string>
     <string name="sort_by">Sort by</string>
     <string name="title_overview">Overview</string>
+    <string name="recent_videos_textview">Recent videos</string>
 </resources>
