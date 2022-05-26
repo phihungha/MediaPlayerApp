@@ -53,10 +53,11 @@ public class OverviewFragment extends Fragment {
         binding = FragmentOverviewBinding.inflate(inflater, container, false);
 
         recentVideosRecyclerView = binding.recentVideosRecyclerview;
+        recentVideosRecyclerView.setLayoutManager(new LinearLayoutManager
+                (binding.getRoot().getContext(),LinearLayoutManager.HORIZONTAL,false));
         recyclerViewAdapter = new OverviewItemAdapter(new OverviewItemAdapter.MediaPlaybackInfoDiff());
         recentVideosRecyclerView.setAdapter(recyclerViewAdapter);
-        recentVideosRecyclerView.setLayoutManager(new LinearLayoutManager
-                (binding.getRoot().getContext()));
+
 
         overviewViewModel = new ViewModelProvider(requireActivity()).get(OverviewViewModel.class);
         overviewViewModel.get5RecentVideos().observe(
