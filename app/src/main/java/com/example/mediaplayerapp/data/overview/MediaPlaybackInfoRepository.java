@@ -22,9 +22,29 @@ public class MediaPlaybackInfoRepository {
                 () -> mediaPlaybackInfoDao.insert(mediaPlaybackInfo));
     }
 
+    public void update(MediaPlaybackInfo mediaPlaybackInfo) {
+        MediaPlaybackInfoRoomDatabase.databaseWriteExecutor.execute(
+                () -> mediaPlaybackInfoDao.update(mediaPlaybackInfo));
+    }
+
     public void updatePlaybackAmount(MediaPlaybackInfo mediaPlaybackInfo) {
         MediaPlaybackInfoRoomDatabase.databaseWriteExecutor.execute(
                 () -> mediaPlaybackInfoDao.updatePlaybackAmount(mediaPlaybackInfo.getId()));
+    }
+
+    public void insertOrUpdate(MediaPlaybackInfo mediaPlaybackInfo) {
+
+        MediaPlaybackInfoRoomDatabase.databaseWriteExecutor.execute(
+                () ->
+                {
+                    MediaPlaybackInfo mediaPlaybackInfoFromRepo = mediaPlaybackInfoDao
+                            .getMediaPlayBackInfoByUri(mediaPlaybackInfo.getMediaUri());
+                    if (mediaPlaybackInfoFromRepo == null)
+                        insert(mediaPlaybackInfo);
+                    else
+                        update(mediaPlaybackInfo);
+                }
+        );
     }
 
     public LiveData<List<MediaPlaybackInfo>> get5RecentVideos() {
