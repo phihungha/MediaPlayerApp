@@ -13,7 +13,7 @@ import com.example.mediaplayerapp.R;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Playlist.class}, version = 1, exportSchema = false)
+@Database(entities = {Playlist.class}, version = 2, exportSchema = false)
 public abstract class PlaylistRoomDatabase extends RoomDatabase {
     public abstract PlaylistDao playlistDao();
 

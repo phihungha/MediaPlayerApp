@@ -25,8 +25,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
@@ -215,7 +213,6 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_sort)
@@ -234,16 +231,12 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         if (isASC) {
             playlistViewModel.sortPlaylistByNameDESC().observe(
                     getViewLifecycleOwner(),
-                    playlists -> {
-                        adapter.submitList(playlists);
-                    });
+                    playlists -> adapter.submitList(playlists));
 
         } else {
             playlistViewModel.sortPlaylistByNameASC().observe(
                     getViewLifecycleOwner(),
-                    playlists -> {
-                        adapter.submitList(playlists);
-                    });
+                    playlists -> adapter.submitList(playlists));
             isASC = !isASC;
         }
     }
