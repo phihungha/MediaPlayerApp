@@ -24,6 +24,12 @@ public interface MediaPlaybackInfoDao {
             "WHERE MediaPlaybackInfoID = :MediaPlaybackInfoID")
     void updatePlaybackAmount(int MediaPlaybackInfoID);
 
+    @Query("UPDATE media_playback_info_table SET " +
+            "PlaybackAmount = PlaybackAmount + 1, " +
+            "LastPlaybackTime = :lastPlaybackTime, " +
+            "LastPlaybackPosition = :lastPlaybackPosition " +
+            "WHERE MediaURI = :mediaUri")
+    void updateRelevantInfo(String mediaUri, long lastPlaybackTime, long lastPlaybackPosition);
 
     @Query("SELECT * FROM media_playback_info_table " +
             "WHERE isVideo = 1 " +

@@ -32,6 +32,12 @@ public class MediaPlaybackInfoRepository {
                 () -> mediaPlaybackInfoDao.updatePlaybackAmount(mediaPlaybackInfo.getId()));
     }
 
+    public void updateRelevantInfo(String mediaUri, long lastPlaybackTime, long lastPlaybackPosition) {
+        MediaPlaybackInfoRoomDatabase.databaseWriteExecutor.execute(
+                () -> mediaPlaybackInfoDao.updateRelevantInfo(
+                        mediaUri, lastPlaybackTime, lastPlaybackPosition));
+    }
+
     public void insertOrUpdate(MediaPlaybackInfo mediaPlaybackInfo) {
 
         MediaPlaybackInfoRoomDatabase.databaseWriteExecutor.execute(
@@ -42,7 +48,10 @@ public class MediaPlaybackInfoRepository {
                     if (mediaPlaybackInfoFromRepo == null)
                         insert(mediaPlaybackInfo);
                     else
-                        update(mediaPlaybackInfo);
+                        updateRelevantInfo(
+                                mediaPlaybackInfo.getMediaUri(),
+                                mediaPlaybackInfo.getLastPlaybackTime(),
+                                mediaPlaybackInfo.getLastPlaybackPosition());
                 }
         );
     }
