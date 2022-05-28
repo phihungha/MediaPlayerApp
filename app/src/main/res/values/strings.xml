@@ -116,4 +116,6 @@
     <string name="title_overview">Overview</string>
     <string name="recent_videos_textview">Recent videos</string>
     <string name="most_watched_videos_textview">Most watched videos</string>
+    <string name="recent_songs_textview">Recent songs</string>
+    <string name="most_listened_songs_textview">Most listened songs</string>
 </resources>
