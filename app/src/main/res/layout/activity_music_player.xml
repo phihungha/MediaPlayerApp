@@ -21,12 +21,8 @@
 
     <ImageView
         android:id="@+id/music_player_song_artwork"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
         android:contentDescription="@string/music_artwork"
         android:scaleType="centerCrop"
         android:transitionName="song_artwork"
@@ -49,7 +45,7 @@
         style="@style/MusicControlBtn"
         android:layout_width="@dimen/music_play_pause_btn_size"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="65dp"
         android:contentDescription="@string/play_pause_btn"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -190,12 +186,12 @@
         style="@style/MusicControlBtn"
         android:layout_width="28dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
         android:contentDescription="@string/more_features_btn"
         android:minWidth="48dp"
         android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/music_player_seekbar"
+        app:layout_constraintBottom_toBottomOf="@+id/music_player_song_artist"
         app:layout_constraintEnd_toEndOf="@+id/music_player_song_duration"
+        app:layout_constraintTop_toTopOf="@+id/music_player_song_title"
         app:srcCompat="@drawable/ic_more_vert_24dp"
         tools:ignore="TouchTargetSizeCheck" />
 
