@@ -48,10 +48,11 @@ public abstract class PlaylistRoomDatabase extends RoomDatabase {
             databaseWriteExecutor.execute(() -> {
                 // Populate the database in the background.
                 // If you want to start with more words, just add them.
-                PlaylistDao dao = INSTANCE.playlistDao();
 
-                Playlist favourite = new Playlist(R.drawable.ic_favorite_24dp,"My Favourite",true);
-                dao.insert(favourite);
+       /*         PlaylistDao dao = INSTANCE.playlistDao();
+
+                Playlist favourite = new Playlist(R.drawable.ic_favorite_24dp,"My Favourite",true,0,null);
+                dao.insert(favourite);*/
             });
         }
     };

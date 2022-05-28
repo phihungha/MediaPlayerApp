@@ -2,6 +2,7 @@ package com.example.mediaplayerapp.ui.playlist.playlist_details;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +10,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
+import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.databinding.ItemMediaBinding;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -21,6 +24,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
+    private static Playlist mPlaylist;
     private final ItemMediaBinding binding;
     private BottomSheetDialog bottomSheetDialog;
     private static IOnItemClickListener itemClickListener;
@@ -31,27 +35,35 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
 
     public MediaItemViewHolder(@NonNull ItemMediaBinding binding) {
         super(binding.getRoot());
-        this.binding=binding;
+        this.binding = binding;
         this.binding.layoutItemPlaylistDetails.setOnClickListener(this);
         this.binding.imgBtnPlaylistDetailsMore.setOnClickListener(this);
     }
 
-    public void setBinding(MediaItem media) {
+    public void setBinding(PlaylistItem media) {
         binding.tvPlaylistNamePlaylistDetails.setText(media.getName());
 
-         /* TODO: This causes exception when opening playlists with video added through video
-             library. To reproduce bug, create a video playlist then go to video library and
-             click on any video's 3 dot and choose "add to playlist". Then choose playlist
-             to add to and open that playlist. */
-        MediaInfo mediaInfo=MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
-        String duration=MediaUtils.convertDuration(mediaInfo.getDuration());
+        MediaInfo mediaInfo = MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
+        String duration = MediaUtils.convertDuration(mediaInfo.getDuration());
         binding.tvDurationMedia.setText(duration);
-        Glide.with(mContext)
-                .load(media.getMediaUri())
-                .skipMemoryCache(false)
-                .error(R.drawable.ic_error_24dp)
-                .centerCrop()
-                .into(binding.imgThumbnailPlaylistDetails);
+
+        if (mPlaylist.isVideo()){
+            Glide.with(mContext)
+                    .load(media.getMediaUri())
+                    .skipMemoryCache(false)
+                    .error(R.drawable.default_song_artwork)
+                    .centerCrop()
+                    .into(binding.imgThumbnailPlaylistDetails);
+        } else {
+            Bitmap thumb = MediaUtils.loadThumbnail(mContext, Uri.parse(media.getMediaUri()));
+            if (thumb != null) {
+                binding.imgThumbnailPlaylistDetails.setImageBitmap(thumb);
+            } else {
+                binding.imgThumbnailPlaylistDetails.setImageDrawable(
+                        ContextCompat.getDrawable(mContext,
+                                R.drawable.default_song_artwork));
+            }
+        }
     }
 
     static MediaItemViewHolder create(ViewGroup parent,
@@ -60,27 +72,30 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
                                       IOnItemClickListener _bsPlayListener,
                                       IOnItemClickListener _bsDeleteListener,
                                       IOnItemClickListener _bsPropertiesListener,
-                                      IOnItemClickListener _bsAddQueueListener) {
+                                      IOnItemClickListener _bsAddQueueListener,
+                                      Playlist playlist) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemMediaBinding binding = ItemMediaBinding.inflate(inflater, parent, false);
-        itemClickListener=_itemClickListener;
-        bsPlayListener=_bsPlayListener;
-        bsDeleteListener=_bsDeleteListener;
-        bsPropertiesListener=_bsPropertiesListener;
-        bsAddQueueListener=_bsAddQueueListener;
-        mContext=context;
+        itemClickListener = _itemClickListener;
+        bsPlayListener = _bsPlayListener;
+        bsDeleteListener = _bsDeleteListener;
+        bsPropertiesListener = _bsPropertiesListener;
+        bsAddQueueListener = _bsAddQueueListener;
+        mContext = context;
+        mPlaylist=playlist;
         return new MediaItemViewHolder(binding);
     }
 
-    private void onClickItem(){
+    private void onClickItem() {
         if (itemClickListener != null && getBindingAdapterPosition() != RecyclerView.NO_POSITION) {
             itemClickListener.onClick(itemView.getRootView(), getBindingAdapterPosition());
         }
     }
+
     @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.layoutItem_PlaylistDetails:
                 onClickItem();
                 break;
@@ -108,22 +123,22 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
     }
 
     private void addToQueue() {
-        bsAddQueueListener.onClick(itemView,getBindingAdapterPosition());
+        bsAddQueueListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void openProperties() {
-        bsPropertiesListener.onClick(itemView,getBindingAdapterPosition());
+        bsPropertiesListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void deleteItem() {
-        bsDeleteListener.onClick(itemView,getBindingAdapterPosition());
+        bsDeleteListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void playNext() {
-        bsPlayListener.onClick(itemView,getBindingAdapterPosition());
+        bsPlayListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 

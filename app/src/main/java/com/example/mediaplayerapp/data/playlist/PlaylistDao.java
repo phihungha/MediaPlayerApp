@@ -28,7 +28,8 @@ public interface PlaylistDao {
     @Query("SELECT * FROM playlist_table ORDER BY PlaylistID ASC")
     LiveData<List<Playlist>> getAllPlaylists();
 
-    @Query("SELECT * FROM playlist_table WHERE playlist_table.Name LIKE '%' || :text || '%'")
+    @Query("SELECT * FROM playlist_table WHERE playlist_table.Name LIKE '%' || :text || '%'" +
+            "ORDER BY PlaylistID ASC")
     LiveData<List<Playlist>> getAllPlaylistSearching(String text);
 
     @Query("SELECT * FROM playlist_table ORDER BY playlist_table.Name ASC")

@@ -3,6 +3,7 @@ package com.example.mediaplayerapp.utils;
 import android.net.Uri;
 
 import com.example.mediaplayerapp.data.music_library.Song;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.video_library.Video;
 import com.google.android.exoplayer2.MediaItem;
 
@@ -39,7 +40,7 @@ public class GetMediaItemsUtils {
      * @return MediaItem objects
      */
     public static List<MediaItem> fromPlaylistItems(
-            List<com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem> items) {
+            List<PlaylistItem> items) {
         return items.stream()
                 .map(i -> MediaItem.fromUri(Uri.parse(i.getMediaUri())))
                 .collect(Collectors.toList());

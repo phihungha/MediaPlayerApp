@@ -9,11 +9,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
-import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
-import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
+import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 
-public class MediaItemAdapter extends ListAdapter<MediaItem, MediaItemViewHolder> {
+public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHolder> {
     private Context mContext;
     private IOnItemClickListener itemClickListener;
     private IOnItemClickListener bsPlayListener;
@@ -21,6 +22,11 @@ public class MediaItemAdapter extends ListAdapter<MediaItem, MediaItemViewHolder
     private IOnItemClickListener bsPropertiesListener;
     private IOnItemClickListener bsAddQueueListener;
     private Application mApplication;
+    private Playlist mPlaylist;
+
+    public void setPlaylist(Playlist mPlaylist) {
+        this.mPlaylist = mPlaylist;
+    }
 
     public void setBsAddQueueListener(IOnItemClickListener bsAddQueueListener) {
         this.bsAddQueueListener = bsAddQueueListener;
@@ -30,7 +36,7 @@ public class MediaItemAdapter extends ListAdapter<MediaItem, MediaItemViewHolder
         this.mApplication = mApplication;
     }
 
-    public MediaItemAdapter(@NonNull DiffUtil.ItemCallback<MediaItem> diffCallback) {
+    public MediaItemAdapter(@NonNull DiffUtil.ItemCallback<PlaylistItem> diffCallback) {
         super(diffCallback);
     }
 
@@ -58,12 +64,13 @@ public class MediaItemAdapter extends ListAdapter<MediaItem, MediaItemViewHolder
     @Override
     public MediaItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return MediaItemViewHolder.create(parent,mContext,itemClickListener,
-                bsPlayListener,bsDeleteListener,bsPropertiesListener,bsAddQueueListener);
+                bsPlayListener,bsDeleteListener,bsPropertiesListener,bsAddQueueListener,
+                mPlaylist);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MediaItemViewHolder holder, int position) {
-        MediaItem current= getPlaylistMediaItemAt(position);
+        PlaylistItem current= getPlaylistMediaItemAt(position);
         if (current==null){
             return;
         }
@@ -71,25 +78,25 @@ public class MediaItemAdapter extends ListAdapter<MediaItem, MediaItemViewHolder
         if (MediaUtils.isUriExists(mContext,uri)){
             holder.setBinding(current);
         } else {
-            MediaItemViewModel mediaItemViewModel=new MediaItemViewModel(mApplication);
-            mediaItemViewModel.deleteItemWithUri(uri.toString());
+            PlaylistItemViewModel playlistItemViewModel =new PlaylistItemViewModel(mApplication);
+            playlistItemViewModel.deleteItemWithUri(uri.toString());
         }
     }
 
-    public static class PlaylistMediaDiff extends DiffUtil.ItemCallback<MediaItem> {
+    public static class PlaylistMediaDiff extends DiffUtil.ItemCallback<PlaylistItem> {
         @Override
-        public boolean areItemsTheSame(@NonNull MediaItem oldItem, @NonNull MediaItem newItem) {
+        public boolean areItemsTheSame(@NonNull PlaylistItem oldItem, @NonNull PlaylistItem newItem) {
             return oldItem == newItem;
         }
 
         @Override
-        public boolean areContentsTheSame(@NonNull MediaItem oldItem, @NonNull MediaItem newItem) {
+        public boolean areContentsTheSame(@NonNull PlaylistItem oldItem, @NonNull PlaylistItem newItem) {
             return oldItem.getMediaUri().equals(newItem.getMediaUri())
                     && oldItem.getId()==newItem.getId();
         }
     }
 
-    public MediaItem getPlaylistMediaItemAt(int position){
+    public PlaylistItem getPlaylistMediaItemAt(int position){
         return getItem(position);
     }
 }
