@@ -38,6 +38,12 @@ public interface MediaPlaybackInfoDao {
     LiveData<List<MediaPlaybackInfo>> get5RecentVideos();
 
     @Query("SELECT * FROM media_playback_info_table " +
+            "WHERE IsVideo = 1 " +
+            "ORDER BY PlaybackAmount DESC " +
+            "LIMIT 5")
+    LiveData<List<MediaPlaybackInfo>> get5MostWatchedVideos();
+
+    @Query("SELECT * FROM media_playback_info_table " +
             "WHERE MediaURI = :mediaUri")
     MediaPlaybackInfo getMediaPlayBackInfoByUri(String mediaUri);
 
