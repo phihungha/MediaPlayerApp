@@ -19,7 +19,9 @@ public class OverviewFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private FragmentOverviewBinding binding;
     private RecyclerView recentVideosRecyclerView;
-    private OverviewItemAdapter recyclerViewAdapter;
+    private RecyclerView mostWatchedVideosRecyclerView;
+    private OverviewItemAdapter recentVideosItemAdapter;
+    private OverviewItemAdapter mostWatchedVideosItemAdapter;
     private OverviewViewModel overviewViewModel;
     private String mParam1;
     private String mParam2;
@@ -52,17 +54,31 @@ public class OverviewFragment extends Fragment {
         // Inflate the layout for this fragment
         binding = FragmentOverviewBinding.inflate(inflater, container, false);
 
+        recentVideosItemAdapter = new OverviewItemAdapter(new OverviewItemAdapter.MediaPlaybackInfoDiff());
+
         recentVideosRecyclerView = binding.recentVideosRecyclerview;
         recentVideosRecyclerView.setLayoutManager(new LinearLayoutManager
-                (binding.getRoot().getContext(),LinearLayoutManager.HORIZONTAL,false));
-        recyclerViewAdapter = new OverviewItemAdapter(new OverviewItemAdapter.MediaPlaybackInfoDiff());
-        recentVideosRecyclerView.setAdapter(recyclerViewAdapter);
+                (binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false));
+
+        recentVideosRecyclerView.setAdapter(recentVideosItemAdapter);
+
+        mostWatchedVideosItemAdapter
+                = new OverviewItemAdapter(new OverviewItemAdapter.MediaPlaybackInfoDiff());
+        mostWatchedVideosRecyclerView = binding.mostWatchedVideosRecyclerview;
+        mostWatchedVideosRecyclerView.setLayoutManager(new LinearLayoutManager
+                (binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false));
+        mostWatchedVideosRecyclerView.setAdapter(mostWatchedVideosItemAdapter);
 
 
         overviewViewModel = new ViewModelProvider(requireActivity()).get(OverviewViewModel.class);
         overviewViewModel.get5RecentVideos().observe(
                 requireActivity(),
-                mediaPlaybackInfoList -> recyclerViewAdapter.submitList(mediaPlaybackInfoList));
+                mediaPlaybackInfoList -> recentVideosItemAdapter.submitList(mediaPlaybackInfoList));
+
+        overviewViewModel.get5MostWatchedVideos().observe(
+                requireActivity(),
+                mediaPlaybackInfoList -> mostWatchedVideosItemAdapter.submitList(mediaPlaybackInfoList));
+
         return binding.getRoot();
     }
 }

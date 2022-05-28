@@ -16,10 +16,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.overview.MediaPlaybackInfo;
 import com.example.mediaplayerapp.databinding.ItemOverviewVideoSmallBinding;
+import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class OverviewItemAdapter
         extends ListAdapter<MediaPlaybackInfo,OverviewItemAdapter.ViewHolder> {
@@ -62,6 +66,18 @@ public class OverviewItemAdapter
                 .centerCrop()
                 .into(holder.videoThumbnail);
         holder.videoName.setText(mediaPlaybackInfoList.get(position).getMediaUri());
+
+        SimpleDateFormat formatter = new SimpleDateFormat(
+                "dd/MM/yyyy - hh:mm a", Locale.US);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(mediaPlaybackInfoList.get(position).getLastPlaybackTime());
+        holder.videoPlaybackTime.setText(formatter.format(calendar.getTime()));
+
+        String lastPlaybackPosi = MediaTimeUtils.getFormattedTime(mediaPlaybackInfoList.get(position).getLastPlaybackPosition());
+        holder.videoPlaybackPosi.setText(lastPlaybackPosi);
+
+        holder.videoPlaybackAmount.setText(String.valueOf(mediaPlaybackInfoList.get(position).getPlaybackAmount()));
+
     }
 
     @Override
@@ -80,12 +96,18 @@ public class OverviewItemAdapter
         public final ShapeableImageView videoThumbnail;
         public final LinearLayout videoClickArea;
         public final TextView videoName;
+        public final TextView videoPlaybackTime;
+        public final TextView videoPlaybackPosi;
+        public final TextView videoPlaybackAmount;
 
         public ViewHolder(ItemOverviewVideoSmallBinding binding) {
             super(binding.getRoot());
             videoThumbnail = binding.videoThumbnailShapeableimageview;
             videoClickArea = binding.videoClickAreaLinearlayout;
             videoName = binding.videoNameTextview;
+            videoPlaybackTime = binding.videoLastPlaybackTextview;
+            videoPlaybackPosi = binding.videoPlaybackPositionTextview;
+            videoPlaybackAmount = binding.videoPlaybackAmountTextview;
         }
     }
 }
