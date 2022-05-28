@@ -23,9 +23,19 @@ public class OverviewViewModel extends AndroidViewModel {
     public LiveData<List<MediaPlaybackInfo>> get5RecentVideos() {
         return repository.get5RecentVideos();
     }
+
     public LiveData<List<MediaPlaybackInfo>> get5MostWatchedVideos() {
         return repository.get5MostWatchedVideos();
     }
+
+    public LiveData<List<MediaPlaybackInfo>> get5RecentSongs() {
+        return repository.get5RecentSongs();
+    }
+
+    public LiveData<List<MediaPlaybackInfo>> get5MostListenedSongs() {
+        return repository.get5MostListenedSongs();
+    }
+
     public void insert(MediaPlaybackInfo mediaPlaybackInfo) {
         repository.insert(mediaPlaybackInfo);
     }

@@ -20,8 +20,13 @@ public class OverviewFragment extends Fragment {
     private FragmentOverviewBinding binding;
     private RecyclerView recentVideosRecyclerView;
     private RecyclerView mostWatchedVideosRecyclerView;
+    private RecyclerView recentSongsRecyclerView;
+    private RecyclerView mostListenedSongsRecyclerView;
+    
     private OverviewItemAdapter recentVideosItemAdapter;
     private OverviewItemAdapter mostWatchedVideosItemAdapter;
+    private OverviewItemAdapter recentSongsItemAdapter;
+    private OverviewItemAdapter mostListenedSongsItemAdapter;
     private OverviewViewModel overviewViewModel;
     private String mParam1;
     private String mParam2;
@@ -55,7 +60,6 @@ public class OverviewFragment extends Fragment {
         binding = FragmentOverviewBinding.inflate(inflater, container, false);
 
         recentVideosItemAdapter = new OverviewItemAdapter(new OverviewItemAdapter.MediaPlaybackInfoDiff());
-
         recentVideosRecyclerView = binding.recentVideosRecyclerview;
         recentVideosRecyclerView.setLayoutManager(new LinearLayoutManager
                 (binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -69,16 +73,39 @@ public class OverviewFragment extends Fragment {
                 (binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false));
         mostWatchedVideosRecyclerView.setAdapter(mostWatchedVideosItemAdapter);
 
+        recentSongsItemAdapter = new OverviewItemAdapter(new OverviewItemAdapter.MediaPlaybackInfoDiff());
+        recentSongsRecyclerView = binding.recentSongsRecyclerview;
+        recentSongsRecyclerView.setLayoutManager(new LinearLayoutManager
+                (binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false));
 
+        recentSongsRecyclerView.setAdapter(recentSongsItemAdapter);
+
+        mostListenedSongsItemAdapter
+                = new OverviewItemAdapter(new OverviewItemAdapter.MediaPlaybackInfoDiff());
+        mostListenedSongsRecyclerView = binding.mostListenedSongsRecyclerview;
+        mostListenedSongsRecyclerView.setLayoutManager(new LinearLayoutManager
+                (binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false));
+        mostListenedSongsRecyclerView.setAdapter(mostListenedSongsItemAdapter);
+        
         overviewViewModel = new ViewModelProvider(requireActivity()).get(OverviewViewModel.class);
-        overviewViewModel.get5RecentVideos().observe(
-                requireActivity(),
-                mediaPlaybackInfoList -> recentVideosItemAdapter.submitList(mediaPlaybackInfoList));
+//        overviewViewModel.get5RecentVideos().observe(
+//                requireActivity(),
+//                mediaPlaybackInfoList -> recentVideosItemAdapter.submitList(mediaPlaybackInfoList));
+//
+//        overviewViewModel.get5MostWatchedVideos().observe(
+//                requireActivity(),
+//                mediaPlaybackInfoList -> mostWatchedVideosItemAdapter.submitList(mediaPlaybackInfoList));
 
-        overviewViewModel.get5MostWatchedVideos().observe(
+        overviewViewModel.get5RecentSongs().observe(
                 requireActivity(),
-                mediaPlaybackInfoList -> mostWatchedVideosItemAdapter.submitList(mediaPlaybackInfoList));
+                mediaPlaybackInfoList -> recentSongsItemAdapter.submitList(mediaPlaybackInfoList));
+
+
+        overviewViewModel.get5MostListenedSongs().observe(
+                requireActivity(),
+                mediaPlaybackInfoList -> mostListenedSongsItemAdapter.submitList(mediaPlaybackInfoList));
 
         return binding.getRoot();
     }
+
 }
