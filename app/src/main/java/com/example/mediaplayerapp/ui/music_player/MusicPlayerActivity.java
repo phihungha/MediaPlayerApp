@@ -98,6 +98,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 }
             };
+
     MediaControllerCompat.Callback controllerCallback =
             new MediaControllerCompat.Callback() {
                 @Override
