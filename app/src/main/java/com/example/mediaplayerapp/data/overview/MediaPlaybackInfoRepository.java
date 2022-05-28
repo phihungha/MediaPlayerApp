@@ -64,6 +64,13 @@ public class MediaPlaybackInfoRepository {
         return mediaPlaybackInfoDao.get5MostWatchedVideos();
     }
 
+    public LiveData<List<MediaPlaybackInfo>> get5RecentSongs() {
+        return mediaPlaybackInfoDao.get5RecentSongs();
+    }
+
+    public LiveData<List<MediaPlaybackInfo>> get5MostListenedSongs() {
+        return mediaPlaybackInfoDao.get5MostListenedSongs();
+    }
     public LiveData<List<MediaPlaybackInfo>> getAllMediaPlaybackInfo() {
         return allMediaPlaybackInfo;
     }
