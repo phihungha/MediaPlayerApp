@@ -26,4 +26,21 @@
                 app:iconTint="@color/cyan" />
         </menu>
     </item>
+    <item
+        android:id="@+id/change_sort_mode"
+        android:title="Sort"
+        app:iconTint="@color/cyan"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/sort_by_title_ASC"
+                android:title="Sort by name (A-Z)"
+                app:iconTint="@color/cyan" />
+
+            <item
+                android:id="@+id/sort_by_title_DESC"
+                android:title="Sort by name (Z-A)"
+                app:iconTint="@color/cyan" />
+        </menu>
+    </item>
 </menu>

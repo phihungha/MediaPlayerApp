@@ -3,14 +3,12 @@ package com.example.mediaplayerapp.ui.music_library.song_tab;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,6 +22,7 @@ import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.utils.IStartPlayback;
 import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.io.IOException;
@@ -117,7 +116,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
     }
 
     public class SongItemViewHolder extends RecyclerView.ViewHolder  {
-
+        BottomSheetDialog bottomSheetDialog;
         private Song currentSong;
         private final ShapeableImageView songThumbnail;
         private final TextView songTitle;
@@ -131,7 +130,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
             songArtist = itemView.findViewById(R.id.song_artist);
 
             ImageButton contextMenuBtn = itemView.findViewById(R.id.context_menu_btn);
-            contextMenuBtn.setOnClickListener(this::openContextMenu);
+            contextMenuBtn.setOnClickListener(this::openBottomSheetDialog);
 
             itemView.setOnClickListener(view -> playbackStartMethod.play(currentSong.getOrderIndex()));
         }
@@ -168,27 +167,26 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
             }
         }
 
-        private void openContextMenu(View view) {
-            PopupMenu popupMenu = new PopupMenu(context, view, Gravity.END);
-            popupMenu.getMenuInflater().inflate(
-                    R.menu.song_context_menu,
-                    popupMenu.getMenu());
-
-            popupMenu.setOnMenuItemClickListener(menuItem -> {
-                if (menuItem.getItemId() == R.id.song_detail)
-                    showSongDetails();
-                return true;
+        private void openBottomSheetDialog(View view){
+            bottomSheetDialog = new BottomSheetDialog(view.getContext(), R.style.BottomSheetTheme);
+            View bsView = LayoutInflater.from(view.getContext()).inflate(R.layout.bottom_sheet_song,
+                    view.findViewById(R.id.bs_song));
+            TextView tv_name = bsView.findViewById(R.id.bottom_sheet_song_name_textview);
+            tv_name.setText(currentSong.getTitle());
+            bsView.findViewById(R.id.bottom_sheet_song_detail).setOnClickListener(view1 -> {
+                showSongDetails();
+                bottomSheetDialog.dismiss();
             });
-
-            popupMenu.show();
+            bottomSheetDialog.setContentView(bsView);
+            bottomSheetDialog.show();
         }
-
         private void showSongDetails() {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("Song detail")
                     .setMessage("Song title: "+ currentSong.getTitle()
                             + "\nArtist name: " + currentSong.getArtistName()
                             + "\nAlbum name: "+ currentSong.getAlbumName()
+                            + "\nGenre: "+currentSong.getGenre(context)
                             + "\nDuration: "+ MediaTimeUtils.getFormattedTime(currentSong.getDuration()));
             builder.setCancelable(true);
             builder.setNegativeButton("Cancel", (dialog, id) -> dialog.cancel());

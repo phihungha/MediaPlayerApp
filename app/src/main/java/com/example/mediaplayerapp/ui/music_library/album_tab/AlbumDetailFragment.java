@@ -28,7 +28,7 @@ import java.io.IOException;
 public class AlbumDetailFragment extends Fragment {
     private long currentAlbumId;
     private String currentAlbumNumberOfSongs;
-
+    private String totalDuration;
     FragmentAlbumDetailBinding binding;
 
     public AlbumDetailFragment() {
@@ -76,6 +76,10 @@ public class AlbumDetailFragment extends Fragment {
             currentAlbumNumberOfSongs = s;
             updateDescription();
         });
+        viewModel.getTotalDuration().observe(getViewLifecycleOwner(), s -> {
+            totalDuration=s;
+            updateDescription();
+        });
         viewModel.getAlbumUri().observe(getViewLifecycleOwner(), this::updateArtwork);
         viewModel.getAlbumSongs().observe(getViewLifecycleOwner(), adapter::updateSongs);
         viewModel.setCurrentAlbumId(currentAlbumId);
@@ -114,7 +118,8 @@ public class AlbumDetailFragment extends Fragment {
      * Update album's description.
      */
     private void updateDescription() {
-        String description = "This album has " + currentAlbumNumberOfSongs + " song(s)";
+        String description = currentAlbumNumberOfSongs + " song(s),"
+                +" total duration: "+totalDuration;
         binding.albumDetailsDescription.setText(description);
     }
 }

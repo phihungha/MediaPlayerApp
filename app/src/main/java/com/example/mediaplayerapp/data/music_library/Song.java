@@ -1,6 +1,8 @@
 package com.example.mediaplayerapp.data.music_library;
 
 
+import android.content.Context;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 
 public class Song {
@@ -43,5 +45,12 @@ public class Song {
 
     public int getOrderIndex() {
         return orderIndex;
+    }
+
+    public String getGenre(Context context)
+    {
+        MediaMetadataRetriever mr = new MediaMetadataRetriever();
+        mr.setDataSource(context,this.uri);
+        return  mr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
     }
 }
