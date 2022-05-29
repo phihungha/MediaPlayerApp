@@ -50,6 +50,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumItemVie
 
     public void setDisplayMode(DisplayMode displayMode) {
         this.displayMode = displayMode;
+        notifyDataSetChanged();
     }
 
     @Override

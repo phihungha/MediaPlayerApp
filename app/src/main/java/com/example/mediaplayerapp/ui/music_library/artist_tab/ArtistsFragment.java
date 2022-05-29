@@ -32,9 +32,13 @@ public class ArtistsFragment extends Fragment {
     private static final int GRID_MODE_SPACING = 30;
 
     private ArtistAdapter artistAdapter;
+
+    private DisplayMode currentDisplayMode;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
+
     private ArtistsViewModel viewModel;
+
     private FragmentArtistBinding binding;
 
     public ArtistsFragment() {
@@ -57,7 +61,10 @@ public class ArtistsFragment extends Fragment {
 
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
         linearLayoutManager = new LinearLayoutManager(getContext());
-        setDisplayModeAsGrid(); // Default display mode is grid
+        // Initial value needs to be LIST so display mode can change
+        currentDisplayMode = DisplayMode.LIST;
+        // Default display mode is grid
+        setDisplayModeAsGrid();
 
         return binding.getRoot();
     }
@@ -89,7 +96,7 @@ public class ArtistsFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.artist_tab_show_as_grid)
             setDisplayModeAsGrid();
-        else if (item.getItemId() == R.id.album_tab_show_as_list)
+        else if (item.getItemId() == R.id.artist_tab_show_as_list)
             setDisplayModeAsList();
         else if (item.getItemId() == R.id.artist_tab_sort_by_name_asc)
             viewModel.loadAllArtists(ArtistsRepository.SortBy.NAME, SortOrder.ASC);
@@ -111,20 +118,30 @@ public class ArtistsFragment extends Fragment {
      * Change display mode to grid.
      */
     private void setDisplayModeAsGrid() {
+        if (currentDisplayMode == DisplayMode.GRID)
+            return;
+
         binding.artistList.setLayoutManager(gridLayoutManager);
         binding.artistList.addItemDecoration(
                 new GridSpacingItemDecoration(GRID_MODE_COLUMN_NUM,
                         GRID_MODE_SPACING,
                         true));
+
         artistAdapter.setDisplayMode(DisplayMode.GRID);
+        currentDisplayMode = DisplayMode.GRID;
     }
 
     /**
      * Change display mode to list.
      */
     private void setDisplayModeAsList() {
+        if (currentDisplayMode == DisplayMode.LIST)
+            return;
+
         binding.artistList.setLayoutManager(linearLayoutManager);
         binding.artistList.removeItemDecorationAt(0);
+
         artistAdapter.setDisplayMode(DisplayMode.LIST);
+        currentDisplayMode = DisplayMode.LIST;
     }
 }

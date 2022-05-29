@@ -35,10 +35,14 @@ public class SongsFragment extends Fragment {
     private static final int GRID_MODE_SPACING = 30;
 
     private SongAdapter songAdapter;
+
+    private DisplayMode currentDisplayMode;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
-    private FragmentSongsBinding binding;
+
     private SongsViewModel viewModel;
+
+    private FragmentSongsBinding binding;
 
     public SongsFragment() {
         // Required empty public constructor
@@ -63,7 +67,10 @@ public class SongsFragment extends Fragment {
 
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
         linearLayoutManager = new LinearLayoutManager(getContext());
-        setDisplayModeAsGrid(); // Default display mode is grid
+        // Initial value needs to be LIST so display mode can change
+        currentDisplayMode = DisplayMode.LIST;
+        // Default display mode is grid
+        setDisplayModeAsGrid();
 
         return binding.getRoot();
     }
@@ -117,23 +124,30 @@ public class SongsFragment extends Fragment {
      * Change display mode to grid.
      */
     private void setDisplayModeAsGrid() {
+        if (currentDisplayMode == DisplayMode.GRID)
+            return;
+
         binding.songList.setLayoutManager(gridLayoutManager);
         binding.songList.addItemDecoration(
                 new GridSpacingItemDecoration(GRID_MODE_COLUMN_NUM,
                         GRID_MODE_SPACING,
                         true));
-        songAdapter.setDisplayMode(DisplayMode.GRID);
-        songAdapter.notifyDataSetChanged();
 
+        songAdapter.setDisplayMode(DisplayMode.GRID);
+        currentDisplayMode = DisplayMode.GRID;
     }
 
     /**
      * Change display mode to list.
      */
     private void setDisplayModeAsList() {
+        if (currentDisplayMode == DisplayMode.LIST)
+            return;
+
         binding.songList.setLayoutManager(linearLayoutManager);
         binding.songList.removeItemDecorationAt(0);
+
         songAdapter.setDisplayMode(DisplayMode.LIST);
-        songAdapter.notifyDataSetChanged();
+        currentDisplayMode = DisplayMode.LIST;
     }
 }

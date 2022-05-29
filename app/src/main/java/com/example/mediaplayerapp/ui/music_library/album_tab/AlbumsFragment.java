@@ -27,12 +27,18 @@ import com.example.mediaplayerapp.utils.SortOrder;
 
 @SuppressLint("NotifyDataSetChanged")
 public class AlbumsFragment extends Fragment {
+
     private static final int GRID_MODE_COLUMN_NUM = 2;
     private static final int GRID_MODE_SPACING = 30;
+
     private AlbumAdapter albumAdapter;
+
+    private DisplayMode currentDisplayMode;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
+
     private AlbumsViewModel viewModel;
+
     private FragmentAlbumBinding binding;
 
     public AlbumsFragment() {
@@ -56,7 +62,10 @@ public class AlbumsFragment extends Fragment {
 
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
         linearLayoutManager = new LinearLayoutManager(getContext());
-        setDisplayModeAsGrid(); // Default display mode is grid
+        // Initial value needs to be LIST so display mode can change
+        currentDisplayMode = DisplayMode.LIST;
+        // Default display mode is grid
+        setDisplayModeAsGrid();
 
         return binding.getRoot();
     }
@@ -110,20 +119,30 @@ public class AlbumsFragment extends Fragment {
      * Change display mode to grid.
      */
     private void setDisplayModeAsGrid() {
+        if (currentDisplayMode == DisplayMode.GRID)
+            return;
+
         binding.albumList.setLayoutManager(gridLayoutManager);
         binding.albumList.addItemDecoration(
                 new GridSpacingItemDecoration(GRID_MODE_COLUMN_NUM,
                         GRID_MODE_SPACING,
                         true));
+
         albumAdapter.setDisplayMode(DisplayMode.GRID);
+        currentDisplayMode = DisplayMode.GRID;
     }
 
     /**
      * Change display mode to list.
      */
     private void setDisplayModeAsList() {
+        if (currentDisplayMode == DisplayMode.LIST)
+            return;
+
         binding.albumList.setLayoutManager(linearLayoutManager);
         binding.albumList.removeItemDecorationAt(0);
+
         albumAdapter.setDisplayMode(DisplayMode.LIST);
+        currentDisplayMode = DisplayMode.LIST;
     }
 }
