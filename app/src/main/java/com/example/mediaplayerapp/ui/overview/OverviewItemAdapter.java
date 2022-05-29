@@ -30,10 +30,16 @@ public class OverviewItemAdapter
         extends ListAdapter<MediaPlaybackInfo, OverviewItemAdapter.ViewHolder> {
 
     private final List<MediaPlaybackInfo> mediaPlaybackInfoList;
+    private final OverviewFragment.MediaType mediaType;
+    private final OverviewFragment.MediaLayoutType mediaLayoutType;
 
-    protected OverviewItemAdapter(@NonNull DiffUtil.ItemCallback<MediaPlaybackInfo> diffCallback) {
+    protected OverviewItemAdapter(@NonNull DiffUtil.ItemCallback<MediaPlaybackInfo> diffCallback,
+                                  OverviewFragment.MediaType mediaType,
+                                  OverviewFragment.MediaLayoutType mediaLayoutType) {
         super(diffCallback);
         mediaPlaybackInfoList = new ArrayList<>();
+        this.mediaType = mediaType;
+        this.mediaLayoutType = mediaLayoutType;
     }
 
     @NonNull
@@ -41,9 +47,13 @@ public class OverviewItemAdapter
     public OverviewItemAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 //        return new ViewHolder(ItemOverviewVideoSmallBinding.inflate
 //                (LayoutInflater.from(parent.getContext()), parent, false));
-
-        return new ViewHolder(ItemOverviewVideoBigBinding.inflate
-                (LayoutInflater.from(parent.getContext()), parent, false));
+        if (mediaLayoutType == OverviewFragment.MediaLayoutType.BIG) {
+            return new ViewHolder(ItemOverviewVideoBigBinding.inflate
+                    (LayoutInflater.from(parent.getContext()), parent, false));
+        } else {
+            return new ViewHolder(ItemOverviewVideoSmallBinding.inflate
+                    (LayoutInflater.from(parent.getContext()), parent, false));
+        }
     }
 
     @Override
