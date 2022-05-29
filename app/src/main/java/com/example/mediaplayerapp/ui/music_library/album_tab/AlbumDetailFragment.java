@@ -26,9 +26,12 @@ import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
 import java.io.IOException;
 
 public class AlbumDetailFragment extends Fragment {
+
     private long currentAlbumId;
     private String currentAlbumNumberOfSongs;
-    private String totalDuration;
+    private String currentAlbumTotalDuration;
+    private String currentAlbumReleaseYear;
+
     FragmentAlbumDetailBinding binding;
 
     public AlbumDetailFragment() {
@@ -77,7 +80,11 @@ public class AlbumDetailFragment extends Fragment {
             updateDescription();
         });
         viewModel.getTotalDuration().observe(getViewLifecycleOwner(), s -> {
-            totalDuration = s;
+            currentAlbumTotalDuration = s;
+            updateDescription();
+        });
+        viewModel.getReleaseYear().observe(getViewLifecycleOwner(), s -> {
+            currentAlbumReleaseYear = s;
             updateDescription();
         });
         viewModel.getAlbumUri().observe(getViewLifecycleOwner(), this::updateArtwork);
@@ -119,7 +126,8 @@ public class AlbumDetailFragment extends Fragment {
      */
     private void updateDescription() {
         String description = currentAlbumNumberOfSongs + " song(s),"
-                    + " total duration: " + totalDuration;
+                    + " total duration: " + currentAlbumTotalDuration + ", "
+                    + " released in " + currentAlbumReleaseYear;
         binding.albumDetailsDescription.setText(description);
     }
 }

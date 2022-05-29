@@ -97,6 +97,7 @@
                     android:singleLine="true"
                     android:text="@string/default_album_details_description"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/album_details_small_artwork"
