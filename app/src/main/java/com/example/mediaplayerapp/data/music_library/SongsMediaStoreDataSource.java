@@ -6,8 +6,11 @@ import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,9 +65,6 @@ public class SongsMediaStoreDataSource extends MediaStoreDataSource {
             if (cursor.moveToFirst()) {
                 do {
                     Uri songUri = getMediaItemUri(cursor.getLong(idColumn));
-                    LocalDateTime timeAdded = LocalDateTime.ofEpochSecond(
-                            cursor.getInt(dateAddedColumn) * 1000L,
-                            0, ZoneOffset.UTC);
                     songs.add(new Song(
                             songUri,
                             cursor.getString(titleColumn),
@@ -72,7 +72,7 @@ public class SongsMediaStoreDataSource extends MediaStoreDataSource {
                             cursor.getString(artistColumn),
                             getGenreFromSong(songUri),
                             cursor.getInt(durationColumn),
-                            timeAdded,
+                            getZonedAddedTime(cursor.getLong(dateAddedColumn)),
                             orderIndex));
                     orderIndex++;
                 } while (cursor.moveToNext());
@@ -83,6 +83,25 @@ public class SongsMediaStoreDataSource extends MediaStoreDataSource {
         });
     }
 
+    /**
+     * Get song's added time in current time zone.
+     * @param addedTimeLong Added time as a long value
+     * @return Added time in current time zone
+     */
+    private ZonedDateTime getZonedAddedTime(long addedTimeLong) {
+        Instant instant = Instant.now();
+        ZoneId currentZone = ZoneId.systemDefault();
+        ZoneOffset currentOffset = currentZone.getRules().getOffset(instant);
+        LocalDateTime localTimeAdded = LocalDateTime.ofEpochSecond(
+                            addedTimeLong,0, currentOffset);
+        return localTimeAdded.atZone(currentZone);
+    }
+
+    /**
+     * Get genre of a song.
+     * @param songUri URI of the song
+     * @return Genre
+     */
     private String getGenreFromSong(Uri songUri)
     {
         MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();

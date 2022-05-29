@@ -110,7 +110,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     binding.musicPlayerSongArtist.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_ARTIST));
 
                     long duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
-                    binding.musicPlayerSongDuration.setText(MediaTimeUtils.getFormattedTime(duration));
+                    binding.musicPlayerSongDuration.setText(MediaTimeUtils.getFormattedTimeFromLong(duration));
                     binding.musicPlayerSeekbar.setDuration(duration);
 
                     String artworkUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI);
@@ -304,7 +304,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             @Override
             public void onScrubMove(TimeBar timeBar, long position) {
                 timeBar.setPosition(position);
-                binding.musicPlayerSongCurrentPosition.setText(MediaTimeUtils.getFormattedTime(position));
+                binding.musicPlayerSongCurrentPosition.setText(MediaTimeUtils.getFormattedTimeFromLong(position));
             }
 
             @Override
@@ -343,7 +343,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 MediaControllerCompat controller = MediaControllerCompat.getMediaController(MusicPlayerActivity.this);
                 long currentPlaybackPosition = controller.getPlaybackState().getPosition();
                 binding.musicPlayerSeekbar.setPosition(currentPlaybackPosition);
-                binding.musicPlayerSongCurrentPosition.setText(MediaTimeUtils.getFormattedTime(currentPlaybackPosition));
+                binding.musicPlayerSongCurrentPosition.setText(MediaTimeUtils.getFormattedTimeFromLong(currentPlaybackPosition));
                 handler.postDelayed(this, 100);
             }
         });

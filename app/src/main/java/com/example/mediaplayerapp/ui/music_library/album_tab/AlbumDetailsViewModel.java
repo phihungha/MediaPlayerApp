@@ -75,7 +75,7 @@ public class AlbumDetailsViewModel extends AndroidViewModel {
                 .subscribe(songs -> {
                     albumSongs.setValue(songs);
                     long totalDurationLong = songs.stream().mapToLong(Song::getDuration).sum();
-                    totalDuration.setValue(MediaTimeUtils.getFormattedTime(totalDurationLong));
+                    totalDuration.setValue(MediaTimeUtils.getFormattedTimeFromLong(totalDurationLong));
                 });
 
         disposables.addAll(disposable1, disposable2);

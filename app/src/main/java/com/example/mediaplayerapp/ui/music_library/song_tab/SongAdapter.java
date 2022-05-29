@@ -183,11 +183,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
         private void showSongDetails() {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("Song detail")
-                    .setMessage("Song title: "+ currentSong.getTitle()
-                            + "\nArtist name: " + currentSong.getArtistName()
-                            + "\nAlbum name: "+ currentSong.getAlbumName()
-                            + "\nGenre: "+ currentSong.getGenre()
-                            + "\nDuration: "+ MediaTimeUtils.getFormattedTime(currentSong.getDuration()));
+                    .setMessage("Song title: " + currentSong.getTitle()
+                        + "\nArtist name: " + currentSong.getArtistName()
+                        + "\nAlbum name: " + currentSong.getAlbumName()
+                        + "\nGenre: " + currentSong.getGenre()
+                        + "\nDuration: " + MediaTimeUtils.getFormattedTimeFromLong(currentSong.getDuration())
+                        + "\nTime Added: " + MediaTimeUtils.getFormattedTimeFromZonedDateTime(currentSong.getTimeAdded())
+                    );
             builder.setCancelable(true);
             builder.setNegativeButton("Cancel", (dialog, id) -> dialog.cancel());
             builder.create().show();

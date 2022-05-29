@@ -2,8 +2,7 @@ package com.example.mediaplayerapp.data.music_library;
 
 import android.net.Uri;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class Song {
     private final int orderIndex;
@@ -13,10 +12,10 @@ public class Song {
     private final String albumName;
     private final String genre;
     private final long duration;
-    private final LocalDateTime timeAdded;
+    private final ZonedDateTime timeAdded;
 
     public Song(Uri uri, String title, String albumName, String artistName,
-                String genre, int duration, LocalDateTime timeAdded, int orderIndex) {
+                String genre, int duration, ZonedDateTime timeAdded, int orderIndex) {
         this.uri = uri;
         this.title = title;
         this.albumName = albumName;
@@ -47,7 +46,7 @@ public class Song {
         return duration;
     }
 
-    public LocalDateTime getTimeAdded() {
+    public ZonedDateTime getTimeAdded() {
         return timeAdded;
     }
 
