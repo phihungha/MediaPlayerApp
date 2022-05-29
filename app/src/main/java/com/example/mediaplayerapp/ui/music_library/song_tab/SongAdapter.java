@@ -181,6 +181,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
             bottomSheetDialog.setContentView(bsView);
             bottomSheetDialog.show();
         }
+
         private void showSongDetails() {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("Song detail")
