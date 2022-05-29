@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.overview.MediaPlaybackInfo;
+import com.example.mediaplayerapp.databinding.ItemOverviewVideoBigBinding;
 import com.example.mediaplayerapp.databinding.ItemOverviewVideoSmallBinding;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -26,7 +27,7 @@ import java.util.List;
 import java.util.Locale;
 
 public class OverviewItemAdapter
-        extends ListAdapter<MediaPlaybackInfo,OverviewItemAdapter.ViewHolder> {
+        extends ListAdapter<MediaPlaybackInfo, OverviewItemAdapter.ViewHolder> {
 
     private final List<MediaPlaybackInfo> mediaPlaybackInfoList;
 
@@ -35,24 +36,13 @@ public class OverviewItemAdapter
         mediaPlaybackInfoList = new ArrayList<>();
     }
 
-    static class MediaPlaybackInfoDiff extends DiffUtil.ItemCallback<MediaPlaybackInfo> {
-
-        @Override
-        public boolean areItemsTheSame(@NonNull MediaPlaybackInfo oldItem,
-                                       @NonNull MediaPlaybackInfo newItem) {
-            return oldItem == newItem;
-        }
-
-        @Override
-        public boolean areContentsTheSame(@NonNull MediaPlaybackInfo oldItem,
-                                          @NonNull MediaPlaybackInfo newItem) {
-            return oldItem.getMediaUri().equals(newItem.getMediaUri());
-        }
-    }
     @NonNull
     @Override
     public OverviewItemAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ViewHolder(ItemOverviewVideoSmallBinding.inflate
+//        return new ViewHolder(ItemOverviewVideoSmallBinding.inflate
+//                (LayoutInflater.from(parent.getContext()), parent, false));
+
+        return new ViewHolder(ItemOverviewVideoBigBinding.inflate
                 (LayoutInflater.from(parent.getContext()), parent, false));
     }
 
@@ -92,7 +82,23 @@ public class OverviewItemAdapter
         this.mediaPlaybackInfoList.clear();
         this.mediaPlaybackInfoList.addAll(list);
     }
-    public static class ViewHolder extends RecyclerView.ViewHolder{
+
+    static class MediaPlaybackInfoDiff extends DiffUtil.ItemCallback<MediaPlaybackInfo> {
+
+        @Override
+        public boolean areItemsTheSame(@NonNull MediaPlaybackInfo oldItem,
+                                       @NonNull MediaPlaybackInfo newItem) {
+            return oldItem == newItem;
+        }
+
+        @Override
+        public boolean areContentsTheSame(@NonNull MediaPlaybackInfo oldItem,
+                                          @NonNull MediaPlaybackInfo newItem) {
+            return oldItem.getMediaUri().equals(newItem.getMediaUri());
+        }
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public final ShapeableImageView videoThumbnail;
         public final LinearLayout videoClickArea;
         public final TextView videoName;
@@ -101,6 +107,16 @@ public class OverviewItemAdapter
         public final TextView videoPlaybackAmount;
 
         public ViewHolder(ItemOverviewVideoSmallBinding binding) {
+            super(binding.getRoot());
+            videoThumbnail = binding.videoThumbnailShapeableimageview;
+            videoClickArea = binding.videoClickAreaLinearlayout;
+            videoName = binding.videoNameTextview;
+            videoPlaybackTime = binding.videoLastPlaybackTextview;
+            videoPlaybackPosi = binding.videoPlaybackPositionTextview;
+            videoPlaybackAmount = binding.videoPlaybackAmountTextview;
+        }
+
+        public ViewHolder(ItemOverviewVideoBigBinding binding) {
             super(binding.getRoot());
             videoThumbnail = binding.videoThumbnailShapeableimageview;
             videoClickArea = binding.videoClickAreaLinearlayout;
