@@ -20,8 +20,6 @@ import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 
 public class ArtistDetailFragment extends Fragment {
     private long currentArtistId;
-    private String currentArtistNumberOfSongs;
-    private String currentArtistNumberOfAlbums;
 
     FragmentArtistDetailBinding binding;
 
@@ -61,17 +59,13 @@ public class ArtistDetailFragment extends Fragment {
 
         binding.artistDetailsPlayAllSongs.setOnClickListener(v -> playAllSongs());
 
-        viewModel.getArtistName().observe(getViewLifecycleOwner(), s -> {
-            binding.artistDetailsCollapsingLayout.setTitle(s);
-            binding.artistDetailsName.setText(s);
-        });
-        viewModel.getNumberOfSongs().observe(getViewLifecycleOwner(), s -> {
-            currentArtistNumberOfSongs = s;
-            updateDescription();
-        });
-        viewModel.getNumberOfAlbums().observe(getViewLifecycleOwner(), s -> {
-            currentArtistNumberOfAlbums = s;
-            updateDescription();
+        viewModel.getArtist().observe(getViewLifecycleOwner(), artist -> {
+            binding.artistDetailsName.setText(artist.getArtistName());
+            String description = "" + artist.getNumberOfSongs()
+                    + " song(s), "
+                    + artist.getNumberOfAlbums()
+                    + " album(s)";
+            binding.artistDetailsDescription.setText(description);
         });
         viewModel.getArtistSongs().observe(getViewLifecycleOwner(), adapter::updateSongs);
         viewModel.setCurrentArtistId(currentArtistId);
@@ -85,17 +79,5 @@ public class ArtistDetailFragment extends Fragment {
     private void playAllSongs() {
         Uri uri = GetPlaybackUriUtils.forArtist(currentArtistId, 0);
         MusicPlayerActivity.launchWithUri(requireActivity(), uri);
-    }
-
-    /**
-     * Update artist's description.
-     */
-    private void updateDescription() {
-        String description = "This artist has "
-                                + currentArtistNumberOfSongs
-                                + " song(s) and "
-                                + currentArtistNumberOfAlbums
-                                + " album(s)";
-        binding.artistDetailsDescription.setText(description);
     }
 }

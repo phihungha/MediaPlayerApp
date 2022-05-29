@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.music_library.Album;
 import com.example.mediaplayerapp.databinding.FragmentAlbumDetailBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
@@ -28,9 +29,8 @@ import java.io.IOException;
 public class AlbumDetailFragment extends Fragment {
 
     private long currentAlbumId;
-    private String currentAlbumNumberOfSongs;
-    private String currentAlbumTotalDuration;
-    private String currentAlbumReleaseYear;
+    private Album currentAlbum;
+    private String currentAlbumDuration;
 
     FragmentAlbumDetailBinding binding;
 
@@ -71,23 +71,17 @@ public class AlbumDetailFragment extends Fragment {
 
         binding.albumDetailsPlayAllSongs.setOnClickListener(v -> playAllSongs());
 
-        viewModel.getAlbumName().observe(getViewLifecycleOwner(), s -> {
-            binding.albumDetailsCollapsingLayout.setTitle(s);
-            binding.albumDetailsName.setText(s);
-        });
-        viewModel.getNumberOfSongs().observe(getViewLifecycleOwner(), s -> {
-            currentAlbumNumberOfSongs = s;
+        viewModel.getAlbum().observe(getViewLifecycleOwner(), album -> {
+            currentAlbum = album;
+            binding.albumDetailsName.setText(album.getAlbumName());
+            binding.albumDetailsArtist.setText(album.getArtistName());
+            updateArtwork(album.getUri());
             updateDescription();
         });
-        viewModel.getTotalDuration().observe(getViewLifecycleOwner(), s -> {
-            currentAlbumTotalDuration = s;
+        viewModel.getAlbumDuration().observe(getViewLifecycleOwner(), duration -> {
+            currentAlbumDuration = duration;
             updateDescription();
         });
-        viewModel.getReleaseYear().observe(getViewLifecycleOwner(), s -> {
-            currentAlbumReleaseYear = s;
-            updateDescription();
-        });
-        viewModel.getAlbumUri().observe(getViewLifecycleOwner(), this::updateArtwork);
         viewModel.getAlbumSongs().observe(getViewLifecycleOwner(), adapter::updateSongs);
         viewModel.setCurrentAlbumId(currentAlbumId);
 
@@ -125,9 +119,10 @@ public class AlbumDetailFragment extends Fragment {
      * Update album's description.
      */
     private void updateDescription() {
-        String description = currentAlbumNumberOfSongs + " song(s),"
-                    + " total duration: " + currentAlbumTotalDuration + ", "
-                    + " released in " + currentAlbumReleaseYear;
+        String description = currentAlbum.getNumberOfSongs() + " song(s),"
+                    + " total duration: " + currentAlbumDuration;
+        if (currentAlbum.getYear() != 0)
+            description += ", released in: " + currentAlbum.getYear();
         binding.albumDetailsDescription.setText(description);
     }
 }

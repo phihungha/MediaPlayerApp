@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.mediaplayerapp.data.music_library.Artist;
 import com.example.mediaplayerapp.data.music_library.ArtistsRepository;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.music_library.SongsRepository;
@@ -25,10 +26,8 @@ public class ArtistDetailsViewModel extends AndroidViewModel {
     private final ArtistsRepository artistsRepository;
     private final SongsRepository songsRepository;
 
+    private final MutableLiveData<Artist> artist = new MutableLiveData<>();
     private final MutableLiveData<List<Song>> artistSongs = new MutableLiveData<>();
-    private final MutableLiveData<String> artistName = new MutableLiveData<>();
-    private final MutableLiveData<String> numberOfSongs = new MutableLiveData<>();
-    private final MutableLiveData<String> numberOfAlbums = new MutableLiveData<>();
 
     public ArtistDetailsViewModel(@NonNull Application application) {
         super(application);
@@ -40,27 +39,15 @@ public class ArtistDetailsViewModel extends AndroidViewModel {
         return artistSongs;
     }
 
-    public LiveData<String> getArtistName() {
-        return artistName;
-    }
-
-    public LiveData<String> getNumberOfSongs() {
-        return numberOfSongs;
-    }
-
-    public LiveData<String> getNumberOfAlbums() {
-        return numberOfAlbums;
+    public LiveData<Artist> getArtist() {
+        return artist;
     }
 
     public void setCurrentArtistId(long id) {
         Disposable disposable1 = artistsRepository.getArtist(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(currentArtist -> {
-                    artistName.setValue(currentArtist.getArtistName());
-                    numberOfAlbums.setValue(String.valueOf(currentArtist.getNumberOfAlbums()));
-                    numberOfSongs.setValue(String.valueOf(currentArtist.getNumberOfSongs()));
-                });
+                .subscribe(artist::setValue);
 
         Disposable disposable2 = songsRepository.getAllSongsFromArtist(id)
                 .subscribeOn(Schedulers.io())
