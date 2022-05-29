@@ -1,5 +1,7 @@
 package com.example.mediaplayerapp.ui.overview;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -7,6 +9,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,11 +18,15 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.overview.MediaPlaybackInfo;
+import com.example.mediaplayerapp.databinding.ItemOverviewSongBigBinding;
+import com.example.mediaplayerapp.databinding.ItemOverviewSongSmallBinding;
 import com.example.mediaplayerapp.databinding.ItemOverviewVideoBigBinding;
 import com.example.mediaplayerapp.databinding.ItemOverviewVideoSmallBinding;
+import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -47,32 +54,54 @@ public class OverviewItemAdapter
     public OverviewItemAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 //        return new ViewHolder(ItemOverviewVideoSmallBinding.inflate
 //                (LayoutInflater.from(parent.getContext()), parent, false));
-        if (mediaLayoutType == OverviewFragment.MediaLayoutType.BIG) {
-            return new ViewHolder(ItemOverviewVideoBigBinding.inflate
-                    (LayoutInflater.from(parent.getContext()), parent, false));
+        if (mediaType == OverviewFragment.MediaType.VIDEO) {
+            if (mediaLayoutType == OverviewFragment.MediaLayoutType.BIG) {
+                return new ViewHolder(ItemOverviewVideoBigBinding.inflate
+                        (LayoutInflater.from(parent.getContext()), parent, false));
+            } else {
+                return new ViewHolder(ItemOverviewVideoSmallBinding.inflate
+                        (LayoutInflater.from(parent.getContext()), parent, false));
+            }
         } else {
-            return new ViewHolder(ItemOverviewVideoSmallBinding.inflate
-                    (LayoutInflater.from(parent.getContext()), parent, false));
+            if (mediaLayoutType == OverviewFragment.MediaLayoutType.BIG) {
+                return new ViewHolder(ItemOverviewSongBigBinding.inflate
+                        (LayoutInflater.from(parent.getContext()), parent, false));
+            } else {
+                return new ViewHolder(ItemOverviewSongSmallBinding.inflate
+                        (LayoutInflater.from(parent.getContext()), parent, false));
+            }
         }
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull OverviewItemAdapter.ViewHolder holder, int position) {
-        Glide.with(holder.videoThumbnail.getContext())
-                .load(mediaPlaybackInfoList.get(position).getMediaUri())
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .error(R.drawable.ic_video_24dp)
-                .override(holder.videoThumbnail.getWidth(), holder.videoThumbnail.getHeight())
-                .centerCrop()
-                .into(holder.videoThumbnail);
-        holder.videoName.setText(mediaPlaybackInfoList.get(position).getMediaUri());
+        if (mediaType == OverviewFragment.MediaType.VIDEO) {
+            Glide.with(holder.videoThumbnail.getContext())
+                    .load(Uri.parse(mediaPlaybackInfoList.get(position).getMediaUri()))
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .error(R.drawable.ic_play_video_24dp)
+                    .override(holder.videoThumbnail.getWidth(), holder.videoThumbnail.getHeight())
+                    .centerCrop()
+                    .into(holder.videoThumbnail);
+        } else try {
+            // Somehow, glide doesn't work for songs' cover thumbnail
+            Bitmap thumbnail = MediaThumbnailUtils.getThumbnailFromUri(
+                    holder.videoThumbnail.getContext(),
+                    Uri.parse(mediaPlaybackInfoList.get(position).getMediaUri()));
+            holder.videoThumbnail.setImageBitmap(thumbnail);
+        } catch (IOException e) {
+            holder.videoThumbnail.setImageDrawable(
+                    ContextCompat.getDrawable(holder.videoThumbnail.getContext(),
+                            R.drawable.default_song_artwork));
+        }
 
         SimpleDateFormat formatter = new SimpleDateFormat(
                 "dd/MM/yyyy - hh:mm a", Locale.US);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(mediaPlaybackInfoList.get(position).getLastPlaybackTime());
         holder.videoPlaybackTime.setText(formatter.format(calendar.getTime()));
-
+        holder.videoName.setText(mediaPlaybackInfoList.get(position).getMediaUri());
         String lastPlaybackPosi = MediaTimeUtils.getFormattedTime(mediaPlaybackInfoList.get(position).getLastPlaybackPosition());
         holder.videoPlaybackPosi.setText(lastPlaybackPosi);
 
@@ -134,6 +163,26 @@ public class OverviewItemAdapter
             videoPlaybackTime = binding.videoLastPlaybackTextview;
             videoPlaybackPosi = binding.videoPlaybackPositionTextview;
             videoPlaybackAmount = binding.videoPlaybackAmountTextview;
+        }
+
+        public ViewHolder(ItemOverviewSongSmallBinding binding) {
+            super(binding.getRoot());
+            videoThumbnail = binding.songThumbnailShapeableimageview;
+            videoClickArea = binding.songClickAreaLinearlayout;
+            videoName = binding.songNameTextview;
+            videoPlaybackTime = binding.songLastPlaybackTextview;
+            videoPlaybackPosi = binding.songPlaybackPositionTextview;
+            videoPlaybackAmount = binding.songPlaybackAmountTextview;
+        }
+
+        public ViewHolder(ItemOverviewSongBigBinding binding) {
+            super(binding.getRoot());
+            videoThumbnail = binding.songThumbnailShapeableimageview;
+            videoClickArea = binding.songClickAreaLinearlayout;
+            videoName = binding.songNameTextview;
+            videoPlaybackTime = binding.songLastPlaybackTextview;
+            videoPlaybackPosi = binding.songPlaybackPositionTextview;
+            videoPlaybackAmount = binding.songPlaybackAmountTextview;
         }
     }
 }
