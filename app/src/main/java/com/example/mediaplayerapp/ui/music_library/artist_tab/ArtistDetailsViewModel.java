@@ -7,17 +7,23 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.mediaplayerapp.data.music_library.Artist;
 import com.example.mediaplayerapp.data.music_library.ArtistsRepository;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.music_library.SongsRepository;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class ArtistDetailsViewModel extends AndroidViewModel {
 
-    private final ArtistsRepository artistRepository;
-    private final SongsRepository songRepository;
+    private final CompositeDisposable disposables = new CompositeDisposable();
+
+    private final ArtistsRepository artistsRepository;
+    private final SongsRepository songsRepository;
 
     private final MutableLiveData<List<Song>> artistSongs = new MutableLiveData<>();
     private final MutableLiveData<String> artistName = new MutableLiveData<>();
@@ -26,8 +32,8 @@ public class ArtistDetailsViewModel extends AndroidViewModel {
 
     public ArtistDetailsViewModel(@NonNull Application application) {
         super(application);
-        artistRepository  = new ArtistsRepository(application);
-        songRepository  = new SongsRepository(application);
+        artistsRepository  = new ArtistsRepository(application);
+        songsRepository  = new SongsRepository(application);
     }
 
     public LiveData<List<Song>> getArtistSongs() {
@@ -47,10 +53,26 @@ public class ArtistDetailsViewModel extends AndroidViewModel {
     }
 
     public void setCurrentArtistId(long id) {
-        Artist currentArtist = artistRepository.getArtist(id);
-        artistName.setValue(currentArtist.getArtistName());
-        numberOfSongs.setValue(String.valueOf(currentArtist.getNumberOfSongs()));
-        numberOfAlbums.setValue(String.valueOf(currentArtist.getNumberOfAlbums()));
-        artistSongs.setValue(songRepository.getAllSongsFromArtist(id));
+        Disposable disposable1 = artistsRepository.getArtist(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(currentArtist -> {
+                    artistName.setValue(currentArtist.getArtistName());
+                    numberOfAlbums.setValue(String.valueOf(currentArtist.getNumberOfAlbums()));
+                    numberOfSongs.setValue(String.valueOf(currentArtist.getNumberOfSongs()));
+                });
+
+        Disposable disposable2 = songsRepository.getAllSongsFromArtist(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(artistSongs::setValue);
+
+        disposables.addAll(disposable1, disposable2);
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        disposables.dispose();
     }
 }

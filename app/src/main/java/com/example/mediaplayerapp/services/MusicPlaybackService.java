@@ -35,8 +35,13 @@ import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
@@ -44,6 +49,8 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     public static final String AUDIO_SESSION_ID_KEY = "com.example.mediaplayerapp.services.MusicPlaybackService.AudioSessionId";
     private static final String NOTIFICATION_CHANNEL_ID = "com.example.mediaplayerapp.services.MusicPlaybackService.MUSIC_PLAYBACK";
     private static final int NOTIFICATION_ID = 1;
+
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
     private ExoPlayer player;
     private MediaSessionCompat mediaSession;
@@ -248,26 +255,45 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
      * @param uri Playback URI
      */
     private void loadMediaItemsFromLibrary(Uri uri) {
-        List<Song> songsToPlay = new ArrayList<>();
-        int playbackStartIndex = 0;
         List<String> uriSegments = uri.getPathSegments();
         String type = uriSegments.get(0);
 
         if (type.equals(GetPlaybackUriUtils.LIBRARY_URI_SEGMENT)) {
-            songsToPlay = songsRepository.getAllSongs(SongsRepository.SortBy.TITLE, SortOrder.ASC);
-            playbackStartIndex = Integer.parseInt(uriSegments.get(1));
+            int playbackStartIndex = Integer.parseInt(uriSegments.get(1));
+            loadMediaItemsFromSongsObservable(
+                    songsRepository.getAllSongs(SongsRepository.SortBy.TITLE, SortOrder.ASC),
+                    playbackStartIndex
+            );
         } else if (type.equals(GetPlaybackUriUtils.ARTIST_URI_SEGMENT)) {
             long artistId = Long.parseLong(uriSegments.get(1));
-            songsToPlay = songsRepository.getAllSongsFromArtist(artistId);
-            playbackStartIndex = Integer.parseInt(uriSegments.get(2));
+            int playbackStartIndex = Integer.parseInt(uriSegments.get(2));
+            loadMediaItemsFromSongsObservable(
+                    songsRepository.getAllSongsFromArtist(artistId),
+                    playbackStartIndex
+            );
         } else if (type.equals(GetPlaybackUriUtils.ALBUM_URI_SEGMENT)) {
             long albumId = Long.parseLong(uriSegments.get(1));
-            songsToPlay = songsRepository.getAllSongsFromAlbum(albumId);
-            playbackStartIndex = Integer.parseInt(uriSegments.get(2));
+            int playbackStartIndex = Integer.parseInt(uriSegments.get(2));
+            loadMediaItemsFromSongsObservable(
+                    songsRepository.getAllSongsFromAlbum(albumId),
+                    playbackStartIndex
+            );
         }
+    }
 
-        player.addMediaItems(GetMediaItemsUtils.fromLibrarySongs(songsToPlay));
-        player.seekTo(playbackStartIndex, C.TIME_UNSET);
+    /**
+     * Load media items from RxJava Observable that emits Song objects.
+     * @param songs RxJava Observable that emits Song objects
+     * @param playbackStartIndex Index of first media item to play
+     */
+    private void loadMediaItemsFromSongsObservable(Observable<List<Song>> songs, int playbackStartIndex) {
+        Disposable disposable = songs.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(newSongs -> {
+                player.addMediaItems(GetMediaItemsUtils.fromLibrarySongs(newSongs));
+                player.seekTo(playbackStartIndex, C.TIME_UNSET);
+            });
+        disposables.add(disposable);
     }
 
     /**
@@ -289,6 +315,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         mediaSession.release();
         notificationManager.setPlayer(null);
         player.release();
+        disposables.dispose();
     }
 
     /**

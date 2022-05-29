@@ -77,7 +77,7 @@ public class AlbumDetailFragment extends Fragment {
             updateDescription();
         });
         viewModel.getTotalDuration().observe(getViewLifecycleOwner(), s -> {
-            totalDuration=s;
+            totalDuration = s;
             updateDescription();
         });
         viewModel.getAlbumUri().observe(getViewLifecycleOwner(), this::updateArtwork);
@@ -119,7 +119,7 @@ public class AlbumDetailFragment extends Fragment {
      */
     private void updateDescription() {
         String description = currentAlbumNumberOfSongs + " song(s),"
-                +" total duration: "+totalDuration;
+                    + " total duration: " + totalDuration;
         binding.albumDetailsDescription.setText(description);
     }
 }

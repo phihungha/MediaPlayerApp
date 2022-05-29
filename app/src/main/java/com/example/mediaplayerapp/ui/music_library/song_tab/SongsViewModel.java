@@ -10,10 +10,17 @@ import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.music_library.SongsRepository;
 import com.example.mediaplayerapp.utils.SortOrder;
 
-
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class SongsViewModel extends AndroidViewModel {
+
+    private final CompositeDisposable disposables = new CompositeDisposable();
+
     private final MutableLiveData<List<Song>> songs = new MutableLiveData<>();
     private final SongsRepository songsRepository;
 
@@ -23,10 +30,20 @@ public class SongsViewModel extends AndroidViewModel {
     }
 
     public void loadAllSongs(SongsRepository.SortBy sortBy, SortOrder sortOrder) {
-        songs.setValue(songsRepository.getAllSongs(sortBy, sortOrder));
+        Disposable disposable = songsRepository.getAllSongs(sortBy, sortOrder)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(songs::setValue);
+        disposables.add(disposable);
     }
 
     public LiveData<List<Song>> getAllSongs() {
         return songs;
+    }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        disposables.dispose();
     }
 }
