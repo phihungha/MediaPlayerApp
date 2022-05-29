@@ -20,12 +20,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.music_library.SongsRepository;
 import com.example.mediaplayerapp.databinding.FragmentSongsBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
-import com.example.mediaplayerapp.ui.video_library.VideoLibraryFragment;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
+import com.example.mediaplayerapp.utils.SortOrder;
 
 @SuppressLint("NotifyDataSetChanged")
 public class SongsFragment extends Fragment {
@@ -36,9 +37,9 @@ public class SongsFragment extends Fragment {
     private SongAdapter songAdapter;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
-    private SortOrder sortOrder = SortOrder.ASC;
     private FragmentSongsBinding binding;
     private SongsViewModel viewModel;
+
     public SongsFragment() {
         // Required empty public constructor
     }
@@ -58,6 +59,7 @@ public class SongsFragment extends Fragment {
         binding.songList.setAdapter(songAdapter);
 
         viewModel.getAllSongs().observe(getViewLifecycleOwner(), newSongs -> songAdapter.updateSongs(newSongs));
+        viewModel.loadAllSongs(SongsRepository.SortBy.TITLE, SortOrder.ASC);
 
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -71,7 +73,7 @@ public class SongsFragment extends Fragment {
         inflater.inflate(R.menu.music_library_options_menu, menu);
 
         SearchManager searchManager = (SearchManager) requireContext().getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.music_library_search).getActionView();
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -91,14 +93,23 @@ public class SongsFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.show_as_grid)
+        if (item.getItemId() == R.id.music_library_show_as_grid)
             setDisplayModeAsGrid();
-        else if (item.getItemId() == R.id.show_as_list)
+        else if (item.getItemId() == R.id.music_library_show_as_list)
             setDisplayModeAsList();
-        else if(item.getItemId()== R.id.sort_by_title_ASC)
-            setSortOrderAsASC();
-        else if(item.getItemId()== R.id.sort_by_title_DESC)
-            setSortOrderAsDESC();
+        else if(item.getItemId() == R.id.music_library_sort_by_title_asc)
+            viewModel.loadAllSongs(SongsRepository.SortBy.TITLE, SortOrder.ASC);
+        else if(item.getItemId() == R.id.music_library_sort_by_title_desc)
+            viewModel.loadAllSongs(SongsRepository.SortBy.TITLE, SortOrder.DESC);
+        else if(item.getItemId() == R.id.music_library_sort_by_duration_asc)
+            viewModel.loadAllSongs(SongsRepository.SortBy.DURATION, SortOrder.ASC);
+        else if(item.getItemId() == R.id.music_library_sort_by_duration_desc)
+            viewModel.loadAllSongs(SongsRepository.SortBy.DURATION, SortOrder.DESC);
+        else if(item.getItemId() == R.id.music_library_sort_by_time_added_asc)
+            viewModel.loadAllSongs(SongsRepository.SortBy.TIME_ADDED, SortOrder.ASC);
+        else if(item.getItemId() == R.id.music_library_sort_by_time_added_desc)
+            viewModel.loadAllSongs(SongsRepository.SortBy.TIME_ADDED, SortOrder.DESC);
+
         return true;
     }
 
@@ -124,20 +135,5 @@ public class SongsFragment extends Fragment {
         binding.songList.removeItemDecorationAt(0);
         songAdapter.setDisplayMode(DisplayMode.LIST);
         songAdapter.notifyDataSetChanged();
-    }
-
-    private void setSortOrderAsASC() {
-        viewModel.getSongsSortByTitleASC().observe(getViewLifecycleOwner(),newSongs -> songAdapter.updateSongs(newSongs));
-        sortOrder= SortOrder.ASC;
-    }
-
-    private void setSortOrderAsDESC() {
-        viewModel.getSongsSortByTitleDESC().observe(getViewLifecycleOwner(),newSongs -> songAdapter.updateSongs(newSongs));
-        sortOrder= SortOrder.DESC;
-    }
-
-    enum SortOrder {
-        ASC,
-        DESC
     }
 }

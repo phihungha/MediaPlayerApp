@@ -23,6 +23,7 @@ import com.example.mediaplayerapp.data.music_library.SongsRepository;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemRepository;
 import com.example.mediaplayerapp.utils.GetMediaItemsUtils;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
+import com.example.mediaplayerapp.utils.SortOrder;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
@@ -253,7 +254,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         String type = uriSegments.get(0);
 
         if (type.equals(GetPlaybackUriUtils.LIBRARY_URI_SEGMENT)) {
-            songsToPlay = songsRepository.getAllSongs();
+            songsToPlay = songsRepository.getAllSongs(SongsRepository.SortBy.TITLE, SortOrder.ASC);
             playbackStartIndex = Integer.parseInt(uriSegments.get(1));
         } else if (type.equals(GetPlaybackUriUtils.ARTIST_URI_SEGMENT)) {
             long artistId = Long.parseLong(uriSegments.get(1));

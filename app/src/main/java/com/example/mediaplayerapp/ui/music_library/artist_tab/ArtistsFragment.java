@@ -22,7 +22,6 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.FragmentArtistBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
-import com.example.mediaplayerapp.ui.music_library.song_tab.SongsFragment;
 
 @SuppressLint("NotifyDataSetChanged")
 public class ArtistsFragment extends Fragment {
@@ -66,7 +65,7 @@ public class ArtistsFragment extends Fragment {
         inflater.inflate(R.menu.music_library_options_menu, menu);
 
         SearchManager searchManager = (SearchManager) requireContext().getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.music_library_search).getActionView();
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -86,11 +85,9 @@ public class ArtistsFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.change_display_mode)
-            changeDisplayMode(item);
-        else if(item.getItemId()== R.id.sort_by_title_ASC)
+        if(item.getItemId()== R.id.music_library_sort_by_title_asc)
             setSortOrderAsASC();
-        else if(item.getItemId()== R.id.sort_by_title_DESC)
+        else if(item.getItemId()== R.id.music_library_sort_by_title_desc)
             setSortOrderAsDESC();
         return true;
     }

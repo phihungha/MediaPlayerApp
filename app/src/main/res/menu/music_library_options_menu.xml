@@ -2,45 +2,74 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/search"
+        android:id="@+id/music_library_search"
         android:title="@string/action_search"
         app:showAsAction="ifRoom"
         app:actionViewClass="android.widget.SearchView" />
 
     <item
-        android:id="@+id/change_display_mode"
         android:title="@string/show_as"
-        app:iconTint="@color/cyan"
         app:showAsAction="never">
         <menu>
             <item
-                android:id="@+id/show_as_list"
+                android:id="@+id/music_library_show_as_list"
                 android:title="@string/list"
                 android:icon="@drawable/ic_list_24dp"
                 app:iconTint="@color/cyan" />
 
             <item
-                android:id="@+id/show_as_grid"
+                android:id="@+id/music_library_show_as_grid"
                 android:title="@string/grid"
                 android:icon="@drawable/ic_grid_24dp"
                 app:iconTint="@color/cyan" />
         </menu>
     </item>
+
     <item
-        android:id="@+id/change_sort_mode"
-        android:title="Sort"
-        app:iconTint="@color/cyan"
+        android:title="@string/sort_by"
         app:showAsAction="never">
         <menu>
-            <item
-                android:id="@+id/sort_by_title_ASC"
-                android:title="Sort by name (A-Z)"
-                app:iconTint="@color/cyan" />
+            <item android:title="@string/title"
+                android:icon="@drawable/ic_sort_by_alphabet_24dp"
+                app:iconTint="@color/cyan">
+               <menu>
+                   <item
+                       android:id="@+id/music_library_sort_by_title_asc"
+                       android:title="@string/ascending" />
 
-            <item
-                android:id="@+id/sort_by_title_DESC"
-                android:title="Sort by name (Z-A)"
-                app:iconTint="@color/cyan" />
+                   <item
+                       android:id="@+id/music_library_sort_by_title_desc"
+                       android:title="@string/descending" />
+               </menu>
+            </item>
+
+            <item android:title="@string/duration"
+                android:icon="@drawable/ic_calendar_month_24dp"
+                app:iconTint="@color/cyan">
+                <menu>
+                    <item
+                        android:id="@+id/music_library_sort_by_duration_asc"
+                        android:title="@string/ascending" />
+
+                    <item
+                        android:id="@+id/music_library_sort_by_duration_desc"
+                        android:title="@string/descending" />
+                </menu>
+            </item>
+
+            <item android:title="@string/time_added"
+                android:icon="@drawable/ic_watch_later_24dp"
+                app:iconTint="@color/cyan">
+                <menu>
+                    <item
+                        android:id="@+id/music_library_sort_by_time_added_asc"
+                        android:title="@string/ascending" />
+
+                    <item
+                        android:id="@+id/music_library_sort_by_time_added_desc"
+                        android:title="@string/descending" />
+                </menu>
+            </item>
         </menu>
     </item>
 </menu>

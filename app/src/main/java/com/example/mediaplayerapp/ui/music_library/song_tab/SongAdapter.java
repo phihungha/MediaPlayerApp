@@ -186,7 +186,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
                     .setMessage("Song title: "+ currentSong.getTitle()
                             + "\nArtist name: " + currentSong.getArtistName()
                             + "\nAlbum name: "+ currentSong.getAlbumName()
-                            + "\nGenre: "+currentSong.getGenre(context)
+                            + "\nGenre: "+ currentSong.getGenre()
                             + "\nDuration: "+ MediaTimeUtils.getFormattedTime(currentSong.getDuration()));
             builder.setCancelable(true);
             builder.setNegativeButton("Cancel", (dialog, id) -> dialog.cancel());

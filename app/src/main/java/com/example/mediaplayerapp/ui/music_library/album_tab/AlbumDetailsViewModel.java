@@ -12,6 +12,7 @@ import com.example.mediaplayerapp.data.music_library.Album;
 import com.example.mediaplayerapp.data.music_library.AlbumsRepository;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.music_library.SongsRepository;
+import com.example.mediaplayerapp.utils.MediaTimeUtils;
 
 import java.util.List;
 
@@ -58,6 +59,6 @@ public class AlbumDetailsViewModel extends AndroidViewModel {
         albumUri.setValue(currentAlbum.getUri());
         numberOfSongs.setValue(String.valueOf(currentAlbum.getNumberOfSongs()));
         albumSongs.setValue(songRepository.getAllSongsFromAlbum(id));
-        totalDuration.setValue(songRepository.getAlbumDurationById(id));
+        totalDuration.setValue(MediaTimeUtils.getFormattedTime(songRepository.getAlbumDurationById(id)));
     }
 }

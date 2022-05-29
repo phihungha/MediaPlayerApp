@@ -113,4 +113,9 @@
     <string name="list">List</string>
     <string name="grid">Grid</string>
     <string name="sort_by">Sort by</string>
+    <string name="ascending">Ascending</string>
+    <string name="descending">Descending</string>
+    <string name="sort_by_title">Sort by title</string>
+    <string name="title">Title</string>
+    <string name="time_added">Time added</string>
 </resources>
