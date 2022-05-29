@@ -118,4 +118,8 @@
     <string name="sort_by_title">Sort by title</string>
     <string name="title">Title</string>
     <string name="time_added">Time added</string>
+    <string name="name">Name</string>
+    <string name="number_of_albums">Number of albums</string>
+    <string name="number_of_songs">Number of songs</string>
+    <string name="release_year">Release year</string>
 </resources>

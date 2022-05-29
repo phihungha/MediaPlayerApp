@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/music_library_search"
+        android:id="@+id/artist_tab_search"
         android:title="@string/action_search"
         app:showAsAction="ifRoom"
         app:actionViewClass="android.widget.SearchView" />
@@ -12,13 +12,13 @@
         app:showAsAction="never">
         <menu>
             <item
-                android:id="@+id/music_library_show_as_list"
+                android:id="@+id/artist_tab_show_as_list"
                 android:title="@string/list"
                 android:icon="@drawable/ic_list_24dp"
                 app:iconTint="@color/cyan" />
 
             <item
-                android:id="@+id/music_library_show_as_grid"
+                android:id="@+id/artist_tab_show_as_grid"
                 android:title="@string/grid"
                 android:icon="@drawable/ic_grid_24dp"
                 app:iconTint="@color/cyan" />
@@ -29,44 +29,44 @@
         android:title="@string/sort_by"
         app:showAsAction="never">
         <menu>
-            <item android:title="@string/title"
+            <item android:title="@string/name"
                 android:icon="@drawable/ic_sort_by_alphabet_24dp"
                 app:iconTint="@color/cyan">
                <menu>
                    <item
-                       android:id="@+id/music_library_sort_by_title_asc"
+                       android:id="@+id/artist_tab_sort_by_name_asc"
                        android:title="@string/ascending" />
 
                    <item
-                       android:id="@+id/music_library_sort_by_title_desc"
+                       android:id="@+id/artist_tab_sort_by_name_desc"
                        android:title="@string/descending" />
                </menu>
             </item>
 
-            <item android:title="@string/duration"
-                android:icon="@drawable/ic_calendar_month_24dp"
+            <item android:title="@string/number_of_albums"
+                android:icon="@drawable/ic_album_white_24dp"
                 app:iconTint="@color/cyan">
                 <menu>
                     <item
-                        android:id="@+id/music_library_sort_by_duration_asc"
+                        android:id="@+id/artist_tab_sort_by_number_of_albums_asc"
                         android:title="@string/ascending" />
 
                     <item
-                        android:id="@+id/music_library_sort_by_duration_desc"
+                        android:id="@+id/artist_tab_sort_by_number_of_albums_desc"
                         android:title="@string/descending" />
                 </menu>
             </item>
 
-            <item android:title="@string/time_added"
-                android:icon="@drawable/ic_watch_later_24dp"
+            <item android:title="@string/number_of_songs"
+                android:icon="@drawable/ic_music_note_24dp"
                 app:iconTint="@color/cyan">
                 <menu>
                     <item
-                        android:id="@+id/music_library_sort_by_time_added_asc"
+                        android:id="@+id/artist_tab_sort_by_number_of_songs_asc"
                         android:title="@string/ascending" />
 
                     <item
-                        android:id="@+id/music_library_sort_by_time_added_desc"
+                        android:id="@+id/artist_tab_sort_by_number_of_songs_desc"
                         android:title="@string/descending" />
                 </menu>
             </item>

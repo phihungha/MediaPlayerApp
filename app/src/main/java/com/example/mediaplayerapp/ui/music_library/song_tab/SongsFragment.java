@@ -70,10 +70,10 @@ public class SongsFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater){
-        inflater.inflate(R.menu.music_library_options_menu, menu);
+        inflater.inflate(R.menu.song_tab_options_menu, menu);
 
         SearchManager searchManager = (SearchManager) requireContext().getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.music_library_search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.song_tab_search).getActionView();
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -93,21 +93,21 @@ public class SongsFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.music_library_show_as_grid)
+        if (item.getItemId() == R.id.song_tab_show_as_grid)
             setDisplayModeAsGrid();
-        else if (item.getItemId() == R.id.music_library_show_as_list)
+        else if (item.getItemId() == R.id.song_tab_show_as_list)
             setDisplayModeAsList();
-        else if(item.getItemId() == R.id.music_library_sort_by_title_asc)
+        else if(item.getItemId() == R.id.song_tab_sort_by_title_asc)
             viewModel.loadAllSongs(SongsRepository.SortBy.TITLE, SortOrder.ASC);
-        else if(item.getItemId() == R.id.music_library_sort_by_title_desc)
+        else if(item.getItemId() == R.id.song_tab_sort_by_title_desc)
             viewModel.loadAllSongs(SongsRepository.SortBy.TITLE, SortOrder.DESC);
-        else if(item.getItemId() == R.id.music_library_sort_by_duration_asc)
+        else if(item.getItemId() == R.id.song_tab_sort_by_duration_asc)
             viewModel.loadAllSongs(SongsRepository.SortBy.DURATION, SortOrder.ASC);
-        else if(item.getItemId() == R.id.music_library_sort_by_duration_desc)
+        else if(item.getItemId() == R.id.song_tab_sort_by_duration_desc)
             viewModel.loadAllSongs(SongsRepository.SortBy.DURATION, SortOrder.DESC);
-        else if(item.getItemId() == R.id.music_library_sort_by_time_added_asc)
+        else if(item.getItemId() == R.id.song_tab_sort_by_time_added_asc)
             viewModel.loadAllSongs(SongsRepository.SortBy.TIME_ADDED, SortOrder.ASC);
-        else if(item.getItemId() == R.id.music_library_sort_by_time_added_desc)
+        else if(item.getItemId() == R.id.song_tab_sort_by_time_added_desc)
             viewModel.loadAllSongs(SongsRepository.SortBy.TIME_ADDED, SortOrder.DESC);
 
         return true;

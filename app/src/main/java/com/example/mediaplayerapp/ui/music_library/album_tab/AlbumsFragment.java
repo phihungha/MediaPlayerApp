@@ -19,19 +19,19 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.music_library.AlbumsRepository;
 import com.example.mediaplayerapp.databinding.FragmentAlbumBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
+import com.example.mediaplayerapp.utils.SortOrder;
 
 @SuppressLint("NotifyDataSetChanged")
 public class AlbumsFragment extends Fragment {
     private static final int GRID_MODE_COLUMN_NUM = 2;
     private static final int GRID_MODE_SPACING = 30;
-    private SortOrder sortOrder= SortOrder.ASC;
     private AlbumAdapter albumAdapter;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
-    private DisplayMode currentDisplayMode = DisplayMode.GRID;
     private AlbumsViewModel viewModel;
     private FragmentAlbumBinding binding;
 
@@ -50,7 +50,9 @@ public class AlbumsFragment extends Fragment {
         albumAdapter = new AlbumAdapter(requireContext());
         binding.albumList.setAdapter(albumAdapter);
 
-        viewModel.getAllAlbums().observe(getViewLifecycleOwner(), newAlbums -> albumAdapter.updateAlbums(newAlbums));
+        viewModel.getAllAlbums().observe(getViewLifecycleOwner(),
+                newAlbums -> albumAdapter.updateAlbums(newAlbums));
+        viewModel.loadAllAlbums(AlbumsRepository.SortBy.NAME, SortOrder.ASC);
 
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -61,10 +63,10 @@ public class AlbumsFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater){
-        inflater.inflate(R.menu.music_library_options_menu, menu);
+        inflater.inflate(R.menu.album_tab_options_menu, menu);
 
         SearchManager searchManager = (SearchManager) requireContext().getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.music_library_search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.album_tab_search).getActionView();
 
         searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -84,27 +86,24 @@ public class AlbumsFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId()== R.id.music_library_sort_by_title_asc)
-            setSortOrderAsASC();
-        else if(item.getItemId()== R.id.music_library_sort_by_title_desc)
-            setSortOrderAsDESC();
-        return true;
-    }
-
-    /**
-     * Change display mode of the list.
-     */
-    private void changeDisplayMode(MenuItem item) {
-        if (currentDisplayMode == DisplayMode.LIST) {
+        if (item.getItemId() == R.id.album_tab_show_as_grid)
             setDisplayModeAsGrid();
-            item.setIcon(R.drawable.ic_grid_24dp);
-            currentDisplayMode = DisplayMode.GRID;
-        } else {
+        else if (item.getItemId() == R.id.album_tab_show_as_list)
             setDisplayModeAsList();
-            item.setIcon(R.drawable.ic_list_24dp);
-            currentDisplayMode = DisplayMode.LIST;
-        }
-        albumAdapter.notifyDataSetChanged();
+        else if (item.getItemId() == R.id.album_tab_sort_by_name_asc)
+            viewModel.loadAllAlbums(AlbumsRepository.SortBy.NAME, SortOrder.ASC);
+        else if (item.getItemId() == R.id.album_tab_sort_by_name_desc)
+            viewModel.loadAllAlbums(AlbumsRepository.SortBy.NAME, SortOrder.DESC);
+        else if (item.getItemId() == R.id.album_tab_sort_by_number_of_songs_asc)
+            viewModel.loadAllAlbums(AlbumsRepository.SortBy.NUMBER_OF_SONGS, SortOrder.ASC);
+        else if (item.getItemId() == R.id.album_tab_sort_by_number_of_songs_desc)
+            viewModel.loadAllAlbums(AlbumsRepository.SortBy.NUMBER_OF_SONGS, SortOrder.DESC);
+        else if (item.getItemId() == R.id.album_tab_sort_by_first_year_asc)
+            viewModel.loadAllAlbums(AlbumsRepository.SortBy.FIRST_YEAR, SortOrder.ASC);
+        else if (item.getItemId() == R.id.album_tab_sort_by_first_year_desc)
+            viewModel.loadAllAlbums(AlbumsRepository.SortBy.FIRST_YEAR, SortOrder.DESC);
+
+        return true;
     }
 
     /**
@@ -126,20 +125,5 @@ public class AlbumsFragment extends Fragment {
         binding.albumList.setLayoutManager(linearLayoutManager);
         binding.albumList.removeItemDecorationAt(0);
         albumAdapter.setDisplayMode(DisplayMode.LIST);
-    }
-
-    private void setSortOrderAsASC() {
-        viewModel.getAlbumSortByNameASC().observe(getViewLifecycleOwner(), newAlbums -> albumAdapter.updateAlbums(newAlbums));
-        sortOrder= SortOrder.ASC;
-    }
-
-    private void setSortOrderAsDESC() {
-        viewModel.getAlbumSortByNameDESC().observe(getViewLifecycleOwner(), newAlbums -> albumAdapter.updateAlbums(newAlbums));
-        sortOrder= SortOrder.DESC;
-    }
-
-    enum SortOrder {
-        ASC,
-        DESC
     }
 }

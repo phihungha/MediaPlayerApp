@@ -25,55 +25,10 @@ public class AlbumMediaStoreDataSource extends MediaStoreDataSource {
      * Get albums that satisfy selection conditions
      * @param selection SQL selection conditions
      * @param selectionArgs Selection arguments
+     * @param sortOrder Sort order
      * @return List of Album objects
      */
-    public List<Album> getAlbums(String selection, String[] selectionArgs) {
-        List<Album> albums = new ArrayList<>();
-
-        String[] projection = new String[]{
-                MediaStore.Audio.Albums._ID,
-                MediaStore.Audio.Albums.ALBUM,
-                MediaStore.Audio.Albums.ARTIST,
-                MediaStore.Audio.Albums.NUMBER_OF_SONGS,
-                MediaStore.Audio.Albums.FIRST_YEAR
-        };
-
-        Cursor cursor = getMediaItems(
-                projection,
-                selection,
-                selectionArgs,
-                MediaStore.Audio.Albums.DEFAULT_SORT_ORDER);
-
-        int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums._ID);
-        int albumColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM);
-        int artistColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ARTIST);
-        int numberOfSongsColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.NUMBER_OF_SONGS);
-        int firstYearColumn = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.FIRST_YEAR);
-
-        if (cursor.moveToFirst()) {
-            do {
-                albums.add(new Album(
-                        cursor.getLong(idColumn),
-                        getMediaItemUri(cursor.getLong(idColumn)),
-                        cursor.getString(albumColumn),
-                        cursor.getString(artistColumn),
-                        cursor.getInt(numberOfSongsColumn),
-                        cursor.getInt(firstYearColumn))
-                );
-            } while (cursor.moveToNext());
-            cursor.close();
-        }
-        return albums;
-    }
-
-    /**
-     * Get albums that satisfy selection conditions
-     * @param selection SQL selection conditions
-     * @param selectionArgs Selection arguments
-     * @param sortOrder sort order
-     * @return List of Album objects
-     */
-    public MutableLiveData<List<Album>> getAlbumsWithOrder(String selection, String[] selectionArgs, String sortOrder) {
+    public List<Album> getAlbums(String selection, String[] selectionArgs, String sortOrder) {
         List<Album> albums = new ArrayList<>();
 
         String[] projection = new String[]{
@@ -109,18 +64,6 @@ public class AlbumMediaStoreDataSource extends MediaStoreDataSource {
             } while (cursor.moveToNext());
             cursor.close();
         }
-
-        return new MutableLiveData<>(albums);
+        return albums;
     }
-    public MutableLiveData<List<Album>> getAlbumSortbyNameDESC()
-    {
-        return getAlbumsWithOrder(null,null,
-                MediaStore.Audio.Albums.ALBUM +" DESC");
-    }
-    public MutableLiveData<List<Album>> getAlbumSortbyNameASC()
-    {
-        return getAlbumsWithOrder(null,null,
-                MediaStore.Audio.Albums.ALBUM +" ASC");
-    }
-
 }

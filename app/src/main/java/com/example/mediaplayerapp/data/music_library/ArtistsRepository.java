@@ -3,7 +3,7 @@ package com.example.mediaplayerapp.data.music_library;
 import android.content.Context;
 import android.provider.MediaStore;
 
-import androidx.lifecycle.MutableLiveData;
+import com.example.mediaplayerapp.utils.SortOrder;
 
 import java.util.List;
 
@@ -11,6 +11,14 @@ import java.util.List;
  * Get artists.
  */
 public class ArtistsRepository {
+
+    public enum SortBy
+    {
+        NAME,
+        NUMBER_OF_ALBUMS,
+        NUMBER_OF_TRACKS
+    }
+
     ArtistMediaStoreDataSource dataSource;
 
     /**
@@ -25,22 +33,36 @@ public class ArtistsRepository {
      * Get all artists from media store.
      * @return List of all artists
      */
-    public List<Artist> getAllArtists() {
-        return dataSource.getArtists(null, null);
+    public List<Artist> getAllArtists(SortBy sortBy, SortOrder sortOrder) {
+        String sortQuery = "";
+        switch (sortBy) {
+            case NAME:
+                sortQuery = MediaStore.Audio.Artists.ARTIST;
+                break;
+            case NUMBER_OF_ALBUMS:
+                sortQuery = MediaStore.Audio.Artists.NUMBER_OF_ALBUMS;
+                break;
+            case NUMBER_OF_TRACKS:
+                sortQuery = MediaStore.Audio.Artists.NUMBER_OF_TRACKS;
+                break;
+        }
+
+        switch (sortOrder) {
+            case ASC:
+                sortQuery += " ASC";
+                break;
+            case DESC:
+                sortQuery += " DESC";
+                break;
+        }
+
+        return dataSource.getArtists(null, null, sortQuery);
     }
 
     public Artist getArtist(long id) {
         return dataSource.getArtists(MediaStore.Audio.Artists._ID + " = ?",
-                new String[] { String.valueOf(id) }).get(0);
+                new String[] { String.valueOf(id) },
+                MediaStore.Audio.Artists.DEFAULT_SORT_ORDER)
+                .get(0);
     }
-
-    public MutableLiveData<List<Artist>> getArtistSortbyNameDESC()
-    {
-        return dataSource.getArtistSortbyNameDESC();
-    }
-    public MutableLiveData<List<Artist>> getArtistSortbyNameASC()
-    {
-        return dataSource.getArtistSortbyNameASC();
-    }
-
 }
