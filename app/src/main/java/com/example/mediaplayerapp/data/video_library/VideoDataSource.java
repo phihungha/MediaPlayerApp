@@ -45,6 +45,11 @@ public class VideoDataSource {
                 MediaStore.Video.Media.DURATION + " DESC");
     }
 
+    public MutableLiveData<List<Video>> getVideoByUri(Uri uri) {
+        return getVideosWithSomeCondition(MediaStore.MediaColumns._ID + " = ?",
+                new String[]{uri.getLastPathSegment()}, null);
+    }
+
     /**
      * Get videos that satisfy certain conditions
      *

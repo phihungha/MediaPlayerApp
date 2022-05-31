@@ -1,6 +1,7 @@
 package com.example.mediaplayerapp.data.video_library;
 
 import android.app.Application;
+import android.net.Uri;
 
 import androidx.lifecycle.MutableLiveData;
 
@@ -34,5 +35,9 @@ public class VideoLibraryRepository {
 
     public MutableLiveData<List<Video>> getVideosSortByDurationDESC() {
         return videoDataSource.getVideosSortByDurationDESC();
+    }
+
+    public MutableLiveData<List<Video>> getVideoByUri(Uri uri){
+        return videoDataSource.getVideoByUri(uri);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.mediaplayerapp.ui.video_library;
 
 import android.app.Application;
+import android.net.Uri;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
@@ -39,5 +40,9 @@ public class VideoLibraryViewModel extends AndroidViewModel {
 
     public MutableLiveData<List<Video>> getVideosSortByDurationDESC() {
         return videoLibraryRepository.getVideosSortByDurationDESC();
+    }
+
+    public MutableLiveData<List<Video>> getVideoByUri(Uri uri){
+        return videoLibraryRepository.getVideoByUri(uri);
     }
 }
