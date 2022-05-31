@@ -41,49 +41,27 @@
 
 
         <TextView
+            android:layout_marginTop="5dp"
             android:id="@+id/song_name_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:gravity="center"
+            android:gravity="start"
             android:singleLine="true"
             android:text="@string/song_name_placeholder"
             android:textColor="#474646"
             android:textSize="15sp"
             android:textStyle="bold" />
         <TextView
-            android:id="@+id/song_last_playback_textview"
+            android:id="@+id/song_artist_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:gravity="center"
+            android:gravity="start"
             android:singleLine="true"
-            android:text="@string/song_name_placeholder"
+            android:text="@string/unknown_artist_textview"
             android:textColor="#474646"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/song_playback_amount_textview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="@string/song_name_placeholder"
-            android:textColor="#474646"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/song_playback_position_textview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="@string/song_name_placeholder"
-            android:textColor="#474646"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textSize="13sp" />
     </LinearLayout>
 
 

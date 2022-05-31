@@ -2,7 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="120dp"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="10dp"
@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:id="@+id/song_click_area_linearlayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
@@ -24,8 +24,8 @@
         tools:ignore="UselessParent">
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp">
+            android:layout_width="120dp"
+            android:layout_height="120dp">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/song_thumbnail_shapeableimageview"
@@ -41,49 +41,27 @@
 
 
         <TextView
+            android:layout_marginTop="5dp"
             android:id="@+id/song_name_textview"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
+
+            android:gravity="start"
             android:singleLine="true"
             android:text="@string/song_name_placeholder"
             android:textColor="#474646"
             android:textSize="15sp"
             android:textStyle="bold" />
         <TextView
-            android:id="@+id/song_last_playback_textview"
+            android:id="@+id/song_artist_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:gravity="center"
+            android:gravity="start"
             android:singleLine="true"
-            android:text="@string/song_name_placeholder"
+            android:text="@string/unknown_artist_textview"
             android:textColor="#474646"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/song_playback_amount_textview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="@string/song_name_placeholder"
-            android:textColor="#474646"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-        <TextView
-            android:id="@+id/song_playback_position_textview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="@string/song_name_placeholder"
-            android:textColor="#474646"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:textSize="13sp"/>
     </LinearLayout>
 
 
