@@ -17,19 +17,11 @@ public class OverviewFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private FragmentOverviewBinding binding;
-    private RecyclerView recentVideosRecyclerView;
-    private RecyclerView mostWatchedVideosRecyclerView;
-    private RecyclerView recentSongsRecyclerView;
-    private RecyclerView mostListenedSongsRecyclerView;
 
     private OverviewItemAdapter recentVideosItemAdapter;
     private OverviewItemAdapter mostWatchedVideosItemAdapter;
     private OverviewItemAdapter recentSongsItemAdapter;
     private OverviewItemAdapter mostListenedSongsItemAdapter;
-    private OverviewViewModel overviewViewModel;
-    private String mParam1;
-    private String mParam2;
 
     public OverviewFragment() {
         // Required empty public constructor
@@ -44,58 +36,56 @@ public class OverviewFragment extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentOverviewBinding.inflate(inflater, container, false);
+        FragmentOverviewBinding binding =
+                FragmentOverviewBinding.inflate(inflater, container, false);
 
         // Initialize recent videos recyclerview
         recentVideosItemAdapter
                 = new OverviewItemAdapter(new OverviewItemAdapter.MediaPlaybackInfoDiff(),
-                MediaType.VIDEO, MediaLayoutType.SMALL);
-        recentVideosRecyclerView = binding.recentVideosRecyclerview;
+                MediaType.VIDEO, MediaLayoutType.SMALL, requireActivity());
+        RecyclerView recentVideosRecyclerView = binding.recentVideosRecyclerview;
         recentVideosRecyclerView.setLayoutManager(new LinearLayoutManager
                 (binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false));
         recentVideosRecyclerView.setAdapter(recentVideosItemAdapter);
+        recentVideosRecyclerView.setHasFixedSize(false);
 
         // Initialize most watched videos recyclerview
         mostWatchedVideosItemAdapter
                 = new OverviewItemAdapter(new OverviewItemAdapter.MediaPlaybackInfoDiff(),
-                MediaType.VIDEO, MediaLayoutType.BIG);
-        mostWatchedVideosRecyclerView = binding.mostWatchedVideosRecyclerview;
+                MediaType.VIDEO, MediaLayoutType.BIG, requireActivity());
+        RecyclerView mostWatchedVideosRecyclerView = binding.mostWatchedVideosRecyclerview;
         mostWatchedVideosRecyclerView.setLayoutManager(new LinearLayoutManager
                 (binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false));
         mostWatchedVideosRecyclerView.setAdapter(mostWatchedVideosItemAdapter);
+        mostWatchedVideosRecyclerView.setHasFixedSize(false);
 
         // Initialize recent songs recyclerview
         recentSongsItemAdapter
                 = new OverviewItemAdapter(new OverviewItemAdapter.MediaPlaybackInfoDiff(),
-                MediaType.SONG, MediaLayoutType.SMALL);
-        recentSongsRecyclerView = binding.recentSongsRecyclerview;
+                MediaType.SONG, MediaLayoutType.SMALL, requireActivity());
+        RecyclerView recentSongsRecyclerView = binding.recentSongsRecyclerview;
         recentSongsRecyclerView.setLayoutManager(new LinearLayoutManager
                 (binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false));
         recentSongsRecyclerView.setAdapter(recentSongsItemAdapter);
+        recentSongsRecyclerView.setHasFixedSize(false);
 
         // Initialize most listened songs recyclerview
         mostListenedSongsItemAdapter
                 = new OverviewItemAdapter(new OverviewItemAdapter.MediaPlaybackInfoDiff(),
-                MediaType.SONG, MediaLayoutType.BIG);
-        mostListenedSongsRecyclerView = binding.mostListenedSongsRecyclerview;
+                MediaType.SONG, MediaLayoutType.BIG, requireActivity());
+        RecyclerView mostListenedSongsRecyclerView = binding.mostListenedSongsRecyclerview;
         mostListenedSongsRecyclerView.setLayoutManager(new LinearLayoutManager
                 (binding.getRoot().getContext(), LinearLayoutManager.HORIZONTAL, false));
         mostListenedSongsRecyclerView.setAdapter(mostListenedSongsItemAdapter);
+        mostListenedSongsRecyclerView.setHasFixedSize(false);
 
-        overviewViewModel = new ViewModelProvider(requireActivity()).get(OverviewViewModel.class);
+        OverviewViewModel overviewViewModel
+                = new ViewModelProvider(requireActivity()).get(OverviewViewModel.class);
         overviewViewModel.get5RecentVideos().observe(
                 requireActivity(),
                 mediaPlaybackInfoList -> recentVideosItemAdapter.submitList(mediaPlaybackInfoList));

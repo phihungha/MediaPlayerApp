@@ -37,7 +37,7 @@ public class OverviewItemAdapter
     private final List<MediaPlaybackInfo> mediaPlaybackInfoList;
     private final OverviewFragment.MediaType mediaType;
     private final OverviewFragment.MediaLayoutType mediaLayoutType;
-    private Context context;
+    private final Context context;
 
     protected OverviewItemAdapter(@NonNull DiffUtil.ItemCallback<MediaPlaybackInfo> diffCallback,
                                   OverviewFragment.MediaType mediaType,
@@ -96,12 +96,27 @@ public class OverviewItemAdapter
 
         Uri mediaUri = Uri.parse(mediaPlaybackInfoList.get(position).getMediaUri());
 
-        // This method uses MediaMetadataRetriever to get media name
         String mediaName = MediaMetadataUtils.getMediaNameFromUri(context, mediaUri);
         if (mediaName != null) holder.mediaName.setText(mediaName);
 
         String mediaArtist = MediaMetadataUtils.getMediaArtistFromUri(context, mediaUri);
         if (mediaArtist != null) holder.mediaArtist.setText(mediaArtist);
+
+        holder.mediaClickArea.setOnClickListener(view -> {
+            //TODO: Add some method to play media
+
+            //TODO: Below is a standard way to insert/update the MediaPlaybackInfo database
+//            MediaPlaybackInfo mediaPlaybackInfo = new MediaPlaybackInfo(
+//                    mediaUri.toString(),
+//                    Calendar.getInstance().getTimeInMillis(),
+//                    1, // playbackAmount = 1 by default
+//                    false,
+//                    0 // playbackPosition to seek to later
+//            );
+//            OverviewViewModel overviewViewModel = new ViewModelProvider((ViewModelStoreOwner) context)
+//                    .get(OverviewViewModel.class);
+//            overviewViewModel.insertOrUpdate(mediaPlaybackInfo);
+        });
     }
 
     @Override
