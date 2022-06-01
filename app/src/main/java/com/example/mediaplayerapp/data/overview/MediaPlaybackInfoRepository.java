@@ -56,20 +56,20 @@ public class MediaPlaybackInfoRepository {
         );
     }
 
-    public LiveData<List<MediaPlaybackInfo>> get5RecentVideos() {
-        return mediaPlaybackInfoDao.get5RecentVideos();
+    public LiveData<List<MediaPlaybackInfo>> getRecentVideos(int mediaShownCount) {
+        return mediaPlaybackInfoDao.getRecentVideos(mediaShownCount);
     }
 
-    public LiveData<List<MediaPlaybackInfo>> get5MostWatchedVideos() {
-        return mediaPlaybackInfoDao.get5MostWatchedVideos();
+    public LiveData<List<MediaPlaybackInfo>> getMostWatchedVideos(int mediaShownCount) {
+        return mediaPlaybackInfoDao.getMostWatchedVideos(mediaShownCount);
     }
 
-    public LiveData<List<MediaPlaybackInfo>> get5RecentSongs() {
-        return mediaPlaybackInfoDao.get5RecentSongs();
+    public LiveData<List<MediaPlaybackInfo>> getRecentSongs(int mediaShownCount) {
+        return mediaPlaybackInfoDao.getRecentSongs(mediaShownCount);
     }
 
-    public LiveData<List<MediaPlaybackInfo>> get5MostListenedSongs() {
-        return mediaPlaybackInfoDao.get5MostListenedSongs();
+    public LiveData<List<MediaPlaybackInfo>> getMostListenedSongs(int mediaShownCount) {
+        return mediaPlaybackInfoDao.getMostListenedSongs(mediaShownCount);
     }
     public LiveData<List<MediaPlaybackInfo>> getAllMediaPlaybackInfo() {
         return allMediaPlaybackInfo;

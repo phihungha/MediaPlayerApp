@@ -34,26 +34,26 @@ public interface MediaPlaybackInfoDao {
     @Query("SELECT * FROM media_playback_info_table " +
             "WHERE isVideo = 1 " +
             "ORDER BY lastPlaybackTime DESC " +
-            "LIMIT 5")
-    LiveData<List<MediaPlaybackInfo>> get5RecentVideos();
+            "LIMIT :mediaShownCount")
+    LiveData<List<MediaPlaybackInfo>> getRecentVideos(int mediaShownCount);
 
     @Query("SELECT * FROM media_playback_info_table " +
             "WHERE IsVideo = 1 " +
             "ORDER BY PlaybackAmount DESC " +
-            "LIMIT 5")
-    LiveData<List<MediaPlaybackInfo>> get5MostWatchedVideos();
+            "LIMIT :mediaShownCount")
+    LiveData<List<MediaPlaybackInfo>> getMostWatchedVideos(int mediaShownCount);
 
     @Query("SELECT * FROM media_playback_info_table " +
             "WHERE isVideo = 0 " +
             "ORDER BY lastPlaybackTime DESC " +
-            "LIMIT 5")
-    LiveData<List<MediaPlaybackInfo>> get5RecentSongs();
+            "LIMIT :mediaShownCount")
+    LiveData<List<MediaPlaybackInfo>> getRecentSongs(int mediaShownCount);
 
     @Query("SELECT * FROM media_playback_info_table " +
             "WHERE IsVideo = 0 " +
             "ORDER BY PlaybackAmount DESC " +
-            "LIMIT 5")
-    LiveData<List<MediaPlaybackInfo>> get5MostListenedSongs();
+            "LIMIT :mediaShownCount")
+    LiveData<List<MediaPlaybackInfo>> getMostListenedSongs(int mediaShownCount);
 
     @Query("SELECT * FROM media_playback_info_table " +
             "WHERE MediaURI = :mediaUri")

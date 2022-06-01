@@ -20,20 +20,20 @@ public class OverviewViewModel extends AndroidViewModel {
         repository = new MediaPlaybackInfoRepository(application);
     }
 
-    public LiveData<List<MediaPlaybackInfo>> get5RecentVideos() {
-        return repository.get5RecentVideos();
+    public LiveData<List<MediaPlaybackInfo>> getRecentVideos(int mediaShownCount) {
+        return repository.getRecentVideos (mediaShownCount);
     }
 
-    public LiveData<List<MediaPlaybackInfo>> get5MostWatchedVideos() {
-        return repository.get5MostWatchedVideos();
+    public LiveData<List<MediaPlaybackInfo>> getMostWatchedVideos(int mediaShownCount) {
+        return repository.getMostWatchedVideos(mediaShownCount);
     }
 
-    public LiveData<List<MediaPlaybackInfo>> get5RecentSongs() {
-        return repository.get5RecentSongs();
+    public LiveData<List<MediaPlaybackInfo>> getRecentSongs(int mediaShownCount) {
+        return repository.getRecentSongs(mediaShownCount);
     }
 
-    public LiveData<List<MediaPlaybackInfo>> get5MostListenedSongs() {
-        return repository.get5MostListenedSongs();
+    public LiveData<List<MediaPlaybackInfo>> getMostListenedSongs(int mediaShownCount) {
+        return repository.getMostListenedSongs(mediaShownCount);
     }
 
     public void insert(MediaPlaybackInfo mediaPlaybackInfo) {
