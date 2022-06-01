@@ -70,6 +70,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
     private void setListenerForAdapter() {
         binding.layoutItemAddPlaylist.setOnClickListener(this);
         binding.layoutItemWatchLater.setOnClickListener(this);
+        binding.layoutItemMyFavourite.setOnClickListener(this);
 
         adapter.setContext(requireContext());
         adapter.setApplication(requireActivity().getApplication());
@@ -118,14 +119,34 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                 openBottomSheetDialogAddPlaylist();
                 break;
 
+            case R.id.layoutItem_myFavourite:
+                openFavourite();
+                break;
+
             case R.id.layoutItem_watchLater:
                 openWatchLaterList();
                 break;
         }
     }
 
+    private void openFavourite() {
+        Bundle bundle=new Bundle();
+        bundle.putString(PlaylistConstants.TRANS,PlaylistConstants.TRANS_FAVOURITE);
+        mediaQueueFragment.setArguments(bundle);
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, mediaQueueFragment)
+                .addToBackStack(null)
+                .commit();
+    }
+
     private void openWatchLaterList() {
-        GoToQueue();
+        Bundle bundle=new Bundle();
+        bundle.putString(PlaylistConstants.TRANS,PlaylistConstants.TRANS_QUEUE);
+        mediaQueueFragment.setArguments(bundle);
+        getParentFragmentManager().beginTransaction()
+                .replace(R.id.nav_host_fragment_activity_main, mediaQueueFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void makeToast(String mess) {
@@ -169,7 +190,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                         edtName.getText().toString().trim(),
                         radioVideo.isChecked(),
                         0
-                       );
+                );
                 playlistViewModel.insert(playlist);
 
                 bottomSheetDialog.dismiss();
@@ -218,13 +239,6 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         if (item.getItemId() == R.id.action_sort)
             SortByName();
         return super.onOptionsItemSelected(item);
-    }
-
-    private void GoToQueue() {
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, mediaQueueFragment)
-                .addToBackStack(null)
-                .commit();
     }
 
     private void SortByName() {

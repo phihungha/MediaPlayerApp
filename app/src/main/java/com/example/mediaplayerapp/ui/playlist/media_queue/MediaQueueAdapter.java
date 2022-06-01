@@ -36,7 +36,7 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
         this.mContext = mContext;
     }
 
-    protected MediaQueueAdapter(@NonNull DiffUtil.ItemCallback<MediaQueue> diffCallback) {
+    public MediaQueueAdapter(@NonNull DiffUtil.ItemCallback<MediaQueue> diffCallback) {
         super(diffCallback);
     }
     @NonNull

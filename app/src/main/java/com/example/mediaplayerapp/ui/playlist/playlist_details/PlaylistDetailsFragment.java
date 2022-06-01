@@ -30,6 +30,7 @@ import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
+
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
@@ -182,13 +183,13 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             MediaQueueViewModel mediaQueueViewModel = new ViewModelProvider(requireActivity())
                     .get(MediaQueueViewModel.class);
 
-            MediaQueue mediaQueue;
-            if (playlist.isVideo()){
-                mediaQueue = new MediaQueue(media.getMediaUri(), media.getName(), true, PlaylistConstants.TYPE_VIDEO_QUEUE);
+            int type;
+            if (playlist.isVideo()) {
+                type = PlaylistConstants.TYPE_VIDEO_QUEUE;
+            } else {
+                type = PlaylistConstants.TYPE_MUSIC_QUEUE;
             }
-            else {
-                mediaQueue = new MediaQueue(media.getMediaUri(), media.getName(), true, PlaylistConstants.TYPE_MUSIC_QUEUE);
-            }
+            MediaQueue mediaQueue = new MediaQueue(media.getMediaUri(), media.getName(), playlist.isVideo(), type);
             mediaQueueViewModel.insert(mediaQueue);
 
             Toast.makeText(getContext(), "Add to queue completed", Toast.LENGTH_SHORT).show();

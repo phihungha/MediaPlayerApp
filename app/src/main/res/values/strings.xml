@@ -122,4 +122,6 @@
     <string name="number_of_albums">Number of albums</string>
     <string name="number_of_songs">Number of songs</string>
     <string name="release_year">Release year</string>
+    <string name="video_queue">Video</string>
+    <string name="music_queue">Song</string>
 </resources>

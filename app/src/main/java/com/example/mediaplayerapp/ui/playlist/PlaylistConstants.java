@@ -25,4 +25,8 @@ public class PlaylistConstants {
     public static final int TYPE_MUSIC_QUEUE = 2;
     public static final int TYPE_VIDEO_FAVOURITE = 3;
     public static final int TYPE_MUSIC_FAVOURITE = 4;
+
+    public static final String TRANS = "trans";
+    public static final String TRANS_QUEUE = "trans_queue";
+    public static final String TRANS_FAVOURITE = "trans_favourite";
 }

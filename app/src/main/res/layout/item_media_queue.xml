@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp"
     android:id="@+id/layoutItem_mediaQueue"
+    android:background="?attr/selectableItemBackground"
     >
 
     <androidx.cardview.widget.CardView
