@@ -25,6 +25,9 @@ public interface MediaQueueDao {
     @Query("SELECT * FROM mediaQueue_table ORDER BY MediaQueueId ASC")
     LiveData<List<MediaQueue>> getAllMediaQueue();
 
+    @Query("SELECT * FROM mediaQueue_table WHERE Type=:type ORDER BY MediaQueueId ASC")
+    LiveData<List<MediaQueue>> getAllQueueWithType(int type);
+
     @Query("SELECT COUNT(*) FROM mediaQueue_table")
     int getCountMediaQueue();
 }

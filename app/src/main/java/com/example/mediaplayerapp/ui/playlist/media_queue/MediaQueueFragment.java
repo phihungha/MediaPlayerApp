@@ -20,10 +20,6 @@ import com.example.mediaplayerapp.databinding.FragmentMediaQueueBinding;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
-import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MediaQueueFragment extends Fragment implements View.OnClickListener {
     private FragmentMediaQueueBinding binding;
@@ -91,20 +87,22 @@ public class MediaQueueFragment extends Fragment implements View.OnClickListener
     }
 
     private void PlayQueue() {
-        List<MediaQueue> listMedia = adapter.getCurrentList();
+       /* List<MediaQueue> listMedia = adapter.getCurrentList();
         List<Uri> uriList = new ArrayList<>();
         listMedia.forEach(item -> {
             Uri uri = Uri.parse(item.getMediaUri());
             uriList.add(uri);
-        });
+        });*/
+/*
 
-     /*   Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
+        Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
         if (playlist.isVideo()) {
             VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
         } else {
             MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
         }
-        makeToast("Play all");*/
+        makeToast("Play all");
+*/
 
     }
 

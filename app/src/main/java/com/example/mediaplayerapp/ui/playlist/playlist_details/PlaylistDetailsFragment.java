@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -181,8 +182,16 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             MediaQueueViewModel mediaQueueViewModel = new ViewModelProvider(requireActivity())
                     .get(MediaQueueViewModel.class);
 
-            MediaQueue mediaQueue = new MediaQueue(media.getMediaUri(), media.getName(), playlist.isVideo());
+            MediaQueue mediaQueue;
+            if (playlist.isVideo()){
+                mediaQueue = new MediaQueue(media.getMediaUri(), media.getName(), true, PlaylistConstants.TYPE_VIDEO_QUEUE);
+            }
+            else {
+                mediaQueue = new MediaQueue(media.getMediaUri(), media.getName(), true, PlaylistConstants.TYPE_MUSIC_QUEUE);
+            }
             mediaQueueViewModel.insert(mediaQueue);
+
+            Toast.makeText(getContext(), "Add to queue completed", Toast.LENGTH_SHORT).show();
         });
 
         //click properties bottom sheet

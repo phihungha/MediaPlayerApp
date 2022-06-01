@@ -3,6 +3,9 @@ package com.example.mediaplayerapp.data.playlist.media_queue;
 import android.app.Application;
 import androidx.lifecycle.LiveData;
 
+import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
+
 import java.util.List;
 
 public class MediaQueueRepository {
@@ -30,6 +33,22 @@ public class MediaQueueRepository {
 
     public int getCountMediaQueue(){
         return mMediaQueueDao.getCountMediaQueue();
+    }
+
+    public LiveData<List<MediaQueue>> getAllVideoQueue() {
+        return mMediaQueueDao.getAllQueueWithType(PlaylistConstants.TYPE_VIDEO_QUEUE);
+    }
+
+    public LiveData<List<MediaQueue>> getAllMusicQueue() {
+        return mMediaQueueDao.getAllQueueWithType(PlaylistConstants.TYPE_MUSIC_QUEUE);
+    }
+
+    public LiveData<List<MediaQueue>> getAllVideoFavourite() {
+        return mMediaQueueDao.getAllQueueWithType(PlaylistConstants.TYPE_VIDEO_FAVOURITE);
+    }
+
+    public LiveData<List<MediaQueue>> getAllMusicFavourite() {
+        return mMediaQueueDao.getAllQueueWithType(PlaylistConstants.TYPE_MUSIC_FAVOURITE);
     }
 
     public LiveData<List<MediaQueue>> getAllMediaQueue() {
