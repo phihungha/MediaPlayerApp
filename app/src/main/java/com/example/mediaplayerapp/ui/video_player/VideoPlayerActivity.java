@@ -15,7 +15,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
-import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemRepository;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemRepository;
 import com.example.mediaplayerapp.data.video_library.VideoLibraryRepository;
 import com.example.mediaplayerapp.databinding.ActivityVideoPlayerBinding;
 import com.example.mediaplayerapp.utils.GetMediaItemsUtils;
@@ -40,7 +40,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
     private ExoPlayer player;
     private MediaSessionCompat mediaSession;
     private VideoLibraryRepository videoLibraryRepository;
-    private MediaItemRepository playlistItemRepository;
+    private PlaylistItemRepository playlistItemRepository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         videoLibraryRepository = new VideoLibraryRepository(getApplication());
-        playlistItemRepository = new MediaItemRepository(getApplication());
+        playlistItemRepository = new PlaylistItemRepository(getApplication());
 
         enterFullScreenMode();
 

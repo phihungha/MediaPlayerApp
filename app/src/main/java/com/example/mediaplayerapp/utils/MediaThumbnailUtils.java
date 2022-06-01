@@ -17,6 +17,6 @@ public class MediaThumbnailUtils {
      */
     public static Bitmap getThumbnailFromUri(Context context, Uri uri) throws IOException {
         return context.getApplicationContext().getContentResolver()
-                .loadThumbnail(uri, new Size(500, 500),null);
+                .loadThumbnail(uri, new Size(800, 800),null);
     }
 }

@@ -3,7 +3,7 @@ package com.example.mediaplayerapp.data.music_library;
 import android.net.Uri;
 
 public class Album {
-    private long id;
+    private final long id;
     private final Uri uri;
     private final String albumName;
     private final String artistName;

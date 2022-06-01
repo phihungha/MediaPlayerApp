@@ -18,9 +18,21 @@ public class MediaQueue implements Serializable {
     @ColumnInfo(name = "MediaQueueName")
     private String name;
 
-    public MediaQueue(String mediaUri, String name) {
+    @ColumnInfo(name = "IsVideo")
+    private boolean isVideo;
+
+    public MediaQueue(String mediaUri, String name, boolean isVideo) {
         this.mediaUri = mediaUri;
         this.name = name;
+        this.isVideo = isVideo;
+    }
+
+    public boolean isVideo() {
+        return isVideo;
+    }
+
+    public void setVideo(boolean video) {
+        isVideo = video;
     }
 
     public int getId() {

@@ -1,5 +1,7 @@
 package com.example.mediaplayerapp.utils;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 /**
@@ -13,9 +15,18 @@ public class MediaTimeUtils {
      * @param position Playback position as milliseconds
      * @return String Formatted playback position
      */
-    public static String getFormattedTime(long position) {
+    public static String getFormattedTimeFromLong(long position) {
         long playedSeconds = position / 1000;
         return String.format(Locale.getDefault(), MEDIA_TIME_FORMAT,
                 (playedSeconds % 3600) / 60, playedSeconds % 60);
+    }
+
+    /**
+     * Get ISO formatted time from a LocalDateTime.
+     * @param time Time
+     * @return ISO formatted time
+     */
+    public static String getFormattedTimeFromZonedDateTime(ZonedDateTime time) {
+        return DateTimeFormatter.ISO_LOCAL_DATE_TIME.format(time);
     }
 }

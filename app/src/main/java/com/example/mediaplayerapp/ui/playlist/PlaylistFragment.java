@@ -36,7 +36,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 public class PlaylistFragment extends Fragment implements View.OnClickListener {
     private FragmentPlaylistBinding binding;
     private final PlaylistDetailsFragment detailsFragment = new PlaylistDetailsFragment();
-    private final MediaQueueFragment mediaQueueFragment=new MediaQueueFragment();
+    private final MediaQueueFragment mediaQueueFragment = new MediaQueueFragment();
     private PlaylistAdapter adapter;
     private PlaylistViewModel playlistViewModel;
 
@@ -71,6 +71,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         binding.layoutItemAddPlaylist.setOnClickListener(this);
         binding.layoutItemWatchLater.setOnClickListener(this);
 
+        adapter.setContext(requireContext());
         adapter.setApplication(requireActivity().getApplication());
         //set click item listener for recyclerview
         adapter.setListener((v, position) -> {
@@ -159,14 +160,16 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
                 makeToast("Please check type for playlist!");
             } else {
                 int idResource;
-                if (!radioAudio.isChecked()){
-                    idResource=R.drawable.ic_play_video_24dp;
-                }
-                else {
-                    idResource=R.drawable.ic_music_video_24;
+                if (!radioAudio.isChecked()) {
+                    idResource = R.drawable.ic_play_video_24dp;
+                } else {
+                    idResource = R.drawable.ic_music_video_24;
                 }
                 Playlist playlist = new Playlist(idResource,
-                        edtName.getText().toString().trim(), radioVideo.isChecked());
+                        edtName.getText().toString().trim(),
+                        radioVideo.isChecked(),
+                        0
+                       );
                 playlistViewModel.insert(playlist);
 
                 bottomSheetDialog.dismiss();
@@ -210,7 +213,6 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.action_sort)
@@ -229,15 +231,14 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         if (isASC) {
             playlistViewModel.sortPlaylistByNameDESC().observe(
                     getViewLifecycleOwner(),
-                    playlists -> adapter.submitList(playlists)
-            );
+                    playlists -> adapter.submitList(playlists));
+
         } else {
             playlistViewModel.sortPlaylistByNameASC().observe(
                     getViewLifecycleOwner(),
-                    playlists -> adapter.submitList(playlists)
-            );
+                    playlists -> adapter.submitList(playlists));
+            isASC = !isASC;
         }
-        isASC = !isASC;
     }
 
     private void Searching(String s) {

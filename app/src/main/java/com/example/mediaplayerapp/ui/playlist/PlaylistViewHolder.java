@@ -1,31 +1,47 @@
 package com.example.mediaplayerapp.ui.playlist;
 
+import android.annotation.SuppressLint;
+import android.app.Application;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.ItemPlaylistBinding;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     BottomSheetDialog bottomSheetDialog;
+    @SuppressLint("StaticFieldLeak")
+    private static Context mContext;
     private final ItemPlaylistBinding binding;
+    private static Application mApplication;
     private static IOnItemClickListener bsRenameListener;
     private static IOnItemClickListener bsDeleteListener;
     private static IOnItemClickListener bsPlayListener;
     private static IOnItemClickListener listener;
+    private final PlaylistItemViewModel playlistItemViewModel;
 
     public PlaylistViewHolder(@NonNull ItemPlaylistBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
         this.binding.imgBtnMore.setOnClickListener(this);
         this.binding.layoutItemPlaylist.setOnClickListener(this);
+        playlistItemViewModel=new PlaylistItemViewModel(mApplication);
     }
 
     @Override
@@ -63,42 +79,88 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         bottomSheetDialog.show();
     }
 
-    public void setBinding(Playlist playlist, String textCount) {
-        binding.imgThumbnail.setImageResource(playlist.getIdResource());
-        binding.tvPlaylistName.setText(playlist.getName());
-        binding.tvPlaylistNumbers.setText(textCount);
+    private void refreshThumb(Playlist playlist) {
+        PlaylistItem playlistItem = playlistItemViewModel.findByItemId(playlist.getId());
 
-        if (playlist.getId() == 1){
-            binding.imgBtnMore.setVisibility(View.GONE);
+        if (playlistItem == null) {
+            binding.imgThumbnail.setImageResource(playlist.getIdResource());
+            return;
         }
+        if (playlist.isVideo()) {
+            Glide.with(mContext)
+                    .load(playlistItem.getMediaUri())
+                    .skipMemoryCache(false)
+                    .error(playlist.getIdResource())
+                    .centerCrop()
+                    .into(binding.imgThumbnail);
+        } else {
+            Bitmap thumb = MediaUtils.loadThumbnail(mContext, Uri.parse(playlistItem.getMediaUri()));
+            if (thumb != null) {
+                binding.imgThumbnail.setImageBitmap(thumb);
+            } else {
+                binding.imgThumbnail.setImageDrawable(
+                        ContextCompat.getDrawable(mContext,
+                                playlist.getIdResource()));
+            }
+        }
+    }
+
+    private String getStringCountText(Playlist playlist) {
+        int count = playlist.getCount();
+        String textNumber = count + " ";
+
+        if (playlist.isVideo()) {
+            if (count <= 1) {
+                textNumber += "video";
+            } else
+                textNumber += "videos";
+        } else {
+            if (count <= 1) {
+                textNumber += "song";
+            } else
+                textNumber += "songs";
+        }
+
+        return textNumber;
+    }
+
+    public void setBinding(Playlist playlist) {
+        refreshThumb(playlist);
+
+        binding.tvPlaylistName.setText(playlist.getName());
+        binding.tvPlaylistNumbers.setText(getStringCountText(playlist));
     }
 
     static PlaylistViewHolder create(ViewGroup parent, IOnItemClickListener l,
                                      IOnItemClickListener _bsRenameListener,
                                      IOnItemClickListener _bsDeleteListener,
-                                     IOnItemClickListener _bsPlayListener
-                                        ) {
+                                     IOnItemClickListener _bsPlayListener,
+                                     Context _context,
+                                     Application application
+    ) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemPlaylistBinding binding = ItemPlaylistBinding.inflate(inflater, parent, false);
         listener = l;
         bsRenameListener = _bsRenameListener;
         bsDeleteListener = _bsDeleteListener;
-        bsPlayListener=_bsPlayListener;
+        bsPlayListener = _bsPlayListener;
+        mContext = _context;
+        mApplication=application;
         return new PlaylistViewHolder(binding);
     }
 
     private void StartPlaylist() {
-        bsPlayListener.onClick(itemView,getBindingAdapterPosition());
+        bsPlayListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void RenamePlaylist() {
-        bsRenameListener.onClick(itemView,getBindingAdapterPosition());
+        bsRenameListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 
     private void DeletePlaylist() {
-        bsDeleteListener.onClick(itemView,getBindingAdapterPosition());
+        bsDeleteListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
 

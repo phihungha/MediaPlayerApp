@@ -86,21 +86,33 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/album_details_artist"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:text="@string/default_artist_name"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:textSize="14sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/album_details_name"
+                    app:layout_constraintTop_toBottomOf="@+id/album_details_name" />
+
+                <TextView
                     android:id="@+id/album_details_description"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginBottom="2dp"
+                    android:layout_marginBottom="1dp"
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="@string/default_album_details_description"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/album_details_small_artwork"
-                    app:layout_constraintTop_toBottomOf="@+id/album_details_name" />
+                    app:layout_constraintStart_toStartOf="@+id/album_details_name"
+                    app:layout_constraintTop_toBottomOf="@+id/album_details_artist" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView

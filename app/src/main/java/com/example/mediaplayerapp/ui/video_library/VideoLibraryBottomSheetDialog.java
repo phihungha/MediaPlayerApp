@@ -13,8 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
-import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItem;
-import com.example.mediaplayerapp.data.playlist.playlist_details.MediaItemViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.databinding.DialogVideoBottomSheetBinding;
 import com.example.mediaplayerapp.databinding.DialogVideoInfoBinding;
@@ -105,8 +105,8 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
 
         LinearLayout optionAddPlaylist = bottomSheetBinding.bottomSheetOptionAddPlaylist;
         optionAddPlaylist.setOnClickListener(view1 -> {
-            MediaItemViewModel mediaItemViewModel
-                    = new ViewModelProvider(requireActivity()).get(MediaItemViewModel.class);
+            PlaylistItemViewModel PlaylistItemViewModel
+                    = new ViewModelProvider(requireActivity()).get(PlaylistItemViewModel.class);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             builder
@@ -114,11 +114,11 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
                     .setItems(
                             allVideoPlaylists.stream().map(Playlist::getName).toArray(CharSequence[]::new),
                             (dialogInterface, i) -> {
-                                MediaItem newMediaItem = new MediaItem(
+                                PlaylistItem newPlaylistItem = new PlaylistItem(
                                         allVideoPlaylists.get(i).getId(),
                                         currentVideo.getUri().toString(),
                                         currentVideo.getName());
-                                mediaItemViewModel.insert(newMediaItem);
+                                PlaylistItemViewModel.insert(newPlaylistItem);
                             })
                     .show();
         });

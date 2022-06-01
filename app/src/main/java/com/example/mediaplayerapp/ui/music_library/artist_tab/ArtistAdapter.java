@@ -45,6 +45,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistItem
 
     public void setDisplayMode(DisplayMode displayMode) {
         this.displayMode = displayMode;
+        notifyDataSetChanged();
     }
 
     @Override

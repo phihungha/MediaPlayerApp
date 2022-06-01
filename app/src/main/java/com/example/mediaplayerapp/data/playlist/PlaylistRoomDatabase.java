@@ -13,7 +13,7 @@ import com.example.mediaplayerapp.R;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {Playlist.class}, version = 1, exportSchema = false)
+@Database(entities = {Playlist.class}, version = 2, exportSchema = false)
 public abstract class PlaylistRoomDatabase extends RoomDatabase {
     public abstract PlaylistDao playlistDao();
 
@@ -48,10 +48,11 @@ public abstract class PlaylistRoomDatabase extends RoomDatabase {
             databaseWriteExecutor.execute(() -> {
                 // Populate the database in the background.
                 // If you want to start with more words, just add them.
-                PlaylistDao dao = INSTANCE.playlistDao();
 
-                Playlist favourite = new Playlist(R.drawable.ic_favorite_24dp,"My Favourite",true);
-                dao.insert(favourite);
+       /*         PlaylistDao dao = INSTANCE.playlistDao();
+
+                Playlist favourite = new Playlist(R.drawable.ic_favorite_24dp,"My Favourite",true,0,null);
+                dao.insert(favourite);*/
             });
         }
     };

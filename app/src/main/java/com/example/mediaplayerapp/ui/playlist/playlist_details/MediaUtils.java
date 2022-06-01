@@ -1,15 +1,21 @@
 package com.example.mediaplayerapp.ui.playlist.playlist_details;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.documentfile.provider.DocumentFile;
+import androidx.loader.content.CursorLoader;
 
+import java.util.HashMap;
 import java.util.Objects;
 
 public class MediaUtils {
@@ -18,11 +24,8 @@ public class MediaUtils {
         try {
             String[] proj = {MediaStore.MediaColumns.DISPLAY_NAME,
                     MediaStore.Video.Media.SIZE};
-            /* TODO: This causes exception when opening playlists with video added through video
-                library. To reproduce bug, create a video playlist then go to video library and
-                 click on any video's 3 dot and choose "add to playlist". Then choose playlist
-                 to add to and open that playlist. */
-            context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            //context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             cursor = context.getContentResolver().query(uri, proj, null, null, null);
             cursor.moveToFirst();
@@ -50,7 +53,28 @@ public class MediaUtils {
         }
     }
 
-    public static boolean isUriExists(Context context,Uri uri){
+    public static Bitmap loadThumbnail(Context context, Uri uri) {
+        context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(context, uri);
+        byte[] data = retriever.getEmbeddedPicture();
+        retriever.release();
+        if (data == null) {
+            return null;
+        }
+        return BitmapFactory.decodeByteArray(data, 0, data.length);
+    }
+
+    public String getRealPathFromURI(Uri contentUri, Context context)
+    {
+        String[] proj = { MediaStore.Audio.Media.DATA };
+        @SuppressLint("Recycle") Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+    public static boolean isUriExists(Context context, Uri uri) {
         return Objects.requireNonNull(DocumentFile.fromSingleUri(context, uri)).exists();
     }
 
@@ -99,7 +123,7 @@ public class MediaUtils {
     }
 
     public static String getMediaNameFromURI(Context context, Uri uri) {
-
+        context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
         Cursor cursor = null;
         try {
             String[] projection = new String[]{

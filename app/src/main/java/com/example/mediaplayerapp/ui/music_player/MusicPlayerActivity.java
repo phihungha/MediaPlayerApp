@@ -27,7 +27,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
+import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
@@ -98,6 +101,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
                 }
             };
+
     MediaControllerCompat.Callback controllerCallback =
             new MediaControllerCompat.Callback() {
                 @Override
@@ -106,7 +110,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     binding.musicPlayerSongArtist.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_ARTIST));
 
                     long duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
-                    binding.musicPlayerSongDuration.setText(MediaTimeUtils.getFormattedTime(duration));
+                    binding.musicPlayerSongDuration.setText(MediaTimeUtils.getFormattedTimeFromLong(duration));
                     binding.musicPlayerSeekbar.setDuration(duration);
 
                     String artworkUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI);
@@ -166,7 +170,15 @@ public class MusicPlayerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMusicPlayerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        WindowInsetsControllerCompat windowInsetsController =
+                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
+        if (windowInsetsController != null) {
+            windowInsetsController.setSystemBarsBehavior(
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars());
+        }
 
         mediaBrowser = new MediaBrowserCompat(this,
                 new ComponentName(this, MusicPlaybackService.class),
@@ -233,18 +245,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private void openMenu() {
         PopupMenu popupMenu = new PopupMenu(this, binding.musicPlayerMenuBtn);
         popupMenu.inflate(R.menu.music_player_menu);
-        popupMenu.setOnMenuItemClickListener(menuItem -> {
-            if (menuItem.getItemId() == R.id.music_player_add_to_listen_later) {
-                // TODO: Add to listen later playlist
-            }
-            else if (menuItem.getItemId() == R.id.music_player_add_to_favorites) {
-                // TODO: Add to favorite playlist
-            }
-            else if (menuItem.getItemId() == R.id.music_player_playlist) {
-                // TODO: Edit current playlist
-            }
-            return true;
-        });
+        popupMenu.setOnMenuItemClickListener(menuItem -> true);
         popupMenu.setForceShowIcon(true);
         popupMenu.show();
     }
@@ -303,7 +304,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
             @Override
             public void onScrubMove(TimeBar timeBar, long position) {
                 timeBar.setPosition(position);
-                binding.musicPlayerSongCurrentPosition.setText(MediaTimeUtils.getFormattedTime(position));
+                binding.musicPlayerSongCurrentPosition.setText(MediaTimeUtils.getFormattedTimeFromLong(position));
             }
 
             @Override
@@ -342,7 +343,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 MediaControllerCompat controller = MediaControllerCompat.getMediaController(MusicPlayerActivity.this);
                 long currentPlaybackPosition = controller.getPlaybackState().getPosition();
                 binding.musicPlayerSeekbar.setPosition(currentPlaybackPosition);
-                binding.musicPlayerSongCurrentPosition.setText(MediaTimeUtils.getFormattedTime(currentPlaybackPosition));
+                binding.musicPlayerSongCurrentPosition.setText(MediaTimeUtils.getFormattedTimeFromLong(currentPlaybackPosition));
                 handler.postDelayed(this, 100);
             }
         });
@@ -380,10 +381,11 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
         MultiTransformation<Bitmap> multiTransformation = new MultiTransformation<>(
                 new BlurTransformation(6, 5),
-                new BrightnessFilterTransformation(-0.1f));
+                new BrightnessFilterTransformation(-0.2f));
         Glide.with(this)
                 .load(artworkBitmap)
                 .apply(RequestOptions.bitmapTransform(multiTransformation))
+                .placeholder(R.drawable.shape_default_artwork_background)
                 .into(binding.musicPlayerSongArtworkBackground);
         Log.d(LOG_TAG, "Loaded song's artwork from bitmap");
 
