@@ -2,16 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
+    android:layout_width="120dp"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="10dp"
     android:layout_marginStart="5dp"
-    android:layout_marginEnd="5dp">
+    android:layout_marginEnd="5dp"
+    android:orientation="vertical"
+    android:padding="10dp">
 
     <LinearLayout
         android:id="@+id/song_click_area_linearlayout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
         android:focusable="true"
@@ -24,8 +24,8 @@
         tools:ignore="UselessParent">
 
         <RelativeLayout
-            android:layout_width="120dp"
-            android:layout_height="120dp">
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/song_thumbnail_shapeableimageview"
@@ -41,17 +41,18 @@
 
 
         <TextView
-            android:layout_marginTop="5dp"
             android:id="@+id/song_name_textview"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:layout_marginTop="5dp"
+            android:ellipsize="end"
             android:gravity="start"
             android:singleLine="true"
             android:text="@string/song_name_placeholder"
             android:textColor="#474646"
             android:textSize="15sp"
             android:textStyle="bold" />
+
         <TextView
             android:id="@+id/song_artist_textview"
             android:layout_width="match_parent"
@@ -61,7 +62,7 @@
             android:singleLine="true"
             android:text="@string/unknown_artist_textview"
             android:textColor="#474646"
-            android:textSize="13sp"/>
+            android:textSize="13sp" />
     </LinearLayout>
 
 
