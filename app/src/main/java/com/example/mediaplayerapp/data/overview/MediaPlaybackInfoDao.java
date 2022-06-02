@@ -20,12 +20,12 @@ public interface MediaPlaybackInfoDao {
 
 
     @Query("UPDATE media_playback_info_table " +
-            "SET playbackAmount = playbackAmount + 1 " +
+            "SET playbackCount = playbackCount + 1 " +
             "WHERE MediaPlaybackInfoID = :MediaPlaybackInfoID")
-    void updatePlaybackAmount(int MediaPlaybackInfoID);
+    void updatePlaybackCount(int MediaPlaybackInfoID);
 
     @Query("UPDATE media_playback_info_table SET " +
-            "PlaybackAmount = PlaybackAmount + 1, " +
+            "playbackCount = playbackCount + 1, " +
             "LastPlaybackTime = :lastPlaybackTime, " +
             "LastPlaybackPosition = :lastPlaybackPosition " +
             "WHERE MediaURI = :mediaUri")
@@ -39,7 +39,7 @@ public interface MediaPlaybackInfoDao {
 
     @Query("SELECT * FROM media_playback_info_table " +
             "WHERE IsVideo = 1 " +
-            "ORDER BY PlaybackAmount DESC " +
+            "ORDER BY playbackCount DESC " +
             "LIMIT :mediaShownCount")
     LiveData<List<MediaPlaybackInfo>> getMostWatchedVideos(int mediaShownCount);
 
@@ -51,7 +51,7 @@ public interface MediaPlaybackInfoDao {
 
     @Query("SELECT * FROM media_playback_info_table " +
             "WHERE IsVideo = 0 " +
-            "ORDER BY PlaybackAmount DESC " +
+            "ORDER BY playbackCount DESC " +
             "LIMIT :mediaShownCount")
     LiveData<List<MediaPlaybackInfo>> getMostListenedSongs(int mediaShownCount);
 
