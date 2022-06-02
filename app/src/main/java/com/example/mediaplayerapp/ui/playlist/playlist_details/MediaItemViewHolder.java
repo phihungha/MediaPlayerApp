@@ -32,6 +32,7 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
     private static IOnItemClickListener bsDeleteListener;
     private static IOnItemClickListener bsPropertiesListener;
     private static IOnItemClickListener bsAddQueueListener;
+    private static IOnItemClickListener bsAddFavouriteListener;
 
     public MediaItemViewHolder(@NonNull ItemMediaBinding binding) {
         super(binding.getRoot());
@@ -73,6 +74,7 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
                                       IOnItemClickListener _bsDeleteListener,
                                       IOnItemClickListener _bsPropertiesListener,
                                       IOnItemClickListener _bsAddQueueListener,
+                                      IOnItemClickListener _bsAddFavouriteListener,
                                       Playlist playlist) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemMediaBinding binding = ItemMediaBinding.inflate(inflater, parent, false);
@@ -81,6 +83,7 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
         bsDeleteListener = _bsDeleteListener;
         bsPropertiesListener = _bsPropertiesListener;
         bsAddQueueListener = _bsAddQueueListener;
+        bsAddFavouriteListener=_bsAddFavouriteListener;
         mContext = context;
         mPlaylist=playlist;
         return new MediaItemViewHolder(binding);
@@ -119,9 +122,16 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
             case R.id.bs_addToQueuePlaylistDetailsItem:
                 addToQueue();
                 break;
+
+            case R.id.bs_addToFavouritePlaylistDetailsItem:
+                addToFavourite();
+                break;
         }
     }
-
+    private void addToFavourite() {
+        bsAddFavouriteListener.onClick(itemView, getBindingAdapterPosition());
+        bottomSheetDialog.dismiss();
+    }
     private void addToQueue() {
         bsAddQueueListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
@@ -157,6 +167,7 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
         bsView.findViewById(R.id.bs_deletePlaylistDetailsItem).setOnClickListener(this);
         bsView.findViewById(R.id.bs_propertiesPlaylistDetailsItem).setOnClickListener(this);
         bsView.findViewById(R.id.bs_addToQueuePlaylistDetailsItem).setOnClickListener(this);
+        bsView.findViewById(R.id.bs_addToFavouritePlaylistDetailsItem).setOnClickListener(this);
 
         bottomSheetDialog.setContentView(bsView);
         bottomSheetDialog.show();

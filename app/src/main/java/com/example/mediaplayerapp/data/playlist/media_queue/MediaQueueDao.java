@@ -23,10 +23,10 @@ public interface MediaQueueDao {
     @Query("DELETE FROM mediaQueue_table WHERE mediaQueue_table.MediaQueueUri=:uri")
     void deleteItemWithUri(String uri);
 
-    @Query("SELECT * FROM mediaQueue_table ORDER BY MediaQueueId ASC")
+    @Query("SELECT * FROM mediaQueue_table")
     LiveData<List<MediaQueue>> getAllMediaQueue();
 
-    @Query("SELECT * FROM mediaQueue_table WHERE Type=:type ORDER BY MediaQueueId ASC")
+    @Query("SELECT * FROM mediaQueue_table WHERE Type=:type")
     LiveData<List<MediaQueue>> getAllQueueWithType(int type);
 
     @Query("SELECT COUNT(*) FROM mediaQueue_table")

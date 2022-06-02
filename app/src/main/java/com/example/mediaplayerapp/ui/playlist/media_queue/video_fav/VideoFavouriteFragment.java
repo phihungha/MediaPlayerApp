@@ -1,10 +1,7 @@
-package com.example.mediaplayerapp.ui.playlist.media_queue.video_queue;
+package com.example.mediaplayerapp.ui.playlist.media_queue.video_fav;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,32 +10,36 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
+import com.example.mediaplayerapp.databinding.FragmentVideoFavouriteBinding;
 import com.example.mediaplayerapp.databinding.FragmentVideoQueueBinding;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueAdapter;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueDeleteDialog;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
-import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 
 import java.util.List;
 
-
-public class VideoQueueFragment extends Fragment {
-    private FragmentVideoQueueBinding binding;
+public class VideoFavouriteFragment extends Fragment {
+    private FragmentVideoFavouriteBinding binding;
     private MediaQueueViewModel viewModel;
     private MediaQueueAdapter adapter;
 
-    public VideoQueueFragment() {
+    public VideoFavouriteFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentVideoQueueBinding.inflate(inflater, container, false);
+        binding = FragmentVideoFavouriteBinding.inflate(inflater, container, false);
         viewModel=new ViewModelProvider(this).get(MediaQueueViewModel.class);
         return binding.getRoot();
     }
@@ -51,10 +52,10 @@ public class VideoQueueFragment extends Fragment {
         adapter.setContext(requireContext());
         adapter.setApplication(requireActivity().getApplication());
 
-        binding.rcvVideoQueue.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.rcvVideoQueue.setAdapter(adapter);
+        binding.rcvVideoFavourite.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.rcvVideoFavourite.setAdapter(adapter);
 
-        viewModel.getAllVideoQueue().observe(
+        viewModel.getAllVideoFavourite().observe(
                 getViewLifecycleOwner(),
                 new Observer<List<MediaQueue>>() {
                     @Override

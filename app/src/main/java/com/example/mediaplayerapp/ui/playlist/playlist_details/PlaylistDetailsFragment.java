@@ -46,7 +46,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     private PlaylistItemViewModel playlistItemViewModel;
     private PlaylistViewModel playlistViewModel;
     private ActivityResultLauncher<String[]> mediaPickerLauncher;
-
+    private MediaQueueViewModel mediaQueueViewModel;
     private boolean isASC = false;
 
     public PlaylistDetailsFragment() {
@@ -65,6 +65,8 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         binding = FragmentPlaylistDetailsBinding.inflate(inflater, container, false);
         playlistItemViewModel = new ViewModelProvider(this).get(PlaylistItemViewModel.class);
         playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
+        mediaQueueViewModel = new ViewModelProvider(requireActivity())
+                .get(MediaQueueViewModel.class);
         // Inflate the layout for this fragment
         return binding.getRoot();
     }
@@ -180,9 +182,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         adapter.setBsAddQueueListener((view, position) -> {
             PlaylistItem media = adapter.getPlaylistMediaItemAt(position);
 
-            MediaQueueViewModel mediaQueueViewModel = new ViewModelProvider(requireActivity())
-                    .get(MediaQueueViewModel.class);
-
             int type;
             if (playlist.isVideo()) {
                 type = PlaylistConstants.TYPE_VIDEO_QUEUE;
@@ -193,6 +192,22 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             mediaQueueViewModel.insert(mediaQueue);
 
             Toast.makeText(getContext(), "Add to queue completed", Toast.LENGTH_SHORT).show();
+        });
+
+        //click add to favourite bottom sheet
+        adapter.setBsAddFavouriteListener((view, position) -> {
+            PlaylistItem media = adapter.getPlaylistMediaItemAt(position);
+
+            int type;
+            if (playlist.isVideo()) {
+                type = PlaylistConstants.TYPE_VIDEO_FAVOURITE;
+            } else {
+                type = PlaylistConstants.TYPE_MUSIC_FAVOURITE;
+            }
+            MediaQueue mediaQueue = new MediaQueue(media.getMediaUri(), media.getName(), playlist.isVideo(), type);
+            mediaQueueViewModel.insert(mediaQueue);
+
+            Toast.makeText(getContext(), "Add to favourite completed", Toast.LENGTH_SHORT).show();
         });
 
         //click properties bottom sheet

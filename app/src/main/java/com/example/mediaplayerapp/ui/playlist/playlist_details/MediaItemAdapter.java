@@ -21,6 +21,7 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
     private IOnItemClickListener bsDeleteListener;
     private IOnItemClickListener bsPropertiesListener;
     private IOnItemClickListener bsAddQueueListener;
+    private IOnItemClickListener bsAddFavouriteListener;
     private Application mApplication;
     private Playlist mPlaylist;
 
@@ -30,6 +31,10 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
 
     public void setBsAddQueueListener(IOnItemClickListener bsAddQueueListener) {
         this.bsAddQueueListener = bsAddQueueListener;
+    }
+
+    public void setBsAddFavouriteListener(IOnItemClickListener bsAddFavouriteListener) {
+        this.bsAddFavouriteListener = bsAddFavouriteListener;
     }
 
     public void setApplication(Application mApplication) {
@@ -64,7 +69,7 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
     @Override
     public MediaItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return MediaItemViewHolder.create(parent,mContext,itemClickListener,
-                bsPlayListener,bsDeleteListener,bsPropertiesListener,bsAddQueueListener,
+                bsPlayListener,bsDeleteListener,bsPropertiesListener,bsAddQueueListener,bsAddFavouriteListener,
                 mPlaylist);
     }
 
