@@ -9,7 +9,6 @@
         app:actionViewClass="android.widget.SearchView"
         app:showAsAction="ifRoom" />
 
-
     <item
         android:id="@+id/video_library_change_display_mode"
         android:title="@string/show_as"
@@ -36,12 +35,35 @@
         app:showAsAction="never">
         <menu>
             <item
-                android:id="@+id/video_library_sort_by_name_menu_item"
-                android:title="@string/sort_by_name" />
+                android:icon="@drawable/ic_sort_by_alphabet_24dp"
+                android:title="@string/title"
+                app:iconTint="@color/cyan">
+                <menu>
+                    <item
+                        android:id="@+id/video_library_sort_by_title_asc"
+                        android:title="@string/ascending" />
+
+                    <item
+                        android:id="@+id/video_library_sort_by_title_desc"
+                        android:title="@string/descending" />
+                </menu>
+            </item>
 
             <item
-                android:id="@+id/video_library_sort_by_length_menu_item"
-                android:title="@string/sort_by_length" />
+                android:icon="@drawable/ic_watch_later_24dp"
+                android:title="@string/duration"
+                app:iconTint="@color/cyan">
+                <menu>
+                    <item
+                        android:id="@+id/video_library_sort_by_duration_asc"
+                        android:title="@string/ascending" />
+
+                    <item
+                        android:id="@+id/video_library_sort_by_duration_desc"
+                        android:title="@string/descending" />
+                </menu>
+            </item>
+
         </menu>
     </item>
 </menu>

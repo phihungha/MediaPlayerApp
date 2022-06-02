@@ -73,41 +73,29 @@ public class VideoLibraryFragment extends Fragment {
             videoLibraryRecyclerView.setAdapter(videoLibraryItemAdapter);
             return true;
 
-        } else if (itemId == R.id.video_library_sort_by_name_menu_item) {
-
-            if (sortOrder == SortOrder.ASC) {
-
-                videoLibraryViewModel.getVideosSortByNameDESC().observe(
-                        getViewLifecycleOwner(),
-                        videos -> videoLibraryItemAdapter.submitList(videos));
-
-                sortOrder = SortOrder.DESC;
-            } else {
-
-                videoLibraryViewModel.getVideosSortByNameASC().observe(
-                        getViewLifecycleOwner(),
-                        videos -> videoLibraryItemAdapter.submitList(videos));
-
-                sortOrder = SortOrder.ASC;
-            }
+        } else if (itemId == R.id.video_library_sort_by_title_asc) {
+            videoLibraryViewModel.getVideosSortByNameASC().observe(
+                    getViewLifecycleOwner(),
+                    videos -> videoLibraryItemAdapter.submitList(videos));
             return true;
 
-        } else if (itemId == R.id.video_library_sort_by_length_menu_item) {
-            if (sortOrder == SortOrder.ASC) {
+        } else if (itemId == R.id.video_library_sort_by_title_desc) {
+            videoLibraryViewModel.getVideosSortByNameDESC().observe(
+                    getViewLifecycleOwner(),
+                    videos -> videoLibraryItemAdapter.submitList(videos));
+            return true;
 
-                videoLibraryViewModel.getVideosSortByDurationDESC().observe(
-                        getViewLifecycleOwner(),
-                        videos -> videoLibraryItemAdapter.submitList(videos));
+        } else if (itemId == R.id.video_library_sort_by_duration_asc) {
+            videoLibraryViewModel.getVideosSortByDurationASC().observe(
+                    getViewLifecycleOwner(),
+                    videos -> videoLibraryItemAdapter.submitList(videos));
 
-                sortOrder = SortOrder.DESC;
-            } else {
+            return true;
+        } else if (itemId == R.id.video_library_sort_by_duration_desc) {
+            videoLibraryViewModel.getVideosSortByDurationDESC().observe(
+                    getViewLifecycleOwner(),
+                    videos -> videoLibraryItemAdapter.submitList(videos));
 
-                videoLibraryViewModel.getVideosSortByDurationASC().observe(
-                        getViewLifecycleOwner(),
-                        videos -> videoLibraryItemAdapter.submitList(videos));
-
-                sortOrder = SortOrder.ASC;
-            }
             return true;
         }
 
