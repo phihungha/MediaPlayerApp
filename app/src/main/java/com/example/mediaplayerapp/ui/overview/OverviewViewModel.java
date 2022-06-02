@@ -40,8 +40,8 @@ public class OverviewViewModel extends AndroidViewModel {
         repository.insert(mediaPlaybackInfo);
     }
 
-    public void updatePlaybackAmount(MediaPlaybackInfo mediaPlaybackInfo) {
-        repository.updatePlaybackAmount(mediaPlaybackInfo);
+    public void updatePlaybackCount(MediaPlaybackInfo mediaPlaybackInfo) {
+        repository.updatePlaybackCount(mediaPlaybackInfo);
     }
 
     public void update(MediaPlaybackInfo mediaPlaybackInfo) {

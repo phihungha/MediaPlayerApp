@@ -27,9 +27,9 @@ public class MediaPlaybackInfoRepository {
                 () -> mediaPlaybackInfoDao.update(mediaPlaybackInfo));
     }
 
-    public void updatePlaybackAmount(MediaPlaybackInfo mediaPlaybackInfo) {
+    public void updatePlaybackCount(MediaPlaybackInfo mediaPlaybackInfo) {
         MediaPlaybackInfoRoomDatabase.databaseWriteExecutor.execute(
-                () -> mediaPlaybackInfoDao.updatePlaybackAmount(mediaPlaybackInfo.getId()));
+                () -> mediaPlaybackInfoDao.updatePlaybackCount(mediaPlaybackInfo.getId()));
     }
 
     public void updateRelevantInfo(String mediaUri, long lastPlaybackTime, long lastPlaybackPosition) {

@@ -20,17 +20,17 @@ public class MediaPlaybackInfo {
     @ColumnInfo(name = "LastPlaybackPosition")
     private long lastPlaybackPosition;
 
-    @ColumnInfo(name = "PlaybackAmount")
-    private int playbackAmount;
+    @ColumnInfo(name = "PlaybackCount")
+    private int playbackCount;
 
     @ColumnInfo(name = "IsVideo")
     private boolean isVideo;
 
-    public MediaPlaybackInfo(String mediaUri, long lastPlaybackTime, int playbackAmount, boolean isVideo, long lastPlaybackPosition) {
+    public MediaPlaybackInfo(String mediaUri, long lastPlaybackTime, int playbackCount, boolean isVideo, long lastPlaybackPosition) {
         this.setLastPlaybackPosition(lastPlaybackPosition);
         this.setMediaUri(mediaUri);
         this.setLastPlaybackTime(lastPlaybackTime);
-        this.setPlaybackAmount(playbackAmount);
+        this.setPlaybackCount(playbackCount);
         this.setVideo(isVideo);
     }
 
@@ -50,12 +50,12 @@ public class MediaPlaybackInfo {
         this.mediaUri = mediaUri;
     }
 
-    public int getPlaybackAmount() {
-        return playbackAmount;
+    public int getPlaybackCount() {
+        return playbackCount;
     }
 
-    public void setPlaybackAmount(int playbackAmount) {
-        this.playbackAmount = playbackAmount;
+    public void setPlaybackCount(int playbackCount) {
+        this.playbackCount = playbackCount;
     }
 
     public boolean isVideo() {
