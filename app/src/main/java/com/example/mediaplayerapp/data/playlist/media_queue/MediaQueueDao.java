@@ -6,6 +6,7 @@ import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -13,6 +14,9 @@ import java.util.List;
 public interface MediaQueueDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(MediaQueue media);
+
+    @Update
+    void update(MediaQueue media);
 
     @Delete
     void delete(MediaQueue media);
@@ -23,10 +27,10 @@ public interface MediaQueueDao {
     @Query("DELETE FROM mediaQueue_table WHERE mediaQueue_table.MediaQueueUri=:uri")
     void deleteItemWithUri(String uri);
 
-    @Query("SELECT * FROM mediaQueue_table")
+    @Query("SELECT * FROM mediaQueue_table ORDER BY OrderSort ASC")
     LiveData<List<MediaQueue>> getAllMediaQueue();
 
-    @Query("SELECT * FROM mediaQueue_table WHERE Type=:type")
+    @Query("SELECT * FROM mediaQueue_table WHERE Type=:type ORDER BY OrderSort ASC")
     LiveData<List<MediaQueue>> getAllQueueWithType(int type);
 
     @Query("SELECT COUNT(*) FROM mediaQueue_table")

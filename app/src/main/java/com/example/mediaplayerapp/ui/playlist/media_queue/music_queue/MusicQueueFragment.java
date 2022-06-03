@@ -11,22 +11,29 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.databinding.FragmentMusicQueueBinding;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueAdapter;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueDeleteDialog;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.OnPlaylistItemListChangedListener;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.OnStartDragListener;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.SimpleItemTouchHelperCallback;
 
 import java.util.List;
 
-public class MusicQueueFragment extends Fragment {
+public class MusicQueueFragment extends Fragment implements OnStartDragListener, OnPlaylistItemListChangedListener {
     private FragmentMusicQueueBinding binding;
     private MediaQueueViewModel viewModel;
     private MediaQueueAdapter adapter;
+    private ItemTouchHelper mItemTouchHelper;
 
     public MusicQueueFragment() {
         // Required empty public constructor
@@ -47,11 +54,6 @@ public class MusicQueueFragment extends Fragment {
 
         adapter=new MediaQueueAdapter(new MediaQueueAdapter.MediaQueueDiff());
         adapter.setContext(requireContext());
-        adapter.setApplication(requireActivity().getApplication());
-
-        binding.rcvMusicQueue.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.rcvMusicQueue.setAdapter(adapter);
-
         viewModel.getAllMusicQueue().observe(
                 getViewLifecycleOwner(),
                 new Observer<List<MediaQueue>>() {
@@ -61,9 +63,23 @@ public class MusicQueueFragment extends Fragment {
                     }
                 }
         );
+        setUpRecyclerView();
         setAdapterListener();
     }
 
+    private void setUpRecyclerView(){
+        binding.rcvMusicQueue.setHasFixedSize(true);
+        binding.rcvMusicQueue.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        adapter.setDragStartListener(this);
+        adapter.setListChangedListener(this);
+        adapter.setViewModel(viewModel);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(binding.rcvMusicQueue);
+
+        binding.rcvMusicQueue.setAdapter(adapter);
+    }
     private void setAdapterListener() {
         // item click
         adapter.setItemClickListener(this::ClickItem);
@@ -87,5 +103,15 @@ public class MusicQueueFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onNoteListChanged(List<PlaylistItem> customers) {
+
+    }
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
     }
 }

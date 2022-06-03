@@ -124,4 +124,6 @@
     <string name="release_year">Release year</string>
     <string name="video_queue">Video</string>
     <string name="music_queue">Song</string>
+    <string name="watch_later">Watch Later</string>
+    <string name="my_favourite">My Favourite</string>
 </resources>

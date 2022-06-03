@@ -19,6 +19,10 @@ public class MediaQueueRepository {
         MediaQueueRoomDatabase.databaseWriteExecutor.execute(() -> mMediaQueueDao.insert(media));
     }
 
+    public void update(MediaQueue media) {
+        MediaQueueRoomDatabase.databaseWriteExecutor.execute(() -> mMediaQueueDao.update(media));
+    }
+
     public void delete(MediaQueue media) {
         MediaQueueRoomDatabase.databaseWriteExecutor.execute(() -> mMediaQueueDao.delete(media));
     }

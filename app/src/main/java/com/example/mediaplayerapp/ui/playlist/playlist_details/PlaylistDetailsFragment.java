@@ -52,7 +52,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     private PlaylistItemViewModel playlistItemViewModel;
     private PlaylistViewModel playlistViewModel;
     private ActivityResultLauncher<String[]> mediaPickerLauncher;
-    private MediaQueueViewModel mediaQueueViewModel;
+
     private ItemTouchHelper mItemTouchHelper;
     private boolean isASC = false;
 
@@ -72,8 +72,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         binding = FragmentPlaylistDetailsBinding.inflate(inflater, container, false);
         playlistItemViewModel = new ViewModelProvider(this).get(PlaylistItemViewModel.class);
         playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
-        mediaQueueViewModel = new ViewModelProvider(requireActivity())
-                .get(MediaQueueViewModel.class);
+
         // Inflate the layout for this fragment
         return binding.getRoot();
     }

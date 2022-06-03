@@ -26,6 +26,13 @@ public class MediaQueueViewModel extends AndroidViewModel {
     }
 
     /**
+     *  update MediaQueue object to database
+     * */
+    public void update(MediaQueue media){
+        mRepository.update(media);
+    }
+
+    /**
      *  delete MediaQueue object from database
      * */
     public void delete(MediaQueue media){

@@ -132,16 +132,12 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-        ArrayList<PlaylistItem> currentList = new ArrayList<>(getCurrentList());
-
         Log.d("TAG_FROM", String.valueOf(fromPosition));
         Log.d("TAG_TO", String.valueOf(toPosition));
 
         listPos.add(fromPosition);
         listPos.add(toPosition);
 
-        //Collections.swap(currentList,fromPosition,toPosition);
-        //mListChangedListener.onNoteListChanged(currentList);
         notifyItemMoved(fromPosition, toPosition);
     }
 

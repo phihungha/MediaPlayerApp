@@ -14,7 +14,8 @@ public class MediaQueueUtil {
      * */
     public static void insertVideoToWatchLater(Application application, String uriString, String name){
         MediaQueueViewModel viewModel= new MediaQueueViewModel(application);
-        MediaQueue mediaQueue = new MediaQueue(uriString, name, true, PlaylistConstants.TYPE_VIDEO_QUEUE);
+        int count= viewModel.getCountMediaQueue();
+        MediaQueue mediaQueue = new MediaQueue(uriString, name, true, PlaylistConstants.TYPE_VIDEO_QUEUE,count+1);
         viewModel.insert(mediaQueue);
     }
 
@@ -26,7 +27,8 @@ public class MediaQueueUtil {
      * */
     public static void insertSongToWatchLater(Application application, String uriString, String name){
         MediaQueueViewModel viewModel= new MediaQueueViewModel(application);
-        MediaQueue mediaQueue = new MediaQueue(uriString, name, true, PlaylistConstants.TYPE_MUSIC_QUEUE);
+        int count= viewModel.getCountMediaQueue();
+        MediaQueue mediaQueue = new MediaQueue(uriString, name, false, PlaylistConstants.TYPE_MUSIC_QUEUE,count+1);
         viewModel.insert(mediaQueue);
     }
 
@@ -37,7 +39,8 @@ public class MediaQueueUtil {
      * */
     public static void insertVideoToFavourite(Application application, String uriString, String name){
         MediaQueueViewModel viewModel= new MediaQueueViewModel(application);
-        MediaQueue mediaQueue = new MediaQueue(uriString, name, true, PlaylistConstants.TYPE_VIDEO_FAVOURITE);
+        int count= viewModel.getCountMediaQueue();
+        MediaQueue mediaQueue = new MediaQueue(uriString, name, true, PlaylistConstants.TYPE_VIDEO_FAVOURITE,count+1);
         viewModel.insert(mediaQueue);
     }
 
@@ -48,7 +51,8 @@ public class MediaQueueUtil {
      * */
     public static void insertSongToFavourite(Application application, String uriString, String name){
         MediaQueueViewModel viewModel= new MediaQueueViewModel(application);
-        MediaQueue mediaQueue = new MediaQueue(uriString, name, true, PlaylistConstants.TYPE_MUSIC_FAVOURITE);
+        int count= viewModel.getCountMediaQueue();
+        MediaQueue mediaQueue = new MediaQueue(uriString, name, false, PlaylistConstants.TYPE_MUSIC_FAVOURITE,count+1);
         viewModel.insert(mediaQueue);
     }
 }

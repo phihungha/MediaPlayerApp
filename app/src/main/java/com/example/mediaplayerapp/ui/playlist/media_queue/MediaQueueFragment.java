@@ -56,7 +56,7 @@ public class MediaQueueFragment extends Fragment {
                                     break;
                             }
                         }).attach();
-                Toast.makeText(getActivity(), "queue", Toast.LENGTH_SHORT).show();
+                binding.tvTitleMediaQueue.setText(R.string.watch_later);
             } else if (key.equals(PlaylistConstants.TRANS_FAVOURITE)) {
                 ViewPager2 viewPager = binding.mediaQueueViewpager;
 
@@ -74,22 +74,10 @@ public class MediaQueueFragment extends Fragment {
                                     break;
                             }
                         }).attach();
-                Toast.makeText(getActivity(), "Favourite", Toast.LENGTH_SHORT).show();
+                binding.tvTitleMediaQueue.setText(R.string.my_favourite);
             }
             else Toast.makeText(getActivity(), "Error", Toast.LENGTH_SHORT).show();
         }
-
-
-    /*    adapter = new MediaQueueAdapter(new MediaQueueAdapter.MediaQueueDiff());
-        adapter.setContext(getContext());
-        adapter.setApplication(requireActivity().getApplication());
-
-        binding.rcvQueue.setAdapter(adapter);
-        setListeners();
-        mediaQueueViewModel.getAllMediaQueue().observe(
-                getViewLifecycleOwner(),
-                mediaQueues -> adapter.submitList(mediaQueues)
-        );*/
     }
 
     @Override
@@ -97,71 +85,5 @@ public class MediaQueueFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-    
-/*
-    private void setListeners() {
-        binding.layoutClearQueue.setOnClickListener(this);
-        binding.layoutPlayQueue.setOnClickListener(this);
 
-        adapter.setDeleteItemListener(this::DeleteItemQueue);
-
-        adapter.setItemClickListener(this::ClickItem);
-    }
-
-    private void ClickItem(View view, int position) {
-        MediaQueue media = adapter.getItemAt(position);
-        Uri playbackUri = Uri.parse(media.getMediaUri());
-        if (media.isVideo()) {
-            VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
-        } else {
-            MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
-        }
-    }
-
-    @SuppressLint("NonConstantResourceId")
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.layout_clearQueue:
-                ClearQueue();
-                break;
-
-            case R.id.layout_playQueue:
-                PlayQueue();
-                break;
-        }
-    }
-
-    private void PlayQueue() {
-       *//* List<MediaQueue> listMedia = adapter.getCurrentList();
-        List<Uri> uriList = new ArrayList<>();
-        listMedia.forEach(item -> {
-            Uri uri = Uri.parse(item.getMediaUri());
-            uriList.add(uri);
-        });*//*
-
-        Uri playbackUri = GetPlaybackUriUtils.forPlaylist(PlaylistConstants.TYPE_VIDEO_QUEUE, 0);
-   *//*     if (playlist.isVideo()) {
-            VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
-        } else {
-            MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
-        }*//*
-        makeToast("Play all");
-
-    }*/
-/*
-    private void DeleteItemQueue(View view, int position) {
-        MediaQueue mediaQueue = adapter.getItemAt(position);
-        MediaQueueDeleteDialog dialog = MediaQueueDeleteDialog.newInstance(mediaQueue);
-        dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_DELETE_DIALOG_QUEUE);
-    }
-
-    private void ClearQueue() {
-        MediaQueueDeleteDialog dialog = MediaQueueDeleteDialog.newInstance(null);
-        dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_DELETE_DIALOG_ALL_QUEUE);
-    }
-
-    private void makeToast(String mess) {
-        Toast.makeText(getActivity(), mess, Toast.LENGTH_SHORT).show();
-    }*/
 }

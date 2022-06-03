@@ -11,24 +11,30 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.databinding.FragmentVideoQueueBinding;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueAdapter;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueDeleteDialog;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.OnPlaylistItemListChangedListener;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.OnStartDragListener;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.SimpleItemTouchHelperCallback;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 
 import java.util.List;
 
-
-public class VideoQueueFragment extends Fragment {
+public class VideoQueueFragment extends Fragment implements OnStartDragListener, OnPlaylistItemListChangedListener {
     private FragmentVideoQueueBinding binding;
     private MediaQueueViewModel viewModel;
     private MediaQueueAdapter adapter;
+    private ItemTouchHelper mItemTouchHelper;
 
     public VideoQueueFragment() {
         // Required empty public constructor
@@ -49,11 +55,6 @@ public class VideoQueueFragment extends Fragment {
 
         adapter=new MediaQueueAdapter(new MediaQueueAdapter.MediaQueueDiff());
         adapter.setContext(requireContext());
-        adapter.setApplication(requireActivity().getApplication());
-
-        binding.rcvVideoQueue.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.rcvVideoQueue.setAdapter(adapter);
-
         viewModel.getAllVideoQueue().observe(
                 getViewLifecycleOwner(),
                 new Observer<List<MediaQueue>>() {
@@ -63,6 +64,7 @@ public class VideoQueueFragment extends Fragment {
                     }
                 }
         );
+        setUpRecyclerView();
         setAdapterListener();
     }
 
@@ -71,6 +73,20 @@ public class VideoQueueFragment extends Fragment {
         adapter.setItemClickListener(this::ClickItem);
         //item delete
         adapter.setDeleteItemListener(this::DeleteItemQueue);
+    }
+
+    private void setUpRecyclerView(){
+        binding.rcvVideoQueue.setHasFixedSize(true);
+        binding.rcvVideoQueue.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        adapter.setDragStartListener(this);
+        adapter.setListChangedListener(this);
+        adapter.setViewModel(viewModel);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(binding.rcvVideoQueue);
+
+        binding.rcvVideoQueue.setAdapter(adapter);
     }
 
     private void ClickItem(View view, int position) {
@@ -89,5 +105,15 @@ public class VideoQueueFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onNoteListChanged(List<PlaylistItem> customers) {
+
+    }
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
     }
 }

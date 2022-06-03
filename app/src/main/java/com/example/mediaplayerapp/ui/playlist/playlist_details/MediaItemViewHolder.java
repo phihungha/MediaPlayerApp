@@ -50,7 +50,7 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
 
         MediaInfo mediaInfo = MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
         String duration = MediaUtils.convertDuration(mediaInfo.getDuration());
-        binding.tvDurationMedia.setText(String.valueOf(media.getOrderSort()));
+        binding.tvDurationMedia.setText(duration);
 
         if (mPlaylist.isVideo()) {
             Glide.with(mContext)
@@ -188,7 +188,6 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
 
     @Override
     public void onItemClear() {
-        Log.d("TAG", "CLEAR");
         itemView.setBackgroundColor(0);
 
         if (mAdapter.getListPosSize()<2)

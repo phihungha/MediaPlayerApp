@@ -7,6 +7,17 @@
     android:orientation="vertical"
     tools:context=".ui.playlist.media_queue.MediaQueueFragment">
 
+    <TextView
+        android:id="@+id/tv_title_media_queue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:gravity="top"
+        android:text="@string/app_name"
+        android:textColor="#474646"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/media_queue_tab_layout"
         android:layout_width="match_parent"
