@@ -9,11 +9,11 @@ import java.util.List;
 
 public class VideoLibraryRepository {
 
-    private final VideoDataSource videoDataSource;
+    private final VideoMediaStoreDataSource videoDataSource;
     private final MutableLiveData<List<Video>> allVideos;
 
     public VideoLibraryRepository(Application application) {
-        videoDataSource = new VideoDataSource(application);
+        videoDataSource = new VideoMediaStoreDataSource(application);
         allVideos = videoDataSource.getAllVideos();
     }
 

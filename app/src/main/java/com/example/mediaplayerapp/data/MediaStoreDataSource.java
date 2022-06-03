@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.data.music_library;
+package com.example.mediaplayerapp.data;
 
 import android.content.ContentUris;
 import android.content.Context;
@@ -9,8 +9,8 @@ import android.net.Uri;
  * System's MediaStore API data source.
  */
 public class MediaStoreDataSource {
-    Context context;
-    Uri contentUri;
+    protected Context context;
+    protected Uri contentUri;
 
     /**
      * Construct MediaStore data source.

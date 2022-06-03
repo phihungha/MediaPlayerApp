@@ -12,11 +12,11 @@ import androidx.loader.content.CursorLoader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VideoDataSource {
+public class VideoMediaStoreDataSource {
 
     private final Context context;
 
-    public VideoDataSource(Context context) {
+    public VideoMediaStoreDataSource(Context context) {
         this.context = context;
     }
 
