@@ -18,8 +18,8 @@
     <string name="now_playing">Now playing</string>
     <string name="default_album_art">Default album art</string>
     <string name="playback">Playback</string>
-    <string name="notification_channel_name">Music playback</string>
-    <string name="notification_channel_description">Display and control music playback</string>
+    <string name="notification_channel_name">Background music playback</string>
+    <string name="notification_channel_description">Display and control music playback when running in background</string>
     <string name="music_artwork">Music artwork</string>
     <string name="playlist">Playlist</string>
     <string name="add_to_favorite">Add to favorite</string>

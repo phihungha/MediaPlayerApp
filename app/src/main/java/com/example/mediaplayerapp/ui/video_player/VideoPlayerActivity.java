@@ -124,7 +124,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         List<String> uriSegments = uri.getPathSegments();
         String type = uriSegments.get(0);
 
-        if (type.equals(GetPlaybackUriUtils.LIBRARY_URI_SEGMENT))
+        if (type.equals(GetPlaybackUriUtils.VIDEO_LIBRARY_URI_SEGMENT))
             loadMediaItemsFromVideoLibrary(Integer.parseInt(uriSegments.get(1)));
         else if (type.equals(GetPlaybackUriUtils.PLAYLIST_URI_SEGMENT))
             loadMediaItemsFromVideoPlaylist(

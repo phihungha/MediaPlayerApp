@@ -37,6 +37,8 @@ public class SongsFragment extends Fragment {
     private SongAdapter songAdapter;
 
     private DisplayMode currentDisplayMode;
+    private SongsRepository.SortBy currentSortBy;
+    private SortOrder currentSortOrder;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
 
@@ -57,13 +59,13 @@ public class SongsFragment extends Fragment {
         setHasOptionsMenu(true);
 
         songAdapter = new SongAdapter(requireContext(), orderIndex -> {
-            Uri playbackUri = GetPlaybackUriUtils.forLibrary(orderIndex);
+            Uri playbackUri = GetPlaybackUriUtils.forMusicLibrary(currentSortBy, currentSortOrder, orderIndex);
             MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
         });
         binding.songList.setAdapter(songAdapter);
 
         viewModel.getAllSongs().observe(getViewLifecycleOwner(), newSongs -> songAdapter.updateSongs(newSongs));
-        viewModel.loadAllSongs(SongsRepository.SortBy.TITLE, SortOrder.ASC);
+        changeSortMode(SongsRepository.SortBy.TITLE, SortOrder.ASC);
 
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -105,19 +107,30 @@ public class SongsFragment extends Fragment {
         else if (item.getItemId() == R.id.song_tab_show_as_list)
             setDisplayModeAsList();
         else if(item.getItemId() == R.id.song_tab_sort_by_title_asc)
-            viewModel.loadAllSongs(SongsRepository.SortBy.TITLE, SortOrder.ASC);
+            changeSortMode(SongsRepository.SortBy.TITLE, SortOrder.ASC);
         else if(item.getItemId() == R.id.song_tab_sort_by_title_desc)
-            viewModel.loadAllSongs(SongsRepository.SortBy.TITLE, SortOrder.DESC);
+            changeSortMode(SongsRepository.SortBy.TITLE, SortOrder.DESC);
         else if(item.getItemId() == R.id.song_tab_sort_by_duration_asc)
-            viewModel.loadAllSongs(SongsRepository.SortBy.DURATION, SortOrder.ASC);
+            changeSortMode(SongsRepository.SortBy.DURATION, SortOrder.ASC);
         else if(item.getItemId() == R.id.song_tab_sort_by_duration_desc)
-            viewModel.loadAllSongs(SongsRepository.SortBy.DURATION, SortOrder.DESC);
+            changeSortMode(SongsRepository.SortBy.DURATION, SortOrder.DESC);
         else if(item.getItemId() == R.id.song_tab_sort_by_time_added_asc)
-            viewModel.loadAllSongs(SongsRepository.SortBy.TIME_ADDED, SortOrder.ASC);
+            changeSortMode(SongsRepository.SortBy.TIME_ADDED, SortOrder.ASC);
         else if(item.getItemId() == R.id.song_tab_sort_by_time_added_desc)
-            viewModel.loadAllSongs(SongsRepository.SortBy.TIME_ADDED, SortOrder.DESC);
+            changeSortMode(SongsRepository.SortBy.TIME_ADDED, SortOrder.DESC);
 
         return true;
+    }
+
+    /**
+     * Change current sort mode.
+     * @param sortBy Sort by what
+     * @param sortOrder Sort order
+     */
+    private void changeSortMode(SongsRepository.SortBy sortBy, SortOrder sortOrder) {
+        viewModel.loadAllSongs(sortBy, sortOrder);
+        currentSortBy = sortBy;
+        currentSortOrder = sortOrder;
     }
 
     /**

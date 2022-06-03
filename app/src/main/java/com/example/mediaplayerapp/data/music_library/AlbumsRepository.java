@@ -14,11 +14,20 @@ import io.reactivex.rxjava3.core.Observable;
  */
 public class AlbumsRepository {
 
-    public enum SortBy
-    {
-        NAME,
-        NUMBER_OF_SONGS,
-        FIRST_YEAR
+    public enum SortBy {
+        NAME("name"),
+        NUMBER_OF_SONGS("number_of_songs"),
+        FIRST_YEAR("first_year");
+
+        private final String uriSegmentName;
+
+        SortBy(String uriSegmentName) {
+            this.uriSegmentName = uriSegmentName;
+        }
+
+        public String getUriSegmentName() {
+            return uriSegmentName;
+        }
     }
 
     AlbumsMediaStoreDataSource mediaStore;

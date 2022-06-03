@@ -75,7 +75,7 @@ public class VideoLibraryItemAdapter
             .into(holder.videoThumbnail);
 
         holder.videoClickArea.setOnClickListener(view -> {
-            Uri playbackUri = GetPlaybackUriUtils.forLibrary(position);
+            Uri playbackUri = GetPlaybackUriUtils.forVideoLibrary(position);
             VideoPlayerActivity.launchWithUri(context, playbackUri);
         });
 

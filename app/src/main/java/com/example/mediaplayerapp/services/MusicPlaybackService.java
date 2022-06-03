@@ -46,8 +46,10 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
     private static final String LOG_TAG = MusicPlaybackService.class.getSimpleName();
-    public static final String AUDIO_SESSION_ID_KEY = "com.example.mediaplayerapp.services.MusicPlaybackService.AudioSessionId";
-    private static final String NOTIFICATION_CHANNEL_ID = "com.example.mediaplayerapp.services.MusicPlaybackService.MUSIC_PLAYBACK";
+    public static final String AUDIO_SESSION_ID_KEY
+            = "com.example.mediaplayerapp.services.MusicPlaybackService.AudioSessionId";
+    private static final String NOTIFICATION_CHANNEL_ID
+            = "com.example.mediaplayerapp.services.MusicPlaybackService.MUSIC_PLAYBACK";
     private static final int NOTIFICATION_ID = 1;
 
     private final CompositeDisposable disposables = new CompositeDisposable();
@@ -251,42 +253,88 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     }
 
     /**
-     * Load media items specified by this app's playback URI from library.
+     * Load media items specified by this app's playback URI from system's music library.
      * @param uri Playback URI
      */
     private void loadMediaItemsFromLibrary(Uri uri) {
         List<String> uriSegments = uri.getPathSegments();
-        String type = uriSegments.get(0);
+        String libraryType = uriSegments.get(1);
 
-        if (type.equals(GetPlaybackUriUtils.LIBRARY_URI_SEGMENT)) {
-            int playbackStartIndex = Integer.parseInt(uriSegments.get(1));
-            loadMediaItemsFromSongsObservable(
-                    songsRepository.getAllSongs(SongsRepository.SortBy.TITLE, SortOrder.ASC),
-                    playbackStartIndex
-            );
-        } else if (type.equals(GetPlaybackUriUtils.ARTIST_URI_SEGMENT)) {
-            long artistId = Long.parseLong(uriSegments.get(1));
-            int playbackStartIndex = Integer.parseInt(uriSegments.get(2));
-            loadMediaItemsFromSongsObservable(
-                    songsRepository.getAllSongsFromArtist(artistId),
-                    playbackStartIndex
-            );
-        } else if (type.equals(GetPlaybackUriUtils.ALBUM_URI_SEGMENT)) {
-            long albumId = Long.parseLong(uriSegments.get(1));
-            int playbackStartIndex = Integer.parseInt(uriSegments.get(2));
-            loadMediaItemsFromSongsObservable(
-                    songsRepository.getAllSongsFromAlbum(albumId),
-                    playbackStartIndex
-            );
+        switch (libraryType) {
+            case GetPlaybackUriUtils.SONG_URI_SEGMENT:
+                loadMediaItemsFromEntireLibrary(uriSegments);
+                break;
+            case GetPlaybackUriUtils.ARTIST_URI_SEGMENT:
+                loadMediaItemsFromArtist(uriSegments);
+                break;
+            case GetPlaybackUriUtils.ALBUM_URI_SEGMENT:
+                loadMediaItemsFromAlbum(uriSegments);
+                break;
         }
     }
 
     /**
-     * Load media items from RxJava Observable that emits Song objects.
+     * Load media items from the entire music library
+     * with provided sort order in the playback URI.
+     * @param uriSegments Playback URI segments
+     */
+    private void loadMediaItemsFromEntireLibrary(List<String> uriSegments) {
+        String sortByUriSegment = uriSegments.get(2);
+        String sortOrderUriSegment = uriSegments.get(3);
+        int playbackStartIndex = Integer.parseInt(uriSegments.get(4));
+
+        SongsRepository.SortBy sortBy;
+        if (sortByUriSegment.equals(SongsRepository.SortBy.DURATION.getUriSegmentName()))
+            sortBy = SongsRepository.SortBy.DURATION;
+        else if (sortByUriSegment.equals(SongsRepository.SortBy.TIME_ADDED.getUriSegmentName()))
+            sortBy = SongsRepository.SortBy.TIME_ADDED;
+        else
+            sortBy = SongsRepository.SortBy.TITLE;
+
+        SortOrder sortOrder;
+        if (sortOrderUriSegment.equals(SortOrder.DESC.getUriSegmentName()))
+            sortOrder = SortOrder.DESC;
+        else
+            sortOrder = SortOrder.ASC;
+
+        asyncLoadMediaItems(
+                songsRepository.getAllSongs(sortBy, sortOrder),
+                playbackStartIndex
+        );
+    }
+
+    /**
+     * Load media items from songs of an artist.
+     * @param uriSegments Playback URI segments
+     */
+    private void loadMediaItemsFromArtist(List<String> uriSegments) {
+        long artistId = Long.parseLong(uriSegments.get(2));
+        int playbackStartIndex = Integer.parseInt(uriSegments.get(3));
+        asyncLoadMediaItems(
+                songsRepository.getAllSongsFromArtist(artistId),
+                playbackStartIndex
+        );
+    }
+
+    /**
+     * Load media items from songs in an album.
+     * @param uriSegments Playback URI segments
+     */
+    private void loadMediaItemsFromAlbum(List<String> uriSegments) {
+        long albumId = Long.parseLong(uriSegments.get(2));
+        int playbackStartIndex = Integer.parseInt(uriSegments.get(3));
+        asyncLoadMediaItems(
+                songsRepository.getAllSongsFromAlbum(albumId),
+                playbackStartIndex
+        );
+    }
+
+    /**
+     * Asynchronously load media items from library.
      * @param songs RxJava Observable that emits Song objects
      * @param playbackStartIndex Index of first media item to play
      */
-    private void loadMediaItemsFromSongsObservable(Observable<List<Song>> songs, int playbackStartIndex) {
+    private void asyncLoadMediaItems(Observable<List<Song>> songs, int playbackStartIndex) {
         Disposable disposable = songs.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(newSongs -> {
