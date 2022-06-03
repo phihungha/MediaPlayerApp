@@ -35,6 +35,7 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
     private static IOnItemClickListener bsPropertiesListener;
     private static IOnItemClickListener bsAddQueueListener;
     private static IOnItemClickListener bsAddFavouriteListener;
+    @SuppressLint("StaticFieldLeak")
     private static MediaItemAdapter mAdapter;
 
     public MediaItemViewHolder(@NonNull ItemMediaBinding binding) {

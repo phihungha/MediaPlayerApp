@@ -31,6 +31,7 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
+import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueUtil;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
@@ -42,6 +43,7 @@ import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 public class PlaylistDetailsFragment extends Fragment implements View.OnClickListener, OnStartDragListener,OnPlaylistItemListChangedListener {
     private Playlist playlist;
@@ -98,7 +100,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         setListener();
         refresh();
     }
-
 
     private void setUpRecyclerView(){
         binding.rcvPlaylistsDetails.setHasFixedSize(true);
@@ -201,15 +202,20 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         //click add to queue bottom sheet
         adapter.setBsAddQueueListener((view, position) -> {
             PlaylistItem media = adapter.getPlaylistMediaItemAt(position);
-
-            int type;
-            if (playlist.isVideo()) {
-                type = PlaylistConstants.TYPE_VIDEO_QUEUE;
-            } else {
-                type = PlaylistConstants.TYPE_MUSIC_QUEUE;
+            if (playlist.isVideo()){
+                MediaQueueUtil.insertVideoToWatchLater(
+                        requireActivity().getApplication(),
+                        media.getMediaUri(),
+                        media.getName()
+                        );
             }
-            MediaQueue mediaQueue = new MediaQueue(media.getMediaUri(), media.getName(), playlist.isVideo(), type);
-            mediaQueueViewModel.insert(mediaQueue);
+            else {
+                MediaQueueUtil.insertSongToWatchLater(
+                        requireActivity().getApplication(),
+                        media.getMediaUri(),
+                        media.getName()
+                );
+            }
 
             Toast.makeText(getContext(), "Add to queue completed", Toast.LENGTH_SHORT).show();
         });
@@ -218,14 +224,20 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         adapter.setBsAddFavouriteListener((view, position) -> {
             PlaylistItem media = adapter.getPlaylistMediaItemAt(position);
 
-            int type;
-            if (playlist.isVideo()) {
-                type = PlaylistConstants.TYPE_VIDEO_FAVOURITE;
-            } else {
-                type = PlaylistConstants.TYPE_MUSIC_FAVOURITE;
+            if (playlist.isVideo()){
+                MediaQueueUtil.insertVideoToFavourite(
+                        requireActivity().getApplication(),
+                        media.getMediaUri(),
+                        media.getName()
+                );
             }
-            MediaQueue mediaQueue = new MediaQueue(media.getMediaUri(), media.getName(), playlist.isVideo(), type);
-            mediaQueueViewModel.insert(mediaQueue);
+            else {
+                MediaQueueUtil.insertSongToFavourite(
+                        requireActivity().getApplication(),
+                        media.getMediaUri(),
+                        media.getName()
+                );
+            }
 
             Toast.makeText(getContext(), "Add to favourite completed", Toast.LENGTH_SHORT).show();
         });

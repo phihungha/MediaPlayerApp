@@ -108,7 +108,6 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
             PlaylistItemViewModel PlaylistItemViewModel
                     = new ViewModelProvider(requireActivity()).get(PlaylistItemViewModel.class);
 
-            // TODO: playlistItem
             AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             builder
                     .setTitle("Choose a playlist: ")
