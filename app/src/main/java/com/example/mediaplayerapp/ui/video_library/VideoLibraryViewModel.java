@@ -39,4 +39,10 @@ public class VideoLibraryViewModel extends AndroidViewModel {
                 .subscribe(videos::setValue);
         disposables.add(disposable);
     }
+
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        disposables.dispose();
+    }
 }

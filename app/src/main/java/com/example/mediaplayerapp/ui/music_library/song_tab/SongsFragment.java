@@ -53,7 +53,7 @@ public class SongsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentSongsBinding.inflate(getLayoutInflater(), container, false);
+        binding = FragmentSongsBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(SongsViewModel.class);
 
         setHasOptionsMenu(true);

@@ -50,7 +50,7 @@ public class ArtistsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentArtistsBinding.inflate(getLayoutInflater(), container, false);
+        binding = FragmentArtistsBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(ArtistsViewModel.class);
 
         setHasOptionsMenu(true);

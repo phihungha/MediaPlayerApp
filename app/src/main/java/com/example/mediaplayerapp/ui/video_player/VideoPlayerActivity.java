@@ -265,5 +265,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
         super.onDestroy();
         mediaSession.release();
         player.release();
+        disposables.dispose();
     }
 }

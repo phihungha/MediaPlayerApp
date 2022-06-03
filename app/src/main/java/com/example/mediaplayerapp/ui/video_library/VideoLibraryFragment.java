@@ -40,7 +40,7 @@ public class VideoLibraryFragment extends Fragment {
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
 
-    private VideoLibraryViewModel videoModel;
+    private VideoLibraryViewModel viewModel;
 
     private FragmentVideoLibraryBinding binding;
 
@@ -52,8 +52,7 @@ public class VideoLibraryFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentVideoLibraryBinding.inflate(inflater, container, false);
-        videoModel = new ViewModelProvider
-                (requireActivity()).get(VideoLibraryViewModel.class);
+        viewModel = new ViewModelProvider(this).get(VideoLibraryViewModel.class);
 
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
         linearLayoutManager = new LinearLayoutManager(getContext());
@@ -62,12 +61,20 @@ public class VideoLibraryFragment extends Fragment {
             Uri playbackUri = GetPlaybackUriUtils.forVideoLibrary(currentSortBy, currentSortOrder, orderIndex);
             VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
         });
-        binding.videoLibraryRecyclerview.setAdapter(videoAdapter);
-        binding.videoLibraryRecyclerview.setHasFixedSize(true);
+        binding.videoList.setAdapter(videoAdapter);
+        binding.videoList.setHasFixedSize(true);
 
-        videoModel.getAllVideos().observe(
-                requireActivity(),
-                videos -> videoAdapter.submitList(videos)
+        binding.videosSwipeRefreshContainer.setOnRefreshListener(
+                () -> viewModel.loadAllVideos(currentSortBy, currentSortOrder)
+        );
+        binding.videosSwipeRefreshContainer.setColorSchemeResources(R.color.cyan);
+
+        viewModel.getAllVideos().observe(
+                getViewLifecycleOwner(),
+                videos -> {
+                    videoAdapter.submitList(videos);
+                    binding.videosSwipeRefreshContainer.setRefreshing(false);
+                }
         );
 
         if (savedInstanceState != null) {
@@ -150,7 +157,7 @@ public class VideoLibraryFragment extends Fragment {
      * @param sortOrder Sort order
      */
     private void setSortMode(VideosRepository.SortBy sortBy, SortOrder sortOrder) {
-        videoModel.loadAllVideos(sortBy, sortOrder);
+        viewModel.loadAllVideos(sortBy, sortOrder);
         currentSortBy = sortBy;
         currentSortOrder = sortOrder;
     }
@@ -161,7 +168,7 @@ public class VideoLibraryFragment extends Fragment {
     private void setDisplayModeAsGrid() {
         if (currentDisplayMode == DisplayMode.GRID)
             return;
-        binding.videoLibraryRecyclerview.setLayoutManager(gridLayoutManager);
+        binding.videoList.setLayoutManager(gridLayoutManager);
         videoAdapter.setDisplayMode(DisplayMode.GRID);
         currentDisplayMode = DisplayMode.GRID;
     }
@@ -172,7 +179,7 @@ public class VideoLibraryFragment extends Fragment {
     private void setDisplayModeAsList() {
         if (currentDisplayMode == DisplayMode.LIST)
             return;
-        binding.videoLibraryRecyclerview.setLayoutManager(linearLayoutManager);
+        binding.videoList.setLayoutManager(linearLayoutManager);
         videoAdapter.setDisplayMode(DisplayMode.LIST);
         currentDisplayMode = DisplayMode.LIST;
     }
