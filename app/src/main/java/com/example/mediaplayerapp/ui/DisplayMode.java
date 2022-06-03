@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.music_library;
+package com.example.mediaplayerapp.ui;
 
 public enum DisplayMode {
     GRID(0),
