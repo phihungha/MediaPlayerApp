@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.ArtistsRepository;
-import com.example.mediaplayerapp.databinding.FragmentArtistBinding;
+import com.example.mediaplayerapp.databinding.FragmentArtistsBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.utils.SortOrder;
@@ -34,12 +34,14 @@ public class ArtistsFragment extends Fragment {
     private ArtistAdapter artistAdapter;
 
     private DisplayMode currentDisplayMode;
+    private ArtistsRepository.SortBy currentSortBy;
+    private SortOrder currentSortOrder;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
 
     private ArtistsViewModel viewModel;
 
-    private FragmentArtistBinding binding;
+    private FragmentArtistsBinding binding;
 
     public ArtistsFragment() {
         // Required empty public constructor
@@ -48,20 +50,30 @@ public class ArtistsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentArtistBinding.inflate(getLayoutInflater(), container, false);
+        binding = FragmentArtistsBinding.inflate(getLayoutInflater(), container, false);
         viewModel = new ViewModelProvider(this).get(ArtistsViewModel.class);
 
         setHasOptionsMenu(true);
 
+        binding.artistsSwipeRefreshContainer.setOnRefreshListener(
+                () -> viewModel.loadAllArtists(currentSortBy, currentSortOrder)
+        );
+        binding.artistsSwipeRefreshContainer.setColorSchemeResources(R.color.cyan);
+
         artistAdapter = new ArtistAdapter(getContext());
         binding.artistList.setAdapter(artistAdapter);
 
-        viewModel.getAllArtists().observe(getViewLifecycleOwner(), newArtists -> artistAdapter.updateArtists(newArtists));
-        viewModel.loadAllArtists(ArtistsRepository.SortBy.NAME, SortOrder.ASC);
+        viewModel.getAllArtists().observe(getViewLifecycleOwner(),
+                newArtists ->  {
+                    artistAdapter.updateArtists(newArtists);
+                    binding.artistsSwipeRefreshContainer.setRefreshing(false);
+                });
+        changeSortMode(ArtistsRepository.SortBy.NAME, SortOrder.ASC);
 
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
         linearLayoutManager = new LinearLayoutManager(getContext());
-        // Initial value needs to be LIST so display mode can change
+        // Initial value needs to be LIST so default display mode
+        //  can be set using setDisplayModeAsGrid()
         currentDisplayMode = DisplayMode.LIST;
         // Default display mode is grid
         setDisplayModeAsGrid();
@@ -99,19 +111,30 @@ public class ArtistsFragment extends Fragment {
         else if (item.getItemId() == R.id.artist_tab_show_as_list)
             setDisplayModeAsList();
         else if (item.getItemId() == R.id.artist_tab_sort_by_name_asc)
-            viewModel.loadAllArtists(ArtistsRepository.SortBy.NAME, SortOrder.ASC);
+            changeSortMode(ArtistsRepository.SortBy.NAME, SortOrder.ASC);
         else if (item.getItemId() == R.id.artist_tab_sort_by_name_desc)
-            viewModel.loadAllArtists(ArtistsRepository.SortBy.NAME, SortOrder.DESC);
+            changeSortMode(ArtistsRepository.SortBy.NAME, SortOrder.DESC);
         else if (item.getItemId() == R.id.artist_tab_sort_by_number_of_albums_asc)
-            viewModel.loadAllArtists(ArtistsRepository.SortBy.NUMBER_OF_ALBUMS, SortOrder.ASC);
+            changeSortMode(ArtistsRepository.SortBy.NUMBER_OF_ALBUMS, SortOrder.ASC);
         else if (item.getItemId() == R.id.artist_tab_sort_by_number_of_albums_desc)
-            viewModel.loadAllArtists(ArtistsRepository.SortBy.NUMBER_OF_ALBUMS, SortOrder.DESC);
+            changeSortMode(ArtistsRepository.SortBy.NUMBER_OF_ALBUMS, SortOrder.DESC);
         else if (item.getItemId() == R.id.artist_tab_sort_by_number_of_songs_asc)
-            viewModel.loadAllArtists(ArtistsRepository.SortBy.NUMBER_OF_TRACKS, SortOrder.ASC);
+            changeSortMode(ArtistsRepository.SortBy.NUMBER_OF_TRACKS, SortOrder.ASC);
         else if (item.getItemId() == R.id.artist_tab_sort_by_number_of_songs_desc)
-            viewModel.loadAllArtists(ArtistsRepository.SortBy.NUMBER_OF_TRACKS, SortOrder.DESC);
+            changeSortMode(ArtistsRepository.SortBy.NUMBER_OF_TRACKS, SortOrder.DESC);
 
         return true;
+    }
+
+    /**
+     * Change current sort mode.
+     * @param sortBy Sort by what
+     * @param sortOrder Sort order
+     */
+    private void changeSortMode(ArtistsRepository.SortBy sortBy, SortOrder sortOrder) {
+        viewModel.loadAllArtists(sortBy, sortOrder);
+        currentSortBy = sortBy;
+        currentSortOrder = sortOrder;
     }
 
     /**

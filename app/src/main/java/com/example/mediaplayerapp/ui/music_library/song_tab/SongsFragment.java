@@ -58,18 +58,28 @@ public class SongsFragment extends Fragment {
 
         setHasOptionsMenu(true);
 
+        binding.songsSwipeRefreshContainer.setOnRefreshListener(
+                () -> viewModel.loadAllSongs(currentSortBy, currentSortOrder)
+        );
+        binding.songsSwipeRefreshContainer.setColorSchemeResources(R.color.cyan);
+
         songAdapter = new SongAdapter(requireContext(), orderIndex -> {
             Uri playbackUri = GetPlaybackUriUtils.forMusicLibrary(currentSortBy, currentSortOrder, orderIndex);
             MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
         });
         binding.songList.setAdapter(songAdapter);
 
-        viewModel.getAllSongs().observe(getViewLifecycleOwner(), newSongs -> songAdapter.updateSongs(newSongs));
+        viewModel.getAllSongs().observe(getViewLifecycleOwner(),
+                newSongs ->  {
+            songAdapter.updateSongs(newSongs);
+            binding.songsSwipeRefreshContainer.setRefreshing(false);
+        });
         changeSortMode(SongsRepository.SortBy.TITLE, SortOrder.ASC);
 
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
         linearLayoutManager = new LinearLayoutManager(getContext());
-        // Initial value needs to be LIST so display mode can change
+        // Initial value needs to be LIST so default display mode
+        //  can be set using setDisplayModeAsGrid()
         currentDisplayMode = DisplayMode.LIST;
         // Default display mode is grid
         setDisplayModeAsGrid();

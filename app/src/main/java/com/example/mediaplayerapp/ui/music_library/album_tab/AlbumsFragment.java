@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.AlbumsRepository;
-import com.example.mediaplayerapp.databinding.FragmentAlbumBinding;
+import com.example.mediaplayerapp.databinding.FragmentAlbumsBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.utils.SortOrder;
@@ -34,12 +34,14 @@ public class AlbumsFragment extends Fragment {
     private AlbumAdapter albumAdapter;
 
     private DisplayMode currentDisplayMode;
+    private AlbumsRepository.SortBy currentSortBy;
+    private SortOrder currentSortOrder;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
 
     private AlbumsViewModel viewModel;
 
-    private FragmentAlbumBinding binding;
+    private FragmentAlbumsBinding binding;
 
     public AlbumsFragment() {
         // Required empty public constructor
@@ -48,21 +50,30 @@ public class AlbumsFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        binding = FragmentAlbumBinding.inflate(inflater, container, false);
+        binding = FragmentAlbumsBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(AlbumsViewModel.class);
 
         setHasOptionsMenu(true);
+
+        binding.albumsSwipeRefreshContainer.setOnRefreshListener(
+                () -> viewModel.loadAllAlbums(currentSortBy, currentSortOrder)
+        );
+        binding.albumsSwipeRefreshContainer.setColorSchemeResources(R.color.cyan);
 
         albumAdapter = new AlbumAdapter(requireContext());
         binding.albumList.setAdapter(albumAdapter);
 
         viewModel.getAllAlbums().observe(getViewLifecycleOwner(),
-                newAlbums -> albumAdapter.updateAlbums(newAlbums));
-        viewModel.loadAllAlbums(AlbumsRepository.SortBy.NAME, SortOrder.ASC);
+                newAlbums ->  {
+                    albumAdapter.updateAlbums(newAlbums);
+                    binding.albumsSwipeRefreshContainer.setRefreshing(false);
+                });
+        changeSortMode(AlbumsRepository.SortBy.NAME, SortOrder.ASC);
 
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
         linearLayoutManager = new LinearLayoutManager(getContext());
-        // Initial value needs to be LIST so display mode can change
+        // Initial value needs to be LIST so default display mode
+        //  can be set using setDisplayModeAsGrid()
         currentDisplayMode = DisplayMode.LIST;
         // Default display mode is grid
         setDisplayModeAsGrid();
@@ -100,19 +111,30 @@ public class AlbumsFragment extends Fragment {
         else if (item.getItemId() == R.id.album_tab_show_as_list)
             setDisplayModeAsList();
         else if (item.getItemId() == R.id.album_tab_sort_by_name_asc)
-            viewModel.loadAllAlbums(AlbumsRepository.SortBy.NAME, SortOrder.ASC);
+            changeSortMode(AlbumsRepository.SortBy.NAME, SortOrder.ASC);
         else if (item.getItemId() == R.id.album_tab_sort_by_name_desc)
-            viewModel.loadAllAlbums(AlbumsRepository.SortBy.NAME, SortOrder.DESC);
+            changeSortMode(AlbumsRepository.SortBy.NAME, SortOrder.DESC);
         else if (item.getItemId() == R.id.album_tab_sort_by_number_of_songs_asc)
-            viewModel.loadAllAlbums(AlbumsRepository.SortBy.NUMBER_OF_SONGS, SortOrder.ASC);
+            changeSortMode(AlbumsRepository.SortBy.NUMBER_OF_SONGS, SortOrder.ASC);
         else if (item.getItemId() == R.id.album_tab_sort_by_number_of_songs_desc)
-            viewModel.loadAllAlbums(AlbumsRepository.SortBy.NUMBER_OF_SONGS, SortOrder.DESC);
+            changeSortMode(AlbumsRepository.SortBy.NUMBER_OF_SONGS, SortOrder.DESC);
         else if (item.getItemId() == R.id.album_tab_sort_by_first_year_asc)
-            viewModel.loadAllAlbums(AlbumsRepository.SortBy.FIRST_YEAR, SortOrder.ASC);
+            changeSortMode(AlbumsRepository.SortBy.FIRST_YEAR, SortOrder.ASC);
         else if (item.getItemId() == R.id.album_tab_sort_by_first_year_desc)
-            viewModel.loadAllAlbums(AlbumsRepository.SortBy.FIRST_YEAR, SortOrder.DESC);
+            changeSortMode(AlbumsRepository.SortBy.FIRST_YEAR, SortOrder.DESC);
 
         return true;
+    }
+
+    /**
+     * Change current sort mode.
+     * @param sortBy Sort by what
+     * @param sortOrder Sort order
+     */
+    private void changeSortMode(AlbumsRepository.SortBy sortBy, SortOrder sortOrder) {
+        viewModel.loadAllAlbums(sortBy, sortOrder);
+        currentSortBy = sortBy;
+        currentSortOrder = sortOrder;
     }
 
     /**

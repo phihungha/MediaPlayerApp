@@ -3,15 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.music_library.song_tab.SongsFragment">
+    tools:context=".ui.music_library.album_tab.AlbumsFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/songs_swipe_refresh_container"
+        android:id="@+id/albums_swipe_refresh_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/song_list"
+            android:id="@+id/album_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
