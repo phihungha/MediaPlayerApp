@@ -59,7 +59,7 @@ public class VideoLibraryFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getContext());
 
         videoAdapter = new VideoAdapter(requireContext(), orderIndex -> {
-            Uri playbackUri = GetPlaybackUriUtils.forVideoLibrary(orderIndex);
+            Uri playbackUri = GetPlaybackUriUtils.forVideoLibrary(currentSortBy, currentSortOrder, orderIndex);
             VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
         });
         binding.videoLibraryRecyclerview.setAdapter(videoAdapter);

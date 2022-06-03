@@ -3,6 +3,7 @@ package com.example.mediaplayerapp.utils;
 import android.net.Uri;
 
 import com.example.mediaplayerapp.data.music_library.SongsRepository;
+import com.example.mediaplayerapp.data.video_library.VideosRepository;
 
 /**
  * Utility methods to get URI to request playback within the app.
@@ -36,10 +37,12 @@ public class GetPlaybackUriUtils {
      * @param index Index of the video item to start
      * @return URI for playback
      */
-    public static Uri forVideoLibrary(int index) {
+    public static Uri forVideoLibrary(VideosRepository.SortBy sortBy, SortOrder sortOrder, int index) {
         return new Uri.Builder()
                 .scheme(PLAYBACK_URI_SCHEME)
                 .appendPath(VIDEO_LIBRARY_URI_SEGMENT)
+                .appendPath(sortBy.getUriSegmentName())
+                .appendPath(sortOrder.getUriSegmentName())
                 .appendPath(String.valueOf(index))
                 .build();
     }
