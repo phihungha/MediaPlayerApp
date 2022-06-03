@@ -24,13 +24,12 @@ import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryGridBinding;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryListBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
+import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.example.mediaplayerapp.utils.StartPlaybackCallback;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 
 @SuppressLint("NotifyDataSetChanged")
 public class VideoAdapter
@@ -95,12 +94,7 @@ public class VideoAdapter
         holder.videoName.setText(displayedVideos.get(position).getName());
 
         int duration = displayedVideos.get(position).getDuration();
-        String durationFormatted = String.format(
-                Locale.US,
-                "%02d:%02d",
-                TimeUnit.MILLISECONDS.toMinutes(duration),
-                TimeUnit.MILLISECONDS.toSeconds(duration) % 60
-        );
+        String durationFormatted = MediaTimeUtils.getFormattedTimeFromLong(duration);
         holder.videoDuration.setText(durationFormatted);
 
         holder.videoOptions.setOnClickListener(view -> {

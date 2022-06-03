@@ -16,7 +16,6 @@ public class GetPlaybackUriUtils {
     public static final String ARTIST_URI_SEGMENT = "artist";
     public static final String VIDEO_LIBRARY_URI_SEGMENT = "video_library";
 
-
     /**
      * Get URI to play a playlist starting from an index.
      * @param id Playlist ID

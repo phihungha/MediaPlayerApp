@@ -49,7 +49,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     public static final String AUDIO_SESSION_ID_KEY
             = "com.example.mediaplayerapp.services.MusicPlaybackService.AudioSessionId";
     private static final String NOTIFICATION_CHANNEL_ID
-            = "com.example.mediaplayerapp.services.MusicPlaybackService.MUSIC_PLAYBACK";
+            = "com.example.mediaplayerapp.services.MusicPlaybackService.MusicPlayback";
     private static final int NOTIFICATION_ID = 1;
 
     private final CompositeDisposable disposables = new CompositeDisposable();
