@@ -30,7 +30,7 @@ public class SongsRepository {
         }
     }
 
-    SongsMediaStoreDataSource mediaStore;
+    private final SongsMediaStoreDataSource mediaStore;
 
     /**
      * Construct song repository.

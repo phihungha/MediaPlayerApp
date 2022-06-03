@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.ArtistsRepository;
 import com.example.mediaplayerapp.databinding.FragmentArtistsBinding;
-import com.example.mediaplayerapp.ui.music_library.DisplayMode;
+import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.utils.SortOrder;
 

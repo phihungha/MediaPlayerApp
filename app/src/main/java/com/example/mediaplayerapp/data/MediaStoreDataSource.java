@@ -17,7 +17,7 @@ public class MediaStoreDataSource {
      * @param context Application context
      * @param contentUri URI of content to access
      */
-    public MediaStoreDataSource (Context context, Uri contentUri) {
+    public MediaStoreDataSource(Context context, Uri contentUri) {
         this.context = context.getApplicationContext();
         this.contentUri = contentUri;
     }

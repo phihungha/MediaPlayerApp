@@ -19,6 +19,7 @@ import java.util.List;
 import io.reactivex.rxjava3.core.Observable;
 
 public class SongsMediaStoreDataSource extends MediaStoreDataSource {
+
     public SongsMediaStoreDataSource(Context context) {
         super(context, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
     }
