@@ -1,5 +1,6 @@
 package com.example.mediaplayerapp.ui.video_library;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,26 +15,92 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.video_library.VideosRepository;
 import com.example.mediaplayerapp.databinding.FragmentVideoLibraryBinding;
+import com.example.mediaplayerapp.ui.DisplayMode;
+import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
+import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
+import com.example.mediaplayerapp.utils.SortOrder;
 
 public class VideoLibraryFragment extends Fragment {
 
-    private static final String ARG_COLUMN_COUNT = "recycler_column_count";
-    public static int recyclerViewColumnCount = 2;
-    private VideoLibraryViewModel videoLibraryViewModel;
-    private FragmentVideoLibraryBinding binding;
-    private RecyclerView videoLibraryRecyclerView;
-    private VideoLibraryItemAdapter videoLibraryItemAdapter;
+    private static final String CURRENT_DISPLAY_MODE_KEY = "current_display_mode";
+    private static final String CURRENT_SORT_BY_KEY = "current_sort_by";
+    private static final String CURRENT_SORT_ORDER_KEY = "current_sort_order";
 
-    private SortOrder sortOrder = SortOrder.ASC;
+    private static final int GRID_MODE_COLUMN_NUM = 2;
+
+    private VideoAdapter videoAdapter;
+
+    private DisplayMode currentDisplayMode;
+    private VideosRepository.SortBy currentSortBy;
+    private SortOrder currentSortOrder;
+    private GridLayoutManager gridLayoutManager;
+    private LinearLayoutManager linearLayoutManager;
+
+    private VideoLibraryViewModel videoModel;
+
+    private FragmentVideoLibraryBinding binding;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+    }
+
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentVideoLibraryBinding.inflate(inflater, container, false);
+        videoModel = new ViewModelProvider
+                (requireActivity()).get(VideoLibraryViewModel.class);
+
+        gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+
+        videoAdapter = new VideoAdapter(requireContext(), orderIndex -> {
+            Uri playbackUri = GetPlaybackUriUtils.forVideoLibrary(orderIndex);
+            VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
+        });
+        binding.videoLibraryRecyclerview.setAdapter(videoAdapter);
+        binding.videoLibraryRecyclerview.setHasFixedSize(true);
+
+        videoModel.getAllVideos().observe(
+                requireActivity(),
+                videos -> videoAdapter.submitList(videos)
+        );
+
+        if (savedInstanceState != null) {
+            restoreInstanceState(savedInstanceState);
+        } else {
+            setSortMode(VideosRepository.SortBy.NAME, SortOrder.ASC);
+            currentDisplayMode = DisplayMode.LIST;
+            setDisplayModeAsGrid();
+        }
+
+        return binding.getRoot();
+    }
+
+    /**
+     * Restore fragment's last state.
+     * @param savedInstanceState Last state
+     */
+    private void restoreInstanceState(Bundle savedInstanceState) {
+        currentDisplayMode = (DisplayMode) savedInstanceState.getSerializable(CURRENT_DISPLAY_MODE_KEY);
+        currentSortBy = (VideosRepository.SortBy) savedInstanceState.getSerializable(CURRENT_SORT_BY_KEY);
+        currentSortOrder = (SortOrder) savedInstanceState.getSerializable(CURRENT_SORT_ORDER_KEY);
+
+        setSortMode(currentSortBy, currentSortOrder);
+
+        if (currentDisplayMode == DisplayMode.GRID) {
+            // Initial value needs to be appropriately set so default display mode
+            // can be set using setDisplayMode methods.
+            currentDisplayMode = DisplayMode.LIST;
+            setDisplayModeAsGrid();
+        } else {
+            currentDisplayMode = DisplayMode.GRID;
+            setDisplayModeAsList();
+        }
     }
 
     @Override
@@ -50,7 +117,7 @@ public class VideoLibraryFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                videoLibraryItemAdapter.getFilter().filter(s);
+                videoAdapter.getFilter().filter(s);
                 return false;
             }
         });
@@ -60,79 +127,54 @@ public class VideoLibraryFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.video_library_show_as_list_menu_item) {
-            recyclerViewColumnCount = 1;
-            videoLibraryRecyclerView.setLayoutManager(new LinearLayoutManager
-                    ((binding.getRoot().getContext())));
-            videoLibraryRecyclerView.setAdapter(videoLibraryItemAdapter);
-            return true;
-
+            setDisplayModeAsList();
         } else if (itemId == R.id.video_library_show_as_grid_menu_item) {
-            recyclerViewColumnCount = 2;
-            videoLibraryRecyclerView.setLayoutManager(new GridLayoutManager
-                    (binding.getRoot().getContext(), recyclerViewColumnCount));
-            videoLibraryRecyclerView.setAdapter(videoLibraryItemAdapter);
-            return true;
-
+            setDisplayModeAsGrid();
         } else if (itemId == R.id.video_library_sort_by_title_asc) {
-            videoLibraryViewModel.getVideosSortByNameASC().observe(
-                    getViewLifecycleOwner(),
-                    videos -> videoLibraryItemAdapter.submitList(videos));
-            return true;
+            setSortMode(VideosRepository.SortBy.NAME, SortOrder.ASC);
 
         } else if (itemId == R.id.video_library_sort_by_title_desc) {
-            videoLibraryViewModel.getVideosSortByNameDESC().observe(
-                    getViewLifecycleOwner(),
-                    videos -> videoLibraryItemAdapter.submitList(videos));
-            return true;
-
+            setSortMode(VideosRepository.SortBy.NAME, SortOrder.DESC);
         } else if (itemId == R.id.video_library_sort_by_duration_asc) {
-            videoLibraryViewModel.getVideosSortByDurationASC().observe(
-                    getViewLifecycleOwner(),
-                    videos -> videoLibraryItemAdapter.submitList(videos));
-
-            return true;
+            setSortMode(VideosRepository.SortBy.DURATION, SortOrder.ASC);
         } else if (itemId == R.id.video_library_sort_by_duration_desc) {
-            videoLibraryViewModel.getVideosSortByDurationDESC().observe(
-                    getViewLifecycleOwner(),
-                    videos -> videoLibraryItemAdapter.submitList(videos));
-
-            return true;
+            setSortMode(VideosRepository.SortBy.DURATION, SortOrder.DESC);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Change current sort mode.
+     * @param sortBy Sort by what
+     * @param sortOrder Sort order
+     */
+    private void setSortMode(VideosRepository.SortBy sortBy, SortOrder sortOrder) {
+        videoModel.loadAllVideos(sortBy, sortOrder);
+        currentSortBy = sortBy;
+        currentSortOrder = sortOrder;
+    }
 
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    /**
+     * Change display mode to grid.
+     */
+    private void setDisplayModeAsGrid() {
+        if (currentDisplayMode == DisplayMode.GRID)
+            return;
+        binding.videoLibraryRecyclerview.setLayoutManager(gridLayoutManager);
+        videoAdapter.setDisplayMode(DisplayMode.GRID);
+        currentDisplayMode = DisplayMode.GRID;
+    }
 
-        if (savedInstanceState != null) {
-            recyclerViewColumnCount = savedInstanceState.getInt(ARG_COLUMN_COUNT);
-        }
-        binding = FragmentVideoLibraryBinding.inflate(inflater, container, false);
-        videoLibraryRecyclerView = binding.videoLibraryRecyclerview;
-
-        if (recyclerViewColumnCount <= 1) {
-            videoLibraryRecyclerView.setLayoutManager(new LinearLayoutManager
-                    (binding.getRoot().getContext()));
-        } else {
-            videoLibraryRecyclerView.setLayoutManager(new GridLayoutManager
-                    (binding.getRoot().getContext(), recyclerViewColumnCount));
-        }
-
-        videoLibraryItemAdapter = new VideoLibraryItemAdapter(
-                new VideoLibraryItemAdapter.VideoDiff());
-        videoLibraryItemAdapter.setContext(requireActivity());
-        videoLibraryRecyclerView.setAdapter(videoLibraryItemAdapter);
-        videoLibraryRecyclerView.setHasFixedSize(true);
-
-        videoLibraryViewModel = new ViewModelProvider
-                (requireActivity()).get(VideoLibraryViewModel.class);
-
-        videoLibraryViewModel.getAllVideos().observe(
-                requireActivity(),
-                videos -> videoLibraryItemAdapter.submitList(videos));
-
-        return binding.getRoot();
+    /**
+     * Change display mode to list.
+     */
+    private void setDisplayModeAsList() {
+        if (currentDisplayMode == DisplayMode.LIST)
+            return;
+        binding.videoLibraryRecyclerview.setLayoutManager(linearLayoutManager);
+        videoAdapter.setDisplayMode(DisplayMode.LIST);
+        currentDisplayMode = DisplayMode.LIST;
     }
 
     @Override
@@ -144,11 +186,8 @@ public class VideoLibraryFragment extends Fragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(ARG_COLUMN_COUNT, recyclerViewColumnCount);
-    }
-
-    enum SortOrder {
-        ASC,
-        DESC
+        outState.putSerializable(CURRENT_DISPLAY_MODE_KEY, currentDisplayMode);
+        outState.putSerializable(CURRENT_SORT_ORDER_KEY, currentSortOrder);
+        outState.putSerializable(CURRENT_SORT_BY_KEY, currentSortBy);
     }
 }

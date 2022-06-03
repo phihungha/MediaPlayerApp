@@ -2,7 +2,6 @@ package com.example.mediaplayerapp.ui.video_library;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Filter;
@@ -24,8 +23,8 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryGridBinding;
 import com.example.mediaplayerapp.databinding.ItemVideoLibraryListBinding;
-import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
-import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
+import com.example.mediaplayerapp.ui.DisplayMode;
+import com.example.mediaplayerapp.utils.StartPlaybackCallback;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
@@ -33,29 +32,47 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-public class VideoLibraryItemAdapter
-        extends ListAdapter<Video, VideoLibraryItemAdapter.ViewHolder>
+@SuppressLint("NotifyDataSetChanged")
+public class VideoAdapter
+        extends ListAdapter<Video, VideoAdapter.ViewHolder>
         implements Filterable {
 
-    private final List<Video> displayedVideos;
-    private final List<Video> allVideos;
-    private Context context;
+    private DisplayMode displayMode = DisplayMode.LIST;
+    private final Context context;
 
-    protected VideoLibraryItemAdapter(@NonNull DiffUtil.ItemCallback<Video> diffCallback) {
-        super(diffCallback);
-        displayedVideos = new ArrayList<>();
-        allVideos = new ArrayList<>();
+    private final StartPlaybackCallback startPlaybackCallback;
+    private List<Video> allVideos = new ArrayList<>();
+    private final List<Video> displayedVideos = new ArrayList<>();
+
+    protected VideoAdapter(Context context, StartPlaybackCallback startPlaybackCallback) {
+        super(new VideoDiff());
+        this.context = context;
+        this.startPlaybackCallback = startPlaybackCallback;
     }
 
-    public void setContext(Context context) {
-        this.context = context;
+    public void setDisplayMode(DisplayMode displayMode) {
+        this.displayMode = displayMode;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return displayMode.getValue();
+    }
+
+    @Override
+    public void submitList(@Nullable List<Video> newVideos) {
+        assert newVideos != null;
+        super.submitList(new ArrayList<>(newVideos));
+        allVideos = newVideos;
+        displayedVideos.clear();
+        displayedVideos.addAll(newVideos);
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
-        if (VideoLibraryFragment.recyclerViewColumnCount > 1)
+        if (displayMode == DisplayMode.GRID)
             return new ViewHolder(ItemVideoLibraryGridBinding.inflate
                     (LayoutInflater.from(parent.getContext()), parent, false));
         else
@@ -65,7 +82,6 @@ public class VideoLibraryItemAdapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-
         Glide.with(holder.videoThumbnail.getContext())
             .load(displayedVideos.get(position).getUri())
             .diskCacheStrategy(DiskCacheStrategy.ALL)
@@ -74,10 +90,7 @@ public class VideoLibraryItemAdapter
             .centerCrop()
             .into(holder.videoThumbnail);
 
-        holder.videoClickArea.setOnClickListener(view -> {
-            Uri playbackUri = GetPlaybackUriUtils.forVideoLibrary(position);
-            VideoPlayerActivity.launchWithUri(context, playbackUri);
-        });
+        holder.videoClickArea.setOnClickListener(view -> startPlaybackCallback.play(position));
 
         holder.videoName.setText(displayedVideos.get(position).getName());
 
@@ -107,17 +120,6 @@ public class VideoLibraryItemAdapter
     }
 
     @Override
-    public void submitList(@Nullable List<Video> list) {
-        assert list != null;
-        super.submitList(new ArrayList<>(list));
-        this.displayedVideos.clear();
-        this.displayedVideos.addAll(list);
-
-        this.allVideos.clear();
-        this.allVideos.addAll(list);
-    }
-
-    @Override
     public Filter getFilter() {
         return new Filter() {
             @Override
@@ -139,7 +141,6 @@ public class VideoLibraryItemAdapter
                 return filterResults;
             }
 
-            @SuppressLint("NotifyDataSetChanged")
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 displayedVideos.clear();

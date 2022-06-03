@@ -16,10 +16,11 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemRepository;
-import com.example.mediaplayerapp.data.video_library.VideoLibraryRepository;
+import com.example.mediaplayerapp.data.video_library.VideosRepository;
 import com.example.mediaplayerapp.databinding.ActivityVideoPlayerBinding;
 import com.example.mediaplayerapp.utils.GetMediaItemsUtils;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
+import com.example.mediaplayerapp.utils.SortOrder;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
@@ -39,7 +40,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     private ExoPlayer player;
     private MediaSessionCompat mediaSession;
-    private VideoLibraryRepository videoLibraryRepository;
+    private VideosRepository videoLibraryRepository;
     private PlaylistItemRepository playlistItemRepository;
 
     @Override
@@ -48,7 +49,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         binding = ActivityVideoPlayerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        videoLibraryRepository = new VideoLibraryRepository(getApplication());
+        videoLibraryRepository = new VideosRepository(getApplication());
         playlistItemRepository = new PlaylistItemRepository(getApplication());
 
         enterFullScreenMode();
@@ -139,10 +140,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
      * @param playbackStartIndex Index of item to start playback from
      */
     private void loadMediaItemsFromVideoLibrary(int playbackStartIndex) {
-        videoLibraryRepository.getAllVideos().observe(this, videos -> {
-            player.addMediaItems(GetMediaItemsUtils.fromLibraryVideos(videos));
-            player.seekTo(playbackStartIndex, C.TIME_UNSET);
-        });
+
     }
 
     /**

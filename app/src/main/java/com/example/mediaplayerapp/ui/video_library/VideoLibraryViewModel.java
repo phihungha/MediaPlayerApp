@@ -1,48 +1,42 @@
 package com.example.mediaplayerapp.ui.video_library;
 
 import android.app.Application;
-import android.net.Uri;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mediaplayerapp.data.video_library.Video;
-import com.example.mediaplayerapp.data.video_library.VideoLibraryRepository;
+import com.example.mediaplayerapp.data.video_library.VideosRepository;
+import com.example.mediaplayerapp.utils.SortOrder;
 
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 public class VideoLibraryViewModel extends AndroidViewModel {
 
-    private final VideoLibraryRepository videoLibraryRepository;
-    private final MutableLiveData<List<Video>> allVideos;
+    private final CompositeDisposable disposables = new CompositeDisposable();
+
+    private final MutableLiveData<List<Video>> videos = new MutableLiveData<>();
+    private final VideosRepository videosRepository;
 
     public VideoLibraryViewModel(Application application) {
         super(application);
-        videoLibraryRepository = new VideoLibraryRepository(application);
-        allVideos = videoLibraryRepository.getAllVideos();
+        videosRepository = new VideosRepository(application);
     }
 
     public MutableLiveData<List<Video>> getAllVideos() {
-        return allVideos;
+        return videos;
     }
 
-    public MutableLiveData<List<Video>> getVideosSortByNameASC() {
-        return videoLibraryRepository.getVideosSortByNameASC();
-    }
-
-    public MutableLiveData<List<Video>> getVideosSortByNameDESC() {
-        return videoLibraryRepository.getVideosSortByNameDESC();
-    }
-
-    public MutableLiveData<List<Video>> getVideosSortByDurationASC() {
-        return videoLibraryRepository.getVideosSortByDurationASC();
-    }
-
-    public MutableLiveData<List<Video>> getVideosSortByDurationDESC() {
-        return videoLibraryRepository.getVideosSortByDurationDESC();
-    }
-
-    public MutableLiveData<List<Video>> getVideoByUri(Uri uri){
-        return videoLibraryRepository.getVideoByUri(uri);
+    public void loadAllVideos(VideosRepository.SortBy sortBy, SortOrder sortOrder) {
+        Disposable disposable = videosRepository.getAllVideos(sortBy, sortOrder)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(videos::setValue);
+        disposables.add(disposable);
     }
 }
