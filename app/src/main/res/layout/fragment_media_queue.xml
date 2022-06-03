@@ -20,7 +20,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:background="@color/blue1"/>
+            android:background="@color/cyan"/>
 
         <TextView
             android:id="@+id/tv_queue"
