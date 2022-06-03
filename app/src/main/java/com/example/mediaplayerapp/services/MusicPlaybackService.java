@@ -163,12 +163,16 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                     }
 
                     @Override
-                    public void onPrepareFromMediaId(@NonNull String mediaId, boolean playWhenReady, @Nullable Bundle extras) {
+                    public void onPrepareFromMediaId(@NonNull String mediaId,
+                                                     boolean playWhenReady,
+                                                     @Nullable Bundle extras) {
 
                     }
 
                     @Override
-                    public void onPrepareFromSearch(@NonNull String query, boolean playWhenReady, @Nullable Bundle extras) {
+                    public void onPrepareFromSearch(@NonNull String query,
+                                                    boolean playWhenReady,
+                                                    @Nullable Bundle extras) {
 
                     }
 
@@ -194,7 +198,10 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                     }
 
                     @Override
-                    public boolean onCommand(@NonNull Player player, @NonNull String command, @Nullable Bundle extras, @Nullable ResultReceiver cb) {
+                    public boolean onCommand(@NonNull Player player,
+                                             @NonNull String command,
+                                             @Nullable Bundle extras,
+                                             @Nullable ResultReceiver cb) {
                         return false;
                     }
                 };
@@ -253,7 +260,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     }
 
     /**
-     * Load media items specified by this app's playback URI from system's music library.
+     * Load media items specified by the playback URI from system's music library.
      * @param uri Playback URI
      */
     private void loadMediaItemsFromLibrary(Uri uri) {
@@ -274,8 +281,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     }
 
     /**
-     * Load media items from the entire music library
-     * with provided sort order in the playback URI.
+     * Load media items from the entire music library according to the playback URI.
      * @param uriSegments Playback URI segments
      */
     private void loadMediaItemsFromEntireLibrary(List<String> uriSegments) {
@@ -304,7 +310,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     }
 
     /**
-     * Load media items from songs of an artist.
+     * Load media items from songs of an artist specified by the playback URI.
      * @param uriSegments Playback URI segments
      */
     private void loadMediaItemsFromArtist(List<String> uriSegments) {
@@ -317,7 +323,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     }
 
     /**
-     * Load media items from songs in an album.
+     * Load media items from songs in an album specified by the playback URI.
      * @param uriSegments Playback URI segments
      */
     private void loadMediaItemsFromAlbum(List<String> uriSegments) {
@@ -330,7 +336,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     }
 
     /**
-     * Asynchronously load media items from library.
+     * Asynchronously load media items from music library.
      * @param songs RxJava Observable that emits Song objects
      * @param playbackStartIndex Index of first media item to play
      */
@@ -345,7 +351,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     }
 
     /**
-     * Load media items specified by this app's playback URI from playlist.
+     * Load music media items from playlist specified by playback URI.
      * @param uri Playback URI
      */
     private void loadMediaItemsFromPlaylist(Uri uri) {
