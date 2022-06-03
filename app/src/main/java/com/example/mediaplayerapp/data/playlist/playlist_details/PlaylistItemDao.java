@@ -29,19 +29,19 @@ public interface PlaylistItemDao {
     @Query("DELETE FROM media_table WHERE media_table.MediaUri=:uri")
     void deleteItemWithUri(String uri);
 
-    @Query("SELECT * FROM media_table WHERE media_table.MediaId= :id")
+    @Query("SELECT * FROM media_table WHERE media_table.MediaId= :id ORDER BY OrderSort ASC")
     LiveData<List<PlaylistItem>> getAllPlaylistMediasWithID(int id);
 
-    @Query("SELECT * FROM media_table ORDER BY MediaId ASC")
+    @Query("SELECT * FROM media_table ORDER BY OrderSort ASC")
     LiveData<List<PlaylistItem>> getAllPlaylistMedias();
 
-    @Query("SELECT * FROM media_table WHERE media_table.MediaName LIKE '%' || :text || '%'")
+    @Query("SELECT * FROM media_table WHERE media_table.MediaName LIKE '%' || :text || '%' ORDER BY OrderSort ASC")
     LiveData<List<PlaylistItem>> getAllMediaSearching(String text);
 
-    @Query("SELECT * FROM media_table WHERE media_table.MediaId=:id ORDER BY media_table.MediaName ASC")
+    @Query("SELECT * FROM media_table WHERE media_table.MediaId=:id ORDER BY MediaName ASC,OrderSort ASC")
     LiveData<List<PlaylistItem>> sortAllMediaByNameASCWithID(int id);
 
-    @Query("SELECT * FROM media_table WHERE media_table.MediaId=:id ORDER BY media_table.MediaName DESC")
+    @Query("SELECT * FROM media_table WHERE media_table.MediaId=:id ORDER BY MediaName DESC, OrderSort ASC")
     LiveData<List<PlaylistItem>> sortAllMediaByNameDESCWithID(int id);
 
     @Query("DELETE FROM media_table WHERE media_table.MediaId=:id")
@@ -50,7 +50,6 @@ public interface PlaylistItemDao {
     @Query("SELECT COUNT(*) FROM media_table WHERE media_table.MediaId=:id")
     int getCountPlaylistWithID(int id);
 
-    @Query("SELECT * FROM media_table WHERE media_table.MediaId = :id ORDER BY media_table.MediaName ASC")
+    @Query("SELECT * FROM media_table WHERE media_table.MediaId = :id ORDER BY OrderSort ASC")
     PlaylistItem findByItemId(int id);
-
 }

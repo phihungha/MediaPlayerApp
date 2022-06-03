@@ -108,16 +108,19 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
             PlaylistItemViewModel PlaylistItemViewModel
                     = new ViewModelProvider(requireActivity()).get(PlaylistItemViewModel.class);
 
+            // TODO: playlistItem
             AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
             builder
                     .setTitle("Choose a playlist: ")
                     .setItems(
                             allVideoPlaylists.stream().map(Playlist::getName).toArray(CharSequence[]::new),
                             (dialogInterface, i) -> {
+                                int count=PlaylistItemViewModel.getCountPlaylistWithID(allVideoPlaylists.get(i).getId());
                                 PlaylistItem newPlaylistItem = new PlaylistItem(
                                         allVideoPlaylists.get(i).getId(),
                                         currentVideo.getUri().toString(),
-                                        currentVideo.getName());
+                                        currentVideo.getName(),
+                                        count+1);
                                 PlaylistItemViewModel.insert(newPlaylistItem);
                             })
                     .show();

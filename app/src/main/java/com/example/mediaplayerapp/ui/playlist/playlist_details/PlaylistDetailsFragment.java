@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -21,6 +22,9 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
@@ -39,7 +43,7 @@ import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 
 import java.util.List;
 
-public class PlaylistDetailsFragment extends Fragment implements View.OnClickListener {
+public class PlaylistDetailsFragment extends Fragment implements View.OnClickListener, OnStartDragListener,OnPlaylistItemListChangedListener {
     private Playlist playlist;
     private FragmentPlaylistDetailsBinding binding;
     private MediaItemAdapter adapter;
@@ -47,6 +51,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     private PlaylistViewModel playlistViewModel;
     private ActivityResultLauncher<String[]> mediaPickerLauncher;
     private MediaQueueViewModel mediaQueueViewModel;
+    private ItemTouchHelper mItemTouchHelper;
     private boolean isASC = false;
 
     public PlaylistDetailsFragment() {
@@ -83,20 +88,34 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         adapter = new MediaItemAdapter(new MediaItemAdapter.PlaylistMediaDiff());
         adapter.setContext(requireContext());
         adapter.setApplication(requireActivity().getApplication());
+        adapter.setViewModel(playlistItemViewModel);
         adapter.setPlaylist(playlist);
         playlistItemViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
                 getViewLifecycleOwner(),
                 media -> adapter.submitList(media)
         );
-        binding.rcvPlaylistsDetails.setAdapter(adapter);
+        setUpRecyclerView();
         setListener();
         refresh();
+    }
+
+
+    private void setUpRecyclerView(){
+        binding.rcvPlaylistsDetails.setHasFixedSize(true);
+        binding.rcvPlaylistsDetails.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        adapter.setDragStartListener(this);
+        adapter.setListChangedListener(this);
+        ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(binding.rcvPlaylistsDetails);
+
+        binding.rcvPlaylistsDetails.setAdapter(adapter);
     }
 
     public void refresh() {
         int count = playlistItemViewModel.getCountPlaylistWithID(playlist.getId());
         playlist.setCount(count);
-        playlistViewModel.update(playlist);
 
         binding.tvPlaylistDetailsName.setText(playlist.getName());
         binding.tvPlaylistDetailsNumbers.setText(getStringCountText(playlist));
@@ -123,6 +142,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                                 playlist.getIdResource()));
             }
         }
+        playlistViewModel.update(playlist);
     }
 
     private String getStringCountText(Playlist playlist) {
@@ -265,10 +285,12 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             return;
 
         uris.forEach(uri -> {
+            int count = playlistItemViewModel.getCountPlaylistWithID(playlist.getId());
             PlaylistItem media = new PlaylistItem(
                     playlist.getId(),
                     uri.toString(),
-                    MediaUtils.getMediaNameFromURI(requireContext(), uri));
+                    MediaUtils.getMediaNameFromURI(requireContext(), uri),
+                    count+1);
             playlistItemViewModel.insert(media);
         });
 
@@ -347,5 +369,20 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    @Override
+    public void onNoteListChanged(List<PlaylistItem> list) {
+        Log.d("TAG","LIST_CHANGED");
+    }
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 }

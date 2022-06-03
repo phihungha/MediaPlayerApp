@@ -10,7 +10,7 @@ import java.io.Serializable;
  *  Media class for playlist
  */
 @Entity(tableName = "media_table",
-        primaryKeys = {"MediaId","MediaUri"})
+        primaryKeys = {"MediaId", "MediaUri"})
 public class PlaylistItem implements Serializable {
     @ColumnInfo(name = "MediaId")
     private int id;
@@ -22,10 +22,22 @@ public class PlaylistItem implements Serializable {
     @ColumnInfo(name = "MediaName")
     private String name;
 
-    public PlaylistItem(int id, @NonNull String mediaUri, String name) {
+    @ColumnInfo(name = "OrderSort")
+    private int orderSort;
+
+    public PlaylistItem(int id, @NonNull String mediaUri, String name, int orderSort) {
         this.id = id;
         this.mediaUri = mediaUri;
         this.name = name;
+        this.orderSort = orderSort;
+    }
+
+    public int getOrderSort() {
+        return orderSort;
+    }
+
+    public void setOrderSort(int orderSort) {
+        this.orderSort = orderSort;
     }
 
     public int getId() {

@@ -3,7 +3,9 @@ package com.example.mediaplayerapp.ui.playlist.playlist_details;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +23,11 @@ import com.example.mediaplayerapp.databinding.ItemMediaBinding;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ItemTouchHelperViewHolder {
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
     private static Playlist mPlaylist;
-    private final ItemMediaBinding binding;
+    public final ItemMediaBinding binding;
     private BottomSheetDialog bottomSheetDialog;
     private static IOnItemClickListener itemClickListener;
     private static IOnItemClickListener bsPlayListener;
@@ -33,6 +35,7 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
     private static IOnItemClickListener bsPropertiesListener;
     private static IOnItemClickListener bsAddQueueListener;
     private static IOnItemClickListener bsAddFavouriteListener;
+    private static MediaItemAdapter mAdapter;
 
     public MediaItemViewHolder(@NonNull ItemMediaBinding binding) {
         super(binding.getRoot());
@@ -46,9 +49,9 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
 
         MediaInfo mediaInfo = MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
         String duration = MediaUtils.convertDuration(mediaInfo.getDuration());
-        binding.tvDurationMedia.setText(duration);
+        binding.tvDurationMedia.setText(String.valueOf(media.getOrderSort()));
 
-        if (mPlaylist.isVideo()){
+        if (mPlaylist.isVideo()) {
             Glide.with(mContext)
                     .load(media.getMediaUri())
                     .skipMemoryCache(false)
@@ -75,7 +78,8 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
                                       IOnItemClickListener _bsPropertiesListener,
                                       IOnItemClickListener _bsAddQueueListener,
                                       IOnItemClickListener _bsAddFavouriteListener,
-                                      Playlist playlist) {
+                                      Playlist playlist,
+                                      MediaItemAdapter adapter) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         ItemMediaBinding binding = ItemMediaBinding.inflate(inflater, parent, false);
         itemClickListener = _itemClickListener;
@@ -83,9 +87,10 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
         bsDeleteListener = _bsDeleteListener;
         bsPropertiesListener = _bsPropertiesListener;
         bsAddQueueListener = _bsAddQueueListener;
-        bsAddFavouriteListener=_bsAddFavouriteListener;
+        bsAddFavouriteListener = _bsAddFavouriteListener;
         mContext = context;
-        mPlaylist=playlist;
+        mPlaylist = playlist;
+        mAdapter = adapter;
         return new MediaItemViewHolder(binding);
     }
 
@@ -128,10 +133,12 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
                 break;
         }
     }
+
     private void addToFavourite() {
         bsAddFavouriteListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
     }
+
     private void addToQueue() {
         bsAddQueueListener.onClick(itemView, getBindingAdapterPosition());
         bottomSheetDialog.dismiss();
@@ -171,5 +178,22 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
 
         bottomSheetDialog.setContentView(bsView);
         bottomSheetDialog.show();
+    }
+
+    @Override
+    public void onItemSelected() {
+        itemView.setBackgroundResource(R.color.bright_grey);
+    }
+
+    @Override
+    public void onItemClear() {
+        Log.d("TAG", "CLEAR");
+        itemView.setBackgroundColor(0);
+
+        if (mAdapter.getListPosSize()<2)
+            return;
+
+        mAdapter.swapItem();
+        mAdapter.clearListPos();
     }
 }
