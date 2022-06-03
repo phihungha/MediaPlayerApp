@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.ui.DisplayMode;
-import com.example.mediaplayerapp.utils.IStartPlayback;
+import com.example.mediaplayerapp.utils.StartPlaybackCallback;
 import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -36,13 +36,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
     private DisplayMode displayMode = DisplayMode.LIST;
     private final Context context;
 
-    private final IStartPlayback playbackStartMethod;
+    private final StartPlaybackCallback startPlaybackCallback;
     private List<Song> songs = new ArrayList<>();
     private List<Song> displayedSongs = new ArrayList<>();
 
-    public SongAdapter(Context context, IStartPlayback playbackStartMethod) {
+    public SongAdapter(Context context, StartPlaybackCallback startPlaybackCallback) {
         this.context = context;
-        this.playbackStartMethod = playbackStartMethod;
+        this.startPlaybackCallback = startPlaybackCallback;
     }
 
     public void updateSongs(List<Song> newSongs) {
@@ -132,7 +132,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
 
             ImageButton contextMenuBtn = itemView.findViewById(R.id.context_menu_btn);
             contextMenuBtn.setOnClickListener(this::openBottomSheetDialog);
-            itemView.setOnClickListener(view -> playbackStartMethod.play(currentSong.getOrderIndex()));
+            itemView.setOnClickListener(view -> startPlaybackCallback.play(currentSong.getOrderIndex()));
         }
 
         /**
