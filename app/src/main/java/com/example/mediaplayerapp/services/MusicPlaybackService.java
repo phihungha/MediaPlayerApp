@@ -68,6 +68,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         player = new ExoPlayer.Builder(this).build();
 
         mediaSession = new MediaSessionCompat(this, "MusicPlaybackService");
+        mediaSession.setSessionActivity(mediaSession.getController().getSessionActivity());
         setSessionToken(mediaSession.getSessionToken());
 
         songsRepository = new SongsRepository(getApplicationContext());
@@ -173,7 +174,6 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                     public void onPrepareFromSearch(@NonNull String query,
                                                     boolean playWhenReady,
                                                     @Nullable Bundle extras) {
-
                     }
 
                     @Override
@@ -379,7 +379,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     public BrowserRoot onGetRoot(@NonNull String clientPackageName,
                                  int clientUid,
                                  Bundle rootHints) {
-        Log.d(LOG_TAG, "Get root requested");
+        Log.i(LOG_TAG, "Get root requested");
         return new BrowserRoot("empty_root", null);
     }
 
@@ -390,5 +390,6 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     public void onLoadChildren(@NonNull final String parentMediaId,
                                @NonNull final Result<List<android.support.v4.media.MediaBrowserCompat.MediaItem>> result) {
         Log.d(LOG_TAG, "Load children requested");
+        result.sendResult(null);
     }
 }

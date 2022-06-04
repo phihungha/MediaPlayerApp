@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.mediaplayerapp">
 
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -58,7 +59,8 @@
 
     <service
         android:name="com.example.mediaplayerapp.services.MusicPlaybackService"
-        android:exported="false">
+        android:exported="true"
+        tools:ignore="ExportedService">
         <intent-filter>
             <action android:name="android.media.browse.MediaBrowserService" />
         </intent-filter>
