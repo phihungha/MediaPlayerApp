@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -23,7 +24,6 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.SongsRepository;
 import com.example.mediaplayerapp.databinding.FragmentSongsBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
-import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.example.mediaplayerapp.utils.SortOrder;
@@ -31,8 +31,11 @@ import com.example.mediaplayerapp.utils.SortOrder;
 @SuppressLint("NotifyDataSetChanged")
 public class SongsFragment extends Fragment {
 
+    private static final String CURRENT_DISPLAY_MODE_KEY = "current_display_mode";
+    private static final String CURRENT_SORT_BY_KEY = "current_sort_by";
+    private static final String CURRENT_SORT_ORDER_KEY = "current_sort_order";
+
     private static final int GRID_MODE_COLUMN_NUM = 2;
-    private static final int GRID_MODE_SPACING = 30;
 
     private SongAdapter songAdapter;
 
@@ -51,40 +54,70 @@ public class SongsFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentSongsBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(SongsViewModel.class);
 
-        setHasOptionsMenu(true);
-
-        binding.songsSwipeRefreshContainer.setOnRefreshListener(
-                () -> viewModel.loadAllSongs(currentSortBy, currentSortOrder)
-        );
-        binding.songsSwipeRefreshContainer.setColorSchemeResources(R.color.cyan);
+        gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
+        linearLayoutManager = new LinearLayoutManager(getContext());
 
         songAdapter = new SongAdapter(requireContext(), orderIndex -> {
             Uri playbackUri = GetPlaybackUriUtils.forMusicLibrary(currentSortBy, currentSortOrder, orderIndex);
             MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
         });
         binding.songList.setAdapter(songAdapter);
+        binding.songList.setHasFixedSize(true);
 
-        viewModel.getAllSongs().observe(getViewLifecycleOwner(),
+        binding.songsSwipeRefreshContainer.setOnRefreshListener(
+                () -> viewModel.loadAllSongs(currentSortBy, currentSortOrder)
+        );
+        binding.songsSwipeRefreshContainer.setColorSchemeResources(R.color.cyan);
+
+        viewModel.getAllSongs().observe(
+                getViewLifecycleOwner(),
                 newSongs ->  {
-            songAdapter.updateSongs(newSongs);
-            binding.songsSwipeRefreshContainer.setRefreshing(false);
+                    songAdapter.updateSongs(newSongs);
+                    binding.songsSwipeRefreshContainer.setRefreshing(false);
         });
-        changeSortMode(SongsRepository.SortBy.TITLE, SortOrder.ASC);
 
-        gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        // Initial value needs to be LIST so default display mode
-        //  can be set using setDisplayModeAsGrid()
-        currentDisplayMode = DisplayMode.LIST;
-        // Default display mode is grid
-        setDisplayModeAsGrid();
+        if (savedInstanceState != null) {
+            restoreInstanceState(savedInstanceState);
+        } else {
+            setSortMode(SongsRepository.SortBy.TITLE, SortOrder.ASC);
+            currentDisplayMode = DisplayMode.LIST;
+            setDisplayModeAsGrid();
+        }
 
         return binding.getRoot();
+    }
+
+    /**
+     * Restore fragment's last state.
+     * @param savedInstanceState Last state
+     */
+    private void restoreInstanceState(Bundle savedInstanceState) {
+        currentDisplayMode = (DisplayMode) savedInstanceState.getSerializable(CURRENT_DISPLAY_MODE_KEY);
+        currentSortBy = (SongsRepository.SortBy) savedInstanceState.getSerializable(CURRENT_SORT_BY_KEY);
+        currentSortOrder = (SortOrder) savedInstanceState.getSerializable(CURRENT_SORT_ORDER_KEY);
+
+        setSortMode(currentSortBy, currentSortOrder);
+
+        if (currentDisplayMode == DisplayMode.GRID) {
+            // Initial value needs to be appropriately set so default display mode
+            // can be set using setDisplayMode methods.
+            currentDisplayMode = DisplayMode.LIST;
+            setDisplayModeAsGrid();
+        } else {
+            currentDisplayMode = DisplayMode.GRID;
+            setDisplayModeAsList();
+        }
     }
 
     @Override
@@ -117,17 +150,17 @@ public class SongsFragment extends Fragment {
         else if (item.getItemId() == R.id.song_tab_show_as_list)
             setDisplayModeAsList();
         else if(item.getItemId() == R.id.song_tab_sort_by_title_asc)
-            changeSortMode(SongsRepository.SortBy.TITLE, SortOrder.ASC);
+            setSortMode(SongsRepository.SortBy.TITLE, SortOrder.ASC);
         else if(item.getItemId() == R.id.song_tab_sort_by_title_desc)
-            changeSortMode(SongsRepository.SortBy.TITLE, SortOrder.DESC);
+            setSortMode(SongsRepository.SortBy.TITLE, SortOrder.DESC);
         else if(item.getItemId() == R.id.song_tab_sort_by_duration_asc)
-            changeSortMode(SongsRepository.SortBy.DURATION, SortOrder.ASC);
+            setSortMode(SongsRepository.SortBy.DURATION, SortOrder.ASC);
         else if(item.getItemId() == R.id.song_tab_sort_by_duration_desc)
-            changeSortMode(SongsRepository.SortBy.DURATION, SortOrder.DESC);
+            setSortMode(SongsRepository.SortBy.DURATION, SortOrder.DESC);
         else if(item.getItemId() == R.id.song_tab_sort_by_time_added_asc)
-            changeSortMode(SongsRepository.SortBy.TIME_ADDED, SortOrder.ASC);
+            setSortMode(SongsRepository.SortBy.TIME_ADDED, SortOrder.ASC);
         else if(item.getItemId() == R.id.song_tab_sort_by_time_added_desc)
-            changeSortMode(SongsRepository.SortBy.TIME_ADDED, SortOrder.DESC);
+            setSortMode(SongsRepository.SortBy.TIME_ADDED, SortOrder.DESC);
 
         return true;
     }
@@ -137,7 +170,7 @@ public class SongsFragment extends Fragment {
      * @param sortBy Sort by what
      * @param sortOrder Sort order
      */
-    private void changeSortMode(SongsRepository.SortBy sortBy, SortOrder sortOrder) {
+    private void setSortMode(SongsRepository.SortBy sortBy, SortOrder sortOrder) {
         viewModel.loadAllSongs(sortBy, sortOrder);
         currentSortBy = sortBy;
         currentSortOrder = sortOrder;
@@ -149,13 +182,7 @@ public class SongsFragment extends Fragment {
     private void setDisplayModeAsGrid() {
         if (currentDisplayMode == DisplayMode.GRID)
             return;
-
         binding.songList.setLayoutManager(gridLayoutManager);
-        binding.songList.addItemDecoration(
-                new GridSpacingItemDecoration(GRID_MODE_COLUMN_NUM,
-                        GRID_MODE_SPACING,
-                        true));
-
         songAdapter.setDisplayMode(DisplayMode.GRID);
         currentDisplayMode = DisplayMode.GRID;
     }
@@ -166,11 +193,16 @@ public class SongsFragment extends Fragment {
     private void setDisplayModeAsList() {
         if (currentDisplayMode == DisplayMode.LIST)
             return;
-
         binding.songList.setLayoutManager(linearLayoutManager);
-        binding.songList.removeItemDecorationAt(0);
-
         songAdapter.setDisplayMode(DisplayMode.LIST);
         currentDisplayMode = DisplayMode.LIST;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(CURRENT_DISPLAY_MODE_KEY, currentDisplayMode);
+        outState.putSerializable(CURRENT_SORT_ORDER_KEY, currentSortOrder);
+        outState.putSerializable(CURRENT_SORT_BY_KEY, currentSortBy);
     }
 }

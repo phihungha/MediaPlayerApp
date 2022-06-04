@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -22,14 +23,16 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.ArtistsRepository;
 import com.example.mediaplayerapp.databinding.FragmentArtistsBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
-import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.utils.SortOrder;
 
 @SuppressLint("NotifyDataSetChanged")
 public class ArtistsFragment extends Fragment {
 
+    private static final String CURRENT_DISPLAY_MODE_KEY = "current_display_mode";
+    private static final String CURRENT_SORT_BY_KEY = "current_sort_by";
+    private static final String CURRENT_SORT_ORDER_KEY = "current_sort_order";
+
     private static final int GRID_MODE_COLUMN_NUM = 2;
-    private static final int GRID_MODE_SPACING = 30;
 
     private ArtistAdapter artistAdapter;
 
@@ -48,37 +51,65 @@ public class ArtistsFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentArtistsBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(ArtistsViewModel.class);
 
-        setHasOptionsMenu(true);
+        gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
+        linearLayoutManager = new LinearLayoutManager(getContext());
+
+        artistAdapter = new ArtistAdapter(getContext());
+        binding.artistList.setAdapter(artistAdapter);
 
         binding.artistsSwipeRefreshContainer.setOnRefreshListener(
                 () -> viewModel.loadAllArtists(currentSortBy, currentSortOrder)
         );
         binding.artistsSwipeRefreshContainer.setColorSchemeResources(R.color.cyan);
 
-        artistAdapter = new ArtistAdapter(getContext());
-        binding.artistList.setAdapter(artistAdapter);
-
         viewModel.getAllArtists().observe(getViewLifecycleOwner(),
                 newArtists ->  {
                     artistAdapter.updateArtists(newArtists);
                     binding.artistsSwipeRefreshContainer.setRefreshing(false);
                 });
-        changeSortMode(ArtistsRepository.SortBy.NAME, SortOrder.ASC);
 
-        gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        // Initial value needs to be LIST so default display mode
-        //  can be set using setDisplayModeAsGrid()
-        currentDisplayMode = DisplayMode.LIST;
-        // Default display mode is grid
-        setDisplayModeAsGrid();
+        if (savedInstanceState != null) {
+            restoreInstanceState(savedInstanceState);
+        } else {
+            setSortMode(ArtistsRepository.SortBy.NAME, SortOrder.ASC);
+            currentDisplayMode = DisplayMode.LIST;
+            setDisplayModeAsGrid();
+        }
 
         return binding.getRoot();
+    }
+
+    /**
+     * Restore fragment's last state.
+     * @param savedInstanceState Last state
+     */
+    private void restoreInstanceState(Bundle savedInstanceState) {
+        currentDisplayMode = (DisplayMode) savedInstanceState.getSerializable(CURRENT_DISPLAY_MODE_KEY);
+        currentSortBy = (ArtistsRepository.SortBy) savedInstanceState.getSerializable(CURRENT_SORT_BY_KEY);
+        currentSortOrder = (SortOrder) savedInstanceState.getSerializable(CURRENT_SORT_ORDER_KEY);
+
+        setSortMode(currentSortBy, currentSortOrder);
+
+        if (currentDisplayMode == DisplayMode.GRID) {
+            // Initial value needs to be appropriately set so default display mode
+            // can be set using setDisplayMode methods.
+            currentDisplayMode = DisplayMode.LIST;
+            setDisplayModeAsGrid();
+        } else {
+            currentDisplayMode = DisplayMode.GRID;
+            setDisplayModeAsList();
+        }
     }
 
     @Override
@@ -111,17 +142,17 @@ public class ArtistsFragment extends Fragment {
         else if (item.getItemId() == R.id.artist_tab_show_as_list)
             setDisplayModeAsList();
         else if (item.getItemId() == R.id.artist_tab_sort_by_name_asc)
-            changeSortMode(ArtistsRepository.SortBy.NAME, SortOrder.ASC);
+            setSortMode(ArtistsRepository.SortBy.NAME, SortOrder.ASC);
         else if (item.getItemId() == R.id.artist_tab_sort_by_name_desc)
-            changeSortMode(ArtistsRepository.SortBy.NAME, SortOrder.DESC);
+            setSortMode(ArtistsRepository.SortBy.NAME, SortOrder.DESC);
         else if (item.getItemId() == R.id.artist_tab_sort_by_number_of_albums_asc)
-            changeSortMode(ArtistsRepository.SortBy.NUMBER_OF_ALBUMS, SortOrder.ASC);
+            setSortMode(ArtistsRepository.SortBy.NUMBER_OF_ALBUMS, SortOrder.ASC);
         else if (item.getItemId() == R.id.artist_tab_sort_by_number_of_albums_desc)
-            changeSortMode(ArtistsRepository.SortBy.NUMBER_OF_ALBUMS, SortOrder.DESC);
+            setSortMode(ArtistsRepository.SortBy.NUMBER_OF_ALBUMS, SortOrder.DESC);
         else if (item.getItemId() == R.id.artist_tab_sort_by_number_of_songs_asc)
-            changeSortMode(ArtistsRepository.SortBy.NUMBER_OF_TRACKS, SortOrder.ASC);
+            setSortMode(ArtistsRepository.SortBy.NUMBER_OF_TRACKS, SortOrder.ASC);
         else if (item.getItemId() == R.id.artist_tab_sort_by_number_of_songs_desc)
-            changeSortMode(ArtistsRepository.SortBy.NUMBER_OF_TRACKS, SortOrder.DESC);
+            setSortMode(ArtistsRepository.SortBy.NUMBER_OF_TRACKS, SortOrder.DESC);
 
         return true;
     }
@@ -131,7 +162,7 @@ public class ArtistsFragment extends Fragment {
      * @param sortBy Sort by what
      * @param sortOrder Sort order
      */
-    private void changeSortMode(ArtistsRepository.SortBy sortBy, SortOrder sortOrder) {
+    private void setSortMode(ArtistsRepository.SortBy sortBy, SortOrder sortOrder) {
         viewModel.loadAllArtists(sortBy, sortOrder);
         currentSortBy = sortBy;
         currentSortOrder = sortOrder;
@@ -143,13 +174,7 @@ public class ArtistsFragment extends Fragment {
     private void setDisplayModeAsGrid() {
         if (currentDisplayMode == DisplayMode.GRID)
             return;
-
         binding.artistList.setLayoutManager(gridLayoutManager);
-        binding.artistList.addItemDecoration(
-                new GridSpacingItemDecoration(GRID_MODE_COLUMN_NUM,
-                        GRID_MODE_SPACING,
-                        true));
-
         artistAdapter.setDisplayMode(DisplayMode.GRID);
         currentDisplayMode = DisplayMode.GRID;
     }
@@ -160,11 +185,16 @@ public class ArtistsFragment extends Fragment {
     private void setDisplayModeAsList() {
         if (currentDisplayMode == DisplayMode.LIST)
             return;
-
         binding.artistList.setLayoutManager(linearLayoutManager);
-        binding.artistList.removeItemDecorationAt(0);
-
         artistAdapter.setDisplayMode(DisplayMode.LIST);
         currentDisplayMode = DisplayMode.LIST;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(CURRENT_DISPLAY_MODE_KEY, currentDisplayMode);
+        outState.putSerializable(CURRENT_SORT_ORDER_KEY, currentSortOrder);
+        outState.putSerializable(CURRENT_SORT_BY_KEY, currentSortBy);
     }
 }

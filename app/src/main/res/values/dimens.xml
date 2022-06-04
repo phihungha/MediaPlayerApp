@@ -9,4 +9,5 @@
     <dimen name="bottom_music_player_btn_size">42dp</dimen>
     <dimen name="bottom_music_player_height">75dp</dimen>
     <dimen name="bottom_music_player_song_artwork_size">60dp</dimen>
+    <dimen name="music_library_grid_spacing">7dp</dimen>
 </resources>
