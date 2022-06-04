@@ -129,4 +129,9 @@
     <string name="most_listened_songs_textview">Most listened songs</string>
     <string name="song_name_placeholder">SONG.MP3</string>
     <string name="unknown_artist_textview">Unknown</string>
+    <string name="artist_name">Artist:</string>
+    <string name="album_name">Album:</string>
+    <string name="genre">Genre:</string>
+    <string name="duration2">Duration:</string>
+    <string name="time_added2">Time added:</string>
 </resources>

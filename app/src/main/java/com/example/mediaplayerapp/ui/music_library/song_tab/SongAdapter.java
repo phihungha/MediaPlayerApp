@@ -13,10 +13,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.SongBottomSheet;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.utils.StartPlaybackCallback;
@@ -131,7 +133,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
             songArtist = itemView.findViewById(R.id.song_artist);
 
             ImageButton contextMenuBtn = itemView.findViewById(R.id.context_menu_btn);
-            contextMenuBtn.setOnClickListener(this::openBottomSheetDialog);
+            contextMenuBtn.setOnClickListener(view -> {
+                SongBottomSheet songBottomSheet = new SongBottomSheet(currentSong);
+                songBottomSheet.show(((AppCompatActivity) context).getSupportFragmentManager(),
+                        songBottomSheet.getTag());
+            });
             itemView.setOnClickListener(view -> startPlaybackCallback.play(currentSong.getOrderIndex()));
         }
 
