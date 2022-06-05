@@ -65,7 +65,7 @@ public class PlaylistItemRepository {
         return mAllMedias;
     }
 
-    public List<PlaylistItem> getCurrentList() {
-        return mPlaylistItemDao.getCurrentList();
+    public List<PlaylistItem> getCurrentListWithID(int id) {
+        return mPlaylistItemDao.getCurrentListWithID(id);
     }
 }

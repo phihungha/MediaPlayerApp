@@ -28,16 +28,15 @@ import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.databinding.FragmentVideoFavouriteBinding;
-import com.example.mediaplayerapp.databinding.FragmentVideoQueueBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueAdapter;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueDeleteDialog;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaUtils;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.OnPlaylistItemListChangedListener;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.OnStartDragListener;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.SimpleItemTouchHelperCallback;
+import com.example.mediaplayerapp.utils.MediaUtils;
+import com.example.mediaplayerapp.utils.OnPlaylistItemListChangedListener;
+import com.example.mediaplayerapp.utils.OnStartDragListener;
+import com.example.mediaplayerapp.utils.SimpleItemTouchHelperCallback;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 
 import java.util.List;
@@ -49,8 +48,6 @@ public class VideoFavouriteFragment extends Fragment implements OnStartDragListe
     private ItemTouchHelper mItemTouchHelper;
 
     private static final int GRID_MODE_COLUMN_NUM = 2;
-    private static final int GRID_MODE_SPACING = 30;
-    private DisplayMode currentDisplayMode;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
 
@@ -75,6 +72,7 @@ public class VideoFavouriteFragment extends Fragment implements OnStartDragListe
 
         adapter=new MediaQueueAdapter(new MediaQueueAdapter.MediaQueueDiff());
         adapter.setContext(requireContext());
+        adapter.setType(PlaylistConstants.TYPE_VIDEO_FAVOURITE);
         viewModel.getAllVideoFavourite().observe(
                 getViewLifecycleOwner(),
                 new Observer<List<MediaQueue>>() {
@@ -85,16 +83,12 @@ public class VideoFavouriteFragment extends Fragment implements OnStartDragListe
                 }
         );
 
-        currentDisplayMode = DisplayMode.LIST;
         setDisplayModeAsList();
 
         setUpRecyclerView();
         setAdapterListener();
     }
     private void setUpRecyclerView(){
-        binding.rcvVideoFavourite.setHasFixedSize(true);
-        binding.rcvVideoFavourite.setLayoutManager(new LinearLayoutManager(getContext()));
-
         adapter.setDragStartListener(this);
         adapter.setListChangedListener(this);
         adapter.setViewModel(viewModel);
@@ -252,31 +246,19 @@ public class VideoFavouriteFragment extends Fragment implements OnStartDragListe
      * Change display mode to grid.
      */
     private void setDisplayModeAsGrid() {
-        if (currentDisplayMode == DisplayMode.GRID)
-            return;
-
+        binding.rcvVideoFavourite.setHasFixedSize(true);
         binding.rcvVideoFavourite.setLayoutManager(gridLayoutManager);
-        binding.rcvVideoFavourite.addItemDecoration(
-                new GridSpacingItemDecoration(GRID_MODE_COLUMN_NUM,
-                        GRID_MODE_SPACING,
-                        true));
-
         adapter.setDisplayMode(DisplayMode.GRID);
-        currentDisplayMode = DisplayMode.GRID;
     }
 
     /**
      * Change display mode to list.
      */
     private void setDisplayModeAsList() {
-        if (currentDisplayMode == DisplayMode.LIST)
-            return;
-
+        binding.rcvVideoFavourite.setHasFixedSize(true);
         binding.rcvVideoFavourite.setLayoutManager(linearLayoutManager);
-        binding.rcvVideoFavourite.removeItemDecorationAt(0);
 
         adapter.setDisplayMode(DisplayMode.LIST);
-        currentDisplayMode = DisplayMode.LIST;
     }
 
     @Override

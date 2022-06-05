@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.playlist.playlist_details;
+package com.example.mediaplayerapp.utils;
 
 public interface ItemTouchHelperAdapter {
     /**

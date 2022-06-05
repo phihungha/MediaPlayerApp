@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.data.playlist;
+package com.example.mediaplayerapp.utils;
 
 import android.app.Application;
 

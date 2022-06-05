@@ -18,10 +18,10 @@ import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.databinding.ItemMediaQueueGridBinding;
 import com.example.mediaplayerapp.databinding.ItemMediaQueueListBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
-import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.ItemTouchHelperViewHolder;
+import com.example.mediaplayerapp.utils.IOnItemClickListener;
+import com.example.mediaplayerapp.utils.ItemTouchHelperViewHolder;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaInfo;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaUtils;
+import com.example.mediaplayerapp.utils.MediaUtils;
 
 public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ItemTouchHelperViewHolder {
     public ItemMediaQueueListBinding binding;

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.utils.IOnItemClickListener;
 
 public class PlaylistAdapter extends ListAdapter<Playlist, PlaylistViewHolder> {
     private IOnItemClickListener mListener;

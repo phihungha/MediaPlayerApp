@@ -3,9 +3,7 @@ package com.example.mediaplayerapp.ui.playlist.playlist_details;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +21,9 @@ import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.databinding.ItemMediaGridBinding;
 import com.example.mediaplayerapp.databinding.ItemMediaListBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
-import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
+import com.example.mediaplayerapp.utils.IOnItemClickListener;
+import com.example.mediaplayerapp.utils.ItemTouchHelperViewHolder;
+import com.example.mediaplayerapp.utils.MediaUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ItemTouchHelperViewHolder {

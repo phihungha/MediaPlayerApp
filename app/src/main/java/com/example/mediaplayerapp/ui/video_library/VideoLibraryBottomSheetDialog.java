@@ -18,7 +18,7 @@ import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemVie
 import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.databinding.DialogVideoBottomSheetBinding;
 import com.example.mediaplayerapp.databinding.DialogVideoInfoBinding;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaUtils;
+import com.example.mediaplayerapp.utils.MediaUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.text.DecimalFormat;

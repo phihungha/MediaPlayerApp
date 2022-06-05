@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
+import com.example.mediaplayerapp.utils.MediaUtils;
 
 public class PlaylistDetailsPropertiesDialog extends AppCompatDialogFragment {
 
@@ -44,7 +45,7 @@ public class PlaylistDetailsPropertiesDialog extends AppCompatDialogFragment {
         String size= mInfo.getFileSize();
         String location=Uri.parse(mInfo.getLocation()).getPath();
 
-        size=MediaUtils.convertToSizeMb(size);
+        size= MediaUtils.convertToSizeMb(size);
         duration=MediaUtils.convertDuration(duration);
 
         tvName.setText(name);

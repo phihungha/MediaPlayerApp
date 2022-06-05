@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.playlist.playlist_details;
+package com.example.mediaplayerapp.utils;
 
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 

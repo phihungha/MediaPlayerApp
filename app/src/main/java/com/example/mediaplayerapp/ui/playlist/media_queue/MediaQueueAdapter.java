@@ -1,9 +1,9 @@
 package com.example.mediaplayerapp.ui.playlist.media_queue;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +15,17 @@ import androidx.recyclerview.widget.ListAdapter;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
-import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.ItemTouchHelperAdapter;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaUtils;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.OnPlaylistItemListChangedListener;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.OnStartDragListener;
+import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
+import com.example.mediaplayerapp.utils.IOnItemClickListener;
+import com.example.mediaplayerapp.utils.ItemTouchHelperAdapter;
+import com.example.mediaplayerapp.utils.MediaUtils;
+import com.example.mediaplayerapp.utils.OnPlaylistItemListChangedListener;
+import com.example.mediaplayerapp.utils.OnStartDragListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHolder> implements ItemTouchHelperAdapter {
     private Context mContext;
@@ -34,8 +36,13 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
     private OnPlaylistItemListChangedListener mListChangedListener;
     private MediaQueueViewModel viewModel;
     private final ArrayList<Integer> listPos;
+    private int type;
 
     private DisplayMode displayMode = DisplayMode.LIST;
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public MediaQueueAdapter(@NonNull DiffUtil.ItemCallback<MediaQueue> diffCallback) {
         super(diffCallback);
@@ -103,6 +110,49 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
         notifyItemMoved(fromPosition, toPosition);
     }
 
+    public void swapItem() {
+        int fromPosition = getFirstPos();
+        int toPosition = getSecondPos();
+        List<MediaQueue> current = new ArrayList<>();
+        switch (type){
+            case PlaylistConstants
+                    .TYPE_VIDEO_QUEUE:
+                current=viewModel.getCurrentListVideoWatchLater();
+                break;
+
+            case PlaylistConstants
+                    .TYPE_MUSIC_QUEUE:
+                current=viewModel.getCurrentListSongWatchLater();
+                break;
+
+            case PlaylistConstants
+                    .TYPE_VIDEO_FAVOURITE:
+                current=viewModel.getCurrentListVideoFavourite();
+                break;
+
+            case PlaylistConstants
+                    .TYPE_MUSIC_FAVOURITE:
+                current=viewModel.getCurrentListSongFavourite();
+                break;
+        }
+
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(current,i,i+1);
+            }
+        } else if (fromPosition > toPosition){
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(current,i,i-1);
+            }
+        }
+
+        for (int i=0;i<current.size();i++){
+            MediaQueue item=current.get(i);
+            item.setOrderSort(i);
+        }
+        viewModel.updateByList(current);
+    }
+
     public int getListPosSize() {
         return listPos.size();
     }
@@ -118,19 +168,6 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
     public int getSecondPos() {
         return listPos.get(listPos.size() - 1);
     }
-
-    public void swapItem() {
-        int fromPosition = getFirstPos();
-        int toPosition = getSecondPos();
-        MediaQueue first = getCurrentList().get(fromPosition);
-        MediaQueue second = getCurrentList().get(toPosition);
-        long order = first.getOrderSort();
-        first.setOrderSort(second.getOrderSort());
-        second.setOrderSort(order);
-        viewModel.update(first);
-        viewModel.update(second);
-    }
-
     @Override
     public void onItemDismiss(int position) {
     }

@@ -108,7 +108,7 @@ public class PlaylistItemViewModel extends AndroidViewModel{
     /**
      *  get Current list
      * */
-    public List<PlaylistItem> getCurrentList() {
-        return mRepository.getCurrentList();
+    public List<PlaylistItem> getCurrentListWithID(int id) {
+        return mRepository.getCurrentListWithID(id);
     }
 }

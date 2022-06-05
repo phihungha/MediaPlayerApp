@@ -17,11 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.PlaylistUtil;
+import com.example.mediaplayerapp.utils.IOnItemClickListener;
+import com.example.mediaplayerapp.utils.PlaylistUtil;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.ItemPlaylistBinding;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaUtils;
+import com.example.mediaplayerapp.utils.MediaUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

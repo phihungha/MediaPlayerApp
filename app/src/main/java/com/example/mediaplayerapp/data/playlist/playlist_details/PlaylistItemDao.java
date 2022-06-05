@@ -50,6 +50,6 @@ public interface PlaylistItemDao {
     @Update
     void updateByList(List<PlaylistItem> list);
 
-    @Query("SELECT * FROM media_table ORDER BY OrderSort ASC")
-    List<PlaylistItem> getCurrentList();
+    @Query("SELECT * FROM media_table WHERE MediaId=:id ORDER BY OrderSort ASC")
+    List<PlaylistItem> getCurrentListWithID(int id);
 }

@@ -31,7 +31,6 @@ import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
-import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueUtil;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
@@ -41,6 +40,11 @@ import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
+import com.example.mediaplayerapp.utils.MediaQueueUtil;
+import com.example.mediaplayerapp.utils.MediaUtils;
+import com.example.mediaplayerapp.utils.OnPlaylistItemListChangedListener;
+import com.example.mediaplayerapp.utils.OnStartDragListener;
+import com.example.mediaplayerapp.utils.SimpleItemTouchHelperCallback;
 
 import java.util.List;
 
@@ -52,10 +56,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     private PlaylistViewModel playlistViewModel;
     private ActivityResultLauncher<String[]> mediaPickerLauncher;
 
-
     private static final int GRID_MODE_COLUMN_NUM = 2;
-    private static final int GRID_MODE_SPACING = 30;
-    private DisplayMode currentDisplayMode;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
 
@@ -77,8 +78,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         binding = FragmentPlaylistDetailsBinding.inflate(inflater, container, false);
         playlistItemViewModel = new ViewModelProvider(this).get(PlaylistItemViewModel.class);
         playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
-        gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
-        linearLayoutManager = new LinearLayoutManager(getContext());
+
         // Inflate the layout for this fragment
         return binding.getRoot();
     }
@@ -91,7 +91,8 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         if (bundle != null) {
             playlist = (Playlist) bundle.getSerializable(PlaylistConstants.KEY_TRANSFER_PLAYLIST);
         }
-
+        gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
+        linearLayoutManager = new LinearLayoutManager(getContext());
         adapter = new MediaItemAdapter(new MediaItemAdapter.PlaylistMediaDiff());
         adapter.setContext(requireContext());
         adapter.setApplication(requireActivity().getApplication());
@@ -103,18 +104,14 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
         setUpRecyclerView();
         setListener();
-
-        currentDisplayMode = DisplayMode.LIST;
         setDisplayModeAsList();
         refresh();
     }
 
     private void setUpRecyclerView() {
-        binding.rcvPlaylistsDetails.setHasFixedSize(true);
-        binding.rcvPlaylistsDetails.setLayoutManager(new LinearLayoutManager(getContext()));
-
         adapter.setDragStartListener(this);
         adapter.setListChangedListener(this);
+        adapter.setViewModel(playlistItemViewModel);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(binding.rcvPlaylistsDetails);
@@ -362,7 +359,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     }
 
     private void SortByNameASC() {
-        List<PlaylistItem> current = playlistItemViewModel.getCurrentList();
+        List<PlaylistItem> current = playlistItemViewModel.getCurrentListWithID(playlist.getId());
         current.sort((playlistItem, t1) -> {
             String name1 = MediaUtils.getMediaNameFromURI(requireContext(), Uri.parse(playlistItem.getMediaUri()));
             String name2 = MediaUtils.getMediaNameFromURI(requireContext(), Uri.parse(t1.getMediaUri()));
@@ -375,11 +372,10 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         }
         playlistItemViewModel.updateByList(current);
 
-
     }
 
     private void SortByNameDESC() {
-        List<PlaylistItem> current = playlistItemViewModel.getCurrentList();
+        List<PlaylistItem> current = playlistItemViewModel.getCurrentListWithID(playlist.getId());
         current.sort((playlistItem, t1) -> {
             String name1 = MediaUtils.getMediaNameFromURI(requireContext(), Uri.parse(playlistItem.getMediaUri()));
             String name2 = MediaUtils.getMediaNameFromURI(requireContext(), Uri.parse(t1.getMediaUri()));
@@ -394,7 +390,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     }
 
     private void SortByDurationASC() {
-        List<PlaylistItem> current = playlistItemViewModel.getCurrentList();
+        List<PlaylistItem> current = playlistItemViewModel.getCurrentListWithID(playlist.getId());
         current.sort((playlistItem, t1) -> {
             Long dur1 = MediaUtils.getDurationFromUri(requireContext(), Uri.parse(playlistItem.getMediaUri()));
             Long dur2 = MediaUtils.getDurationFromUri(requireContext(), Uri.parse(t1.getMediaUri()));
@@ -409,7 +405,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     }
 
     private void SortByDurationDESC() {
-        List<PlaylistItem> current = playlistItemViewModel.getCurrentList();
+        List<PlaylistItem> current = playlistItemViewModel.getCurrentListWithID(playlist.getId());
         current.sort((playlistItem, t1) -> {
             Long dur1 = MediaUtils.getDurationFromUri(requireContext(), Uri.parse(playlistItem.getMediaUri()));
             Long dur2 = MediaUtils.getDurationFromUri(requireContext(), Uri.parse(t1.getMediaUri()));
@@ -456,30 +452,19 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
      * Change display mode to grid.
      */
     private void setDisplayModeAsGrid() {
-        if (currentDisplayMode == DisplayMode.GRID)
-            return;
-
+        binding.rcvPlaylistsDetails.setHasFixedSize(true);
         binding.rcvPlaylistsDetails.setLayoutManager(gridLayoutManager);
-        binding.rcvPlaylistsDetails.addItemDecoration(
-                new GridSpacingItemDecoration(GRID_MODE_COLUMN_NUM,
-                        GRID_MODE_SPACING,
-                        true));
 
         adapter.setDisplayMode(DisplayMode.GRID);
-        currentDisplayMode = DisplayMode.GRID;
     }
 
     /**
      * Change display mode to list.
      */
     private void setDisplayModeAsList() {
-        if (currentDisplayMode == DisplayMode.LIST)
-            return;
-
+        binding.rcvPlaylistsDetails.setHasFixedSize(true);
         binding.rcvPlaylistsDetails.setLayoutManager(linearLayoutManager);
-        binding.rcvPlaylistsDetails.removeItemDecorationAt(0);
 
         adapter.setDisplayMode(DisplayMode.LIST);
-        currentDisplayMode = DisplayMode.LIST;
     }
 }

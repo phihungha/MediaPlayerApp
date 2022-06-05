@@ -17,9 +17,14 @@ import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
-import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
+import com.example.mediaplayerapp.utils.IOnItemClickListener;
+import com.example.mediaplayerapp.utils.ItemTouchHelperAdapter;
+import com.example.mediaplayerapp.utils.MediaUtils;
+import com.example.mediaplayerapp.utils.OnPlaylistItemListChangedListener;
+import com.example.mediaplayerapp.utils.OnStartDragListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHolder> implements ItemTouchHelperAdapter {
@@ -39,14 +44,11 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
     private DisplayMode displayMode = DisplayMode.LIST;
 
     private PlaylistItemViewModel viewModel;
-    private static ArrayList<Integer> listPos;
-    private static ArrayList<PlaylistItem> listBeforeDrag;
+    private final ArrayList<Integer> listPos;
 
     public MediaItemAdapter(@NonNull DiffUtil.ItemCallback<PlaylistItem> diffCallback) {
         super(diffCallback);
         listPos = new ArrayList<>();
-        listBeforeDrag = new ArrayList<>();
-        viewModel=new PlaylistItemViewModel(mApplication);
     }
 
     @NonNull
@@ -99,10 +101,8 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
                     }
                 });
             }
-
         } else {
-            PlaylistItemViewModel playlistItemViewModel = new PlaylistItemViewModel(mApplication);
-            playlistItemViewModel.deleteItemWithUri(uri.toString());
+            viewModel.deleteItemWithUri(uri.toString());
         }
     }
 
@@ -111,10 +111,6 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
         listPos.add(fromPosition);
         listPos.add(toPosition);
 
-   /*     if (listBeforeDrag.size() < 1) {
-            listBeforeDrag = new ArrayList<>(getCurrentList());
-        }
-*/
         notifyItemMoved(fromPosition,toPosition);
     }
 
@@ -122,45 +118,23 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
         int fromPosition = getFirstPos();
         int toPosition = getSecondPos();
 
-        PlaylistItemViewModel viewModel=new PlaylistItemViewModel(mApplication);
-        List<PlaylistItem> current=viewModel.getCurrentList();
+        List<PlaylistItem> current=viewModel.getCurrentListWithID(mPlaylist.getId());
 
         if (fromPosition < toPosition) {
-            long key = current.get(toPosition).getOrderSort();
-            for (int i = toPosition; i > fromPosition; i--) {
-                PlaylistItem item = current.get(i);
-                PlaylistItem pre=current.get(i-1);
-                item.setOrderSort(pre.getOrderSort());
-                viewModel.update(item);
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(current,i,i+1);
             }
-
-            PlaylistItem lastItem=current.get(fromPosition);
-            lastItem.setOrderSort(key);
-            viewModel.update(lastItem);
-        }
-/*        for (PlaylistItem item :
-                listBeforeDrag) {
-            Log.d("TAG_LIST_BEFORE",item.getName() + " " + String.valueOf(item.getOrderSort()));
+        } else if (fromPosition > toPosition){
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(current,i,i-1);
+            }
         }
 
-        PlaylistItem first = listBeforeDrag.get(fromPosition);
-        PlaylistItem second = listBeforeDrag.get(toPosition);
-        Log.d("TAG_LIST_FIRST",first.getName());
-        Log.d("TAG_LIST_SECOND",second.getName());*/
-
-        //MediaUtils.insertionSort(mApplication,listBeforeDrag,fromPosition,toPosition);
-        //MediaUtils.updateListToDatabase(mApplication,newList);
-        //MediaUtils.swapOrderOf(mApplication, current);
-      /*  PlaylistItem first = current.get(fromPosition);
-        PlaylistItem second = current.get(toPosition);
-
-        for (PlaylistItem item :
-                current) {
-            Log.d("TAG_LIST_CURRENT",item.getName());
+        for (int i=0;i<current.size();i++){
+            PlaylistItem item=current.get(i);
+            item.setOrderSort(i);
         }
-
-        Log.d("TAG_LIST_FIRST",first.getName());
-        Log.d("TAG_LIST_SECOND",second.getName());*/
+        viewModel.updateByList(current);
     }
 
     public int getListPosSize() {
@@ -173,7 +147,6 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
 
     public void clearList() {
         listPos.clear();
-        listBeforeDrag.clear();
     }
 
     public int getSecondPos() {
@@ -188,14 +161,13 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
     public static class PlaylistMediaDiff extends DiffUtil.ItemCallback<PlaylistItem> {
         @Override
         public boolean areItemsTheSame(@NonNull PlaylistItem oldItem, @NonNull PlaylistItem newItem) {
-            return oldItem.getMediaUri().equals(newItem.getMediaUri())
-                    && oldItem.getId() == newItem.getId();
+            return oldItem == newItem;
         }
 
         @SuppressLint("DiffUtilEquals")
         @Override
         public boolean areContentsTheSame(@NonNull PlaylistItem oldItem, @NonNull PlaylistItem newItem) {
-            return oldItem.equals(newItem);
+            return oldItem.getMediaUri().equals(newItem.getMediaUri());
         }
     };
 
@@ -240,6 +212,10 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
 
     public void setBsDeleteListener(IOnItemClickListener bsDeleteListener) {
         this.bsDeleteListener = bsDeleteListener;
+    }
+
+    public void setViewModel(PlaylistItemViewModel viewModel) {
+        this.viewModel = viewModel;
     }
 
     public void setContext(Context mContext) {

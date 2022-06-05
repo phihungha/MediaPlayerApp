@@ -1,10 +1,11 @@
-package com.example.mediaplayerapp.ui.playlist.playlist_details;
+package com.example.mediaplayerapp.utils;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mediaplayerapp.ui.music_library.DisplayMode;
+import com.example.mediaplayerapp.utils.ItemTouchHelperAdapter;
+import com.example.mediaplayerapp.utils.ItemTouchHelperViewHolder;
 
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 

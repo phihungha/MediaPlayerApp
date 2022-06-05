@@ -32,12 +32,11 @@ import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueAdapter;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueDeleteDialog;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaUtils;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.OnPlaylistItemListChangedListener;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.OnStartDragListener;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.SimpleItemTouchHelperCallback;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
-import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
+import com.example.mediaplayerapp.utils.MediaUtils;
+import com.example.mediaplayerapp.utils.OnPlaylistItemListChangedListener;
+import com.example.mediaplayerapp.utils.OnStartDragListener;
+import com.example.mediaplayerapp.utils.SimpleItemTouchHelperCallback;
 
 import java.util.List;
 
@@ -48,8 +47,6 @@ public class VideoQueueFragment extends Fragment implements OnStartDragListener,
     private ItemTouchHelper mItemTouchHelper;
 
     private static final int GRID_MODE_COLUMN_NUM = 2;
-    private static final int GRID_MODE_SPACING = 30;
-    private DisplayMode currentDisplayMode;
     private GridLayoutManager gridLayoutManager;
     private LinearLayoutManager linearLayoutManager;
 
@@ -74,6 +71,7 @@ public class VideoQueueFragment extends Fragment implements OnStartDragListener,
 
         adapter=new MediaQueueAdapter(new MediaQueueAdapter.MediaQueueDiff());
         adapter.setContext(requireContext());
+        adapter.setType(PlaylistConstants.TYPE_VIDEO_QUEUE);
         viewModel.getAllVideoQueue().observe(
                 getViewLifecycleOwner(),
                 new Observer<List<MediaQueue>>() {
@@ -84,7 +82,6 @@ public class VideoQueueFragment extends Fragment implements OnStartDragListener,
                 }
         );
 
-        currentDisplayMode = DisplayMode.LIST;
         setDisplayModeAsList();
 
         setUpRecyclerView();
@@ -99,9 +96,6 @@ public class VideoQueueFragment extends Fragment implements OnStartDragListener,
     }
 
     private void setUpRecyclerView(){
-        binding.rcvVideoQueue.setHasFixedSize(true);
-        binding.rcvVideoQueue.setLayoutManager(new LinearLayoutManager(getContext()));
-
         adapter.setDragStartListener(this);
         adapter.setListChangedListener(this);
         adapter.setViewModel(viewModel);
@@ -253,31 +247,20 @@ public class VideoQueueFragment extends Fragment implements OnStartDragListener,
      * Change display mode to grid.
      */
     private void setDisplayModeAsGrid() {
-        if (currentDisplayMode == DisplayMode.GRID)
-            return;
-
+        binding.rcvVideoQueue.setHasFixedSize(true);
         binding.rcvVideoQueue.setLayoutManager(gridLayoutManager);
-        binding.rcvVideoQueue.addItemDecoration(
-                new GridSpacingItemDecoration(GRID_MODE_COLUMN_NUM,
-                        GRID_MODE_SPACING,
-                        true));
 
         adapter.setDisplayMode(DisplayMode.GRID);
-        currentDisplayMode = DisplayMode.GRID;
     }
 
     /**
      * Change display mode to list.
      */
     private void setDisplayModeAsList() {
-        if (currentDisplayMode == DisplayMode.LIST)
-            return;
-
+        binding.rcvVideoQueue.setHasFixedSize(true);
         binding.rcvVideoQueue.setLayoutManager(linearLayoutManager);
-        binding.rcvVideoQueue.removeItemDecorationAt(0);
 
         adapter.setDisplayMode(DisplayMode.LIST);
-        currentDisplayMode = DisplayMode.LIST;
     }
 
     @Override

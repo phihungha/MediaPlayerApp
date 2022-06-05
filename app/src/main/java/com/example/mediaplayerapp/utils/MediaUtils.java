@@ -1,7 +1,5 @@
-package com.example.mediaplayerapp.ui.playlist.playlist_details;
+package com.example.mediaplayerapp.utils;
 
-import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -14,10 +12,8 @@ import android.provider.MediaStore;
 import androidx.annotation.NonNull;
 import androidx.documentfile.provider.DocumentFile;
 
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
+import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaInfo;
 
-import java.util.List;
 import java.util.Objects;
 
 public class MediaUtils {
@@ -63,14 +59,6 @@ public class MediaUtils {
             return null;
         }
         return BitmapFactory.decodeByteArray(data, 0, data.length);
-    }
-
-    public String getRealPathFromURI(Uri contentUri, Context context) {
-        String[] proj = {MediaStore.Audio.Media.DATA};
-        @SuppressLint("Recycle") Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
     }
 
     public static boolean isUriExists(Context context, Uri uri) {
@@ -132,7 +120,7 @@ public class MediaUtils {
     }
 
     public static String getMediaNameFromURI(Context context, Uri uri) {
-        //context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
         Cursor cursor = null;
         try {
             String[] projection = new String[]{
@@ -150,29 +138,6 @@ public class MediaUtils {
             if (cursor != null) {
                 cursor.close();
             }
-        }
-    }
-
-    public static void updateListToDatabase(Application application, List<PlaylistItem> list) {
-        PlaylistItemViewModel viewModel = new PlaylistItemViewModel(application);
-        viewModel.updateByList(list);
-    }
-
-    public static void insertionSort(Application application, List<PlaylistItem> list, int from, int to) {
-        PlaylistItemViewModel viewModel = new PlaylistItemViewModel(application);
-
-        if (from < to) {
-            long key = list.get(to).getOrderSort();
-            for (int i = to; i > from; i--) {
-                PlaylistItem item = list.get(i);
-                PlaylistItem pre = list.get(i - 1);
-                item.setOrderSort(pre.getOrderSort());
-                viewModel.update(item);
-            }
-
-            PlaylistItem lastItem = list.get(from);
-            lastItem.setOrderSort(key);
-            viewModel.update(lastItem);
         }
     }
 
