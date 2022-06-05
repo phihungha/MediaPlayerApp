@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
@@ -27,14 +28,12 @@ import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
-import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class PlaylistFragment extends Fragment implements View.OnClickListener {
     private FragmentPlaylistBinding binding;
-    private final PlaylistDetailsFragment detailsFragment = new PlaylistDetailsFragment();
     private final MediaQueueFragment mediaQueueFragment = new MediaQueueFragment();
     private PlaylistAdapter adapter;
     private PlaylistViewModel playlistViewModel;
@@ -73,17 +72,13 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         adapter.setContext(requireContext());
         adapter.setApplication(requireActivity().getApplication());
         //set click item listener for recyclerview
-        adapter.setListener((v, position) -> {
-            Bundle bundle = new Bundle();
-            bundle.putSerializable(PlaylistConstants.KEY_TRANSFER_PLAYLIST, adapter.getPlaylistItemAt(position));
-            detailsFragment.setArguments(bundle);
-
-            getParentFragmentManager().beginTransaction()
-                    .replace(R.id.nav_host_fragment_activity_main, detailsFragment)
-                    .addToBackStack(null)
-                    .setReorderingAllowed(true)
-                    .commit();
-        });
+        adapter.setListener((v, position) ->
+                Navigation.findNavController(binding.getRoot()).navigate(
+                        PlaylistFragmentDirections
+                        .actionNavigationPlaylistToNavigationPlaylistDetails(
+                                adapter.getPlaylistItemAt(position).getId()
+                        )
+        ));
 
         //click bottom sheet play item recyclerview
         adapter.setBSPlayListener((view, position) -> {

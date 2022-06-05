@@ -45,6 +45,10 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     private PlaylistViewModel playlistViewModel;
     private ActivityResultLauncher<String[]> mediaPickerLauncher;
 
+    private int currentPlaylistId;
+
+    private boolean isObservingPlaylistItem = false;
+
     private boolean isASC = false;
 
     public PlaylistDetailsFragment() {
@@ -71,33 +75,41 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            playlist = (Playlist) bundle.getSerializable(PlaylistConstants.KEY_TRANSFER_PLAYLIST);
-        }
-
         adapter = new MediaItemAdapter(new MediaItemAdapter.PlaylistMediaDiff());
         adapter.setContext(requireContext());
         adapter.setApplication(requireActivity().getApplication());
-        adapter.setPlaylist(playlist);
-        playlistItemViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
+
+        currentPlaylistId = PlaylistDetailsFragmentArgs.fromBundle(requireArguments()).getPlaylistId();
+        playlistViewModel.getPlaylistWithID(currentPlaylistId).observe(
                 getViewLifecycleOwner(),
-                media -> adapter.submitList(media)
+                newPlaylist -> {
+                    playlist = newPlaylist.get(0);
+                    adapter.setPlaylist(playlist);
+                    if (!isObservingPlaylistItem) {
+                        playlistItemViewModel.getAllPlaylistMediasWithID(currentPlaylistId).observe(
+                                getViewLifecycleOwner(),
+                                media -> adapter.submitList(media)
+                        );
+                        isObservingPlaylistItem = true;
+                    }
+                    refresh();
+                }
         );
+
         binding.rcvPlaylistsDetails.setAdapter(adapter);
         setListener();
-        refresh();
+
     }
 
     public void refresh() {
-        int count = playlistItemViewModel.getCountPlaylistWithID(playlist.getId());
+        int count = playlistItemViewModel.getCountPlaylistWithID(currentPlaylistId);
         playlist.setCount(count);
         playlistViewModel.update(playlist);
 
         binding.tvPlaylistDetailsName.setText(playlist.getName());
         binding.tvPlaylistDetailsNumbers.setText(getStringCountText(playlist));
 
-        PlaylistItem playlistItem = playlistItemViewModel.findByItemId(playlist.getId());
+        PlaylistItem playlistItem = playlistItemViewModel.findByItemId(currentPlaylistId);
         if (playlistItem == null) {
             binding.imgThumbnailPlaylistDetails.setImageResource(playlist.getIdResource());
             return;
@@ -198,7 +210,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     }
 
     private void PlayAll() {
-        Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
+        Uri playbackUri = GetPlaybackUriUtils.forPlaylist(currentPlaylistId, 0);
         if (playlist.isVideo()) {
             VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
         } else {
@@ -207,7 +219,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     }
 
     private void PlayShuffleAll() {
-        Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
+        Uri playbackUri = GetPlaybackUriUtils.forPlaylist(currentPlaylistId, 0);
         if (playlist.isVideo()) {
             VideoPlayerActivity.launchWithUriAndShuffleAll(requireActivity(), playbackUri);
         } else {
@@ -241,7 +253,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
         uris.forEach(uri -> {
             PlaylistItem media = new PlaylistItem(
-                    playlist.getId(),
+                    currentPlaylistId,
                     uri.toString(),
                     MediaUtils.getMediaNameFromURI(requireContext(), uri));
             playlistItemViewModel.insert(media);
@@ -291,7 +303,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
     private void Searching(String s) {
         if (s.equals("")) {
-            playlistItemViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
+            playlistItemViewModel.getAllPlaylistMediasWithID(currentPlaylistId).observe(
                     getViewLifecycleOwner(),
                     playlists -> adapter.submitList(playlists)
             );
@@ -305,12 +317,12 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
     private void SortByName() {
         if (isASC) {
-            playlistItemViewModel.sortAllMediaByNameDESCWithID(playlist.getId()).observe(
+            playlistItemViewModel.sortAllMediaByNameDESCWithID(currentPlaylistId).observe(
                     getViewLifecycleOwner(),
                     playlists -> adapter.submitList(playlists)
             );
         } else {
-            playlistItemViewModel.sortAllMediaByNameASCWithID(playlist.getId()).observe(
+            playlistItemViewModel.sortAllMediaByNameASCWithID(currentPlaylistId).observe(
                     getViewLifecycleOwner(),
                     playlists -> adapter.submitList(playlists)
             );

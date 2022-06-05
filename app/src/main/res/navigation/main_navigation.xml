@@ -9,7 +9,11 @@
         android:id="@+id/navigation_playlist"
         android:name="com.example.mediaplayerapp.ui.playlist.PlaylistFragment"
         android:label="@string/title_playlist"
-        tools:layout="@layout/fragment_playlist" />
+        tools:layout="@layout/fragment_playlist" >
+        <action
+            android:id="@+id/action_navigation_playlist_to_navigation_playlist_details"
+            app:destination="@id/navigation_playlist_details" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_video_library"
@@ -22,9 +26,20 @@
         android:name="com.example.mediaplayerapp.ui.music_library.MusicLibraryFragment"
         android:label="@string/title_music"
         tools:layout="@layout/fragment_music_library" />
+
     <fragment
         android:id="@+id/navigation_overview"
         android:name="com.example.mediaplayerapp.ui.overview.OverviewFragment"
         android:label="@string/title_overview"
         tools:layout="@layout/fragment_overview" />
+
+    <fragment
+        android:id="@+id/navigation_playlist_details"
+        android:name="com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment"
+        android:label="Playlist details"
+        tools:layout="@layout/fragment_playlist_details" >
+        <argument
+            android:name="playlist_id"
+            app:argType="integer" />
+    </fragment>
 </navigation>
