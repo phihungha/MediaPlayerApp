@@ -12,7 +12,6 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,8 +21,6 @@ import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.utils.StartPlaybackCallback;
 import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
-import com.example.mediaplayerapp.utils.MediaTimeUtils;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.io.IOException;
@@ -118,7 +115,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
     }
 
     public class SongItemViewHolder extends RecyclerView.ViewHolder  {
-        BottomSheetDialog bottomSheetDialog;
         private Song currentSong;
         private final ShapeableImageView songThumbnail;
         private final TextView songTitle;
@@ -170,35 +166,6 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
                         ContextCompat.getDrawable(context,
                                 R.drawable.default_song_artwork));
             }
-        }
-
-        private void openBottomSheetDialog(View view){
-            bottomSheetDialog = new BottomSheetDialog(view.getContext(), R.style.BottomSheetTheme);
-            View bsView = LayoutInflater.from(view.getContext()).inflate(R.layout.bottom_sheet_song,
-                    view.findViewById(R.id.bs_song));
-            TextView tv_name = bsView.findViewById(R.id.bottom_sheet_song_name_textview);
-            tv_name.setText(currentSong.getTitle());
-            bsView.findViewById(R.id.bottom_sheet_song_detail).setOnClickListener(view1 -> {
-                showSongDetails();
-                bottomSheetDialog.dismiss();
-            });
-            bottomSheetDialog.setContentView(bsView);
-            bottomSheetDialog.show();
-        }
-
-        private void showSongDetails() {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setTitle("Song detail")
-                    .setMessage("Song title: " + currentSong.getTitle()
-                        + "\nArtist name: " + currentSong.getArtistName()
-                        + "\nAlbum name: " + currentSong.getAlbumName()
-                        + "\nGenre: " + currentSong.getGenre()
-                        + "\nDuration: " + MediaTimeUtils.getFormattedTimeFromLong(currentSong.getDuration())
-                        + "\nTime Added: " + MediaTimeUtils.getFormattedTimeFromZonedDateTime(currentSong.getTimeAdded())
-                    );
-            builder.setCancelable(true);
-            builder.setNegativeButton("Cancel", (dialog, id) -> dialog.cancel());
-            builder.create().show();
         }
     }
 }

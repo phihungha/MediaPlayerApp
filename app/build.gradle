@@ -6,6 +6,7 @@ android {
     compileSdk 32
 
     defaultConfig {
+        resConfigs ("en","vi")
         applicationId "com.example.mediaplayerapp"
         minSdk 29
         targetSdk 32
