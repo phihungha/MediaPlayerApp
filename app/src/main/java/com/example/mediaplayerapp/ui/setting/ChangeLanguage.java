@@ -17,7 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class ChangeLanguage  extends BottomSheetDialogFragment {
 
-    SharedPrefs sharedPreferences = new SharedPrefs(getActivity());
+
     public ChangeLanguage() {
         // Required empty public constructor
     }
@@ -35,6 +35,7 @@ public class ChangeLanguage  extends BottomSheetDialogFragment {
         FragmentChangeLanguageBinding fragmentChangeLanguageBinding =  FragmentChangeLanguageBinding.inflate(inflater,container,false);
         LinearLayout english = fragmentChangeLanguageBinding.bottomSheetEnglish;
         LinearLayout vietnam = fragmentChangeLanguageBinding.bottomSheetVietnam;
+        SharedPrefs sharedPreferences = new SharedPrefs(getActivity());
         english.setOnClickListener(view -> {
             sharedPreferences.setLocale("en");
             getActivity().recreate();
