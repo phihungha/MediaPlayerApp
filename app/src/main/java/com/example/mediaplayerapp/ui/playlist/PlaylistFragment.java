@@ -1,6 +1,5 @@
 package com.example.mediaplayerapp.ui.playlist;
 
-import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Context;
 import android.net.Uri;
@@ -82,6 +81,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
             getParentFragmentManager().beginTransaction()
                     .replace(R.id.nav_host_fragment_activity_main, detailsFragment)
                     .addToBackStack(null)
+                    .setReorderingAllowed(true)
                     .commit();
         });
 
@@ -110,17 +110,13 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         }));
     }
 
-    @SuppressLint("NonConstantResourceId")
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.layoutItem_addPlaylist:
-                openBottomSheetDialogAddPlaylist();
-                break;
-
-            case R.id.layoutItem_watchLater:
-                openWatchLaterList();
-                break;
+        int id = view.getId();
+        if (id == R.id.layoutItem_addPlaylist) {
+            openBottomSheetDialogAddPlaylist();
+        } else if (id == R.id.layoutItem_watchLater) {
+            openWatchLaterList();
         }
     }
 
