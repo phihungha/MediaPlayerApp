@@ -11,12 +11,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="@string/setting"
+        android:text="@string/choose_language"
         android:textSize="20sp"
         android:textStyle="bold" />
 
     <LinearLayout
-        android:id="@+id/something"
+        android:id="@+id/bottom_sheet_english"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
@@ -34,11 +34,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:padding="8dp" />
+            android:padding="8dp"
+            android:text="@string/english" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/changelanguage"
+        android:id="@+id/bottom_sheet_vietnam"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
@@ -57,8 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="8dp"
-            android:text="@string/change_language" />
-
+            android:text="@string/vietnamese" />
     </LinearLayout>
 
 </LinearLayout>
