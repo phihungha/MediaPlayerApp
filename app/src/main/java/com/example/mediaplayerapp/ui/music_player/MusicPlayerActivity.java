@@ -54,7 +54,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     private static final String LOG_TAG = MusicPlayerActivity.class.getSimpleName();
     private static final String SHUFFLE_MODE_ALL_KEY =
-            "com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity.SHUFFLE_MODE_KEY";
+            "com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity.SHUFFLE_MODE_ALL_KEY";
     private static final int AUTOSCROLL_DELAY = 4500;
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
@@ -245,9 +245,17 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private void openMenu() {
         PopupMenu popupMenu = new PopupMenu(this, binding.musicPlayerMenuBtn);
         popupMenu.inflate(R.menu.music_player_menu);
-        popupMenu.setOnMenuItemClickListener(menuItem -> true);
+        popupMenu.setOnMenuItemClickListener(menuItem -> {
+            if (menuItem.getItemId() == R.id.music_player_add_to_playlist)
+                openAddToPlaylistDialog();
+            return true;
+        });
         popupMenu.setForceShowIcon(true);
         popupMenu.show();
+    }
+
+    private void openAddToPlaylistDialog() {
+
     }
 
     /**
