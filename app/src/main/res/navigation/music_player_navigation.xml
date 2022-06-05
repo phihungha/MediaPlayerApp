@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/music_player_navigation"
+    app:startDestination="@id/musicPlayerControlFragment">
+
+    <fragment
+        android:id="@+id/musicPlayerControlFragment"
+        android:name="com.example.mediaplayerapp.ui.music_player.MusicPlayerControlFragment"
+        android:label="fragment_music_player_control"
+        tools:layout="@layout/fragment_music_player_control" >
+        <action
+            android:id="@+id/action_musicPlayerControlFragment_to_playlistDetailsFragment"
+            app:destination="@id/playlistDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/playlistDetailsFragment"
+        android:name="com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment"
+        android:label="fragment_playlist_details"
+        tools:layout="@layout/fragment_playlist_details" >
+        <argument
+            android:name="playlist_id"
+            app:argType="integer" />
+    </fragment>
+</navigation>
