@@ -60,9 +60,10 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     private ExoPlayer player;
     private MediaSessionCompat mediaSession;
     private PlayerNotificationManager notificationManager;
+    private boolean isForeground = false;
+
     private SongsRepository songsRepository;
     private PlaylistItemRepository playlistItemRepository;
-    private boolean isForeground = false;
 
     @Override
     public void onCreate() {
@@ -103,7 +104,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     private void setupMetadataSyncListener() {
         player.addListener(new Player.Listener() {
             @Override
-            public void onMediaMetadataChanged(@NonNull MediaMetadata mediaMetadata) {
+                public void onMediaMetadataChanged(@NonNull MediaMetadata mediaMetadata) {
                 MediaMetadataCompat.Builder metadataCompatBuilder = new MediaMetadataCompat.Builder();
                 putStringIntoMediaMetadataCompat(metadataCompatBuilder,
                         MediaMetadataCompat.METADATA_KEY_TITLE,
@@ -119,6 +120,12 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                         mediaMetadata.albumTitle);
                 metadataCompatBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION,
                         player.getDuration());
+
+                if (mediaMetadata.mediaUri != null)
+                    metadataCompatBuilder.putString(
+                            MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
+                            mediaMetadata.mediaUri.toString()
+                    );
 
                 if (mediaMetadata.artworkUri != null)
                     metadataCompatBuilder.putString(

@@ -15,6 +15,9 @@ import androidx.annotation.NonNull;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.loader.content.CursorLoader;
 
+import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -54,15 +57,20 @@ public class MediaUtils {
     }
 
     public static Bitmap loadThumbnail(Context context, Uri uri) {
-        context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(context, uri);
-        byte[] data = retriever.getEmbeddedPicture();
-        retriever.release();
-        if (data == null) {
-            return null;
+        try {
+            return MediaThumbnailUtils.getThumbnailFromUri(context, uri);
+        } catch (IOException err)
+        {
+            context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(context, uri);
+            byte[] data = retriever.getEmbeddedPicture();
+            retriever.release();
+            if (data == null) {
+                return null;
+            }
+            return BitmapFactory.decodeByteArray(data, 0, data.length);
         }
-        return BitmapFactory.decodeByteArray(data, 0, data.length);
     }
 
     public String getRealPathFromURI(Uri contentUri, Context context)

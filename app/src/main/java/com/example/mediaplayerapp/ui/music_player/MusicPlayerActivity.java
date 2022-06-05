@@ -31,6 +31,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
@@ -39,10 +40,18 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.ActivityMusicPlayerBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
+import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.google.android.exoplayer2.ui.TimeBar;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
@@ -56,6 +65,13 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private static final String SHUFFLE_MODE_ALL_KEY =
             "com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity.SHUFFLE_MODE_ALL_KEY";
     private static final int AUTOSCROLL_DELAY = 4500;
+
+    private final List<Playlist> playlists = new ArrayList<>();
+    private PlaylistItemViewModel playlistItemViewModel;
+
+    private int currentPlaylistId = -1;
+    private String currentMediaUri;
+    private String currentTitle;
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(),
@@ -106,6 +122,8 @@ public class MusicPlayerActivity extends AppCompatActivity {
             new MediaControllerCompat.Callback() {
                 @Override
                 public void onMetadataChanged(MediaMetadataCompat metadata) {
+                    currentMediaUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI);
+                    currentTitle = metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE);
                     binding.musicPlayerSongTitle.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_TITLE));
                     binding.musicPlayerSongArtist.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_ARTIST));
 
@@ -185,6 +203,13 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 connectionCallback,
                 null);
 
+        playlistItemViewModel = new ViewModelProvider(this).get(PlaylistItemViewModel.class);
+        PlaylistViewModel playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
+        playlistViewModel.getAllPlaylists().observe(this, newPlaylists -> {
+            playlists.clear();
+            playlists.addAll(newPlaylists);
+        });
+
         binding.musicPlayerCloseBtn.setOnClickListener(view -> finishAfterTransition());
         binding.musicPlayerMenuBtn.setOnClickListener(view -> openMenu());
 
@@ -226,10 +251,15 @@ public class MusicPlayerActivity extends AppCompatActivity {
      */
     private void playFromIntent() {
         Uri uri = getIntent().getData();
-        if (uri != null)
+        if (uri != null) {
             MediaControllerCompat.getMediaController(this)
                     .getTransportControls()
                     .playFromUri(uri, null);
+            if (uri.getScheme().equals(GetPlaybackUriUtils.PLAYBACK_URI_SCHEME)
+                && uri.getPathSegments().get(0).equals(GetPlaybackUriUtils.PLAYLIST_URI_SEGMENT)) {
+                currentPlaylistId = Integer.parseInt(uri.getPathSegments().get(1));
+            }
+        }
 
         Bundle extras = getIntent().getExtras();
         if (extras != null)
@@ -245,6 +275,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private void openMenu() {
         PopupMenu popupMenu = new PopupMenu(this, binding.musicPlayerMenuBtn);
         popupMenu.inflate(R.menu.music_player_menu);
+
         popupMenu.setOnMenuItemClickListener(menuItem -> {
             if (menuItem.getItemId() == R.id.music_player_add_to_playlist)
                 openAddToPlaylistDialog();
@@ -255,7 +286,26 @@ public class MusicPlayerActivity extends AppCompatActivity {
     }
 
     private void openAddToPlaylistDialog() {
+        CharSequence[] playlistOptions = playlists
+                .stream()
+                .map(Playlist::getName)
+                .toArray(CharSequence[]::new);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+                .setTitle("Choose a playlist")
+                .setItems(
+                        playlistOptions,
+                        (dialogInterface, i) -> {
+                            PlaylistItem newPlaylistItem = new PlaylistItem(
+                                    playlists.get(i).getId(),
+                                    currentMediaUri,
+                                    currentTitle);
+                            playlistItemViewModel.insert(newPlaylistItem);
+                            Toast.makeText(MusicPlayerActivity.this,
+                                    "Added to playlist",
+                                    Toast.LENGTH_SHORT).show();
+                        });
+        builder.show();
     }
 
     /**
