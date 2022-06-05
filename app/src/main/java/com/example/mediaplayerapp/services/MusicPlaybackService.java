@@ -1,6 +1,7 @@
 package com.example.mediaplayerapp.services;
 
 import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +22,7 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.music_library.SongsRepository;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemRepository;
+import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.GetMediaItemsUtils;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.example.mediaplayerapp.utils.SortOrder;
@@ -32,6 +34,7 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
+import com.google.android.exoplayer2.ui.DefaultMediaDescriptionAdapter;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 
 import java.lang.reflect.Array;
@@ -118,8 +121,10 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                         player.getDuration());
 
                 if (mediaMetadata.artworkUri != null)
-                    metadataCompatBuilder.putString(MediaMetadataCompat.METADATA_KEY_ART_URI,
-                            mediaMetadata.artworkUri.toString());
+                    metadataCompatBuilder.putString(
+                            MediaMetadataCompat.METADATA_KEY_ART_URI,
+                            mediaMetadata.artworkUri.toString()
+                    );
 
                 if (mediaMetadata.artworkData != null) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(
@@ -247,10 +252,20 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
             }
         };
 
+        PendingIntent openMusicPlayerScreenIntent = PendingIntent.getActivity(
+                this,
+                0,
+                new Intent(this, MusicPlayerActivity.class),
+                PendingIntent.FLAG_IMMUTABLE);
+
+        PlayerNotificationManager.MediaDescriptionAdapter descriptionAdapter
+                = new DefaultMediaDescriptionAdapter(openMusicPlayerScreenIntent);
+
         notificationManager = new PlayerNotificationManager.Builder(this,
                 NOTIFICATION_ID,
                 NOTIFICATION_CHANNEL_ID)
                 .setNotificationListener(notificationListener)
+                .setMediaDescriptionAdapter(descriptionAdapter)
                 .setChannelNameResourceId(R.string.notification_channel_name)
                 .setChannelDescriptionResourceId(R.string.notification_channel_description)
                 .build();
