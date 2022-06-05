@@ -28,6 +28,14 @@ public class PlaylistItemRepository {
         PlaylistItemRoomDatabase.databaseWriteExecutor.execute(() -> mPlaylistItemDao.update(media));
     }
 
+    public void updateMultiple(PlaylistItem... playlistItems) {
+        PlaylistItemRoomDatabase.databaseWriteExecutor.execute(() -> mPlaylistItemDao.updateMultiple(playlistItems));
+    }
+
+    public void updateByList(List<PlaylistItem> list) {
+        PlaylistItemRoomDatabase.databaseWriteExecutor.execute(() -> mPlaylistItemDao.updateByList(list));
+    }
+
     public void deleteAll() {
         PlaylistItemRoomDatabase.databaseWriteExecutor.execute(mPlaylistItemDao::deleteAll);
     }
@@ -52,19 +60,12 @@ public class PlaylistItemRepository {
         return mPlaylistItemDao.getAllPlaylistMediasWithID(id);
     }
 
-    public LiveData<List<PlaylistItem>> getAllMediaSearching(String text){
-        return mPlaylistItemDao.getAllMediaSearching(text);
-    }
-
-    public LiveData<List<PlaylistItem>> sortAllMediaByNameASCWithID(int id){
-        return mPlaylistItemDao.sortAllMediaByNameASCWithID(id);
-    }
-
-    public LiveData<List<PlaylistItem>> sortAllMediaByNameDESCWithID(int id){
-        return mPlaylistItemDao.sortAllMediaByNameDESCWithID(id);
-    }
 
     public LiveData<List<PlaylistItem>> getAllPlaylistMedias() {
         return mAllMedias;
+    }
+
+    public List<PlaylistItem> getCurrentList() {
+        return mPlaylistItemDao.getCurrentList();
     }
 }

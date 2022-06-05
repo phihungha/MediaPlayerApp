@@ -15,9 +15,6 @@ public class MediaQueue implements Serializable {
     @ColumnInfo(name = "MediaQueueUri")
     private String mediaUri;
 
-    @ColumnInfo(name = "MediaQueueName")
-    private String name;
-
     @ColumnInfo(name = "IsVideo")
     private boolean isVideo;
 
@@ -31,21 +28,20 @@ public class MediaQueue implements Serializable {
     private int type;
 
     @ColumnInfo(name = "OrderSort")
-    private int orderSort;
+    private long orderSort;
 
-    public MediaQueue(String mediaUri, String name, boolean isVideo, int type, int orderSort) {
+    public MediaQueue(String mediaUri, boolean isVideo, int type, long orderSort) {
         this.mediaUri = mediaUri;
-        this.name = name;
         this.isVideo = isVideo;
         this.type = type;
         this.orderSort = orderSort;
     }
 
-    public int getOrderSort() {
+    public long getOrderSort() {
         return orderSort;
     }
 
-    public void setOrderSort(int orderSort) {
+    public void setOrderSort(long orderSort) {
         this.orderSort = orderSort;
     }
 
@@ -81,11 +77,4 @@ public class MediaQueue implements Serializable {
         this.mediaUri = mediaUri;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 }

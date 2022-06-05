@@ -39,7 +39,7 @@ public class PlaylistAdapter extends ListAdapter<Playlist, PlaylistViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull PlaylistViewHolder holder, int position) {
-        Playlist current = getItem(position);
+        Playlist current = getPlaylistItemAt(position);
         holder.setBinding(current);
     }
 

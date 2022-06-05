@@ -16,6 +16,7 @@ import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
+import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.ItemTouchHelperAdapter;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaUtils;
@@ -34,38 +35,26 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
     private MediaQueueViewModel viewModel;
     private final ArrayList<Integer> listPos;
 
-    public void setItemClickListener(IOnItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
-    }
-
-    public void setDragStartListener(OnStartDragListener mDragStartListener) {
-        this.mDragStartListener = mDragStartListener;
-    }
-
-    public void setListChangedListener(OnPlaylistItemListChangedListener mListChangedListener) {
-        this.mListChangedListener = mListChangedListener;
-    }
-
-    public void setViewModel(MediaQueueViewModel viewModel) {
-        this.viewModel = viewModel;
-    }
-
-    public void setDeleteItemListener(IOnItemClickListener deleteItemListener) {
-        this.deleteItemListener = deleteItemListener;
-    }
-
-    public void setContext(Context mContext) {
-        this.mContext = mContext;
-    }
+    private DisplayMode displayMode = DisplayMode.LIST;
 
     public MediaQueueAdapter(@NonNull DiffUtil.ItemCallback<MediaQueue> diffCallback) {
         super(diffCallback);
         listPos=new ArrayList<>();
     }
+
+    public void setDisplayMode(DisplayMode displayMode) {
+        this.displayMode = displayMode;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return displayMode.getValue();
+    }
+
     @NonNull
     @Override
     public MediaQueueViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return MediaQueueViewHolder.create(parent,mContext,deleteItemListener,itemClickListener,this);
+        return MediaQueueViewHolder.create(parent,mContext,deleteItemListener,itemClickListener,this,displayMode);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -77,16 +66,30 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
         }
         Uri uri=Uri.parse(current.getMediaUri());
         if (MediaUtils.isUriExists(mContext,uri)){
-            holder.setBinding(current);
-            holder.binding.imgThumbnailMediaQueue.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                        mDragStartListener.onStartDrag(holder);
+            if (displayMode==DisplayMode.LIST){
+                holder.setBindingList(current);
+                holder.binding.imgThumbnailMediaQueue.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                            mDragStartListener.onStartDrag(holder);
+                        }
+                        return false;
                     }
-                    return false;
-                }
-            });
+                });
+            } else{
+                holder.setBindingGrid(current);
+                holder.gridBinding.imgThumbQueueGrid.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                            mDragStartListener.onStartDrag(holder);
+                        }
+                        return false;
+                    }
+                });
+            }
+
         } else {
             viewModel.deleteItemWithUri(uri.toString());
         }
@@ -121,7 +124,7 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
         int toPosition = getSecondPos();
         MediaQueue first = getCurrentList().get(fromPosition);
         MediaQueue second = getCurrentList().get(toPosition);
-        int order = first.getOrderSort();
+        long order = first.getOrderSort();
         first.setOrderSort(second.getOrderSort());
         second.setOrderSort(order);
         viewModel.update(first);
@@ -130,7 +133,6 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
 
     @Override
     public void onItemDismiss(int position) {
-
     }
 
     public static class MediaQueueDiff extends DiffUtil.ItemCallback<MediaQueue> {
@@ -147,5 +149,29 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
 
     public MediaQueue getItemAt(int position){
         return getItem(position);
+    }
+
+    public void setItemClickListener(IOnItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
+    public void setDragStartListener(OnStartDragListener mDragStartListener) {
+        this.mDragStartListener = mDragStartListener;
+    }
+
+    public void setListChangedListener(OnPlaylistItemListChangedListener mListChangedListener) {
+        this.mListChangedListener = mListChangedListener;
+    }
+
+    public void setViewModel(MediaQueueViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
+
+    public void setDeleteItemListener(IOnItemClickListener deleteItemListener) {
+        this.deleteItemListener = deleteItemListener;
+    }
+
+    public void setContext(Context mContext) {
+        this.mContext = mContext;
     }
 }

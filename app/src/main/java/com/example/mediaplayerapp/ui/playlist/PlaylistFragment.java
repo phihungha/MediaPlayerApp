@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.music_library.SongsRepository;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
@@ -31,6 +32,7 @@ import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
+import com.example.mediaplayerapp.utils.SortOrder;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class PlaylistFragment extends Fragment implements View.OnClickListener {
@@ -39,8 +41,6 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
     private final MediaQueueFragment mediaQueueFragment = new MediaQueueFragment();
     private PlaylistAdapter adapter;
     private PlaylistViewModel playlistViewModel;
-
-    private boolean isASC = false;
 
     BottomSheetDialog bottomSheetDialog;
 
@@ -174,7 +174,6 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         RadioButton radioAudio = bsAddView.findViewById(R.id.radio_audio);
         RadioButton radioVideo = bsAddView.findViewById(R.id.radio_video);
         btnCreate.setOnClickListener(view -> {
-
             if (edtName.getText().toString().trim().isEmpty()) {
                 makeToast("Name is empty!");
             } else if (!radioAudio.isChecked() && !radioVideo.isChecked()) {
@@ -211,7 +210,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.playlist_options_menu, menu);
-        MenuItem menuItemSearch = menu.findItem(R.id.action_search);
+        MenuItem menuItemSearch = menu.findItem(R.id.action_search_playlist_main);
         SearchView searchView = (SearchView) menuItemSearch.getActionView();
         searchView.setIconified(true);
         searchView.setQueryHint(PlaylistConstants.STRING_HINT_SEARCH);
@@ -222,6 +221,7 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
+                Searching(s);
                 return true;
             }
 
@@ -236,23 +236,36 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_sort)
-            SortByName();
-        return super.onOptionsItemSelected(item);
+        if(item.getItemId() == R.id.action_sort_playlist_by_title_asc)
+           sortByNameASC();
+        else if(item.getItemId() == R.id.action_sort_playlist_by_title_desc)
+            sortByNameDESC();
+        else if(item.getItemId() == R.id.action_sort_playlist_by_number_item_asc)
+            sortByNumberItemASC();
+        else if(item.getItemId() == R.id.action_sort_playlist_by_number_item_desc)
+            sortByNumberItemDESC();
+        return true;
     }
 
-    private void SortByName() {
-        if (isASC) {
-            playlistViewModel.sortPlaylistByNameDESC().observe(
-                    getViewLifecycleOwner(),
-                    playlists -> adapter.submitList(playlists));
-
-        } else {
-            playlistViewModel.sortPlaylistByNameASC().observe(
-                    getViewLifecycleOwner(),
-                    playlists -> adapter.submitList(playlists));
-            isASC = !isASC;
-        }
+    private void sortByNumberItemASC() {
+        playlistViewModel.sortPlaylistByNameASC().observe(
+                getViewLifecycleOwner(),
+                playlists -> adapter.submitList(playlists));
+    }
+    private void sortByNumberItemDESC() {
+        playlistViewModel.sortPlaylistByNumberItemDESC().observe(
+                getViewLifecycleOwner(),
+                playlists -> adapter.submitList(playlists));
+    }
+    private void sortByNameASC() {
+        playlistViewModel.sortPlaylistByNameASC().observe(
+                getViewLifecycleOwner(),
+                playlists -> adapter.submitList(playlists));
+    }
+    private void sortByNameDESC() {
+        playlistViewModel.sortPlaylistByNameDESC().observe(
+                getViewLifecycleOwner(),
+                playlists -> adapter.submitList(playlists));
     }
 
     private void Searching(String s) {

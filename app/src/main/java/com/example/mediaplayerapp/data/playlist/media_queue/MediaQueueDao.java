@@ -35,4 +35,10 @@ public interface MediaQueueDao {
 
     @Query("SELECT COUNT(*) FROM mediaQueue_table")
     int getCountMediaQueue();
+
+    @Query("SELECT * FROM mediaQueue_table WHERE Type=:type ORDER BY OrderSort ASC")
+    List<MediaQueue> getCurrentList(int type);
+
+    @Update
+    void updateByList(List<MediaQueue> list);
 }

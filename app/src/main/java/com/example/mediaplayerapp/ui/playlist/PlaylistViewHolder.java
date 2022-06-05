@@ -12,12 +12,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.data.playlist.PlaylistUtil;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.ItemPlaylistBinding;
@@ -42,6 +42,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
         this.binding.imgBtnMore.setOnClickListener(this);
         this.binding.layoutItemPlaylist.setOnClickListener(this);
         playlistItemViewModel=new PlaylistItemViewModel(mApplication);
+
     }
 
     @Override
@@ -106,7 +107,7 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
     }
 
     private String getStringCountText(Playlist playlist) {
-        int count = playlist.getCount();
+        int count = PlaylistUtil.getNumberItemOfPlaylistWithID(mApplication,playlist.getId());
         String textNumber = count + " ";
 
         if (playlist.isVideo()) {
@@ -120,15 +121,15 @@ public class PlaylistViewHolder extends RecyclerView.ViewHolder implements View.
             } else
                 textNumber += "songs";
         }
-
         return textNumber;
     }
 
     public void setBinding(Playlist playlist) {
         refreshThumb(playlist);
+        String countText=getStringCountText(playlist);
 
         binding.tvPlaylistName.setText(playlist.getName());
-        binding.tvPlaylistNumbers.setText(getStringCountText(playlist));
+        binding.tvPlaylistNumbers.setText(countText);
     }
 
     static PlaylistViewHolder create(ViewGroup parent, IOnItemClickListener l,

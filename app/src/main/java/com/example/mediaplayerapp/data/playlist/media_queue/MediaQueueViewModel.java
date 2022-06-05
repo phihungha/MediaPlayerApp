@@ -32,6 +32,10 @@ public class MediaQueueViewModel extends AndroidViewModel {
         mRepository.update(media);
     }
 
+    public void updateByList(List<MediaQueue> list) {
+        mRepository.updateByList(list);
+    }
+
     /**
      *  delete MediaQueue object from database
      * */
@@ -93,5 +97,21 @@ public class MediaQueueViewModel extends AndroidViewModel {
      * */
     public LiveData<List<MediaQueue>> getAllMusicFavourite() {
         return mRepository.getAllMusicFavourite();
+    }
+
+    public List<MediaQueue> getCurrentListVideoWatchLater() {
+        return mRepository.getCurrentList(PlaylistConstants.TYPE_VIDEO_QUEUE);
+    }
+
+    public List<MediaQueue> getCurrentListVideoFavourite() {
+        return mRepository.getCurrentList(PlaylistConstants.TYPE_VIDEO_FAVOURITE);
+    }
+
+    public List<MediaQueue> getCurrentListSongWatchLater() {
+        return mRepository.getCurrentList(PlaylistConstants.TYPE_MUSIC_QUEUE);
+    }
+
+    public List<MediaQueue> getCurrentListSongFavourite() {
+        return mRepository.getCurrentList(PlaylistConstants.TYPE_MUSIC_FAVOURITE);
     }
 }

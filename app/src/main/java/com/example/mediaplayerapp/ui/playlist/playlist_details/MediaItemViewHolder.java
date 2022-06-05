@@ -19,7 +19,10 @@ import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
-import com.example.mediaplayerapp.databinding.ItemMediaBinding;
+
+import com.example.mediaplayerapp.databinding.ItemMediaGridBinding;
+import com.example.mediaplayerapp.databinding.ItemMediaListBinding;
+import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -27,7 +30,11 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
     private static Playlist mPlaylist;
-    public final ItemMediaBinding binding;
+
+    public ItemMediaListBinding binding;
+    public ItemMediaGridBinding gridBinding;
+
+    private static DisplayMode mDisplayMode;
     private BottomSheetDialog bottomSheetDialog;
     private static IOnItemClickListener itemClickListener;
     private static IOnItemClickListener bsPlayListener;
@@ -38,15 +45,23 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
     @SuppressLint("StaticFieldLeak")
     private static MediaItemAdapter mAdapter;
 
-    public MediaItemViewHolder(@NonNull ItemMediaBinding binding) {
+    public MediaItemViewHolder(@NonNull ItemMediaListBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
-        this.binding.layoutItemPlaylistDetails.setOnClickListener(this);
+        this.binding.getRoot().setOnClickListener(this);
         this.binding.imgBtnPlaylistDetailsMore.setOnClickListener(this);
     }
 
-    public void setBinding(PlaylistItem media) {
-        binding.tvPlaylistNamePlaylistDetails.setText(media.getName());
+    public MediaItemViewHolder(@NonNull ItemMediaGridBinding binding) {
+        super(binding.getRoot());
+        this.gridBinding = binding;
+        this.gridBinding.getRoot().setOnClickListener(this);
+        this.gridBinding.imgBtnMoreGrid.setOnClickListener(this);
+    }
+
+    public void setBindingList(PlaylistItem media) {
+        String name= MediaUtils.getMediaNameFromURI(mContext, Uri.parse(media.getMediaUri()));
+        binding.tvPlaylistNamePlaylistDetails.setText(name);
 
         MediaInfo mediaInfo = MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
         String duration = MediaUtils.convertDuration(mediaInfo.getDuration());
@@ -70,6 +85,32 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
             }
         }
     }
+    public void setBindingGrid(PlaylistItem media) {
+        String name= MediaUtils.getMediaNameFromURI(mContext, Uri.parse(media.getMediaUri()));
+        gridBinding.tvPlaylistDetailsNameGrid.setText(name);
+
+        MediaInfo mediaInfo = MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
+        String duration = MediaUtils.convertDuration(mediaInfo.getDuration());
+        gridBinding.tvDurationPlaylistDetailGrid.setText(duration);
+
+        if (mPlaylist.isVideo()) {
+            Glide.with(mContext)
+                    .load(media.getMediaUri())
+                    .skipMemoryCache(false)
+                    .error(R.drawable.default_song_artwork)
+                    .centerCrop()
+                    .into(gridBinding.imgThumbPlaylistDetailGrid);
+        } else {
+            Bitmap thumb = MediaUtils.loadThumbnail(mContext, Uri.parse(media.getMediaUri()));
+            if (thumb != null) {
+                gridBinding.imgThumbPlaylistDetailGrid.setImageBitmap(thumb);
+            } else {
+                gridBinding.imgThumbPlaylistDetailGrid.setImageDrawable(
+                        ContextCompat.getDrawable(mContext,
+                                R.drawable.default_song_artwork));
+            }
+        }
+    }
 
     static MediaItemViewHolder create(ViewGroup parent,
                                       Context context,
@@ -80,9 +121,9 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
                                       IOnItemClickListener _bsAddQueueListener,
                                       IOnItemClickListener _bsAddFavouriteListener,
                                       Playlist playlist,
-                                      MediaItemAdapter adapter) {
+                                      MediaItemAdapter adapter,
+                                      DisplayMode displayMode) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        ItemMediaBinding binding = ItemMediaBinding.inflate(inflater, parent, false);
         itemClickListener = _itemClickListener;
         bsPlayListener = _bsPlayListener;
         bsDeleteListener = _bsDeleteListener;
@@ -92,7 +133,16 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
         mContext = context;
         mPlaylist = playlist;
         mAdapter = adapter;
-        return new MediaItemViewHolder(binding);
+        mDisplayMode=displayMode;
+
+        if (displayMode==DisplayMode.LIST){
+            ItemMediaListBinding binding = ItemMediaListBinding.inflate(inflater, parent, false);
+            return new MediaItemViewHolder(binding);
+        }
+        else {
+            ItemMediaGridBinding binding = ItemMediaGridBinding.inflate(inflater, parent, false);
+            return new MediaItemViewHolder(binding);
+        }
     }
 
     private void onClickItem() {
@@ -106,10 +156,12 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.layoutItem_PlaylistDetails:
+            case R.id.layout_item_playlist_detail_grid:
                 onClickItem();
                 break;
 
             case R.id.imgBtn_playlist_details_more:
+            case R.id.imgBtn_more_grid:
                 openBottomSheetDialog();
                 break;
 
@@ -169,7 +221,12 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
                 itemView.findViewById(R.id.bs_playlist_detail));
 
         TextView tv_name = bsView.findViewById(R.id.tv_playlist_details_name);
-        tv_name.setText(binding.tvPlaylistNamePlaylistDetails.getText().toString());
+
+        if (mDisplayMode==DisplayMode.LIST){
+            tv_name.setText(binding.tvPlaylistNamePlaylistDetails.getText().toString());
+        }else {
+            tv_name.setText(gridBinding.tvPlaylistDetailsNameGrid.getText().toString());
+        }
 
         bsView.findViewById(R.id.bs_startPlaylistDetailsItem).setOnClickListener(this);
         bsView.findViewById(R.id.bs_deletePlaylistDetailsItem).setOnClickListener(this);
@@ -190,10 +247,9 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
     public void onItemClear() {
         itemView.setBackgroundColor(0);
 
-        if (mAdapter.getListPosSize()<2)
+        if (mAdapter.getListPosSize() < 2)
             return;
-
         mAdapter.swapItem();
-        mAdapter.clearListPos();
+        mAdapter.clearList();
     }
 }

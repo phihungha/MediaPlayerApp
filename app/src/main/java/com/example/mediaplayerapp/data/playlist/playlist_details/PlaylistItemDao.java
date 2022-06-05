@@ -35,15 +35,6 @@ public interface PlaylistItemDao {
     @Query("SELECT * FROM media_table ORDER BY OrderSort ASC")
     LiveData<List<PlaylistItem>> getAllPlaylistMedias();
 
-    @Query("SELECT * FROM media_table WHERE media_table.MediaName LIKE '%' || :text || '%' ORDER BY OrderSort ASC")
-    LiveData<List<PlaylistItem>> getAllMediaSearching(String text);
-
-    @Query("SELECT * FROM media_table WHERE media_table.MediaId=:id ORDER BY MediaName ASC,OrderSort ASC")
-    LiveData<List<PlaylistItem>> sortAllMediaByNameASCWithID(int id);
-
-    @Query("SELECT * FROM media_table WHERE media_table.MediaId=:id ORDER BY MediaName DESC, OrderSort ASC")
-    LiveData<List<PlaylistItem>> sortAllMediaByNameDESCWithID(int id);
-
     @Query("DELETE FROM media_table WHERE media_table.MediaId=:id")
     void deleteAllWithID(int id);
 
@@ -52,4 +43,13 @@ public interface PlaylistItemDao {
 
     @Query("SELECT * FROM media_table WHERE media_table.MediaId = :id ORDER BY OrderSort ASC")
     PlaylistItem findByItemId(int id);
+
+    @Update
+    void updateMultiple(PlaylistItem... playlistItems);
+
+    @Update
+    void updateByList(List<PlaylistItem> list);
+
+    @Query("SELECT * FROM media_table ORDER BY OrderSort ASC")
+    List<PlaylistItem> getCurrentList();
 }

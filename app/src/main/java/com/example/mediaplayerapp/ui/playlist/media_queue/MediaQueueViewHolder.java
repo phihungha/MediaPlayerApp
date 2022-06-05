@@ -15,15 +15,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
-
-import com.example.mediaplayerapp.databinding.ItemMediaQueueBinding;
+import com.example.mediaplayerapp.databinding.ItemMediaQueueGridBinding;
+import com.example.mediaplayerapp.databinding.ItemMediaQueueListBinding;
+import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.ItemTouchHelperViewHolder;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaInfo;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaUtils;
 
 public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ItemTouchHelperViewHolder {
-    public final ItemMediaQueueBinding binding;
+    public ItemMediaQueueListBinding binding;
+    public ItemMediaQueueGridBinding gridBinding;
+
     @SuppressLint("StaticFieldLeak")
     private static Context mContext;
     private static IOnItemClickListener deleteItemListener;
@@ -31,19 +34,29 @@ public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements Vie
     @SuppressLint("StaticFieldLeak")
     private static MediaQueueAdapter mAdapter;
 
-    public MediaQueueViewHolder(@NonNull ItemMediaQueueBinding binding) {
+    private static DisplayMode mDisplayMode;
+
+    public MediaQueueViewHolder(@NonNull ItemMediaQueueListBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
         this.binding.imgBtnDeleteMediaQueue.setOnClickListener(this);
         this.binding.getRoot().setOnClickListener(this);
     }
 
-    public void setBinding(MediaQueue media) {
-        binding.tvNameMediaQueue.setText(media.getName());
+    public MediaQueueViewHolder(@NonNull ItemMediaQueueGridBinding binding) {
+        super(binding.getRoot());
+        this.gridBinding = binding;
+        this.gridBinding.imgBtnQueueDeleteGrid.setOnClickListener(this);
+        this.gridBinding.getRoot().setOnClickListener(this);
+    }
+
+    public void setBindingList(MediaQueue media) {
+        String name= MediaUtils.getMediaNameFromURI(mContext, Uri.parse(media.getMediaUri()));
+        binding.tvNameMediaQueue.setText(name);
 
         MediaInfo mediaInfo = MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
         String duration = MediaUtils.convertDuration(mediaInfo.getDuration());
-        binding.tvDurationMediaQueue.setText(String.valueOf(media.getOrderSort()));
+        binding.tvDurationMediaQueue.setText(duration);
 
         if (media.isVideo()) {
             Glide.with(mContext)
@@ -64,19 +77,54 @@ public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements Vie
         }
 
     }
+    public void setBindingGrid(MediaQueue media) {
+        String name= MediaUtils.getMediaNameFromURI(mContext, Uri.parse(media.getMediaUri()));
+        gridBinding.tvQueueNameGrid.setText(name);
 
+        MediaInfo mediaInfo = MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
+        String duration = MediaUtils.convertDuration(mediaInfo.getDuration());
+        gridBinding.tvDurationQueueGrid.setText(duration);
+
+        if (media.isVideo()) {
+            Glide.with(mContext)
+                    .load(media.getMediaUri())
+                    .skipMemoryCache(false)
+                    .error(R.drawable.ic_error_24dp)
+                    .centerCrop()
+                    .into(gridBinding.imgThumbQueueGrid);
+        } else {
+            Bitmap thumb = MediaUtils.loadThumbnail(mContext, Uri.parse(media.getMediaUri()));
+            if (thumb != null) {
+                gridBinding.imgThumbQueueGrid.setImageBitmap(thumb);
+            } else {
+                gridBinding.imgThumbQueueGrid.setImageDrawable(
+                        ContextCompat.getDrawable(mContext,
+                                R.drawable.default_song_artwork));
+            }
+        }
+
+    }
     static MediaQueueViewHolder create(ViewGroup parent,
                                        Context context,
                                        IOnItemClickListener _deleteItemListener,
                                        IOnItemClickListener _itemClickListener,
-                                       MediaQueueAdapter adapter) {
+                                       MediaQueueAdapter adapter,
+                                       DisplayMode displayMode) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        ItemMediaQueueBinding binding = ItemMediaQueueBinding.inflate(inflater, parent, false);
         deleteItemListener = _deleteItemListener;
         itemClickListener = _itemClickListener;
         mContext = context;
         mAdapter = adapter;
-        return new MediaQueueViewHolder(binding);
+        mDisplayMode=displayMode;
+
+        if (mDisplayMode==DisplayMode.LIST){
+            ItemMediaQueueListBinding binding = ItemMediaQueueListBinding.inflate(inflater, parent, false);
+            return new MediaQueueViewHolder(binding);
+        }
+        else {
+            ItemMediaQueueGridBinding binding = ItemMediaQueueGridBinding.inflate(inflater, parent, false);
+            return new MediaQueueViewHolder(binding);
+        }
     }
 
     @SuppressLint("NonConstantResourceId")
@@ -84,10 +132,12 @@ public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements Vie
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.imgBtn_Delete_MediaQueue:
+            case R.id.imgBtn_queue_delete_grid:
                 DeleteItemQueue();
                 break;
 
             case R.id.layoutItem_mediaQueue:
+            case R.id.layout_item_queue_grid:
                 QueueItemClick();
                 break;
         }

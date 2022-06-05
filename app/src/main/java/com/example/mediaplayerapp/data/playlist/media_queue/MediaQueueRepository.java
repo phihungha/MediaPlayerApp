@@ -23,6 +23,10 @@ public class MediaQueueRepository {
         MediaQueueRoomDatabase.databaseWriteExecutor.execute(() -> mMediaQueueDao.update(media));
     }
 
+    public void updateByList(List<MediaQueue> list) {
+        MediaQueueRoomDatabase.databaseWriteExecutor.execute(() -> mMediaQueueDao.updateByList(list));
+    }
+
     public void delete(MediaQueue media) {
         MediaQueueRoomDatabase.databaseWriteExecutor.execute(() -> mMediaQueueDao.delete(media));
     }
@@ -37,6 +41,10 @@ public class MediaQueueRepository {
 
     public int getCountMediaQueue(){
         return mMediaQueueDao.getCountMediaQueue();
+    }
+
+    public List<MediaQueue> getCurrentList(int type) {
+        return mMediaQueueDao.getCurrentList(type);
     }
 
     public LiveData<List<MediaQueue>> getAllVideoQueue() {

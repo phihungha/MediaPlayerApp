@@ -32,11 +32,17 @@ public interface PlaylistDao {
             "ORDER BY PlaylistID ASC")
     LiveData<List<Playlist>> getAllPlaylistSearching(String text);
 
-    @Query("SELECT * FROM playlist_table ORDER BY playlist_table.Name ASC")
+    @Query("SELECT * FROM playlist_table ORDER BY playlist_table.Name ASC, playlist_table.PlaylistID ASC")
     LiveData<List<Playlist>> sortPlaylistByNameASC();
 
-    @Query("SELECT * FROM playlist_table ORDER BY playlist_table.Name DESC")
+    @Query("SELECT * FROM playlist_table ORDER BY playlist_table.Name DESC, playlist_table.PlaylistID ASC")
     LiveData<List<Playlist>> sortPlaylistByNameDESC();
+
+    @Query("SELECT * FROM playlist_table ORDER BY playlist_table.Count ASC, playlist_table.PlaylistID ASC")
+    LiveData<List<Playlist>> sortPlaylistByNumberItemASC();
+
+    @Query("SELECT * FROM playlist_table ORDER BY playlist_table.Count DESC, playlist_table.PlaylistID ASC")
+    LiveData<List<Playlist>> sortPlaylistByNumberItemDESC();
 
     @Query("SELECT * from playlist_table WHERE PlaylistID=:id")
     LiveData<List<Playlist>> getPlayListWithID(int id);
