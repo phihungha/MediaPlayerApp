@@ -27,4 +27,9 @@
         android:name="com.example.mediaplayerapp.ui.overview.OverviewFragment"
         android:label="@string/title_overview"
         tools:layout="@layout/fragment_overview" />
+    <fragment
+        android:id="@+id/navigation_setting"
+        android:name="com.example.mediaplayerapp.ui.setting.SettingFragment"
+        android:label="Setting"
+        tools:layout="@layout/fragment_setting" />
 </navigation>

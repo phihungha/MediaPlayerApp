@@ -2,6 +2,7 @@ package com.example.mediaplayerapp;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -16,11 +17,13 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.example.mediaplayerapp.databinding.ActivityMainBinding;
 import com.example.mediaplayerapp.ui.music_player.BottomMusicPlayerComponent;
+import com.example.mediaplayerapp.utils.LanguageConfig;
+import com.example.mediaplayerapp.utils.SharedPrefs;
 
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
-
+    SharedPrefs sharedPreferences;
     private final ActivityResultLauncher<String> permissionRequestLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.RequestPermission(),
@@ -29,6 +32,14 @@ public class MainActivity extends AppCompatActivity {
                             showReadExternalStoragePermissionDeniedNotice();
                     }
             );
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        sharedPreferences = new SharedPrefs(newBase);
+        String languageCode = sharedPreferences.getLocale();
+        Context context = LanguageConfig.changeLanguage(newBase, languageCode);
+        super.attachBaseContext(context);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

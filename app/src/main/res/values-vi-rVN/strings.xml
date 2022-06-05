@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MediaPlayerApp</string>
+    <string name="title_music">Bài hát</string>
+    <string name="title_video">Video</string>
+    <string name="title_playlist">Playlist</string>
+    <string name="repeat_btn">Lặp lại</string>
+    <string name="default_song_name">Tên bài hát</string>
+    <string name="default_artist_name">Tên nghệ sĩ</string>
+    <string name="close">Đóng</string>
+    <string name="now_playing">Đang phát</string>
+    <string name="add_to_playlist">Thêm vào Playlist</string>
+    <string name="add_to_favorite">Thêm vào yêu thích</string>
+    <string name="add_to_listen_later">Thêm vào nghe sau</string>
+    <string name="action_search">Tìm kiếm</string>
+    <string name="detail">Chi tiết</string>
+    <string name="default_album_details_description">Số lượng bài hát: 0</string>
+    <string name="play_all_songs_from_this_album">Phát tất cả bài hát trong album</string>
+    <string name="shuffle_btn">Ngẫu nhiên</string>
+    <string name="playback">Phát lại</string>
+    <string name="show_as">Hiển thị</string>
+    <string name="default_artist_details_description">Nghệ sĩ này có 0 bài hát và 0 album</string>
+    <string name="default_album_name">Tên album</string>
+    <string name="songs">Bài hát</string>
+    <string name="artists">Nghệ sĩ</string>
+    <string name="new_playlist">Tạo PlayList</string>
+    <string name="add_more">Thêm</string>
+    <string name="play_all">Phát tất cả</string>
+    <string name="shuffle_all">Phát ngẫu nhiên</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="delete">Xóa</string>
+    <string name="rename">Đổi tên</string>
+    <string name="create_new_playlist">Tạo PlayList</string>
+    <string name="enter_playlist_name">Nhập tên PlayList</string>
+    <string name="create">Tạo</string>
+</resources>
