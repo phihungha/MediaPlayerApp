@@ -23,4 +23,9 @@
         android:icon="@drawable/ic_playlist_24dp"
         android:orderInCategory="3"
         android:title="@string/title_playlist" />
+    <item
+        android:id="@+id/navigation_setting"
+        android:icon="@drawable/ic_playlist_24dp"
+        android:orderInCategory="4"
+        android:title="Setting" />
 </menu>

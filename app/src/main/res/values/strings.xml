@@ -3,7 +3,7 @@
     <string name="title_music">Music</string>
     <string name="title_video">Video</string>
     <string name="title_playlist">Playlist</string>
-    <string name="default_playback_time">0:00</string>
+    <string name="default_playback_time" translatable="false">0:00</string>
     <string name="play_pause_btn">Play pause</string>
     <string name="skip_next_btn">Skip to next song</string>
     <string name="skip_prev_btn">Skip to previous song</string>
@@ -11,47 +11,47 @@
     <string name="shuffle_btn">Shuffle</string>
     <string name="default_song_name">Song name</string>
     <string name="default_artist_name">Artist name</string>
-    <string name="music_artwork_background">Music artwork background</string>
-    <string name="seekbar">Seekbar</string>
-    <string name="more_features_btn">More music features</string>
+    <string name="music_artwork_background" translatable="false">Music artwork background</string>
+    <string name="seekbar" translatable="false">Seekbar</string>
+    <string name="more_features_btn" translatable="false">More music features</string>
     <string name="close">Close</string>
     <string name="now_playing">Now playing</string>
-    <string name="default_album_art">Default album art</string>
+    <string name="default_album_art" translatable="false">Default album art</string>
     <string name="playback">Playback</string>
-    <string name="notification_channel_name">Background music playback</string>
-    <string name="notification_channel_description">Display and control music playback when running in background</string>
-    <string name="music_artwork">Music artwork</string>
-    <string name="playlist">Playlist</string>
+    <string name="notification_channel_name" translatable="false">Background music playback</string>
+    <string name="notification_channel_description" translatable="false">Display and control music playback when running in background</string>
+    <string name="music_artwork" translatable="false">Music artwork</string>
+    <string name="playlist" translatable="false">Playlist</string>
     <string name="add_to_favorite">Add to favorite</string>
     <string name="add_to_listen_later">Add to listen later</string>
     <string name="add_to_playlist">Add to playlist</string>
     <string name="audio_visualizer_permission_rationale_title">Audio recording permission needed</string>
     <string name="audio_visualizer_permission_rationale_message">This app needs to record audio to render the music visualization. The audio won\'t actually be saved.</string>
-    <string name="ok">OK</string>
+    <string name="ok" translatable="false">OK</string>
     <string name="disable_music_visual">Disable music visual</string>
     <string name="audio_visualizer_permission_denied_notice_title">Audio visualizer disabled</string>
     <string name="audio_visualizer_permission_denied_notice_message">Audio visualizer disabled because audio recording permission is denied</string>
     <string name="action_search">Search</string>
     <string name="detail">Detail</string>
-    <string name="switch_view">Switch View</string>
-    <string name="open_song_item_context_menu">Open song item context menu</string>
+    <string name="switch_view" translatable="false">Switch View</string>
+    <string name="open_song_item_context_menu" translatable="false">Open song item context menu</string>
     <string name="show_as">Show as</string>
-    <string name="artist_artwork">Artist artwork</string>
-    <string name="small_artist_artwork">Small artist artwork</string>
+    <string name="artist_artwork" translatable="false">Artist artwork</string>
+    <string name="small_artist_artwork" translatable="false">Small artist artwork</string>
     <string name="play_all_songs_from_this_artist">Play all songs from this artist</string>
     <string name="default_artist_details_description">This artist has 0 song(s) and 0 album(s)</string>
     <string name="default_album_name">Album name</string>
     <string name="default_album_details_description">Number of songs: 0</string>
     <string name="play_all_songs_from_this_album">Play all songs from this album</string>
-    <string name="album_details_artwork">Album details artwork</string>
-    <string name="album_details_s_small_artwork">Album details small artwork</string>
+    <string name="album_details_artwork" translatable="false">Album details artwork</string>
+    <string name="album_details_s_small_artwork" translatable="false">Album details small artwork</string>
     <string name="songs">Songs</string>
     <string name="artists">Artists</string>
-    <string name="albums">Albums</string>
+    <string name="albums" translatable="false">Albums</string>
     <string name="read_external_storage_permission_denied_notice_title">Cannot read media files</string>
     <string name="read_external_storage_permission_denied_notice_message">This app cannot read media files on your device because the permission has been denied.</string>
-    <string name="image_for_thumbnail">Image for thumbnail</string>
-    <string name="navigate_next">Navigate next</string>
+    <string name="image_for_thumbnail" translatable="false">Image for thumbnail</string>
+    <string name="navigate_next" translatable="false">Navigate next</string>
     <string name="new_playlist">Create Playlist</string>
     <string name="add_more">Add more</string>
     <string name="play_all">Play All</string>
@@ -68,7 +68,7 @@
     <string name="delete_playlist_from_device">Delete playlist from device?</string>
     <string name="message_delete">This will be deleted permanently from device.</string>
     <string name="remove">Remove</string>
-    <string name="properties">Properties</string>
+    <string name="properties" translatable="false">Properties</string>
     <string name="date">Date</string>
     <string name="location">Location</string>
     <string name="file_size">File size</string>
@@ -78,7 +78,7 @@
     <string name="add_to_queue">Add to queue</string>
     <string name="go_to_queue_list">Go to queue list</string>
     <string name="clear_queue_list">Clear queue list</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="queue">Queue</string>
     <string name="save_to_playlist">Save to playlist</string>
     <string name="clear">Clear</string>
@@ -86,13 +86,13 @@
     <string name="watch_later_list">Watch later list</string>
     <string name="sort_by_length">Length</string>
     <string name="sort_by_name">Name</string>
-    <string name="description_options_icon">A gray options icon</string>
+    <string name="description_options_icon" translatable="false">A gray options icon</string>
     <string name="item_list_grid_change">Change to list/grid</string>
-    <string name="video_duration_placeholder">-01:00</string>
-    <string name="video_name_placeholder">VIDEO.MP4</string>
-    <string name="description_play_arrow_icon">A white play arrow icon</string>
+    <string name="video_duration_placeholder" translatable="false">-01:00</string>
+    <string name="video_name_placeholder" translatable="false">VIDEO.MP4</string>
+    <string name="description_play_arrow_icon" translatable="false">A white play arrow icon</string>
     <string name="all_videos_textView">All videos</string>
-    <string name="dialog_bottom_video_name">VIDEO NAME</string>
+    <string name="dialog_bottom_video_name" translatable="false">VIDEO NAME</string>
     <string name="bottom_dialog_option_info">Information</string>
     <string name="dialog_bottom_option_playlist">Add to playlist</string>
     <string name="dialog_bottom_option_rename">Rename</string>
@@ -127,6 +127,30 @@
     <string name="most_watched_videos_textview">Most watched videos</string>
     <string name="recent_songs_textview">Recent songs</string>
     <string name="most_listened_songs_textview">Most listened songs</string>
-    <string name="song_name_placeholder">SONG.MP3</string>
-    <string name="unknown_artist_textview">Unknown</string>
+    <string name="song_name_placeholder" translatable="false">SONG.MP3</string>
+    <string name="unknown_artist_textview" translatable="false">Unknown</string>
+    <string name="artist_name">Artist:</string>
+    <string name="album_name" translatable="false">Album:</string>
+    <string name="genre">Genre:</string>
+    <string name="duration2">Duration:</string>
+    <string name="time_added2">Time added:</string>
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title" translatable="false">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="english">English</string>
+    <string name="vietnamese">Vietnamese</string>
+    <string name="choose_language">Choose Language</string>
+    <string name="setting">Setting</string>
+    <string name="change_language">Change Language</string>
 </resources>

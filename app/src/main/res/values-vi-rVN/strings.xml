@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MediaPlayerApp</string>
+    <string name="title_music">Bài hát</string>
+    <string name="title_video">Video</string>
+    <string name="title_playlist">Playlist</string>
+    <string name="repeat_btn">Lặp lại</string>
+    <string name="default_song_name">Tên bài hát</string>
+    <string name="default_artist_name">Tên nghệ sĩ</string>
+    <string name="close">Đóng</string>
+    <string name="now_playing">Đang phát</string>
+    <string name="add_to_playlist">Thêm vào Playlist</string>
+    <string name="add_to_favorite">Thêm vào yêu thích</string>
+    <string name="add_to_listen_later">Thêm vào nghe sau</string>
+    <string name="action_search">Tìm kiếm</string>
+    <string name="detail">Chi tiết</string>
+    <string name="default_album_details_description">Số lượng bài hát: 0</string>
+    <string name="play_all_songs_from_this_album">Phát tất cả bài hát trong album</string>
+    <string name="shuffle_btn">Ngẫu nhiên</string>
+    <string name="playback">Phát lại</string>
+    <string name="show_as">Hiển thị</string>
+    <string name="default_artist_details_description">Nghệ sĩ này có 0 bài hát và 0 album</string>
+    <string name="default_album_name">Tên album</string>
+    <string name="songs">Bài hát</string>
+    <string name="artists">Nghệ sĩ</string>
+    <string name="new_playlist">Tạo PlayList</string>
+    <string name="add_more">Thêm</string>
+    <string name="play_all">Phát tất cả</string>
+    <string name="shuffle_all">Phát ngẫu nhiên</string>
+    <string name="search">Tìm kiếm</string>
+    <string name="delete">Xóa</string>
+    <string name="rename">Đổi tên</string>
+    <string name="create_new_playlist">Tạo PlayList</string>
+    <string name="enter_playlist_name">Nhập tên PlayList</string>
+    <string name="create">Tạo</string>
+    <string name="play_pause_btn" translatable="false">"Tạm dừng "</string>
+    <string name="skip_next_btn" translatable="false">Chuyển đến bài hát tiếp theo</string>
+    <string name="skip_prev_btn">Chuyển đến bài hát trước</string>
+    <string name="audio_visualizer_permission_rationale_title">Cần có quyền ghi âm thanh</string>
+    <string name="audio_visualizer_permission_rationale_message">Ứng dụng này cần ghi lại âm thanh để hiển thị Audio visualizer. Âm thanh sẽ không được ghi lại.</string>
+    <string name="disable_music_visual">Tắt music visual</string>
+    <string name="audio_visualizer_permission_denied_notice_title">Đã tắt Audio visualizer</string>
+    <string name="audio_visualizer_permission_denied_notice_message">Audio visualizer bị tắt vì quyền ghi âm thanh bị từ chối</string>
+    <string name="read_external_storage_permission_denied_notice_title" translatable="false">Không thể đọc các tệp media</string>
+    <string name="read_external_storage_permission_denied_notice_message">Ứng dụng này không thể đọc các tệp media trên thiết bị của bạn vì quyền đã bị từ chối.</string>
+    <string name="play_next" translatable="false">Phát tiếp theo</string>
+    <string name="rename_playlist" translatable="false">Đổi tên PlayList</string>
+    <string name="new_playlist_name">Tạo mới tên PlayList</string>
+    <string name="delete_playlist_from_device" translatable="false">Xóa PlayList khỏi thiết bị</string>
+    <string name="message_delete" translatable="false">Cái này sẽ bị xóa vĩnh viễn khỏi thiết bị.</string>
+    <string name="remove" translatable="false">Xóa</string>
+    <string name="date" translatable="false">Ngày</string>
+    <string name="location" translatable="false">Vị trí</string>
+    <string name="file_size" translatable="false">Kích thước</string>
+    <string name="duration" translatable="false">Thời lượng</string>
+    <string name="file_name">Tên file</string>
+    <string name="sort">Sắp xếp theo tên</string>
+    <string name="sort_by_length" translatable="false">Độ dài</string>
+    <string name="sort_by_name" translatable="false">Tên</string>
+    <string name="my_favourites" translatable="false">Yêu thích</string>
+    <string name="watch_later_list" translatable="false">Xem sau</string>
+    <string name="save_to_playlist">Lưu vào Playlist</string>
+    <string name="grid" translatable="false">Lưới</string>
+    <string name="list" translatable="false">Danh sách</string>
+    <string name="ascending" translatable="false">Tăng dần</string>
+    <string name="descending" translatable="false">Giảm dần</string>
+    <string name="sort_by">Sắp xếp theo</string>
+    <string name="dialog_video_info_path_textview" translatable="false">Đường dẫn:</string>
+    <string name="dialog_video_info_size_textview" translatable="false">Kích thước:</string>
+    <string name="english">tiếng Anh</string>
+    <string name="vietnamese">tiếng Việt</string>
+    <string name="choose_language">Chọn ngôn ngữ</string>
+    <string name="setting">Cài đặt</string>
+    <string name="change_language">Thay đổi ngôn ngữ</string>
+    <string name="dialog_video_info_date_textview" translatable="false">Ngày ghi:</string>
+    <string name="dialog_video_info_length_textview" translatable="false">Độ dài:</string>
+    <string name="sort_by_title" translatable="false">Sắp xếp theo tiêu đề</string>
+    <string name="title" translatable="false">Tiêu đề</string>
+    <string name="time_added" translatable="false">Ngày thêm</string>
+    <string name="name" translatable="false">Tên</string>
+    <string name="number_of_albums" translatable="false">Số lượng album</string>
+    <string name="number_of_songs" translatable="false">Số lượng bài hát</string>
+    <string name="release_year" translatable="false">Năm phát hành</string>
+    <string name="title_overview" translatable="false">Tổng quan</string>
+    <string name="recent_videos_textview" translatable="false">Video gần đây</string>
+    <string name="most_watched_videos_textview" translatable="false">Video được xem nhiều nhất</string>
+    <string name="recent_songs_textview" translatable="false">Bài hát gần đây</string>
+    <string name="most_listened_songs_textview" translatable="false">Bài hát được nghe nhiều nhất</string>
+    <string name="artist_name" translatable="false">Nghệ sĩ:</string>
+    <string name="genre" translatable="false">Thể loại:</string>
+    <string name="duration2" translatable="false">Thời lượng:</string>
+    <string name="time_added2" translatable="false">Ngày thêm:</string>
+    <string name="bottom_dialog_option_info" translatable="false">Thông tin</string>
+    <string name="attachment_title" translatable="false">Tải xuống tệp đính kèm</string>
+    <string name="attachment_summary_on" translatable="false">Tự động tải xuống tệp đính kèm cho các email</string>
+    <string name="attachment_summary_off">Chỉ tải xuống tệp đính kèm khi được yêu cầu</string>
+    <string name="dialog_bottom_option_playlist_ic" translatable="false">Thêm vào Playlist</string>
+    <string name="dialog_bottom_option_share_ic" translatable="false">Chia sẻ</string>
+    <string name="dialog_bottom_option_delete_ic" translatable="false">Xóa</string>
+    <string name="dialog_bottom_option_information_ic" translatable="false">Thông tin</string>
+    <string name="dialog_bottom_option_playlist" translatable="false">Thêm vào Playlist</string>
+    <string name="dialog_bottom_option_share" translatable="false">Chia sẻ</string>
+    <string name="dialog_bottom_option_delete" translatable="false">Xóa</string>
+    <string name="dialog_bottom_option_rename_ic" translatable="false">Đổi tên</string>
+    <string name="dialog_bottom_option_rename" translatable="false">Đổi tên</string>
+    <string name="all_videos_textView" translatable="false">Tất cả video</string>
+    <string name="item_search" translatable="false">Tìm kiếm</string>
+    <string name="dialog_video_info_name_textview" translatable="false">TÊN VIDEO</string>
+    <string name="sync_title" translatable="false">Đồng bộ hóa email định kỳ</string>
+    <string name="reply_title" translatable="false">Hành động trả lời mặc định</string>
+    <string name="sync_header" translatable="false">Đồng bộ hóa</string>
+    <string name="messages_header" translatable="false">Tin nhắn</string>
+    <string name="item_list_grid_change" translatable="false">Thay đổi thành danh sách / lưới</string>
+    <string name="play_all_songs_from_this_artist" translatable="false">Phát tất cả các bài hát của nghệ sĩ này</string>
+    <string name="dialog_video_info_resolution_textview" translatable="false">Độ Phân Giải:</string>
+    <string name="queue" translatable="false">Xem sau</string>
+    <string name="clear" translatable="false">Xóa</string>
+    <string name="add_to_queue" translatable="false">Thêm vào Xem sau</string>
+    <string name="clear_queue_list" translatable="false">Xóa danh sách Xem sau</string>
+    <string name="go_to_queue_list" translatable="false">Đi đến danh sách Xem sau</string>
+</resources>
