@@ -2,17 +2,14 @@ package com.example.mediaplayerapp.ui.music_player;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.ComponentName;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -43,12 +40,12 @@ import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentMusicPlayerControlBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
-import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.google.android.exoplayer2.ui.TimeBar;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
@@ -61,6 +58,7 @@ public class MusicPlayerControlFragment extends Fragment {
     private final List<Playlist> playlists = new ArrayList<>();
     private PlaylistItemViewModel playlistItemViewModel;
 
+    private MediaMetadataCompat currentMediaMetadata;
     private int currentPlaylistId = -1;
     private String currentMediaUri;
     private String currentTitle;
@@ -74,105 +72,6 @@ public class MusicPlayerControlFragment extends Fragment {
                             showAudioVisualizerPermissionDeniedNotice();
                     });
 
-    private MediaBrowserCompat mediaBrowser;
-    private final MediaBrowserCompat.ConnectionCallback connectionCallback =
-            new MediaBrowserCompat.ConnectionCallback() {
-                @Override
-                public void onConnected() {
-                    Log.i(LOG_TAG, "Connected to music playback service");
-                    MediaSessionCompat.Token token = mediaBrowser.getSessionToken();
-                    MediaControllerCompat mediaController =
-                            new MediaControllerCompat(requireActivity(), token);
-                    MediaControllerCompat.setMediaController(requireActivity(), mediaController);
-                    setupTransportControls();
-                    setupTimeIndicators();
-                    MediaMetadataCompat metadata = mediaController.getMetadata();
-                    PlaybackStateCompat playbackState = mediaController.getPlaybackState();
-                    if (metadata != null)
-                        controllerCallback.onMetadataChanged(metadata);
-                    if (playbackState != null)
-                        controllerCallback.onPlaybackStateChanged(playbackState);
-                    playFromIntent();
-                }
-
-                @Override
-                public void onConnectionSuspended() {
-                    Log.i(LOG_TAG, "Suspended connection to music playback service");
-                    disableTransportControls();
-                }
-
-                @Override
-                public void onConnectionFailed() {
-                    Log.i(LOG_TAG, "Connection to music playback service failed");
-                    Toast.makeText(requireActivity(),
-                            "Music playback service error!",
-                            Toast.LENGTH_SHORT).show();
-                }
-            };
-
-    private final MediaControllerCompat.Callback controllerCallback =
-            new MediaControllerCompat.Callback() {
-                @Override
-                public void onMetadataChanged(MediaMetadataCompat metadata) {
-                    currentMediaUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI);
-                    currentTitle = metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE);
-                    binding.musicPlayerSongTitle.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_TITLE));
-                    binding.musicPlayerSongArtist.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_ARTIST));
-
-                    long duration = metadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
-                    binding.musicPlayerSongDuration.setText(MediaTimeUtils.getFormattedTimeFromLong(duration));
-                    binding.musicPlayerSeekbar.setDuration(duration);
-
-                    String artworkUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI);
-                    Bitmap artworkBitmap = metadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ART);
-                    if (artworkBitmap != null)
-                        setArtworkFromBitmap(artworkBitmap);
-                    else if (artworkUri != null)
-                        setArtworkFromArtworkUri(Uri.parse(artworkUri));
-                    else
-                        setDefaultArtwork();
-                    Log.d(LOG_TAG, "Media metadata views updated");
-                }
-
-                @Override
-                public void onPlaybackStateChanged(PlaybackStateCompat state) {
-                    if (state.getState() == PlaybackStateCompat.STATE_PLAYING) {
-                        // Bind visualizer to new audio session id if it changes.
-                        if (checkAudioVisualizerPermission())
-                            bindAudioVisualizerToAudio();
-                        binding.musicPlayerPlayPauseBtn.setImageLevel(1);
-                    }
-                    else
-                        binding.musicPlayerPlayPauseBtn.setImageLevel(0);
-                    Log.d(LOG_TAG, "Playback state changed to " + state.getState());
-                }
-
-                @Override
-                public void onRepeatModeChanged(int repeatMode) {
-                    if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE)
-                        binding.musicPlayerRepeatBtn.setImageLevel(0);
-                    else if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL)
-                        binding.musicPlayerRepeatBtn.setImageLevel(1);
-                    else if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE)
-                        binding.musicPlayerRepeatBtn.setImageLevel(2);
-                }
-
-                @Override
-                public void onShuffleModeChanged(int shuffleMode) {
-                    if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE)
-                        binding.musicPlayerShuffleBtn.setImageLevel(0);
-                    else if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL)
-                        binding.musicPlayerShuffleBtn.setImageLevel(1);
-                }
-
-                @Override
-                public void onSessionDestroyed() {
-                    super.onSessionDestroyed();
-                    mediaBrowser.disconnect();
-                    Log.i(LOG_TAG, "Music playback service disconnected");
-                }
-            };
-
     FragmentMusicPlayerControlBinding binding;
 
     public MusicPlayerControlFragment() {
@@ -184,30 +83,25 @@ public class MusicPlayerControlFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentMusicPlayerControlBinding.inflate(inflater, container, false);
-
-        mediaBrowser = new MediaBrowserCompat(requireActivity(),
-                new ComponentName(requireActivity(), MusicPlaybackService.class),
-                connectionCallback,
-                null);
 
         playlistItemViewModel = new ViewModelProvider(this).get(PlaylistItemViewModel.class);
         PlaylistViewModel playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
         playlistViewModel.getAllPlaylists().observe(getViewLifecycleOwner(), newPlaylists -> {
             playlists.clear();
-            playlists.addAll(newPlaylists);
+            playlists.addAll(newPlaylists
+                    .stream()
+                    .filter(Playlist::isVideo)
+                    .collect(Collectors.toList()));
         });
 
+        beginObservingMediaControllerData();
+
+        setupTransportControls();
         binding.musicPlayerCloseBtn.setOnClickListener(view -> requireActivity().finishAfterTransition());
         binding.musicPlayerMenuBtn.setOnClickListener(view -> openMenu());
-
         binding.musicPlayerVisualizer.setDensity(70);
 
         // Delay text auto-scroll
@@ -220,33 +114,123 @@ public class MusicPlayerControlFragment extends Fragment {
         return binding.getRoot();
     }
 
+    private void beginObservingMediaControllerData() {
+        MusicPlayerViewModel musicPlayerViewModel
+                = new ViewModelProvider(requireActivity()).get(MusicPlayerViewModel.class);
+
+        musicPlayerViewModel.getCurrentMediaMetadata().observe(
+                getViewLifecycleOwner(), this::setMediaMetadata
+        );
+
+        musicPlayerViewModel.getCurrentPlaybackState().observe(
+                getViewLifecycleOwner(), this::setPlaybackState
+        );
+
+        musicPlayerViewModel.getCurrentRepeatMode().observe(
+                getViewLifecycleOwner(), this::setRepeatMode
+        );
+
+        musicPlayerViewModel.getCurrentShuffleMode().observe(
+                getViewLifecycleOwner(), this::setShuffleMode
+        );
+
+        musicPlayerViewModel.getCurrentPlaylistId().observe(
+                getViewLifecycleOwner(), this::setCurrentPlaylistId
+        );
+
+        musicPlayerViewModel.getEnableTransportControls().observe(
+                getViewLifecycleOwner(),
+                enableTransportControls -> {
+                    if (enableTransportControls)
+                        enablePlaybackControlCapability();
+                    else
+                        disableTransportControls();
+                }
+        );
+    }
+
     /**
-     * Play music from intent's URI if there is one.
+     * Set current media metadata.
+     * @param metadata New media metadata
      */
-    private void playFromIntent() {
-        Uri uri = requireActivity().getIntent().getData();
-        if (uri != null) {
-            MediaControllerCompat.getMediaController(requireActivity())
-                    .getTransportControls()
-                    .playFromUri(uri, null);
-            if (uri.getScheme().equals(GetPlaybackUriUtils.PLAYBACK_URI_SCHEME)
-                    && uri.getPathSegments().get(0).equals(GetPlaybackUriUtils.PLAYLIST_URI_SEGMENT)) {
-                currentPlaylistId = Integer.parseInt(uri.getPathSegments().get(1));
-            }
-        }
+    private void setMediaMetadata(MediaMetadataCompat metadata) {
+        currentMediaMetadata = metadata;
+        currentMediaUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI);
+        currentTitle = metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE);
 
-        Bundle extras = requireActivity().getIntent().getExtras();
-        if (extras != null)
-            if (extras.getBoolean(MusicPlayerActivity.SHUFFLE_MODE_ALL_KEY))
-                MediaControllerCompat.getMediaController(requireActivity())
-                        .getTransportControls()
-                        .setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
+        updateMediaMetadataViews();
+    }
 
-        // Set intent URI to null to mark the fact that
-        // we already processed the URI. This makes sure
-        // the URI won't be loaded again when we move
-        // to this fragment without a new URI in the host activity.
-        requireActivity().getIntent().setData(null);
+    /**
+     * Set current playback state.
+     * @param playbackState New playback state
+     */
+    private void setPlaybackState(PlaybackStateCompat playbackState) {
+        if (playbackState.getState() == PlaybackStateCompat.STATE_PLAYING) {
+            // Bind visualizer to new audio session id if it changes.
+            if (checkAudioVisualizerPermission())
+                bindAudioVisualizerToAudio();
+            binding.musicPlayerPlayPauseBtn.setImageLevel(1);
+        } else
+            binding.musicPlayerPlayPauseBtn.setImageLevel(0);
+    }
+
+    /**
+     * Set current repeat mode.
+     * @param repeatMode New repeat mode
+     */
+    private void setRepeatMode(int repeatMode) {
+        if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE)
+            binding.musicPlayerRepeatBtn.setImageLevel(0);
+        else if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ALL)
+            binding.musicPlayerRepeatBtn.setImageLevel(1);
+        else if (repeatMode == PlaybackStateCompat.REPEAT_MODE_ONE)
+            binding.musicPlayerRepeatBtn.setImageLevel(2);
+    }
+
+    /**
+     * Set current shuffle mode.
+     * @param shuffleMode New shuffle mode
+     */
+    private void setShuffleMode(int shuffleMode) {
+        if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE)
+            binding.musicPlayerShuffleBtn.setImageLevel(0);
+        else if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_ALL)
+            binding.musicPlayerShuffleBtn.setImageLevel(1);
+    }
+
+    /**
+     * Set id of current playlist.
+     * @param id New playlist id
+     */
+    private void setCurrentPlaylistId(int id) {
+        currentPlaylistId = id;
+    }
+
+    /**
+     * Enable all transport controls and time indicators on the UI.
+     */
+    private void enablePlaybackControlCapability() {
+        binding.musicPlayerPlayPauseBtn.setEnabled(true);
+        binding.musicPlayerSkipPrevBtn.setEnabled(true);
+        binding.musicPlayerSkipNextBtn.setEnabled(true);
+        binding.musicPlayerRepeatBtn.setEnabled(true);
+        binding.musicPlayerShuffleBtn.setEnabled(true);
+        binding.musicPlayerSeekbar.setEnabled(true);
+        startTimeIndicators();
+    }
+
+    /**
+     * Disable all transport controls on the UI in case
+     * we lost connection to the music playback service.
+     */
+    private void disableTransportControls() {
+        binding.musicPlayerPlayPauseBtn.setEnabled(false);
+        binding.musicPlayerSkipPrevBtn.setEnabled(false);
+        binding.musicPlayerSkipNextBtn.setEnabled(false);
+        binding.musicPlayerRepeatBtn.setEnabled(false);
+        binding.musicPlayerShuffleBtn.setEnabled(false);
+        binding.musicPlayerSeekbar.setEnabled(false);
     }
 
     /**
@@ -294,7 +278,7 @@ public class MusicPlayerControlFragment extends Fragment {
     private void openPlaylistEditScreen() {
         Navigation.findNavController(requireActivity().findViewById(R.id.music_player_fragment_container))
                 .navigate(MusicPlayerControlFragmentDirections
-                         .actionMusicPlayerControlFragmentToPlaylistDetailsFragment(currentPlaylistId));
+                        .actionMusicPlayerControlFragmentToPlaylistDetailsFragment(currentPlaylistId));
     }
 
     /**
@@ -302,7 +286,7 @@ public class MusicPlayerControlFragment extends Fragment {
      */
     private void setupTransportControls() {
         binding.musicPlayerPlayPauseBtn.setOnClickListener(view -> {
-            MediaControllerCompat controller = MediaControllerCompat.getMediaController(requireActivity());
+            MediaControllerCompat controller = getMediaController();
             int playbackState = controller.getPlaybackState().getState();
             if (playbackState == PlaybackStateCompat.STATE_PLAYING)
                 controller.getTransportControls().pause();
@@ -311,7 +295,7 @@ public class MusicPlayerControlFragment extends Fragment {
         });
 
         binding.musicPlayerRepeatBtn.setOnClickListener(view -> {
-            MediaControllerCompat controller = MediaControllerCompat.getMediaController(requireActivity());
+            MediaControllerCompat controller = getMediaController();
             int repeatMode = controller.getRepeatMode();
             if (repeatMode == PlaybackStateCompat.REPEAT_MODE_NONE)
                 controller.getTransportControls().setRepeatMode(PlaybackStateCompat.REPEAT_MODE_ALL);
@@ -322,7 +306,7 @@ public class MusicPlayerControlFragment extends Fragment {
         });
 
         binding.musicPlayerShuffleBtn.setOnClickListener(view -> {
-            MediaControllerCompat controller = MediaControllerCompat.getMediaController(requireActivity());
+            MediaControllerCompat controller = getMediaController();
             int shuffleMode = controller.getShuffleMode();
             if (shuffleMode == PlaybackStateCompat.SHUFFLE_MODE_NONE)
                 controller.getTransportControls().setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
@@ -331,13 +315,13 @@ public class MusicPlayerControlFragment extends Fragment {
         });
 
         binding.musicPlayerSkipNextBtn.setOnClickListener(
-                view -> MediaControllerCompat.getMediaController(requireActivity())
+                view -> getMediaController()
                         .getTransportControls()
                         .skipToNext()
         );
 
         binding.musicPlayerSkipPrevBtn.setOnClickListener(
-                view -> MediaControllerCompat.getMediaController(requireActivity())
+                view -> getMediaController()
                         .getTransportControls()
                         .skipToPrevious()
         );
@@ -356,50 +340,107 @@ public class MusicPlayerControlFragment extends Fragment {
 
             @Override
             public void onScrubStop(TimeBar timeBar, long position, boolean canceled) {
-                MediaControllerCompat.getMediaController(requireActivity())
+                getMediaController()
                         .getTransportControls()
                         .seekTo(position);
             }
         });
-
-        MediaControllerCompat mediaController = MediaControllerCompat.getMediaController(requireActivity());
-        mediaController.registerCallback(controllerCallback);
-    }
-
-    /**
-     * Disable all transport controls on the UI in case
-     * we lost connection to the music playback service.
-     */
-    private void disableTransportControls() {
-        binding.musicPlayerPlayPauseBtn.setEnabled(false);
-        binding.musicPlayerSkipPrevBtn.setEnabled(false);
-        binding.musicPlayerSkipNextBtn.setEnabled(false);
-        binding.musicPlayerRepeatBtn.setEnabled(false);
-        binding.musicPlayerShuffleBtn.setEnabled(false);
-        binding.musicPlayerSeekbar.setEnabled(false);
     }
 
     /**
      * Begin updating current playback position and seekbar progress.
      */
-    private void setupTimeIndicators() {
+    private void startTimeIndicators() {
         Handler handler = new Handler();
         requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 if (getActivity() == null)
                     return;
-                MediaControllerCompat controller = MediaControllerCompat.getMediaController(requireActivity());
-                long currentPlaybackPosition = controller.getPlaybackState().getPosition();
+                long currentPlaybackPosition = getMediaController()
+                        .getPlaybackState()
+                        .getPosition();
                 binding.musicPlayerSeekbar.setPosition(currentPlaybackPosition);
-                binding.musicPlayerSongCurrentPosition.setText(MediaTimeUtils.getFormattedTimeFromLong(currentPlaybackPosition));
+                binding.musicPlayerSongCurrentPosition.setText(
+                        MediaTimeUtils.getFormattedTimeFromLong(currentPlaybackPosition)
+                );
                 handler.postDelayed(this, 100);
             }
         });
     }
 
     /**
+     * Connect audio visualizer to the current music audio stream.
+     */
+    private void bindAudioVisualizerToAudio() {
+        int audioSessionId = getMediaController()
+                .getExtras()
+                .getInt(MusicPlaybackService.AUDIO_SESSION_ID_KEY);
+        binding.musicPlayerVisualizer.setPlayer(audioSessionId);
+    }
+
+    /**
+     * Check RECORD_AUDIO permission for audio visualizer
+     * and request it if necessary.
+     *
+     * @return True if RECORD_AUDIO permission is granted.
+     */
+    private boolean checkAudioVisualizerPermission() {
+        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.RECORD_AUDIO)
+                == PackageManager.PERMISSION_GRANTED)
+            return true;
+
+        if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireActivity());
+            dialogBuilder.setMessage(R.string.audio_visualizer_permission_rationale_message)
+                    .setTitle(R.string.audio_visualizer_permission_rationale_title)
+                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+                    });
+            dialogBuilder.create().show();
+        } else
+            requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
+
+        return false;
+    }
+
+    /**
+     * Show that the audio visualizer has been disabled because
+     * RECORD_AUDIO permission is denied.
+     */
+    private void showAudioVisualizerPermissionDeniedNotice() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireActivity());
+        dialogBuilder.setMessage(R.string.audio_visualizer_permission_denied_notice_message)
+                .setTitle(R.string.audio_visualizer_permission_denied_notice_title)
+                .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+                });
+        dialogBuilder.create().show();
+    }
+
+    /**
+     * Update views that display media metadata.
+     */
+    private void updateMediaMetadataViews() {
+        binding.musicPlayerSongTitle.setText(currentMediaMetadata.getText(MediaMetadataCompat.METADATA_KEY_TITLE));
+        binding.musicPlayerSongArtist.setText(currentMediaMetadata.getText(MediaMetadataCompat.METADATA_KEY_ARTIST));
+
+        long duration = currentMediaMetadata.getLong(MediaMetadataCompat.METADATA_KEY_DURATION);
+        binding.musicPlayerSongDuration.setText(MediaTimeUtils.getFormattedTimeFromLong(duration));
+        binding.musicPlayerSeekbar.setDuration(duration);
+
+        String artworkUri = currentMediaMetadata.getString(MediaMetadataCompat.METADATA_KEY_ART_URI);
+        Bitmap artworkBitmap = currentMediaMetadata.getBitmap(MediaMetadataCompat.METADATA_KEY_ART);
+        if (artworkBitmap != null)
+            setArtworkFromBitmap(artworkBitmap);
+        else if (artworkUri != null)
+            setArtworkFromArtworkUri(Uri.parse(artworkUri));
+        else
+            setDefaultArtwork();
+        Log.d(LOG_TAG, "Media metadata views updated");
+    }
+
+    /**
      * Set song's artwork from artwork's uri.
+     *
      * @param artworkUri Artwork's uri
      */
     private void setArtworkFromArtworkUri(Uri artworkUri) {
@@ -423,6 +464,7 @@ public class MusicPlayerControlFragment extends Fragment {
 
     /**
      * Set song's artwork from artwork's bitmap.
+     *
      * @param artworkBitmap Artwork's bitmap
      */
     private void setArtworkFromBitmap(Bitmap artworkBitmap) {
@@ -455,6 +497,7 @@ public class MusicPlayerControlFragment extends Fragment {
 
     /**
      * Set colors of views on the UI based on song's artwork.
+     *
      * @param artworkBitmap Artwork's bitmap
      */
     private void setViewsColors(Bitmap artworkBitmap) {
@@ -510,63 +553,17 @@ public class MusicPlayerControlFragment extends Fragment {
         Log.d(LOG_TAG, "Updated views' colors to default");
     }
 
-    /**
-     * Connect audio visualizer to the current music audio stream.
-     */
-    private void bindAudioVisualizerToAudio() {
-        int audioSessionId = MediaControllerCompat
-                .getMediaController(requireActivity())
-                .getExtras()
-                .getInt(MusicPlaybackService.AUDIO_SESSION_ID_KEY);
-        binding.musicPlayerVisualizer.setPlayer(audioSessionId);
-    }
-
-    /**
-     * Check RECORD_AUDIO permission for audio visualizer
-     * and request it if necessary.
-     * @return True if RECORD_AUDIO permission is granted.
-     */
-    private boolean checkAudioVisualizerPermission() {
-        if (ContextCompat.checkSelfPermission(requireActivity(), Manifest.permission.RECORD_AUDIO)
-                == PackageManager.PERMISSION_GRANTED)
-            return true;
-
-        if (shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO)) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireActivity());
-            dialogBuilder.setMessage(R.string.audio_visualizer_permission_rationale_message)
-                    .setTitle(R.string.audio_visualizer_permission_rationale_title)
-                    .setPositiveButton(R.string.ok, (dialogInterface, i) -> {});
-            dialogBuilder.create().show();
-        }
-        else
-            requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO);
-
-        return false;
-    }
-
-    /**
-     * Show that the audio visualizer has been disabled because
-     * RECORD_AUDIO permission is denied.
-     */
-    private void showAudioVisualizerPermissionDeniedNotice() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(requireActivity());
-        dialogBuilder.setMessage(R.string.audio_visualizer_permission_denied_notice_message)
-                .setTitle(R.string.audio_visualizer_permission_denied_notice_title)
-                .setPositiveButton(R.string.ok, (dialogInterface, i) -> {});
-        dialogBuilder.create().show();
+    private MediaControllerCompat getMediaController() {
+        return MediaControllerCompat.getMediaController(requireActivity());
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        mediaBrowser.connect();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        if (MediaControllerCompat.getMediaController(requireActivity()) != null)
-            MediaControllerCompat.getMediaController(requireActivity()).unregisterCallback(controllerCallback);
-        mediaBrowser.disconnect();
     }
 }
