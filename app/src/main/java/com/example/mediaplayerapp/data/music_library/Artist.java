@@ -1,23 +1,21 @@
 package com.example.mediaplayerapp.data.music_library;
 
-import android.net.Uri;
-
 public class Artist {
-    private final long artistId;
+    private final long id;
     private final String artistName;
     private final int numberOfSongs;
     private final int numberOfAlbums;
 
-    public Artist(long artistId, String artistName, int numberOfSongs, int numberOfAlbums)
+    public Artist(long id, String artistName, int numberOfSongs, int numberOfAlbums)
     {
-        this.artistId = artistId;
+        this.id = id;
         this.artistName = artistName;
         this.numberOfSongs = numberOfSongs;
         this.numberOfAlbums = numberOfAlbums;
     }
 
-    public long getArtistId() {
-        return artistId;
+    public long getId() {
+        return id;
     }
 
     public String getArtistName() {

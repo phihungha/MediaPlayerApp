@@ -98,7 +98,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
         binding.rcvPlaylistsDetails.setAdapter(adapter);
         setListener();
-
     }
 
     public void refresh() {

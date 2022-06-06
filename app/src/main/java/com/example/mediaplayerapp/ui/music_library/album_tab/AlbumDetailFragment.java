@@ -19,10 +19,10 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Album;
 import com.example.mediaplayerapp.databinding.FragmentAlbumDetailBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
+import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
-import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
 
 import java.io.IOException;
 
@@ -38,18 +38,14 @@ public class AlbumDetailFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static AlbumDetailFragment newInstance(long id) {
-        Bundle args = new Bundle();
-        args.putLong("CURRENT_ALBUM_ID", id);
-        AlbumDetailFragment fragment = new AlbumDetailFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static AlbumDetailFragment newInstance() {
+        return new AlbumDetailFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        currentAlbumId = requireArguments().getLong("CURRENT_ALBUM_ID");
+        currentAlbumId = AlbumDetailFragmentArgs.fromBundle(requireArguments()).getAlbumId();
     }
 
     @SuppressLint("SetTextI18n")

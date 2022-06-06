@@ -27,18 +27,14 @@ public class ArtistDetailFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static ArtistDetailFragment newInstance(long artist_id) {
-        Bundle args = new Bundle();
-        args.putLong("CURRENT_ARTIST_ID", artist_id);
-        ArtistDetailFragment fragment = new ArtistDetailFragment();
-        fragment.setArguments(args);
-        return fragment;
+    public static ArtistDetailFragment newInstance() {
+        return new ArtistDetailFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        currentArtistId = requireArguments().getLong("CURRENT_ARTIST_ID");
         super.onCreate(savedInstanceState);
+        currentArtistId = ArtistDetailFragmentArgs.fromBundle(requireArguments()).getArtistId();
     }
 
     @Override

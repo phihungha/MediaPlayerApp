@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_playlist" >
         <action
             android:id="@+id/action_navigation_playlist_to_navigation_playlist_details"
-            app:destination="@id/navigation_playlist_details" />
+            app:destination="@id/navigation_playlist_details"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
     </fragment>
 
     <fragment
@@ -25,7 +29,22 @@
         android:id="@+id/navigation_music_library"
         android:name="com.example.mediaplayerapp.ui.music_library.MusicLibraryFragment"
         android:label="@string/title_music"
-        tools:layout="@layout/fragment_music_library" />
+        tools:layout="@layout/fragment_music_library" >
+        <action
+            android:id="@+id/action_navigation_music_library_to_artistDetailFragment"
+            app:destination="@id/artistDetailFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+        <action
+            android:id="@+id/action_navigation_music_library_to_albumDetailFragment"
+            app:destination="@id/albumDetailFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_overview"
@@ -41,5 +60,23 @@
         <argument
             android:name="playlist_id"
             app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/artistDetailFragment"
+        android:name="com.example.mediaplayerapp.ui.music_library.artist_tab.ArtistDetailFragment"
+        android:label="fragment_artist_detail"
+        tools:layout="@layout/fragment_artist_detail" >
+        <argument
+            android:name="artist_id"
+            app:argType="long" />
+    </fragment>
+    <fragment
+        android:id="@+id/albumDetailFragment"
+        android:name="com.example.mediaplayerapp.ui.music_library.album_tab.AlbumDetailFragment"
+        android:label="fragment_album_detail"
+        tools:layout="@layout/fragment_album_detail" >
+        <argument
+            android:name="album_id"
+            app:argType="long" />
     </fragment>
 </navigation>

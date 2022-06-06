@@ -279,7 +279,7 @@ public class MusicPlayerControlFragment extends Fragment {
 
     private void openPlaylistEditScreen() {
         ((MusicPlayerActivity) requireActivity()).exitEdgeToEdgeUIMode();
-        Navigation.findNavController(requireActivity().findViewById(R.id.music_player_fragment_container))
+        Navigation.findNavController(binding.getRoot())
                 .navigate(MusicPlayerControlFragmentDirections
                         .actionMusicPlayerControlFragmentToPlaylistDetailsFragment(currentPlaylistId));
     }

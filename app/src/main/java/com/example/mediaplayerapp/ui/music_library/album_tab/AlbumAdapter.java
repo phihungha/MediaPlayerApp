@@ -11,16 +11,14 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Album;
 import com.example.mediaplayerapp.ui.DisplayMode;
+import com.example.mediaplayerapp.ui.music_library.MusicLibraryFragmentDirections;
 import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -161,16 +159,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumItemVie
 
         @Override
         public void onClick(View view) {
-            long albumId = albums.get(getAbsoluteAdapterPosition()).getId();
-            FragmentManager fragmentManager = ((AppCompatActivity) context).getSupportFragmentManager();
-            FragmentTransaction transaction = fragmentManager.beginTransaction();
-            Fragment fragment;
-            transaction.setCustomAnimations(R.anim.layout_fad_in, R.anim.layout_fad_out,
-                    R.anim.layout_fad_in, R.anim.layout_fad_out);
-            fragment = AlbumDetailFragment.newInstance(albumId);
-            transaction.replace(R.id.nav_host_fragment_activity_main,fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
+            Navigation.findNavController(view)
+                    .navigate(MusicLibraryFragmentDirections
+                            .actionNavigationMusicLibraryToAlbumDetailFragment(currentAlbum.getId()));
         }
     }
 
