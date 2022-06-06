@@ -10,8 +10,6 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Single;
-
 @Dao
 public interface PlaylistItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

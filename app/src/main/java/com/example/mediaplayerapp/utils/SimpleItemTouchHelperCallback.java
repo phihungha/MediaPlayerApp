@@ -4,9 +4,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mediaplayerapp.utils.ItemTouchHelperAdapter;
-import com.example.mediaplayerapp.utils.ItemTouchHelperViewHolder;
-
 public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private final ItemTouchHelperAdapter mAdapter;

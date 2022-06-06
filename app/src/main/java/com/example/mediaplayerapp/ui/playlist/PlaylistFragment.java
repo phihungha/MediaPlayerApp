@@ -23,7 +23,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.music_library.SongsRepository;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
@@ -32,7 +31,6 @@ import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
-import com.example.mediaplayerapp.utils.SortOrder;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class PlaylistFragment extends Fragment implements View.OnClickListener {

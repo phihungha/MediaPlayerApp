@@ -1,15 +1,14 @@
 package com.example.mediaplayerapp.ui.playlist.playlist_details;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 
@@ -20,7 +19,6 @@ import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.utils.IOnItemClickListener;
 import com.example.mediaplayerapp.utils.ItemTouchHelperAdapter;
 import com.example.mediaplayerapp.utils.MediaUtils;
-import com.example.mediaplayerapp.utils.OnPlaylistItemListChangedListener;
 import com.example.mediaplayerapp.utils.OnStartDragListener;
 
 import java.util.ArrayList;
@@ -36,10 +34,8 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
     private IOnItemClickListener bsAddQueueListener;
     private IOnItemClickListener bsAddFavouriteListener;
 
-    private Application mApplication;
     private Playlist mPlaylist;
     private OnStartDragListener mDragStartListener;
-    private OnPlaylistItemListChangedListener mListChangedListener;
 
     private DisplayMode displayMode = DisplayMode.LIST;
 
@@ -56,7 +52,7 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
     public MediaItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return MediaItemViewHolder.create(parent, mContext, itemClickListener,
                 bsPlayListener, bsDeleteListener, bsPropertiesListener, bsAddQueueListener, bsAddFavouriteListener,
-                mPlaylist, this,displayMode);
+                mPlaylist, this, displayMode);
     }
 
     public void setDisplayMode(DisplayMode displayMode) {
@@ -77,28 +73,21 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
         }
         Uri uri = Uri.parse(current.getMediaUri());
         if (MediaUtils.isUriExists(mContext, uri)) {
-            if (displayMode==DisplayMode.LIST){
+            if (displayMode == DisplayMode.LIST) {
                 holder.setBindingList(current);
-                holder.binding.imgThumbnailPlaylistDetails.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                            mDragStartListener.onStartDrag(holder);
-                        }
-                        return true;
+                holder.binding.imgThumbnailPlaylistDetails.setOnTouchListener((view, motionEvent) -> {
+                    if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        mDragStartListener.onStartDrag(holder);
                     }
+                    return true;
                 });
-            }
-            else {
+            } else {
                 holder.setBindingGrid(current);
-                holder.gridBinding.imgThumbPlaylistDetailGrid.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                            mDragStartListener.onStartDrag(holder);
-                        }
-                        return true;
+                holder.gridBinding.imgThumbPlaylistDetailGrid.setOnTouchListener((view, motionEvent) -> {
+                    if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        mDragStartListener.onStartDrag(holder);
                     }
+                    return true;
                 });
             }
         } else {
@@ -111,27 +100,27 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
         listPos.add(fromPosition);
         listPos.add(toPosition);
 
-        notifyItemMoved(fromPosition,toPosition);
+        notifyItemMoved(fromPosition, toPosition);
     }
 
     public void swapItem() {
         int fromPosition = getFirstPos();
         int toPosition = getSecondPos();
 
-        List<PlaylistItem> current=viewModel.getCurrentListWithID(mPlaylist.getId());
+        List<PlaylistItem> current = viewModel.getCurrentListWithID(mPlaylist.getId());
 
         if (fromPosition < toPosition) {
             for (int i = fromPosition; i < toPosition; i++) {
-                Collections.swap(current,i,i+1);
+                Collections.swap(current, i, i + 1);
             }
-        } else if (fromPosition > toPosition){
+        } else if (fromPosition > toPosition) {
             for (int i = fromPosition; i > toPosition; i--) {
-                Collections.swap(current,i,i-1);
+                Collections.swap(current, i, i - 1);
             }
         }
 
-        for (int i=0;i<current.size();i++){
-            PlaylistItem item=current.get(i);
+        for (int i = 0; i < current.size(); i++) {
+            PlaylistItem item = current.get(i);
             item.setOrderSort(i);
         }
         viewModel.updateByList(current);
@@ -158,6 +147,11 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
         Log.d("TAG", "DISMISS");
     }
 
+    @Override
+    public void submitList(@Nullable List<PlaylistItem> list) {
+        super.submitList(list);
+    }
+
     public static class PlaylistMediaDiff extends DiffUtil.ItemCallback<PlaylistItem> {
         @Override
         public boolean areItemsTheSame(@NonNull PlaylistItem oldItem, @NonNull PlaylistItem newItem) {
@@ -169,17 +163,14 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
         public boolean areContentsTheSame(@NonNull PlaylistItem oldItem, @NonNull PlaylistItem newItem) {
             return oldItem.getMediaUri().equals(newItem.getMediaUri());
         }
-    };
+    }
 
     public PlaylistItem getPlaylistMediaItemAt(int position) {
         return getItem(position);
     }
+
     public void setDragStartListener(OnStartDragListener mDragStartListener) {
         this.mDragStartListener = mDragStartListener;
-    }
-
-    public void setListChangedListener(OnPlaylistItemListChangedListener mListChangedListener) {
-        this.mListChangedListener = mListChangedListener;
     }
 
     public void setPlaylist(Playlist mPlaylist) {
@@ -192,10 +183,6 @@ public class MediaItemAdapter extends ListAdapter<PlaylistItem, MediaItemViewHol
 
     public void setBsAddFavouriteListener(IOnItemClickListener bsAddFavouriteListener) {
         this.bsAddFavouriteListener = bsAddFavouriteListener;
-    }
-
-    public void setApplication(Application mApplication) {
-        this.mApplication = mApplication;
     }
 
     public void setBsPropertiesListener(IOnItemClickListener bsPropertiesListener) {

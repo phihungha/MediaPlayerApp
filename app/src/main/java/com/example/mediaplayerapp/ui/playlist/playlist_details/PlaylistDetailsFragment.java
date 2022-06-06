@@ -1,7 +1,5 @@
 package com.example.mediaplayerapp.ui.playlist.playlist_details;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -35,7 +32,6 @@ import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
-import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
@@ -95,7 +91,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         linearLayoutManager = new LinearLayoutManager(getContext());
         adapter = new MediaItemAdapter(new MediaItemAdapter.PlaylistMediaDiff());
         adapter.setContext(requireContext());
-        adapter.setApplication(requireActivity().getApplication());
         adapter.setPlaylist(playlist);
         playlistItemViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
                 getViewLifecycleOwner(),
@@ -110,7 +105,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
     private void setUpRecyclerView() {
         adapter.setDragStartListener(this);
-        adapter.setListChangedListener(this);
         adapter.setViewModel(playlistItemViewModel);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
@@ -316,27 +310,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.playlist_detail_option_menu, menu);
-        MenuItem menuItemSearch = menu.findItem(R.id.action_search_playlist_detail);
-        SearchView searchView = (SearchView) menuItemSearch.getActionView();
-        searchView.setIconified(true);
-        searchView.setQueryHint(PlaylistConstants.STRING_HINT_SEARCH);
-
-        SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-
-                return true;
-            }
-        });
         super.onCreateOptionsMenu(menu, inflater);
     }
 

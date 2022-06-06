@@ -1,27 +1,22 @@
 package com.example.mediaplayerapp.ui.playlist.media_queue.video_fav;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
@@ -29,15 +24,14 @@ import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.databinding.FragmentVideoFavouriteBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
-import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueAdapter;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueDeleteDialog;
+import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.MediaUtils;
 import com.example.mediaplayerapp.utils.OnPlaylistItemListChangedListener;
 import com.example.mediaplayerapp.utils.OnStartDragListener;
 import com.example.mediaplayerapp.utils.SimpleItemTouchHelperCallback;
-import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 
 import java.util.List;
 
@@ -75,12 +69,7 @@ public class VideoFavouriteFragment extends Fragment implements OnStartDragListe
         adapter.setType(PlaylistConstants.TYPE_VIDEO_FAVOURITE);
         viewModel.getAllVideoFavourite().observe(
                 getViewLifecycleOwner(),
-                new Observer<List<MediaQueue>>() {
-                    @Override
-                    public void onChanged(List<MediaQueue> mediaQueues) {
-                        adapter.submitList(mediaQueues);
-                    }
-                }
+                mediaQueues -> adapter.submitList(mediaQueues)
         );
 
         setDisplayModeAsList();
@@ -90,7 +79,6 @@ public class VideoFavouriteFragment extends Fragment implements OnStartDragListe
     }
     private void setUpRecyclerView(){
         adapter.setDragStartListener(this);
-        adapter.setListChangedListener(this);
         adapter.setViewModel(viewModel);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
@@ -126,27 +114,6 @@ public class VideoFavouriteFragment extends Fragment implements OnStartDragListe
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.playlist_detail_option_menu, menu);
-        MenuItem menuItemSearch = menu.findItem(R.id.action_search_playlist_detail);
-        SearchView searchView = (SearchView) menuItemSearch.getActionView();
-        searchView.setIconified(true);
-        searchView.setQueryHint(PlaylistConstants.STRING_HINT_SEARCH);
-
-        SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-
-                return true;
-            }
-        });
         super.onCreateOptionsMenu(menu, inflater);
     }
 

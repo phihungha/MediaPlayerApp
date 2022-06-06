@@ -1,7 +1,5 @@
 package com.example.mediaplayerapp.ui.playlist.media_queue.video_queue;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,12 +8,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -28,7 +24,6 @@ import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.databinding.FragmentVideoQueueBinding;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
-import com.example.mediaplayerapp.ui.music_library.GridSpacingItemDecoration;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueAdapter;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueDeleteDialog;
@@ -74,12 +69,7 @@ public class VideoQueueFragment extends Fragment implements OnStartDragListener,
         adapter.setType(PlaylistConstants.TYPE_VIDEO_QUEUE);
         viewModel.getAllVideoQueue().observe(
                 getViewLifecycleOwner(),
-                new Observer<List<MediaQueue>>() {
-                    @Override
-                    public void onChanged(List<MediaQueue> mediaQueues) {
-                        adapter.submitList(mediaQueues);
-                    }
-                }
+                mediaQueues -> adapter.submitList(mediaQueues)
         );
 
         setDisplayModeAsList();
@@ -97,7 +87,6 @@ public class VideoQueueFragment extends Fragment implements OnStartDragListener,
 
     private void setUpRecyclerView(){
         adapter.setDragStartListener(this);
-        adapter.setListChangedListener(this);
         adapter.setViewModel(viewModel);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);
@@ -127,27 +116,6 @@ public class VideoQueueFragment extends Fragment implements OnStartDragListener,
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.playlist_detail_option_menu, menu);
-        MenuItem menuItemSearch = menu.findItem(R.id.action_search_playlist_detail);
-        SearchView searchView = (SearchView) menuItemSearch.getActionView();
-        searchView.setIconified(true);
-        searchView.setQueryHint(PlaylistConstants.STRING_HINT_SEARCH);
-
-        SearchManager searchManager = (SearchManager) requireActivity().getSystemService(Context.SEARCH_SERVICE);
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(requireActivity().getComponentName()));
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-
-                return true;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-
-                return true;
-            }
-        });
         super.onCreateOptionsMenu(menu, inflater);
     }
 

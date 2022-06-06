@@ -3,9 +3,7 @@ package com.example.mediaplayerapp.ui.playlist.media_queue;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
-import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -14,13 +12,11 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.ui.music_library.DisplayMode;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.utils.IOnItemClickListener;
 import com.example.mediaplayerapp.utils.ItemTouchHelperAdapter;
 import com.example.mediaplayerapp.utils.MediaUtils;
-import com.example.mediaplayerapp.utils.OnPlaylistItemListChangedListener;
 import com.example.mediaplayerapp.utils.OnStartDragListener;
 
 import java.util.ArrayList;
@@ -33,7 +29,6 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
     private IOnItemClickListener itemClickListener;
 
     private OnStartDragListener mDragStartListener;
-    private OnPlaylistItemListChangedListener mListChangedListener;
     private MediaQueueViewModel viewModel;
     private final ArrayList<Integer> listPos;
     private int type;
@@ -75,25 +70,19 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
         if (MediaUtils.isUriExists(mContext,uri)){
             if (displayMode==DisplayMode.LIST){
                 holder.setBindingList(current);
-                holder.binding.imgThumbnailMediaQueue.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                            mDragStartListener.onStartDrag(holder);
-                        }
-                        return false;
+                holder.binding.imgThumbnailMediaQueue.setOnTouchListener((view, motionEvent) -> {
+                    if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        mDragStartListener.onStartDrag(holder);
                     }
+                    return false;
                 });
             } else{
                 holder.setBindingGrid(current);
-                holder.gridBinding.imgThumbQueueGrid.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
-                            mDragStartListener.onStartDrag(holder);
-                        }
-                        return false;
+                holder.gridBinding.imgThumbQueueGrid.setOnTouchListener((view, motionEvent) -> {
+                    if (motionEvent.getActionMasked() == MotionEvent.ACTION_DOWN) {
+                        mDragStartListener.onStartDrag(holder);
                     }
+                    return false;
                 });
             }
 
@@ -194,10 +183,6 @@ public class MediaQueueAdapter extends ListAdapter<MediaQueue,MediaQueueViewHold
 
     public void setDragStartListener(OnStartDragListener mDragStartListener) {
         this.mDragStartListener = mDragStartListener;
-    }
-
-    public void setListChangedListener(OnPlaylistItemListChangedListener mListChangedListener) {
-        this.mListChangedListener = mListChangedListener;
     }
 
     public void setViewModel(MediaQueueViewModel viewModel) {

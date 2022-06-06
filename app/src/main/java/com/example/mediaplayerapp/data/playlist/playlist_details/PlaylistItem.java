@@ -3,7 +3,6 @@ package com.example.mediaplayerapp.data.playlist.playlist_details;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.Index;
 
 import java.io.Serializable;
 

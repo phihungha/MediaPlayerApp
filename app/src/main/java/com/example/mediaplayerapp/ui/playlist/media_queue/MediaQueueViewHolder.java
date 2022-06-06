@@ -34,8 +34,6 @@ public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements Vie
     @SuppressLint("StaticFieldLeak")
     private static MediaQueueAdapter mAdapter;
 
-    private static DisplayMode mDisplayMode;
-
     public MediaQueueViewHolder(@NonNull ItemMediaQueueListBinding binding) {
         super(binding.getRoot());
         this.binding = binding;
@@ -115,9 +113,8 @@ public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements Vie
         itemClickListener = _itemClickListener;
         mContext = context;
         mAdapter = adapter;
-        mDisplayMode=displayMode;
 
-        if (mDisplayMode==DisplayMode.LIST){
+        if (displayMode ==DisplayMode.LIST){
             ItemMediaQueueListBinding binding = ItemMediaQueueListBinding.inflate(inflater, parent, false);
             return new MediaQueueViewHolder(binding);
         }

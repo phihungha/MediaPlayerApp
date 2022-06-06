@@ -19,7 +19,7 @@ public class PlaylistConstants {
     public static final String TAG_BS_DETAIL_DELETE_DIALOG = "bsDeleteDetailDialog";
     public static final String TAG_BS_DETAIL_PROPERTY_DIALOG = "bsPropertyDetailDialog";
     public static final String TAG_DELETE_DIALOG_QUEUE = "delete_item_queue";
-    public static final String TAG_DELETE_DIALOG_ALL_QUEUE = "delete_all_queue";
+
 
     public static final int TYPE_VIDEO_QUEUE = 1;
     public static final int TYPE_MUSIC_QUEUE = 2;
