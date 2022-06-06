@@ -12,7 +12,11 @@
         tools:layout="@layout/fragment_music_player_control" >
         <action
             android:id="@+id/action_musicPlayerControlFragment_to_playlistDetailsFragment"
-            app:destination="@id/playlistDetailsFragment" />
+            app:destination="@id/playlistDetailsFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/playlistDetailsFragment"
