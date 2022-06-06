@@ -79,4 +79,8 @@
             android:name="album_id"
             app:argType="long" />
     </fragment>
+    <fragment
+        android:id="@+id/settingFragment"
+        android:name="com.example.mediaplayerapp.ui.setting.SettingFragment"
+        android:label="SettingFragment" />
 </navigation>
