@@ -15,12 +15,14 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.ActivityMusicPlayerBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
@@ -120,15 +122,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 new ComponentName(this, MusicPlaybackService.class),
                 connectionCallback,
                 null);
-
-        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
-        WindowInsetsControllerCompat windowInsetsController =
-                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
-        if (windowInsetsController != null) {
-            windowInsetsController.setSystemBarsBehavior(
-                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
-            windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars());
-        }
     }
 
     /**
@@ -152,6 +145,35 @@ public class MusicPlayerActivity extends AppCompatActivity {
         playbackIntent.setData(uri);
         playbackIntent.putExtra(SHUFFLE_MODE_ALL_KEY, true);
         activity.startActivity(playbackIntent);
+    }
+
+    /**
+     * Enter edge-to-edge UI mode.
+     */
+    public void enterEdgeToEdgeUIMode() {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+        WindowInsetsControllerCompat windowInsetsController =
+                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
+        if (windowInsetsController != null) {
+            windowInsetsController.setSystemBarsBehavior(
+                    WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE);
+            windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars());
+        }
+
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, android.R.color.transparent));
+    }
+
+    /**
+     * Exit edge-to-edge UI mode.
+     */
+    public void exitEdgeToEdgeUIMode() {
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), true);
+        WindowInsetsControllerCompat windowInsetsController =
+                ViewCompat.getWindowInsetsController(getWindow().getDecorView());
+        if (windowInsetsController != null)
+            windowInsetsController.show(WindowInsetsCompat.Type.navigationBars());
+
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.cyan));
     }
 
     /**

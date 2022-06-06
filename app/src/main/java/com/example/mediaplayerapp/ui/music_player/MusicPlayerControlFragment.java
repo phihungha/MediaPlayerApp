@@ -111,6 +111,8 @@ public class MusicPlayerControlFragment extends Fragment {
             binding.musicPlayerSongArtist.setSelected(true);
         }, AUTOSCROLL_DELAY);
 
+        ((MusicPlayerActivity) requireActivity()).enterEdgeToEdgeUIMode();
+
         return binding.getRoot();
     }
 
@@ -276,6 +278,7 @@ public class MusicPlayerControlFragment extends Fragment {
     }
 
     private void openPlaylistEditScreen() {
+        ((MusicPlayerActivity) requireActivity()).exitEdgeToEdgeUIMode();
         Navigation.findNavController(requireActivity().findViewById(R.id.music_player_fragment_container))
                 .navigate(MusicPlayerControlFragmentDirections
                         .actionMusicPlayerControlFragmentToPlaylistDetailsFragment(currentPlaylistId));
