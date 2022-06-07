@@ -1,15 +1,14 @@
 package com.example.mediaplayerapp.ui.music_library.song_tab;
 
 import android.os.Bundle;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.playlist.Playlist;
@@ -17,8 +16,8 @@ import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.BottomSheetSongBinding;
-import com.example.mediaplayerapp.databinding.FragmentSongBottomSheetBinding;
 import com.example.mediaplayerapp.databinding.SongDetailBinding;
+import com.example.mediaplayerapp.utils.MediaQueueUtil;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.example.mediaplayerapp.utils.MediaUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -28,9 +27,9 @@ import java.util.List;
 
 
 public class SongBottomSheet extends BottomSheetDialogFragment {
-    private final Song currentsong;
+    private final Song currentSong;
     public SongBottomSheet(Song song) {
-        currentsong=song;
+        currentSong = song;
     }
 
     @Override
@@ -39,19 +38,21 @@ public class SongBottomSheet extends BottomSheetDialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FragmentSongBottomSheetBinding bottomSheetBinding = FragmentSongBottomSheetBinding.inflate(inflater,container,false);
-        bottomSheetBinding.bottomSheetSongNameTextview.setText(currentsong.getTitle());
-        LinearLayout SongDetail = bottomSheetBinding.bottomSheetSongDetail;
+        BottomSheetSongBinding binding =
+                BottomSheetSongBinding.inflate(inflater,container,false);
+        binding.bottomSheetSongNameTextview.setText(currentSong.getTitle());
+
+        LinearLayout SongDetail = binding.bottomSheetSongDetail;
         SongDetail.setOnClickListener(view -> {
             SongDetailBinding songDetailBinding = SongDetailBinding.inflate(inflater,container,false);
-            songDetailBinding.songInfoTitle.setText(currentsong.getTitle());
-            songDetailBinding.songInfoArtist.setText(currentsong.getArtistName());
-            songDetailBinding.songInfoAlbum.setText(currentsong.getAlbumName());
-            songDetailBinding.songInfoGenre.setText(currentsong.getGenre());
-            songDetailBinding.songInfoDuration.setText(MediaTimeUtils.getFormattedTimeFromLong(currentsong.getDuration()));
-            songDetailBinding.songInfoTimeadded.setText(MediaTimeUtils.getFormattedTimeFromZonedDateTime(currentsong.getTimeAdded()));
+            songDetailBinding.songInfoTitle.setText(currentSong.getTitle());
+            songDetailBinding.songInfoArtist.setText(currentSong.getArtistName());
+            songDetailBinding.songInfoAlbum.setText(currentSong.getAlbumName());
+            songDetailBinding.songInfoGenre.setText(currentSong.getGenre());
+            songDetailBinding.songInfoDuration.setText(MediaTimeUtils.getFormattedTimeFromLong(currentSong.getDuration()));
+            songDetailBinding.songInfoTimeadded.setText(MediaTimeUtils.getFormattedTimeFromZonedDateTime(currentSong.getTimeAdded()));
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setView(songDetailBinding.getRoot()).show();
         });
@@ -70,8 +71,8 @@ public class SongBottomSheet extends BottomSheetDialogFragment {
                             allMusicPlaylists.add(playlist);
                     }
                 });
-        LinearLayout optionAdd = bottomSheetBinding.bottomSheetAddSongPlaylist;
-        optionAdd.setOnClickListener(view -> {
+
+        binding.bottomSheetAddSongPlaylist.setOnClickListener(view -> {
             PlaylistItemViewModel PlaylistItemViewModel
                     = new ViewModelProvider(requireActivity()).get(PlaylistItemViewModel.class);
 
@@ -83,13 +84,27 @@ public class SongBottomSheet extends BottomSheetDialogFragment {
                             (dialogInterface, i) -> {
                                 PlaylistItem newPlaylistItem = new PlaylistItem(
                                         allMusicPlaylists.get(i).getId(),
-                                        currentsong.getUri().toString(),
+                                        currentSong.getUri().toString(),
                                         MediaUtils.generateOrderSort());
                                 PlaylistItemViewModel.insert(newPlaylistItem);
                             })
                     .show();
         });
 
-        return bottomSheetBinding.getRoot();
+        binding.bottomSheetAddSongToFavorites.setOnClickListener(
+                view -> MediaQueueUtil.insertSongToFavourite(
+                        requireActivity().getApplication(),
+                        currentSong.getUri().toString()
+                )
+        );
+
+        binding.bottomSheetAddSongToWatchLater.setOnClickListener(
+                view -> MediaQueueUtil.insertSongToWatchLater(
+                        requireActivity().getApplication(),
+                        currentSong.getUri().toString()
+                )
+        );
+
+        return binding.getRoot();
     }
 }

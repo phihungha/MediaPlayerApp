@@ -12,7 +12,7 @@
         />
     <item
         android:id="@+id/music_player_add_to_listen_later"
-        android:title="@string/add_to_listen_later"
+        android:title="@string/listen_later"
         android:icon="@drawable/ic_watch_later_24dp"
         />
     <item

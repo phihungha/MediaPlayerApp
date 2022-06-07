@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="8dp"
-            android:text="@string/bottom_dialog_option_info" />
+            android:text="@string/details" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,7 +61,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/bottom_sheet_option_share"
+        android:id="@+id/bottom_sheet_option_add_to_favorites"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?android:attr/selectableItemBackground"
@@ -72,15 +72,37 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_margin="8dp"
-            android:contentDescription="@string/dialog_bottom_option_share_ic"
-            android:src="@drawable/ic_share_24dp" />
+            android:contentDescription="@string/favorite"
+            android:src="@drawable/ic_favorite_24dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="8dp"
-            android:text="@string/dialog_bottom_option_share" />
+            android:text="@string/favorite" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/bottom_sheet_option_add_to_watch_later"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="horizontal"
+        android:padding="8dp">
+
+        <ImageView
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_margin="8dp"
+            android:contentDescription="@string/watch_later"
+            android:src="@drawable/ic_watch_later_24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="8dp"
+            android:text="@string/watch_later" />
+    </LinearLayout>
 </LinearLayout>

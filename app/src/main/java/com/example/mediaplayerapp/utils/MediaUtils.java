@@ -1,7 +1,6 @@
 package com.example.mediaplayerapp.utils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -76,7 +75,6 @@ public class MediaUtils {
     }
 
     public static String getMediaNameFromURI(Context context, Uri uri) {
-        context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
         Cursor cursor = null;
         try {
             String[] projection = new String[]{

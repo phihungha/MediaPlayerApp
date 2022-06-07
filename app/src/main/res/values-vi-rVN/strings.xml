@@ -11,9 +11,9 @@
     <string name="now_playing">Đang phát</string>
     <string name="add_to_playlist">Thêm vào Playlist</string>
     <string name="add_to_favorite">Thêm vào yêu thích</string>
-    <string name="add_to_listen_later">Thêm vào nghe sau</string>
+    <string name="listen_later">Nghe sau</string>
     <string name="action_search">Tìm kiếm</string>
-    <string name="detail">Chi tiết</string>
+    <string name="details">Chi tiết</string>
     <string name="default_album_details_description">Số lượng bài hát: 0</string>
     <string name="play_all_songs_from_this_album">Phát tất cả bài hát trong album</string>
     <string name="shuffle_btn">Ngẫu nhiên</string>
@@ -116,6 +116,7 @@
     <string name="video_queue">Video</string>
     <string name="music_queue">Bài hát</string>
     <string name="my_favourite">Yêu thích</string>
+    <string name="favorite">Yêu thích</string>
     <string name="numbers_of_item">Số lượng</string>
     <string name="dialog_bottom_video_name">Tên video</string>
 </resources>

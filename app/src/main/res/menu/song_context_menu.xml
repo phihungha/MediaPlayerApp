@@ -8,5 +8,5 @@
     <item
         android:id="@+id/song_detail"
         android:orderInCategory="30"
-        android:title="@string/detail" />
+        android:title="@string/details" />
 </menu>

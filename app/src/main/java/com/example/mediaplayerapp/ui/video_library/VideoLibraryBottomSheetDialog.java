@@ -1,6 +1,5 @@
 package com.example.mediaplayerapp.ui.video_library;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,8 +15,9 @@ import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.data.video_library.Video;
-import com.example.mediaplayerapp.databinding.DialogVideoBottomSheetBinding;
+import com.example.mediaplayerapp.databinding.BottomSheetVideoBinding;
 import com.example.mediaplayerapp.databinding.DialogVideoInfoBinding;
+import com.example.mediaplayerapp.utils.MediaQueueUtil;
 import com.example.mediaplayerapp.utils.MediaUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -47,12 +47,12 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        DialogVideoBottomSheetBinding bottomSheetBinding
-                = DialogVideoBottomSheetBinding.inflate(inflater, container, false);
+        BottomSheetVideoBinding binding
+                = BottomSheetVideoBinding.inflate(inflater, container, false);
 
-        bottomSheetBinding.bottomSheetVideoNameTextview.setText(currentVideo.getName());
+        binding.bottomSheetVideoNameTextview.setText(currentVideo.getName());
 
-        LinearLayout optionInfo = bottomSheetBinding.bottomSheetOptionInfo;
+        LinearLayout optionInfo = binding.bottomSheetOptionInfo;
         optionInfo.setOnClickListener(view1 -> {
 
             DialogVideoInfoBinding videoInfoBinding
@@ -104,7 +104,7 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
                     }
                 });
 
-        LinearLayout optionAddPlaylist = bottomSheetBinding.bottomSheetOptionAddPlaylist;
+        LinearLayout optionAddPlaylist = binding.bottomSheetOptionAddPlaylist;
         optionAddPlaylist.setOnClickListener(view1 -> {
             PlaylistItemViewModel PlaylistItemViewModel
                     = new ViewModelProvider(requireActivity()).get(PlaylistItemViewModel.class);
@@ -125,16 +125,19 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
                     .show();
         });
 
-        LinearLayout optionShare = bottomSheetBinding.bottomSheetOptionShare;
-        optionShare.setOnClickListener(view1 ->
-        {
-            Intent shareVideoIntent = new Intent("android.intent.action.SEND");
-            shareVideoIntent.setType("video/mp4");
-            shareVideoIntent.putExtra("android.intent.extra.STREAM", currentVideo.getUri());
-            startActivity(Intent.createChooser(shareVideoIntent,
-                    "Share " + currentVideo.getName()));
-        });
-        return bottomSheetBinding.getRoot();
+        binding.bottomSheetOptionAddToFavorites.setOnClickListener(
+                view -> MediaQueueUtil.insertVideoToFavourite(
+                        requireActivity().getApplication(),
+                        currentVideo.getUri().toString()
+                ));
+
+        binding.bottomSheetOptionAddToWatchLater.setOnClickListener(
+                view -> MediaQueueUtil.insertVideoToWatchLater(
+                        requireActivity().getApplication(),
+                        currentVideo.getUri().toString()
+                ));
+
+        return binding.getRoot();
     }
 
     /**

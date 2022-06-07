@@ -41,7 +41,7 @@ public class PlaylistRenameDialog extends AppCompatDialogFragment {
                 .get(PlaylistViewModel.class);
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
 
-        View view= requireActivity().getLayoutInflater().inflate(R.layout.dialog_rename_playlist_layout,null);
+        View view= requireActivity().getLayoutInflater().inflate(R.layout.dialog_rename_playlist,null);
         edtRename=view.findViewById(R.id.edt_renamePlaylist);
         edtRename.setText(playlist.getName());
 

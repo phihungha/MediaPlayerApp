@@ -33,7 +33,7 @@ public class PlaylistDetailsPropertiesDialog extends AppCompatDialogFragment {
         assert getArguments() != null;
         MediaInfo mInfo = (MediaInfo) getArguments().getSerializable(PlaylistConstants.KEY_PLAYLIST_DETAIL);
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-        View view= requireActivity().getLayoutInflater().inflate(R.layout.dialog_properties_playlist_layout,null);
+        View view= requireActivity().getLayoutInflater().inflate(R.layout.dialog_properties_playlist,null);
 
         TextView tvName=view.findViewById(R.id.tv_nameProp);
         TextView tvDuration=view.findViewById(R.id.tv_durationProp);

@@ -37,7 +37,7 @@ public class PlaylistDeleteDialog extends AppCompatDialogFragment {
                 .get(PlaylistViewModel.class);
 
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-        View view= requireActivity().getLayoutInflater().inflate(R.layout.dialog_delete_playlist_layout,null);
+        View view= requireActivity().getLayoutInflater().inflate(R.layout.dialog_delete_playlist,null);
 
         builder.setView(view)
                 .setNegativeButton("cancel", (dialogInterface, i) -> {

@@ -36,12 +36,11 @@ import com.bumptech.glide.request.transition.Transition;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
-import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
-import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueRepository;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentMusicPlayerControlBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
+import com.example.mediaplayerapp.utils.MediaQueueUtil;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.example.mediaplayerapp.utils.MediaUtils;
 import com.google.android.exoplayer2.ui.TimeBar;
@@ -64,7 +63,6 @@ public class MusicPlayerControlFragment extends Fragment {
     private MediaMetadataCompat currentMediaMetadata;
     private int currentPlaylistId = -1;
     private String currentMediaUri;
-    private String currentTitle;
 
     private final ActivityResultLauncher<String> requestPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(),
@@ -161,7 +159,6 @@ public class MusicPlayerControlFragment extends Fragment {
     private void setMediaMetadata(MediaMetadataCompat metadata) {
         currentMediaMetadata = metadata;
         currentMediaUri = metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI);
-        currentTitle = metadata.getString(MediaMetadataCompat.METADATA_KEY_TITLE);
 
         updateMediaMetadataViews();
     }
@@ -253,6 +250,8 @@ public class MusicPlayerControlFragment extends Fragment {
                 openPlaylistEditScreen();
             else if (itemId == R.id.music_player_add_to_favorites)
                 addToFavorites();
+            else if (itemId == R.id.music_player_add_to_listen_later)
+                addToWatchLater();
             return true;
         });
         popupMenu.setForceShowIcon(true);
@@ -290,10 +289,15 @@ public class MusicPlayerControlFragment extends Fragment {
     }
 
     private void addToFavorites() {
-        MediaQueue item = new MediaQueue(currentMediaUri, false, 4, MediaUtils.generateOrderSort());
-        MediaQueueRepository mediaQueueRepository = new MediaQueueRepository(requireActivity().getApplication());
-        mediaQueueRepository.insert(item);
+        MediaQueueUtil.insertSongToFavourite(requireActivity().getApplication(), currentMediaUri);
+        Toast.makeText(requireActivity(), "Added to favorites!", Toast.LENGTH_SHORT).show();
     }
+
+    private void addToWatchLater() {
+        MediaQueueUtil.insertSongToWatchLater(requireActivity().getApplication(), currentMediaUri);
+        Toast.makeText(requireActivity(), "Added to favorites!", Toast.LENGTH_SHORT).show();
+    }
+
 
     /**
      * Set up transport controls on the UI.

@@ -23,8 +23,8 @@
     <string name="music_artwork" translatable="false">Music artwork</string>
     <string name="playlist" translatable="false">Playlist</string>
     <string name="add_to_favorite">Add to favorite</string>
-    <string name="add_to_listen_later">Add to listen later</string>
     <string name="add_to_playlist">Add to playlist</string>
+    <string name="listen_later">Listen later</string>
     <string name="audio_visualizer_permission_rationale_title">Audio recording permission needed</string>
     <string name="audio_visualizer_permission_rationale_message">This app needs to record audio to render the music visualization. The audio won\'t actually be saved.</string>
     <string name="ok" translatable="false">OK</string>
@@ -32,7 +32,7 @@
     <string name="audio_visualizer_permission_denied_notice_title">Audio visualizer disabled</string>
     <string name="audio_visualizer_permission_denied_notice_message">Audio visualizer disabled because audio recording permission is denied</string>
     <string name="action_search">Search</string>
-    <string name="detail">Detail</string>
+    <string name="details">Details</string>
     <string name="switch_view" translatable="false">Switch View</string>
     <string name="open_song_item_context_menu" translatable="false">Open song item context menu</string>
     <string name="show_as">Show as</string>
@@ -144,5 +144,6 @@
     <string name="settings">Settings</string>
     <string name="change_language">Change Language</string>
     <string name="favorites">Favorites</string>
+    <string name="favorite">Favorite</string>
     <string name="more">More</string>
 </resources>
