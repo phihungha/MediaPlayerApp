@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {PlaylistItem.class}, version = 1, exportSchema = false)
+@Database(entities = {PlaylistItem.class}, version = 2, exportSchema = false)
 public abstract class PlaylistItemRoomDatabase extends RoomDatabase {
     public abstract PlaylistItemDao playlistMediaDao();
 

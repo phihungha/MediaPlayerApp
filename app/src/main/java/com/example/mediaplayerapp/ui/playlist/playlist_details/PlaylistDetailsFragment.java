@@ -3,6 +3,7 @@ package com.example.mediaplayerapp.ui.playlist.playlist_details;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,7 +45,8 @@ import com.example.mediaplayerapp.utils.item_touch.SimpleItemTouchHelperCallback
 
 import java.util.List;
 
-public class PlaylistDetailsFragment extends Fragment implements View.OnClickListener, OnStartDragListener, OnPlaylistItemListChangedListener {
+public class PlaylistDetailsFragment extends Fragment
+        implements View.OnClickListener, OnStartDragListener, OnPlaylistItemListChangedListener {
     private Playlist playlist;
     private FragmentPlaylistDetailsBinding binding;
     private MediaItemAdapter adapter;
@@ -306,7 +308,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             long order = MediaUtils.generateOrderSort();
             PlaylistItem media = new PlaylistItem(
                     currentPlaylistId,
-                    uri.toString(),
+                    MediaStore.getMediaUri(getContext(), uri).toString(),
                     order);
             playlistItemViewModel.insert(media);
         });
