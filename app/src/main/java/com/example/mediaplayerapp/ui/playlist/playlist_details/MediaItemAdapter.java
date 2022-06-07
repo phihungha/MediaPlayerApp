@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.ListAdapter;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
-import com.example.mediaplayerapp.ui.music_library.DisplayMode;
+import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.utils.IOnItemClickListener;
 import com.example.mediaplayerapp.utils.ItemTouchHelperAdapter;
 import com.example.mediaplayerapp.utils.MediaUtils;

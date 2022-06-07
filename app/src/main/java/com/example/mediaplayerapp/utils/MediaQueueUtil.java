@@ -21,7 +21,6 @@ public class MediaQueueUtil {
         viewModel.insert(mediaQueue);
     }
 
-
     /** Insert song file to watch later
      * @param application Application
      * @param uriString value of uri convert to String

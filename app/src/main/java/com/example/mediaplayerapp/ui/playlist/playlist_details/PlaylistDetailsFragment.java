@@ -31,7 +31,7 @@ import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
-import com.example.mediaplayerapp.ui.music_library.DisplayMode;
+import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
@@ -61,8 +61,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
     private boolean isObservingPlaylistItem = false;
 
-    private boolean isASC = false;
-
     public PlaylistDetailsFragment() {
         // Required empty public constructor
     }
@@ -88,19 +86,11 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            playlist = (Playlist) bundle.getSerializable(PlaylistConstants.KEY_TRANSFER_PLAYLIST);
-        }
+        currentPlaylistId = PlaylistDetailsFragmentArgs.fromBundle(requireArguments()).getPlaylistId();
         gridLayoutManager = new GridLayoutManager(getContext(), GRID_MODE_COLUMN_NUM);
         linearLayoutManager = new LinearLayoutManager(getContext());
         adapter = new MediaItemAdapter(new MediaItemAdapter.PlaylistMediaDiff());
         adapter.setContext(requireContext());
-        adapter.setPlaylist(playlist);
-        playlistItemViewModel.getAllPlaylistMediasWithID(playlist.getId()).observe(
-                getViewLifecycleOwner(),
-                media -> adapter.submitList(media)
-        adapter.setApplication(requireActivity().getApplication());
 
         currentPlaylistId = PlaylistDetailsFragmentArgs.fromBundle(requireArguments()).getPlaylistId();
         playlistViewModel.getPlaylistWithID(currentPlaylistId).observe(
@@ -124,7 +114,6 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         binding.rcvPlaylistsDetails.setAdapter(adapter);
         setListener();
         setDisplayModeAsList();
-        refresh();
     }
 
     private void setUpRecyclerView() {

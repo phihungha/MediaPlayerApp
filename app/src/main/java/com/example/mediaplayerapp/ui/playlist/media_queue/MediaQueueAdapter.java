@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.ListAdapter;
 
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
-import com.example.mediaplayerapp.ui.music_library.DisplayMode;
+import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.utils.IOnItemClickListener;
 import com.example.mediaplayerapp.utils.ItemTouchHelperAdapter;

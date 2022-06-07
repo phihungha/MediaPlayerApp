@@ -36,11 +36,14 @@ import com.bumptech.glide.request.transition.Transition;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
+import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
+import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueRepository;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentMusicPlayerControlBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
+import com.example.mediaplayerapp.utils.MediaUtils;
 import com.google.android.exoplayer2.ui.TimeBar;
 
 import java.util.ArrayList;
@@ -248,6 +251,8 @@ public class MusicPlayerControlFragment extends Fragment {
                 openAddToPlaylistDialog();
             else if (itemId == R.id.music_player_playlist)
                 openPlaylistEditScreen();
+            else if (itemId == R.id.music_player_add_to_favorites)
+                addToFavorites();
             return true;
         });
         popupMenu.setForceShowIcon(true);
@@ -268,7 +273,7 @@ public class MusicPlayerControlFragment extends Fragment {
                             PlaylistItem newPlaylistItem = new PlaylistItem(
                                     playlists.get(i).getId(),
                                     currentMediaUri,
-                                    currentTitle);
+                                    MediaUtils.generateOrderSort());
                             playlistItemViewModel.insert(newPlaylistItem);
                             Toast.makeText(requireActivity(),
                                     "Added to playlist",
@@ -282,6 +287,12 @@ public class MusicPlayerControlFragment extends Fragment {
         Navigation.findNavController(binding.getRoot())
                 .navigate(MusicPlayerControlFragmentDirections
                         .actionMusicPlayerControlFragmentToPlaylistDetailsFragment(currentPlaylistId));
+    }
+
+    private void addToFavorites() {
+        MediaQueue item = new MediaQueue(currentMediaUri, false, 4, MediaUtils.generateOrderSort());
+        MediaQueueRepository mediaQueueRepository = new MediaQueueRepository(requireActivity().getApplication());
+        mediaQueueRepository.insert(item);
     }
 
     /**

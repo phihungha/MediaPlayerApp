@@ -20,6 +20,7 @@ import com.example.mediaplayerapp.databinding.BottomSheetSongBinding;
 import com.example.mediaplayerapp.databinding.FragmentSongBottomSheetBinding;
 import com.example.mediaplayerapp.databinding.SongDetailBinding;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
+import com.example.mediaplayerapp.utils.MediaUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
@@ -83,7 +84,7 @@ public class SongBottomSheet extends BottomSheetDialogFragment {
                                 PlaylistItem newPlaylistItem = new PlaylistItem(
                                         allMusicPlaylists.get(i).getId(),
                                         currentsong.getUri().toString(),
-                                        currentsong.getTitle());
+                                        MediaUtils.generateOrderSort());
                                 PlaylistItemViewModel.insert(newPlaylistItem);
                             })
                     .show();

@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.setting;
+package com.example.mediaplayerapp.ui.settings;
 
 import android.os.Bundle;
 
