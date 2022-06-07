@@ -32,14 +32,14 @@
         tools:layout="@layout/fragment_music_library" >
         <action
             android:id="@+id/action_navigation_music_library_to_artistDetailFragment"
-            app:destination="@id/artistDetailFragment"
+            app:destination="@id/navigation_artist_details"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_left" />
         <action
             android:id="@+id/action_navigation_music_library_to_albumDetailFragment"
-            app:destination="@id/albumDetailFragment"
+            app:destination="@id/navigation_album_details"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right"
             app:popEnterAnim="@anim/slide_in_right"
@@ -62,7 +62,7 @@
             app:argType="integer" />
     </fragment>
     <fragment
-        android:id="@+id/artistDetailFragment"
+        android:id="@+id/navigation_artist_details"
         android:name="com.example.mediaplayerapp.ui.music_library.artist_tab.ArtistDetailFragment"
         android:label="fragment_artist_detail"
         tools:layout="@layout/fragment_artist_detail" >
@@ -71,7 +71,7 @@
             app:argType="long" />
     </fragment>
     <fragment
-        android:id="@+id/albumDetailFragment"
+        android:id="@+id/navigation_album_details"
         android:name="com.example.mediaplayerapp.ui.music_library.album_tab.AlbumDetailFragment"
         android:label="fragment_album_detail"
         tools:layout="@layout/fragment_album_detail" >
@@ -80,7 +80,19 @@
             app:argType="long" />
     </fragment>
     <fragment
-        android:id="@+id/settingFragment"
+        android:id="@+id/navigation_settings"
         android:name="com.example.mediaplayerapp.ui.setting.SettingFragment"
         android:label="SettingFragment" />
+    <fragment
+        android:id="@+id/navigation_more"
+        android:name="com.example.mediaplayerapp.ui.MoreFragment"
+        android:label="fragment_more"
+        tools:layout="@layout/fragment_more" >
+        <action
+            android:id="@+id/action_navigation_more_to_navigation_settings"
+            app:destination="@id/navigation_settings" />
+        <action
+            android:id="@+id/action_navigation_more_to_navigation_playlist"
+            app:destination="@id/navigation_playlist" />
+    </fragment>
 </navigation>

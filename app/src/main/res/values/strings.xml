@@ -83,7 +83,7 @@
     <string name="save_to_playlist">Save to playlist</string>
     <string name="clear">Clear</string>
     <string name="my_favourites">My favourites</string>
-    <string name="watch_later_list">Watch later list</string>
+    <string name="watch_later">Watch later</string>
     <string name="sort_by_length">Length</string>
     <string name="sort_by_name">Name</string>
     <string name="description_options_icon" translatable="false">A gray options icon</string>
@@ -134,23 +134,11 @@
     <string name="genre">Genre:</string>
     <string name="duration2">Duration:</string>
     <string name="time_added2">Time added:</string>
-    <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
-
-    <!-- Messages Preferences -->
-    <string name="signature_title" translatable="false">Your signature</string>
-    <string name="reply_title">Default reply action</string>
-
-    <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
-    <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="english">English</string>
     <string name="vietnamese">Vietnamese</string>
     <string name="choose_language">Choose Language</string>
-    <string name="setting">Setting</string>
+    <string name="settings">Settings</string>
     <string name="change_language">Change Language</string>
+    <string name="favorites">Favorites</string>
+    <string name="more">More</string>
 </resources>

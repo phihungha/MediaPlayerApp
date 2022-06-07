@@ -19,14 +19,8 @@
         android:title="@string/title_video" />
 
     <item
-        android:id="@+id/navigation_playlist"
-        android:icon="@drawable/ic_playlist_24dp"
+        android:id="@+id/navigation_more"
+        android:icon="@drawable/ic_more_horiz_24dp"
         android:orderInCategory="4"
-        android:title="@string/title_playlist" />
-
-    <item
-        android:id="@+id/settingFragment"
-        android:icon="@drawable/ic_playlist_24dp"
-        android:orderInCategory="5"
-        android:title="@string/setting" />
+        android:title="@string/more" />
 </menu>
