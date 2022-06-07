@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.utils;
+package com.example.mediaplayerapp.utils.item_touch;
 
 public interface ItemTouchHelperViewHolder {
     /**

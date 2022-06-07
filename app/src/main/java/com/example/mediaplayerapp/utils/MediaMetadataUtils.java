@@ -2,83 +2,109 @@ package com.example.mediaplayerapp.utils;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.util.Log;
+import android.util.Size;
+
+import androidx.annotation.DrawableRes;
+
+import java.io.IOException;
 
 public class MediaMetadataUtils {
 
     /**
-     * Get media name from URI using MediaMetadataRetriever and MediaStore (in case
-     * MediaMetadataRetriever doesn't work)
-     *
-     * @param context The context for MediaMetadataRetriever and getContentResolver() to use
-     * @param uri     The URI for MediaMetadataRetriever and getContentResolver() to use
-     * @return The name of the media
+     * Get Bitmap thumbnail of a media by its URI.
+     * @param context Application context
+     * @param uri URI of content
+     * @return Bitmap of the thumbnail
      */
-    public static String getMediaNameFromUri(Context context, Uri uri) {
-
-        MediaMetadataRetriever mediaMetadataRetriever;
-        mediaMetadataRetriever = new MediaMetadataRetriever();
-        mediaMetadataRetriever.setDataSource(context, uri);
-        String mediaName = "";
+    public static Bitmap getThumbnail(Context context, Uri uri, @DrawableRes int defaultImageResourceId) {
         try {
-            mediaName = mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e("[EXCEPTION]",
-                    "An exception occurred in MediaMetadataUtils.getMediaNameFromUri() ");
+            return context.getApplicationContext()
+                    .getContentResolver()
+                    .loadThumbnail(uri, new Size(800, 800),null);
+        } catch (IOException e) {
+            return BitmapFactory.decodeResource(context.getResources(), defaultImageResourceId);
         }
-
-        // In some cases, MediaMetadataRetriever can't retrieve a media's name, so we use
-        // MediaStore instead
-        if (mediaName == null) {
-            String[] projection = new String[]{MediaStore.MediaColumns.DISPLAY_NAME,};
-
-            Cursor cursor = context.getContentResolver().query(uri, projection,
-                    null, null, null);
-            if (cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                int nameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
-                mediaName = cursor.getString(nameColumnIndex);
-                cursor.close();
-            }
-
-        }
-        if (mediaName == null) Log.e(
-                "[GENERAL_ERROR]",
-                "Failed to retrieve media name using MediaMetadataUtils.getMediaNameFromUri for URI:" + uri.toString());
-        return mediaName;
     }
 
     /**
-     * Get media artist (mainly for songs) from URI using MediaMetadataRetriever
-     *
-     * @param context The context for MediaMetadataRetriever to use
-     * @param uri     The URI for MediaMetadataRetriever to use
-     * @return The media artist
+     * Get display name of a media by its URI.
+     * @param context Context
+     * @param uri     URI of the media
+     * @return Display name
      */
-    public static String getMediaArtistFromUri(Context context, Uri uri) {
+    public static String getDisplayName(Context context, Uri uri) {
+        String displayName = null;
 
-        MediaMetadataRetriever mediaMetadataRetriever;
-        mediaMetadataRetriever = new MediaMetadataRetriever();
-        mediaMetadataRetriever.setDataSource(context, uri);
-        String mediaArtist = "";
-        try {
-            mediaArtist =
-                    mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e(
-                    "[EXCEPTION]",
-                    "An exception occurred in MediaMetadataUtils.getMediaNameFromUri() ");
+        String[] projection = new String[] {
+                MediaStore.MediaColumns.DISPLAY_NAME,
+                MediaStore.MediaColumns.TITLE
+        };
+
+        Cursor cursor = context.getContentResolver().query(
+                uri,
+                projection,
+                null,
+                null,
+                null);
+        if (cursor.moveToFirst()) {
+            // Prefer using title name in the metadata of
+            // the media over the default display name if possible.
+            int titleColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.TITLE);
+            int displayNameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
+            displayName = cursor.getString(titleColumnIndex);
+            if (displayName == null)
+                displayName = cursor.getString(displayNameColumnIndex);
+            cursor.close();
         }
 
-        if (mediaArtist == null) Log.e(
-                "[GENERAL_ERROR]",
-                "Failed to retrieve media artist using MediaMetadataUtils.getMediaArtistFromUri() for URI:" + uri.toString());
-        return mediaArtist;
+        // Get the display name the manual way if media store can't find it.
+        if (displayName == null)
+            displayName = uri.getLastPathSegment();
+
+        return displayName;
     }
 
+    /**
+     * Get artist name of an audio media by its URI.
+     *
+     * @param context Context
+     * @param uri URI of the media
+     * @return Artist name
+     */
+    public static String getArtistName(Context context, Uri uri) {
+        String artistName = null;
+
+        String[] projection = new String[] {
+                MediaStore.Audio.Media.ARTIST
+        };
+
+        Cursor cursor = context.getContentResolver().query(
+                uri,
+                projection,
+                null,
+                null,
+                null);
+        if (cursor.moveToFirst()) {
+            int artistColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST);
+            artistName = cursor.getString(artistColumnIndex);
+            cursor.close();
+        }
+
+        if (artistName != null)
+            return artistName;
+
+        // Use the slower metadata retriever as last resort if the media store cannot
+        // find the artist name.
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(context, uri);
+        artistName = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
+        if (artistName == null)
+            artistName = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST);
+        return artistName;
+    }
 }

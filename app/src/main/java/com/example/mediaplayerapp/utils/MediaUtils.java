@@ -14,10 +14,7 @@ import androidx.documentfile.provider.DocumentFile;
 
 import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaInfo;
 
-import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
-
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Objects;
 
 public class MediaUtils {
@@ -54,20 +51,14 @@ public class MediaUtils {
     }
 
     public static Bitmap loadThumbnail(Context context, Uri uri) {
-        try {
-            return MediaThumbnailUtils.getThumbnailFromUri(context, uri);
-        } catch (IOException err)
-        {
-            context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(context, uri);
-            byte[] data = retriever.getEmbeddedPicture();
-            retriever.release();
-            if (data == null) {
-                return null;
-            }
-            return BitmapFactory.decodeByteArray(data, 0, data.length);
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(context, uri);
+        byte[] data = retriever.getEmbeddedPicture();
+        retriever.release();
+        if (data == null) {
+            return null;
         }
+        return BitmapFactory.decodeByteArray(data, 0, data.length);
     }
 
     public static boolean isUriExists(Context context, Uri uri) {

@@ -20,7 +20,7 @@ import com.example.mediaplayerapp.databinding.ItemMediaQueueListBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaInfo;
 import com.example.mediaplayerapp.utils.IOnItemClickListener;
-import com.example.mediaplayerapp.utils.ItemTouchHelperViewHolder;
+import com.example.mediaplayerapp.utils.item_touch.ItemTouchHelperViewHolder;
 import com.example.mediaplayerapp.utils.MediaUtils;
 
 public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, ItemTouchHelperViewHolder {

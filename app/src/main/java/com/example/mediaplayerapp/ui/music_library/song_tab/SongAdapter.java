@@ -2,7 +2,6 @@ package com.example.mediaplayerapp.ui.music_library.song_tab;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,17 +12,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.ui.DisplayMode;
+import com.example.mediaplayerapp.utils.MediaMetadataUtils;
 import com.example.mediaplayerapp.utils.StartPlaybackCallback;
-import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -158,14 +155,13 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
          * Update item thumbnail with current song's artwork.
          */
         private void updateThumbnailWithCurrentSong() {
-            try {
-                Bitmap thumbnail = MediaThumbnailUtils.getThumbnailFromUri(context, currentSong.getUri());
-                songThumbnail.setImageBitmap(thumbnail);
-            } catch (IOException e) {
-                songThumbnail.setImageDrawable(
-                        ContextCompat.getDrawable(context,
-                                R.drawable.default_song_artwork));
-            }
+            songThumbnail.setImageBitmap(
+                    MediaMetadataUtils.getThumbnail(
+                                    context,
+                                    currentSong.getUri(),
+                                    R.drawable.default_song_artwork
+                            )
+            );
         }
     }
 }

@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -24,10 +23,8 @@ import com.example.mediaplayerapp.databinding.ItemOverviewSongSmallBinding;
 import com.example.mediaplayerapp.databinding.ItemOverviewVideoBigBinding;
 import com.example.mediaplayerapp.databinding.ItemOverviewVideoSmallBinding;
 import com.example.mediaplayerapp.utils.MediaMetadataUtils;
-import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,24 +79,21 @@ public class OverviewItemAdapter
                     .override(holder.mediaThumbnail.getWidth(), holder.mediaThumbnail.getHeight())
                     .centerCrop()
                     .into(holder.mediaThumbnail);
-        } else try {
+        } else {
             // Somehow, glide doesn't work for songs' cover thumbnail
-            Bitmap thumbnail = MediaThumbnailUtils.getThumbnailFromUri(
+            Bitmap thumbnail = MediaMetadataUtils.getThumbnail(
                     holder.mediaThumbnail.getContext(),
-                    Uri.parse(mediaPlaybackInfoList.get(position).getMediaUri()));
+                    Uri.parse(mediaPlaybackInfoList.get(position).getMediaUri()),
+                    R.drawable.default_song_artwork);
             holder.mediaThumbnail.setImageBitmap(thumbnail);
-        } catch (IOException e) {
-            holder.mediaThumbnail.setImageDrawable(
-                    ContextCompat.getDrawable(holder.mediaThumbnail.getContext(),
-                            R.drawable.default_song_artwork));
         }
 
         Uri mediaUri = Uri.parse(mediaPlaybackInfoList.get(position).getMediaUri());
 
-        String mediaName = MediaMetadataUtils.getMediaNameFromUri(context, mediaUri);
+        String mediaName = MediaMetadataUtils.getDisplayName(context, mediaUri);
         if (mediaName != null) holder.mediaName.setText(mediaName);
 
-        String mediaArtist = MediaMetadataUtils.getMediaArtistFromUri(context, mediaUri);
+        String mediaArtist = MediaMetadataUtils.getArtistName(context, mediaUri);
         if (mediaArtist != null) holder.mediaArtist.setText(mediaArtist);
 
         holder.mediaClickArea.setOnClickListener(view -> {

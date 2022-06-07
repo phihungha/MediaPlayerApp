@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -22,9 +21,7 @@ import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
-import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
-
-import java.io.IOException;
+import com.example.mediaplayerapp.utils.MediaMetadataUtils;
 
 public class AlbumDetailFragment extends Fragment {
 
@@ -62,7 +59,9 @@ public class AlbumDetailFragment extends Fragment {
             MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
         });
         adapter.setDisplayMode(DisplayMode.LIST);
-        binding.albumDetailsSongList.addItemDecoration(new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL));
+        binding.albumDetailsSongList.addItemDecoration(
+                new DividerItemDecoration(requireActivity(), DividerItemDecoration.VERTICAL)
+        );
         binding.albumDetailsSongList.setAdapter(adapter);
 
         binding.albumDetailsPlayAllSongs.setOnClickListener(v -> playAllSongs());
@@ -97,18 +96,13 @@ public class AlbumDetailFragment extends Fragment {
      * @param uri URI of the album
      */
     private void updateArtwork(Uri uri) {
-        try {
-            Bitmap artwork = MediaThumbnailUtils.getThumbnailFromUri(requireContext(), uri);
-            binding.albumDetailsArtwork.setImageBitmap(artwork);
-            binding.albumDetailsSmallArtwork.setImageBitmap(artwork);
-        } catch (IOException e) {
-            binding.albumDetailsSmallArtwork.setImageDrawable(
-                    ContextCompat.getDrawable(requireContext(),
-                            R.drawable.default_album_artwork));
-            binding.albumDetailsArtwork.setImageDrawable(
-                    ContextCompat.getDrawable(requireContext(),
-                            R.drawable.default_album_artwork));
-        }
+        Bitmap artwork = MediaMetadataUtils.getThumbnail(
+                requireContext(),
+                uri,
+                R.drawable.default_album_artwork
+        );
+        binding.albumDetailsArtwork.setImageBitmap(artwork);
+        binding.albumDetailsSmallArtwork.setImageBitmap(artwork);
     }
 
     /**

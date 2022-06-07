@@ -2,7 +2,6 @@ package com.example.mediaplayerapp.ui.music_library.album_tab;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,10 +17,9 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Album;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.MusicLibraryFragmentDirections;
-import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
+import com.example.mediaplayerapp.utils.MediaMetadataUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -131,30 +128,29 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumItemVie
          */
         public void updateCurrentAlbum(Album album) {
             currentAlbum = album;
-            updateViewsWithCurrentArtist();
+            updateViewsWithCurrentAlbum();
         }
 
         /**
          * Update the views using current album's info.
          */
-        private void updateViewsWithCurrentArtist() {
+        private void updateViewsWithCurrentAlbum() {
             albumName.setText(currentAlbum.getAlbumName());
             albumArtistName.setText(currentAlbum.getArtistName());
-            updateThumbnailWithCurrentSong();
+            updateThumbnailWithCurrentAlbum();
         }
 
         /**
          * Update item thumbnail with current album's artwork.
          */
-        private void updateThumbnailWithCurrentSong() {
-            try {
-                Bitmap thumbnail = MediaThumbnailUtils.getThumbnailFromUri(context, currentAlbum.getUri());
-                albumThumbnail.setImageBitmap(thumbnail);
-            } catch (IOException e) {
-                albumThumbnail.setImageDrawable(
-                        ContextCompat.getDrawable(context,
-                                R.drawable.default_album_artwork));
-            }
+        private void updateThumbnailWithCurrentAlbum() {
+            albumThumbnail.setImageBitmap(
+                    MediaMetadataUtils.getThumbnail(
+                            context,
+                            currentAlbum.getUri(),
+                            R.drawable.default_album_artwork
+                    )
+            );
         }
 
         @Override

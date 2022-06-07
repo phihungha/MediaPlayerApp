@@ -17,7 +17,7 @@ import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.utils.IOnItemClickListener;
-import com.example.mediaplayerapp.utils.ItemTouchHelperAdapter;
+import com.example.mediaplayerapp.utils.item_touch.ItemTouchHelperAdapter;
 import com.example.mediaplayerapp.utils.MediaUtils;
 import com.example.mediaplayerapp.utils.OnStartDragListener;
 
