@@ -81,7 +81,7 @@
     </fragment>
     <fragment
         android:id="@+id/navigation_settings"
-        android:name="com.example.mediaplayerapp.ui.setting.SettingFragment"
+        android:name="com.example.mediaplayerapp.ui.setting.SettingsFragment"
         android:label="SettingFragment" />
     <fragment
         android:id="@+id/navigation_more"

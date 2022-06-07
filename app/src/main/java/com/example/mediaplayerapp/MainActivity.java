@@ -3,6 +3,7 @@ package com.example.mediaplayerapp;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.os.Bundle;
@@ -14,16 +15,17 @@ import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
+import androidx.preference.PreferenceManager;
 
 import com.example.mediaplayerapp.databinding.ActivityMainBinding;
 import com.example.mediaplayerapp.ui.music_player.BottomMusicPlayerComponent;
 import com.example.mediaplayerapp.utils.LanguageConfig;
-import com.example.mediaplayerapp.utils.SharedPrefs;
 
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity {
-    SharedPrefs sharedPreferences;
+public class MainActivity extends AppCompatActivity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
+
     private final ActivityResultLauncher<String> permissionRequestLauncher =
             registerForActivityResult(
                     new ActivityResultContracts.RequestPermission(),
@@ -34,19 +36,15 @@ public class MainActivity extends AppCompatActivity {
             );
 
     @Override
-    protected void attachBaseContext(Context newBase) {
-        sharedPreferences = new SharedPrefs(newBase);
-        String languageCode = sharedPreferences.getLocale();
-        Context context = LanguageConfig.changeLanguage(newBase, languageCode);
-        super.attachBaseContext(context);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
 
         setSupportActionBar(binding.appToolbar);
         Objects.requireNonNull(getSupportActionBar()).setTitle("");
@@ -63,9 +61,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+    protected void attachBaseContext(Context newBase) {
+        String languageCode = PreferenceManager
+                .getDefaultSharedPreferences(newBase)
+                .getString("language", "en");
+        Context context = LanguageConfig.changeLanguage(newBase, languageCode);
+        super.attachBaseContext(context);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        if (s.equals("language"))
+            recreate();
     }
 
     /**
@@ -88,5 +95,11 @@ public class MainActivity extends AppCompatActivity {
                 .setTitle(R.string.read_external_storage_permission_denied_notice_title)
                 .setPositiveButton(R.string.ok, (dialogInterface, i) -> {});
         dialogBuilder.create().show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
     }
 }
