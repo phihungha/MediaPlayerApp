@@ -20,6 +20,7 @@ import com.example.mediaplayerapp.databinding.ItemMediaQueueListBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaInfo;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
+import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.example.mediaplayerapp.utils.item_touch.ItemTouchHelperViewHolder;
 import com.example.mediaplayerapp.utils.MediaUtils;
 
@@ -53,7 +54,7 @@ public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements Vie
         binding.tvNameMediaQueue.setText(name);
 
         MediaInfo mediaInfo = MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
-        String duration = MediaUtils.convertDuration(mediaInfo.getDuration());
+        String duration = MediaTimeUtils.getFormattedTimeFromLong(mediaInfo.getDuration());
         binding.tvDurationMediaQueue.setText(duration);
 
         if (media.isVideo()) {
@@ -80,7 +81,7 @@ public class MediaQueueViewHolder extends RecyclerView.ViewHolder implements Vie
         gridBinding.tvQueueNameGrid.setText(name);
 
         MediaInfo mediaInfo = MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
-        String duration = MediaUtils.convertDuration(mediaInfo.getDuration());
+        String duration = MediaTimeUtils.getFormattedTimeFromLong(mediaInfo.getDuration());
         gridBinding.tvDurationQueueGrid.setText(duration);
 
         if (media.isVideo()) {

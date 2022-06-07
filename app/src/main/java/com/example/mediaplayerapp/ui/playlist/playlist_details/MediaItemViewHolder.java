@@ -22,6 +22,7 @@ import com.example.mediaplayerapp.databinding.ItemMediaGridBinding;
 import com.example.mediaplayerapp.databinding.ItemMediaListBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
+import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.example.mediaplayerapp.utils.item_touch.ItemTouchHelperViewHolder;
 import com.example.mediaplayerapp.utils.MediaUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -64,7 +65,7 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
         binding.tvPlaylistNamePlaylistDetails.setText(name);
 
         MediaInfo mediaInfo = MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
-        String duration = MediaUtils.convertDuration(mediaInfo.getDuration());
+        String duration = MediaTimeUtils.getFormattedTimeFromLong(mediaInfo.getDuration());
         binding.tvDurationMedia.setText(duration);
 
         if (mPlaylist.isVideo()) {
@@ -90,7 +91,7 @@ public class MediaItemViewHolder extends RecyclerView.ViewHolder implements View
         gridBinding.tvPlaylistDetailsNameGrid.setText(name);
 
         MediaInfo mediaInfo = MediaUtils.getInfoWithUri(mContext, Uri.parse(media.getMediaUri()));
-        String duration = MediaUtils.convertDuration(mediaInfo.getDuration());
+        String duration = MediaTimeUtils.getFormattedTimeFromLong(mediaInfo.getDuration());
         gridBinding.tvDurationPlaylistDetailGrid.setText(duration);
 
         if (mPlaylist.isVideo()) {

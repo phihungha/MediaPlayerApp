@@ -4,11 +4,11 @@ import java.io.Serializable;
 
 public class MediaInfo implements Serializable {
     private final String fileName;
-    private String duration;
+    private long duration;
     private final String fileSize;
     private final String location;
 
-    public MediaInfo(String fileName, String duration, String fileSize, String location) {
+    public MediaInfo(String fileName, long duration, String fileSize, String location) {
         this.fileName = fileName;
         this.duration = duration;
         this.fileSize = fileSize;
@@ -19,11 +19,11 @@ public class MediaInfo implements Serializable {
         return fileName;
     }
 
-    public String getDuration() {
+    public long getDuration() {
         return duration;
     }
 
-    public void setDuration(String duration) {
+    public void setDuration(long duration) {
         this.duration = duration;
     }
 

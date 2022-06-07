@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
-import com.example.mediaplayerapp.utils.MediaUtils;
+import com.example.mediaplayerapp.utils.MediaTimeUtils;
 
 public class PlaylistDetailsPropertiesDialog extends AppCompatDialogFragment {
 
@@ -37,20 +37,14 @@ public class PlaylistDetailsPropertiesDialog extends AppCompatDialogFragment {
 
         TextView tvName=view.findViewById(R.id.tv_nameProp);
         TextView tvDuration=view.findViewById(R.id.tv_durationProp);
-        TextView tvSize=view.findViewById(R.id.tv_fileSizeProp);
         TextView tvLocation=view.findViewById(R.id.tv_locationProp);
 
         String name= mInfo.getFileName();
-        String duration= mInfo.getDuration();
-        String size= mInfo.getFileSize();
+        String duration= MediaTimeUtils.getFormattedTimeFromLong(mInfo.getDuration());
         String location=Uri.parse(mInfo.getLocation()).getPath();
-
-        size= MediaUtils.convertToSizeMb(size);
-        duration=MediaUtils.convertDuration(duration);
 
         tvName.setText(name);
         tvDuration.setText(duration);
-        tvSize.setText(size);
         tvLocation.setText(location);
 
         builder.setView(view)
