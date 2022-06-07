@@ -88,7 +88,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
         setAudioSessionIdOnMediaSession();
         setupAnalyticsListener();
-        setupMetadataSyncListener();
+        setupPlayerEventListener();
         setupMediaSessionConnector();
         setupNotification();
         mediaSession.setActive(true);
@@ -109,7 +109,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         });
     }
 
-    private void setupMetadataSyncListener() {
+    private void setupPlayerEventListener() {
         player.addListener(new Player.Listener() {
             @Override
                 public void onMediaMetadataChanged(@NonNull MediaMetadata mediaMetadata) {

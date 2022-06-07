@@ -8,13 +8,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
+import com.example.mediaplayerapp.data.overview.MediaPlaybackInfo;
+import com.example.mediaplayerapp.data.overview.MediaPlaybackInfoRepository;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemRepository;
 import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.data.video_library.VideosRepository;
@@ -25,10 +29,13 @@ import com.example.mediaplayerapp.utils.SortOrder;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.MediaMetadata;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -47,11 +54,14 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     private ExoPlayer player;
     private MediaSessionCompat mediaSession;
+
     private VideosRepository videoLibraryRepository;
     private PlaylistItemRepository playlistItemRepository;
+    private MediaPlaybackInfoRepository playbackInfoRepository;
+
+    private Uri currentMediaUri = null;
 
     ActivityVideoPlayerBinding binding;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,11 +71,13 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         videoLibraryRepository = new VideosRepository(getApplication());
         playlistItemRepository = new PlaylistItemRepository(getApplication());
+        playbackInfoRepository = new MediaPlaybackInfoRepository(getApplication());
 
         enterFullScreenMode();
 
         player = new ExoPlayer.Builder(this).build();
         binding.videoPlayer.setPlayer(player);
+        setupPlayerEventListener();
 
         mediaSession = new MediaSessionCompat(this, LOG_TAG);
         mediaSession.setMediaButtonReceiver(null);
@@ -224,6 +236,44 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         // Hide both the status bar and the navigation bar
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
+    }
+
+    private void setupPlayerEventListener() {
+        player.addListener(new Player.Listener() {
+            @Override
+            public void onMediaMetadataChanged(@NonNull MediaMetadata mediaMetadata) {
+                if (mediaMetadata.mediaUri != null)
+                    currentMediaUri = mediaMetadata.mediaUri;
+                else
+                    currentMediaUri = null;
+                Log.d(LOG_TAG, "New media metadata found");
+            }
+
+            @Override
+            public void onPlaybackStateChanged(int playbackState) {
+                if (playbackState == Player.STATE_ENDED && currentMediaUri != null)
+                    playbackInfoRepository.insertOrUpdate(new MediaPlaybackInfo(
+                            currentMediaUri.toString(),
+                            LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
+                            0,
+                            true,
+                            player.getCurrentPosition()
+                    ));
+            }
+
+            @Override
+            public void onMediaItemTransition(@Nullable MediaItem mediaItem, int reason) {
+                if (currentMediaUri != null) {
+                    playbackInfoRepository.insertOrUpdate(new MediaPlaybackInfo(
+                            currentMediaUri.toString(),
+                            LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
+                            0,
+                            true,
+                            player.getCurrentPosition()
+                    ));
+                }
+            }
+        });
     }
 
     @Override

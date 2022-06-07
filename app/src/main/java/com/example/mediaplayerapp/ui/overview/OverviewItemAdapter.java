@@ -93,8 +93,11 @@ public class OverviewItemAdapter
         String mediaName = MediaMetadataUtils.getDisplayName(context, mediaUri);
         if (mediaName != null) holder.mediaName.setText(mediaName);
 
-        String mediaArtist = MediaMetadataUtils.getArtistName(context, mediaUri);
-        if (mediaArtist != null) holder.mediaArtist.setText(mediaArtist);
+        if (mediaType == OverviewFragment.MediaType.SONG) {
+            String mediaArtist = MediaMetadataUtils.getArtistName(context, mediaUri);
+            if (mediaArtist != null)
+                holder.mediaArtist.setText(mediaArtist);
+        }
 
         holder.mediaClickArea.setOnClickListener(view -> {
             //TODO: Add some method to play media
