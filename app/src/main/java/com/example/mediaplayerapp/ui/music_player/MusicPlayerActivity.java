@@ -1,7 +1,7 @@
 package com.example.mediaplayerapp.ui.music_player;
 
-import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.net.Uri;
@@ -35,10 +35,14 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private static final String LOG_TAG = MusicPlayerControlFragment.class.getSimpleName();
     public static final String SHUFFLE_MODE_ALL_KEY =
             "com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity.SHUFFLE_MODE_ALL_KEY";
+    private static final String SEEK_TO_POSITION_KEY =
+            "com.example.mediaplayerapp.ui.video_player.MusicPlayerActivity.SEEK_TO_POSITION_KEY";
 
     private MusicPlayerViewModel musicPlayerViewModel;
 
     private MediaBrowserCompat mediaBrowser;
+
+    private boolean firstTimeRun = true;
 
     private final MediaBrowserCompat.ConnectionCallback connectionCallback =
             new MediaBrowserCompat.ConnectionCallback() {
@@ -88,6 +92,10 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
                 @Override
                 public void onPlaybackStateChanged(PlaybackStateCompat state) {
+                    if (firstTimeRun && state.getState() == PlaybackStateCompat.STATE_PLAYING) {
+                        seekToOnFirstSong();
+                        firstTimeRun = false;
+                    }
                     musicPlayerViewModel.setCurrentPlaybackState(state);
                     Log.d(LOG_TAG, "Playback state changed to " + state.getState());
                 }
@@ -126,25 +134,39 @@ public class MusicPlayerActivity extends AppCompatActivity {
 
     /**
      * Sequentially play song(s) specified by an URI with MusicPlayerActivity.
-     * @param activity Current activity
+     * @param context Current context
      * @param uri URI of the media item to play
      */
-    public static void launchWithUri(Activity activity, Uri uri) {
-        Intent playbackIntent = new Intent(activity, MusicPlayerActivity.class);
+    public static void launchWithUri(Context context, Uri uri) {
+        Intent playbackIntent = new Intent(context, MusicPlayerActivity.class);
         playbackIntent.setData(uri);
-        activity.startActivity(playbackIntent);
+        context.startActivity(playbackIntent);
+    }
+
+    /**
+     * Sequentially play song(s) specified by an URI with MusicPlayerActivity
+     * and seek to specified position on the first song.
+     * @param context Current context
+     * @param uri URI of the media item to play
+     * @param seekToPosition Position to seek to
+     */
+    public static void launchWithUriAndSeekTo(Context context, Uri uri, long seekToPosition) {
+        Intent playbackIntent = new Intent(context, MusicPlayerActivity.class);
+        playbackIntent.setData(uri);
+        playbackIntent.putExtra(SEEK_TO_POSITION_KEY, seekToPosition);
+        context.startActivity(playbackIntent);
     }
 
     /**
      * Randomly play song(s) specified by an URI with MusicPlayerActivity.
-     * @param activity Current activity
+     * @param context Current context
      * @param uri URI of the media item to play
      */
-    public static void launchWithUriAndShuffleAll(Activity activity, Uri uri) {
-        Intent playbackIntent = new Intent(activity, MusicPlayerActivity.class);
+    public static void launchWithUriAndShuffleAll(Context context, Uri uri) {
+        Intent playbackIntent = new Intent(context, MusicPlayerActivity.class);
         playbackIntent.setData(uri);
         playbackIntent.putExtra(SHUFFLE_MODE_ALL_KEY, true);
-        activity.startActivity(playbackIntent);
+        context.startActivity(playbackIntent);
     }
 
     /**
@@ -193,11 +215,21 @@ public class MusicPlayerActivity extends AppCompatActivity {
         }
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null)
+        if (extras != null) {
             if (extras.getBoolean(MusicPlayerActivity.SHUFFLE_MODE_ALL_KEY))
                 getMediaControllerCompat()
                         .getTransportControls()
                         .setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
+        }
+    }
+
+    private void seekToOnFirstSong() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.getLong(SEEK_TO_POSITION_KEY, -1) != -1) {
+            getMediaControllerCompat()
+                    .getTransportControls()
+                    .seekTo(extras.getLong(SEEK_TO_POSITION_KEY));
+        }
     }
 
     private MediaControllerCompat getMediaControllerCompat() {

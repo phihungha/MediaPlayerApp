@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
+import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
@@ -34,8 +35,7 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -49,6 +49,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
     private final static String LOG_TAG = VideoPlayerActivity.class.getSimpleName();
     private static final String SHUFFLE_MODE_ALL_KEY =
             "com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity.SHUFFLE_MODE_KEY";
+    private static final String SEEK_TO_POSITION_KEY =
+            "com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity.SEEK_TO_POSITION_KEY";
 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
@@ -103,6 +105,19 @@ public class VideoPlayerActivity extends AppCompatActivity {
     public static void launchWithUri(Context context, Uri uri) {
         Intent playbackIntent = new Intent(context, VideoPlayerActivity.class);
         playbackIntent.setData(uri);
+        context.startActivity(playbackIntent);
+    }
+
+    /**
+     * Sequentially play video(s) specified by an URI with VideoPlayerActivity.
+     * @param context Current context
+     * @param uri URI of the media item to play
+     * @param seekToPosition Position to seek to
+     */
+    public static void launchWithUriAndSeekTo(Context context, Uri uri, long seekToPosition) {
+        Intent playbackIntent = new Intent(context, VideoPlayerActivity.class);
+        playbackIntent.setData(uri);
+        playbackIntent.putExtra(SEEK_TO_POSITION_KEY, seekToPosition);
         context.startActivity(playbackIntent);
     }
 
@@ -254,8 +269,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 if (playbackState == Player.STATE_ENDED && currentMediaUri != null)
                     playbackInfoRepository.insertOrUpdate(new MediaPlaybackInfo(
                             currentMediaUri.toString(),
-                            LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
-                            0,
+                            Calendar.getInstance().getTimeInMillis(),
+                            1,
                             true,
                             player.getCurrentPosition()
                     ));
@@ -266,14 +281,21 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 if (currentMediaUri != null) {
                     playbackInfoRepository.insertOrUpdate(new MediaPlaybackInfo(
                             currentMediaUri.toString(),
-                            LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
-                            0,
+                            Calendar.getInstance().getTimeInMillis(),
+                            1,
                             true,
                             player.getCurrentPosition()
                     ));
                 }
             }
         });
+    }
+
+    private void seekToOnFirstVideo() {
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.getLong(SEEK_TO_POSITION_KEY, -1) != -1) {
+            player.seekTo(extras.getLong(SEEK_TO_POSITION_KEY));
+        }
     }
 
     @Override

@@ -22,6 +22,8 @@ import com.example.mediaplayerapp.databinding.ItemOverviewSongBigBinding;
 import com.example.mediaplayerapp.databinding.ItemOverviewSongSmallBinding;
 import com.example.mediaplayerapp.databinding.ItemOverviewVideoBigBinding;
 import com.example.mediaplayerapp.databinding.ItemOverviewVideoSmallBinding;
+import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
+import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.MediaMetadataUtils;
 import com.google.android.material.imageview.ShapeableImageView;
 
@@ -88,7 +90,9 @@ public class OverviewItemAdapter
             holder.mediaThumbnail.setImageBitmap(thumbnail);
         }
 
-        Uri mediaUri = Uri.parse(mediaPlaybackInfoList.get(position).getMediaUri());
+        MediaPlaybackInfo mediaPlaybackInfo = mediaPlaybackInfoList.get(position);
+        Uri mediaUri = Uri.parse(mediaPlaybackInfo.getMediaUri());
+        long lastPlaybackPosition = mediaPlaybackInfo.getLastPlaybackPosition();
 
         String mediaName = MediaMetadataUtils.getDisplayName(context, mediaUri);
         if (mediaName != null) holder.mediaName.setText(mediaName);
@@ -100,19 +104,10 @@ public class OverviewItemAdapter
         }
 
         holder.mediaClickArea.setOnClickListener(view -> {
-            //TODO: Add some method to play media
-
-            //TODO: Below is a standard way to insert/update the MediaPlaybackInfo database
-//            MediaPlaybackInfo mediaPlaybackInfo = new MediaPlaybackInfo(
-//                    mediaUri.toString(),
-//                    Calendar.getInstance().getTimeInMillis(),
-//                    1, // playbackAmount = 1 by default
-//                    false,
-//                    0 // playbackPosition to seek to later
-//            );
-//            OverviewViewModel overviewViewModel = new ViewModelProvider((ViewModelStoreOwner) context)
-//                    .get(OverviewViewModel.class);
-//            overviewViewModel.insertOrUpdate(mediaPlaybackInfo);
+            if (mediaType == OverviewFragment.MediaType.VIDEO)
+                VideoPlayerActivity.launchWithUriAndSeekTo(context, mediaUri, lastPlaybackPosition);
+            else if (mediaType == OverviewFragment.MediaType.SONG)
+                MusicPlayerActivity.launchWithUriAndSeekTo(context, mediaUri, lastPlaybackPosition);
         });
     }
 

@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.ResultReceiver;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
@@ -40,8 +41,7 @@ import com.google.android.exoplayer2.ui.DefaultMediaDescriptionAdapter;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 
 import java.lang.reflect.Array;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
+import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -70,6 +70,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     private PlaylistItemRepository playlistItemRepository;
     private MediaPlaybackInfoRepository playbackInfoRepository;
 
+    private long lastPlaybackPosition = -1;
     private Uri currentMediaUri = null;
 
     @Override
@@ -85,6 +86,16 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         songsRepository = new SongsRepository(getApplicationContext());
         playlistItemRepository = new PlaylistItemRepository(getApplication());
         playbackInfoRepository = new MediaPlaybackInfoRepository(getApplication());
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (player.getCurrentPosition() != 0)
+                    lastPlaybackPosition = player.getCurrentPosition();
+                handler.postDelayed(this, 1000);
+            }
+        }, 1000);
 
         setAudioSessionIdOnMediaSession();
         setupAnalyticsListener();
@@ -135,8 +146,6 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                             MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
                             mediaMetadata.mediaUri.toString()
                     );
-                } else {
-                    currentMediaUri = null;
                 }
 
                 if (mediaMetadata.artworkUri != null)
@@ -162,10 +171,10 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                 if (playbackState == Player.STATE_ENDED && currentMediaUri != null)
                     playbackInfoRepository.insertOrUpdate(new MediaPlaybackInfo(
                             currentMediaUri.toString(),
-                            LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
-                            0,
+                            Calendar.getInstance().getTimeInMillis(),
+                            1,
                             false,
-                            player.getCurrentPosition()
+                            lastPlaybackPosition
                     ));
             }
 
@@ -174,10 +183,10 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                 if (currentMediaUri != null) {
                     playbackInfoRepository.insertOrUpdate(new MediaPlaybackInfo(
                             currentMediaUri.toString(),
-                            LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
-                            0,
+                            Calendar.getInstance().getTimeInMillis(),
+                            1,
                             false,
-                            player.getCurrentPosition()
+                            lastPlaybackPosition
                     ));
                 }
             }
