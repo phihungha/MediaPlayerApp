@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.utils;
+package com.example.mediaplayerapp.ui.playlist;
 
 
 import android.app.Application;
@@ -6,6 +6,7 @@ import android.app.Application;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
+import com.example.mediaplayerapp.utils.MediaUtils;
 
 public class MediaQueueUtil {
 

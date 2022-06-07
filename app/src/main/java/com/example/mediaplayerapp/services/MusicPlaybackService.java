@@ -21,6 +21,8 @@ import androidx.media.MediaBrowserServiceCompat;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.music_library.SongsRepository;
+import com.example.mediaplayerapp.data.overview.MediaPlaybackInfo;
+import com.example.mediaplayerapp.data.overview.MediaPlaybackInfoRepository;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemRepository;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.GetMediaItemsUtils;
@@ -38,6 +40,8 @@ import com.google.android.exoplayer2.ui.DefaultMediaDescriptionAdapter;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 
 import java.lang.reflect.Array;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -64,6 +68,9 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
     private SongsRepository songsRepository;
     private PlaylistItemRepository playlistItemRepository;
+    private MediaPlaybackInfoRepository playbackInfoRepository;
+
+    private Uri currentMediaUri = null;
 
     @Override
     public void onCreate() {
@@ -77,6 +84,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
         songsRepository = new SongsRepository(getApplicationContext());
         playlistItemRepository = new PlaylistItemRepository(getApplication());
+        playbackInfoRepository = new MediaPlaybackInfoRepository(getApplication());
 
         setAudioSessionIdOnMediaSession();
         setupAnalyticsListener();
@@ -121,11 +129,15 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                 metadataCompatBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION,
                         player.getDuration());
 
-                if (mediaMetadata.mediaUri != null)
+                if (mediaMetadata.mediaUri != null) {
+                    currentMediaUri = mediaMetadata.mediaUri;
                     metadataCompatBuilder.putString(
                             MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
                             mediaMetadata.mediaUri.toString()
                     );
+                } else {
+                    currentMediaUri = null;
+                }
 
                 if (mediaMetadata.artworkUri != null)
                     metadataCompatBuilder.putString(
@@ -143,6 +155,31 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
                 mediaSession.setMetadata(metadataCompatBuilder.build());
                 Log.d(LOG_TAG, "New media metadata found");
+            }
+
+            @Override
+            public void onPlaybackStateChanged(int playbackState) {
+                if (playbackState == Player.STATE_ENDED && currentMediaUri != null)
+                    playbackInfoRepository.insertOrUpdate(new MediaPlaybackInfo(
+                            currentMediaUri.toString(),
+                            LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
+                            0,
+                            false,
+                            player.getCurrentPosition()
+                    ));
+            }
+
+            @Override
+            public void onMediaItemTransition(@Nullable MediaItem mediaItem, int reason) {
+                if (currentMediaUri != null) {
+                    playbackInfoRepository.insertOrUpdate(new MediaPlaybackInfo(
+                            currentMediaUri.toString(),
+                            LocalDateTime.now().toEpochSecond(ZoneOffset.UTC),
+                            0,
+                            false,
+                            player.getCurrentPosition()
+                    ));
+                }
             }
         });
     }

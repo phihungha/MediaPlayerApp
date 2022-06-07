@@ -51,7 +51,7 @@ public class MediaMetadataUtils {
                 null,
                 null,
                 null);
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             // Prefer using title name in the metadata of
             // the media over the default display name if possible.
             int titleColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.TITLE);
@@ -89,7 +89,7 @@ public class MediaMetadataUtils {
                 null,
                 null,
                 null);
-        if (cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
             int artistColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST);
             artistName = cursor.getString(artistColumnIndex);
             cursor.close();

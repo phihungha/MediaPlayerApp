@@ -36,7 +36,7 @@ import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
-import com.example.mediaplayerapp.utils.MediaQueueUtil;
+import com.example.mediaplayerapp.ui.playlist.MediaQueueUtil;
 import com.example.mediaplayerapp.utils.MediaUtils;
 import com.example.mediaplayerapp.ui.playlist.OnPlaylistItemListChangedListener;
 import com.example.mediaplayerapp.utils.item_touch.OnStartDragListener;

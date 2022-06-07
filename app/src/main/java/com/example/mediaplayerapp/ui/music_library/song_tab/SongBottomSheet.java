@@ -17,7 +17,7 @@ import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.BottomSheetSongBinding;
 import com.example.mediaplayerapp.databinding.SongDetailBinding;
-import com.example.mediaplayerapp.utils.MediaQueueUtil;
+import com.example.mediaplayerapp.ui.playlist.MediaQueueUtil;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.example.mediaplayerapp.utils.MediaUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
