@@ -1,7 +1,5 @@
 package com.example.mediaplayerapp.data.playlist;
 
-import android.graphics.Bitmap;
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;

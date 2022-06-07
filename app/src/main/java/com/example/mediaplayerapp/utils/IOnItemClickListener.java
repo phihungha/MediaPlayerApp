@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.ui.playlist;
+package com.example.mediaplayerapp.utils;
 
 import android.view.View;
 

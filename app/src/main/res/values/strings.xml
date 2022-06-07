@@ -92,7 +92,7 @@
     <string name="video_name_placeholder" translatable="false">VIDEO.MP4</string>
     <string name="description_play_arrow_icon" translatable="false">A white play arrow icon</string>
     <string name="all_videos_textView">All videos</string>
-    <string name="dialog_bottom_video_name" translatable="false">VIDEO NAME</string>
+    <string name="dialog_bottom_video_name">VIDEO NAME</string>
     <string name="bottom_dialog_option_info">Information</string>
     <string name="dialog_bottom_option_playlist">Add to playlist</string>
     <string name="dialog_bottom_option_rename">Rename</string>
@@ -122,6 +122,11 @@
     <string name="number_of_albums">Number of albums</string>
     <string name="number_of_songs">Number of songs</string>
     <string name="release_year">Release year</string>
+    <string name="video_queue">Video</string>
+    <string name="music_queue">Song</string>
+    <string name="watch_later">Watch Later</string>
+    <string name="my_favourite">My Favourite</string>
+    <string name="numbers_of_item">Numbers of item</string>
     <string name="title_overview">Overview</string>
     <string name="recent_videos_textview">Recent videos</string>
     <string name="most_watched_videos_textview">Most watched videos</string>

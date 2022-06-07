@@ -18,6 +18,7 @@ import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemVie
 import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.databinding.DialogVideoBottomSheetBinding;
 import com.example.mediaplayerapp.databinding.DialogVideoInfoBinding;
+import com.example.mediaplayerapp.utils.MediaUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.text.DecimalFormat;
@@ -114,10 +115,11 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
                     .setItems(
                             allVideoPlaylists.stream().map(Playlist::getName).toArray(CharSequence[]::new),
                             (dialogInterface, i) -> {
+                                long order= MediaUtils.generateOrderSort();
                                 PlaylistItem newPlaylistItem = new PlaylistItem(
                                         allVideoPlaylists.get(i).getId(),
                                         currentVideo.getUri().toString(),
-                                        currentVideo.getName());
+                                        order);
                                 PlaylistItemViewModel.insert(newPlaylistItem);
                             })
                     .show();

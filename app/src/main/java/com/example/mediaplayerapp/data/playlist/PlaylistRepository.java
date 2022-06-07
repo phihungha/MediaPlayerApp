@@ -42,6 +42,14 @@ public class PlaylistRepository {
         return mPlaylistDao.sortPlaylistByNameDESC();
     }
 
+    public LiveData<List<Playlist>> sortPlaylistByNumberItemASC(){
+        return mPlaylistDao.sortPlaylistByNumberItemASC();
+    }
+
+    public LiveData<List<Playlist>> sortPlaylistByNumberItemDESC(){
+        return mPlaylistDao.sortPlaylistByNumberItemDESC();
+    }
+
     public LiveData<List<Playlist>> getAllPlaylistSearching(String text) {
         return mPlaylistDao.getAllPlaylistSearching(text);
     }

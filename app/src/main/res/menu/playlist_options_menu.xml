@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
-    <item android:id="@+id/action_search"
+<!--    <item android:id="@+id/action_search"
         android:title="@string/search"
         android:icon="@drawable/ic_search_24dp"
         app:showAsAction="ifRoom|collapseActionView"
@@ -15,6 +15,45 @@
         android:title="@string/sort"
         android:iconTint="@color/white"
         android:icon="@drawable/ic_sort_24dp"
-        />
+        />-->
 
+    <item
+        android:id="@+id/action_search_playlist_main"
+        android:title="@string/action_search"
+        app:showAsAction="ifRoom"
+        app:actionViewClass="android.widget.SearchView" />
+
+    <item
+        android:title="@string/sort_by"
+        app:showAsAction="never">
+        <menu>
+            <item android:title="@string/title"
+                android:icon="@drawable/ic_sort_by_alphabet_24dp"
+                app:iconTint="@color/cyan">
+                <menu>
+                    <item
+                        android:id="@+id/action_sort_playlist_by_title_asc"
+                        android:title="@string/ascending" />
+
+                    <item
+                        android:id="@+id/action_sort_playlist_by_title_desc"
+                        android:title="@string/descending" />
+                </menu>
+            </item>
+
+            <item android:title="@string/numbers_of_item"
+                android:icon="@drawable/ic_watch_later_24dp"
+                app:iconTint="@color/cyan">
+                <menu>
+                    <item
+                        android:id="@+id/action_sort_playlist_by_number_item_asc"
+                        android:title="@string/ascending" />
+
+                    <item
+                        android:id="@+id/action_sort_playlist_by_number_item_desc"
+                        android:title="@string/descending" />
+                </menu>
+            </item>
+        </menu>
+    </item>
 </menu>

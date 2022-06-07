@@ -1,19 +1,18 @@
-package com.example.mediaplayerapp.ui.playlist.playlist_details;
+package com.example.mediaplayerapp.utils;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
-import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.provider.MediaStore;
 
 import androidx.annotation.NonNull;
 import androidx.documentfile.provider.DocumentFile;
-import androidx.loader.content.CursorLoader;
+
+import com.example.mediaplayerapp.ui.playlist.playlist_details.MediaInfo;
 
 import com.example.mediaplayerapp.utils.MediaThumbnailUtils;
 
@@ -27,8 +26,6 @@ public class MediaUtils {
         try {
             String[] proj = {MediaStore.MediaColumns.DISPLAY_NAME,
                     MediaStore.Video.Media.SIZE};
-
-            //context.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
             cursor = context.getContentResolver().query(uri, proj, null, null, null);
             cursor.moveToFirst();
@@ -73,17 +70,18 @@ public class MediaUtils {
         }
     }
 
-    public String getRealPathFromURI(Uri contentUri, Context context)
-    {
-        String[] proj = { MediaStore.Audio.Media.DATA };
-        @SuppressLint("Recycle") Cursor cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
-        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-
     public static boolean isUriExists(Context context, Uri uri) {
         return Objects.requireNonNull(DocumentFile.fromSingleUri(context, uri)).exists();
+    }
+
+    public static long getDurationFromUri(Context context, Uri uri){
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        //use one of overloaded setDataSource() functions to set your data source
+        retriever.setDataSource(context, uri);
+        String time = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+        long timeInMilliSec = Long.parseLong(time);
+        retriever.release();
+        return timeInMilliSec;
     }
 
     public static String convertDuration(String duration) {
@@ -141,7 +139,7 @@ public class MediaUtils {
                     null, null, null);
             cursor.moveToFirst();
 
-            int nameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
+            int nameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
             String name = cursor.getString(nameColumnIndex);
             cursor.close();
             return name;
@@ -151,4 +149,11 @@ public class MediaUtils {
             }
         }
     }
+
+    public static long generateOrderSort() {
+        long primeNum = 282589933;
+        long time = System.currentTimeMillis();
+        return time % primeNum;
+    }
+
 }

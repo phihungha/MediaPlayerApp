@@ -26,31 +26,10 @@ public class PlaylistItemViewModel extends AndroidViewModel{
     }
 
     /**
-     *  get all MediaItem object with name from database to display
-     * */
-    public LiveData<List<PlaylistItem>> getAllMediaSearching(String text){
-        return mRepository.getAllMediaSearching(text);
-    }
-
-    /**
      *  get all MediaItem object from database to display
      * */
     LiveData<List<PlaylistItem>> getAllPlaylistMedias(){
         return mAllMedias;
-    }
-
-    /**
-     *  get all MediaItem object with id of playlist order by desc from database to display
-     * */
-    public LiveData<List<PlaylistItem>> sortAllMediaByNameDESCWithID(int id){
-        return mRepository.sortAllMediaByNameDESCWithID(id);
-    }
-
-    /**
-     *  get all MediaItem object with id of playlist order by asc from database to display
-     * */
-    public LiveData<List<PlaylistItem>> sortAllMediaByNameASCWithID(int id){
-        return mRepository.sortAllMediaByNameASCWithID(id);
     }
 
     /**
@@ -65,6 +44,20 @@ public class PlaylistItemViewModel extends AndroidViewModel{
      * */
     public void update(PlaylistItem media){
         mRepository.update(media);
+    }
+
+    /**
+     *  update multiple item from database
+     * */
+    public void updateMultiple(PlaylistItem... playlistItems){
+        mRepository.updateMultiple(playlistItems);
+    }
+
+    /**
+     *  update multiple item by list from database
+     * */
+    public void updateByList(List<PlaylistItem> list){
+        mRepository.updateByList(list);
     }
 
     /**
@@ -109,4 +102,10 @@ public class PlaylistItemViewModel extends AndroidViewModel{
         mRepository.deleteItemWithUri(uri);
     }
 
+    /**
+     *  get Current list
+     * */
+    public List<PlaylistItem> getCurrentListWithID(int id) {
+        return mRepository.getCurrentListWithID(id);
+    }
 }

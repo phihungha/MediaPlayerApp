@@ -10,8 +10,6 @@ import androidx.room.Update;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Single;
-
 @Dao
 public interface PlaylistItemDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -29,20 +27,11 @@ public interface PlaylistItemDao {
     @Query("DELETE FROM media_table WHERE media_table.MediaUri=:uri")
     void deleteItemWithUri(String uri);
 
-    @Query("SELECT * FROM media_table WHERE media_table.MediaId= :id")
+    @Query("SELECT * FROM media_table WHERE media_table.MediaId= :id ORDER BY OrderSort ASC")
     LiveData<List<PlaylistItem>> getAllPlaylistMediasWithID(int id);
 
-    @Query("SELECT * FROM media_table ORDER BY MediaId ASC")
+    @Query("SELECT * FROM media_table ORDER BY OrderSort ASC")
     LiveData<List<PlaylistItem>> getAllPlaylistMedias();
-
-    @Query("SELECT * FROM media_table WHERE media_table.MediaName LIKE '%' || :text || '%'")
-    LiveData<List<PlaylistItem>> getAllMediaSearching(String text);
-
-    @Query("SELECT * FROM media_table WHERE media_table.MediaId=:id ORDER BY media_table.MediaName ASC")
-    LiveData<List<PlaylistItem>> sortAllMediaByNameASCWithID(int id);
-
-    @Query("SELECT * FROM media_table WHERE media_table.MediaId=:id ORDER BY media_table.MediaName DESC")
-    LiveData<List<PlaylistItem>> sortAllMediaByNameDESCWithID(int id);
 
     @Query("DELETE FROM media_table WHERE media_table.MediaId=:id")
     void deleteAllWithID(int id);
@@ -50,7 +39,15 @@ public interface PlaylistItemDao {
     @Query("SELECT COUNT(*) FROM media_table WHERE media_table.MediaId=:id")
     int getCountPlaylistWithID(int id);
 
-    @Query("SELECT * FROM media_table WHERE media_table.MediaId = :id ORDER BY media_table.MediaName ASC")
+    @Query("SELECT * FROM media_table WHERE media_table.MediaId = :id ORDER BY OrderSort ASC")
     PlaylistItem findByItemId(int id);
 
+    @Update
+    void updateMultiple(PlaylistItem... playlistItems);
+
+    @Update
+    void updateByList(List<PlaylistItem> list);
+
+    @Query("SELECT * FROM media_table WHERE MediaId=:id ORDER BY OrderSort ASC")
+    List<PlaylistItem> getCurrentListWithID(int id);
 }

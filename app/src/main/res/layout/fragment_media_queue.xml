@@ -5,120 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-
-    android:paddingBottom="60dp"
     tools:context=".ui.playlist.media_queue.MediaQueueFragment">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <TextView
+        android:id="@+id/tv_title_media_queue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        >
-        <View
-            android:id="@+id/view_queue"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="@color/cyan"/>
+        android:layout_margin="10dp"
+        android:gravity="top"
+        android:text="@string/app_name"
+        android:textColor="#474646"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/tv_queue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:text="@string/queue"
-            android:textSize="28sp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-
-            android:layout_marginTop="12dp"
-            android:layout_marginStart="20dp"
-            app:layout_constraintStart_toStartOf="@id/view_queue"
-            app:layout_constraintTop_toTopOf="@id/view_queue"
-            />
-
-        <LinearLayout
-            android:id="@+id/layout_playQueue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-
-            android:padding="8dp"
-            app:layout_constraintTop_toBottomOf="@id/tv_queue"
-            app:layout_constraintBottom_toBottomOf="@id/view_queue"
-            app:layout_constraintStart_toStartOf="@id/view_queue">
-
-            <ImageView
-                android:id="@+id/img_playQueue"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-
-                android:layout_gravity="center"
-                android:backgroundTint="@color/white"
-                android:src="@drawable/ic_play_circle_outline_24dp"
-                app:tint="@color/white" />
-
-            <TextView
-                android:id="@+id/tv_playQueue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-
-                android:text="@string/play_all"
-                android:textColor="@color/white"
-                android:textSize="20sp"
-                />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_clearQueue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-
-            android:padding="8dp"
-            app:layout_constraintTop_toTopOf="@id/layout_playQueue"
-            app:layout_constraintBottom_toBottomOf="@id/layout_playQueue"
-            app:layout_constraintEnd_toEndOf="@id/view_queue">
-
-            <ImageView
-                android:id="@+id/img_clearQueue"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-
-                android:layout_gravity="center"
-                android:backgroundTint="@color/white"
-                android:src="@drawable/ic_clear_all_24dp" />
-
-            <TextView
-                android:id="@+id/tv_clearQueue"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-
-                android:text="@string/clear"
-                android:textColor="@color/white"
-                android:textSize="20sp" />
-        </LinearLayout>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rcv_queue"
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/media_queue_tab_layout"
         android:layout_width="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        android:layout_height="wrap_content" />
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp"
-        android:clipToPadding="true"
-        />
+        android:id="@+id/media_queue_viewpager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 </LinearLayout>

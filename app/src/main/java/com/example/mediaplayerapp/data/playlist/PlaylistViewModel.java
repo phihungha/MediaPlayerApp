@@ -54,6 +54,20 @@ public class PlaylistViewModel extends AndroidViewModel {
     }
 
     /**
+     *  get All playlist from database sort by number asc
+     * */
+    public LiveData<List<Playlist>> sortPlaylistByNumberItemASC(){
+        return mRepository.sortPlaylistByNumberItemASC();
+    }
+
+    /**
+     *  get All playlist from database sort by number desc
+     * */
+    public LiveData<List<Playlist>> sortPlaylistByNumberItemDESC(){
+        return mRepository.sortPlaylistByNumberItemDESC();
+    }
+
+    /**
      *  insert playlist to database
      * */
     public void insert(Playlist playlist){
