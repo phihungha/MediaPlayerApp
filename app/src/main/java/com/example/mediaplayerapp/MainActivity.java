@@ -19,7 +19,7 @@ import androidx.preference.PreferenceManager;
 
 import com.example.mediaplayerapp.databinding.ActivityMainBinding;
 import com.example.mediaplayerapp.ui.music_player.BottomMusicPlayerComponent;
-import com.example.mediaplayerapp.utils.LanguageConfig;
+import com.example.mediaplayerapp.ui.LanguageConfig;
 
 import java.util.Objects;
 

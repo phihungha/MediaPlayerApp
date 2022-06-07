@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.utils.IOnItemClickListener;
 import com.example.mediaplayerapp.utils.PlaylistUtil;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;

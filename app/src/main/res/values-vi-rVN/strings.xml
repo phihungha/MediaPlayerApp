@@ -113,4 +113,9 @@
     <string name="go_to_queue_list" translatable="false">Đi đến danh sách Xem sau</string>
     <string name="favorites">Yêu thích</string>
     <string name="more">Thêm</string>
+    <string name="video_queue">Video</string>
+    <string name="music_queue">Bài hát</string>
+    <string name="my_favourite">Yêu thích</string>
+    <string name="numbers_of_item">Số lượng</string>
+    <string name="dialog_bottom_video_name">Tên video</string>
 </resources>

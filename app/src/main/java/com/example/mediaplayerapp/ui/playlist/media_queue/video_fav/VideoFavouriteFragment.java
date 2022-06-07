@@ -29,8 +29,8 @@ import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueAdapter;
 import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueDeleteDialog;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.MediaUtils;
-import com.example.mediaplayerapp.utils.OnPlaylistItemListChangedListener;
-import com.example.mediaplayerapp.utils.OnStartDragListener;
+import com.example.mediaplayerapp.ui.playlist.OnPlaylistItemListChangedListener;
+import com.example.mediaplayerapp.utils.item_touch.OnStartDragListener;
 import com.example.mediaplayerapp.utils.item_touch.SimpleItemTouchHelperCallback;
 
 import java.util.List;

@@ -14,10 +14,10 @@ import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
-import com.example.mediaplayerapp.utils.IOnItemClickListener;
+import com.example.mediaplayerapp.ui.playlist.IOnItemClickListener;
 import com.example.mediaplayerapp.utils.item_touch.ItemTouchHelperAdapter;
 import com.example.mediaplayerapp.utils.MediaUtils;
-import com.example.mediaplayerapp.utils.OnStartDragListener;
+import com.example.mediaplayerapp.utils.item_touch.OnStartDragListener;
 
 import java.util.ArrayList;
 import java.util.Collections;

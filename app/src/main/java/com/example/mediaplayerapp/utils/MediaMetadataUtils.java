@@ -34,7 +34,7 @@ public class MediaMetadataUtils {
     /**
      * Get display name of a media by its URI.
      * @param context Context
-     * @param uri     URI of the media
+     * @param uri URI of the media
      * @return Display name
      */
     public static String getDisplayName(Context context, Uri uri) {

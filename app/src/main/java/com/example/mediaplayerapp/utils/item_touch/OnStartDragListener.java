@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.utils;
+package com.example.mediaplayerapp.utils.item_touch;
 
 import androidx.recyclerview.widget.RecyclerView;
 

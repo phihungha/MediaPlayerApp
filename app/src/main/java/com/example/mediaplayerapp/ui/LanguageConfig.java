@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.utils;
+package com.example.mediaplayerapp.ui;
 
 import android.content.Context;
 import android.content.ContextWrapper;
