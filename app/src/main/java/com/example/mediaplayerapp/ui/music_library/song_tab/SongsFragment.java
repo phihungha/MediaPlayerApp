@@ -121,7 +121,9 @@ public class SongsFragment extends Fragment {
     }
 
     @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, MenuInflater inflater){
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        // Fix toolbar item duplication issue on tab changing
+        menu.clear();
         inflater.inflate(R.menu.song_tab_options_menu, menu);
 
         SearchManager searchManager = (SearchManager) requireContext().getSystemService(Context.SEARCH_SERVICE);
