@@ -7,7 +7,6 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.media.MediaDescriptionCompat;
-import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.MediaSessionCompat;
 import android.util.Log;
 
@@ -39,7 +38,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -200,10 +199,10 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     /**
      * Asynchronously load media items from video library.
-     * @param videos RxJava Observable that emits Video objects
+     * @param videos RxJava Single observable that emits a list of videos.
      * @param playbackStartIndex Index of first media item to play
      */
-    private void asyncLoadMediaItems(Observable<List<Video>> videos, int playbackStartIndex) {
+    private void asyncLoadMediaItems(Single<List<Video>> videos, int playbackStartIndex) {
         Disposable disposable = videos.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(newVideos -> {

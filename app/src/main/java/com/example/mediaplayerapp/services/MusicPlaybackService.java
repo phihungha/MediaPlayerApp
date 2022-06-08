@@ -45,7 +45,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -405,10 +405,10 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
     /**
      * Asynchronously load media items from music library.
-     * @param songs RxJava Observable that emits Song objects
+     * @param songs RxJava Single observable that emits a list of songs
      * @param playbackStartIndex Index of first media item to play
      */
-    private void asyncLoadMediaItems(Observable<List<Song>> songs, int playbackStartIndex) {
+    private void asyncLoadMediaItems(Single<List<Song>> songs, int playbackStartIndex) {
         Disposable disposable = songs.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(newSongs -> {

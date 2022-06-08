@@ -7,7 +7,7 @@ import com.example.mediaplayerapp.utils.SortOrder;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 public class VideosRepository {
 
@@ -33,7 +33,7 @@ public class VideosRepository {
         mediaStore = new VideosMediaStoreDataSource(context);
     }
 
-    public Observable<List<Video>> getAllVideos(SortBy sortBy, SortOrder sortOrder) {
+    public Single<List<Video>> getAllVideos(SortBy sortBy, SortOrder sortOrder) {
         String sortQuery = "";
         switch (sortBy) {
             case NAME:

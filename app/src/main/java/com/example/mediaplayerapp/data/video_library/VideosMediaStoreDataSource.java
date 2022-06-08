@@ -10,7 +10,7 @@ import com.example.mediaplayerapp.data.MediaStoreDataSource;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 public class VideosMediaStoreDataSource extends MediaStoreDataSource {
 
@@ -24,12 +24,12 @@ public class VideosMediaStoreDataSource extends MediaStoreDataSource {
      * @param selection SQL selection conditions
      * @param selectionArgs Selection arguments
      * @param sortOrder Sort order
-     * @return The MutableLiveData form for list of video that satisfies the conditions
+     * @return List of videos
      */
-    public Observable<List<Video>> getVideos(
+    public Single<List<Video>> getVideos(
             String selection, String[] selectionArgs, String sortOrder) {
 
-        return Observable.fromCallable(() -> {
+        return Single.fromCallable(() -> {
             List<Video> videoList = new ArrayList<>();
             String[] projection = new String[]{
                     MediaStore.MediaColumns._ID,

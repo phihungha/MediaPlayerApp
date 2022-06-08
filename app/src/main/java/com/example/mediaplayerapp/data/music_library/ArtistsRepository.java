@@ -7,7 +7,7 @@ import com.example.mediaplayerapp.utils.SortOrder;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Get artists.
@@ -15,19 +15,9 @@ import io.reactivex.rxjava3.core.Observable;
 public class ArtistsRepository {
 
     public enum SortBy {
-        NAME("name"),
-        NUMBER_OF_ALBUMS("number_of_albums"),
-        NUMBER_OF_TRACKS("number_of_tracks");
-
-        private final String uriSegmentName;
-
-        SortBy(String uriSegmentName) {
-            this.uriSegmentName = uriSegmentName;
-        }
-
-        public String getUriSegmentName() {
-            return uriSegmentName;
-        }
+        NAME,
+        NUMBER_OF_ALBUMS,
+        NUMBER_OF_TRACKS
     }
 
     ArtistsMediaStoreDataSource dataSource;
@@ -44,7 +34,7 @@ public class ArtistsRepository {
      * Get all artists from media store.
      * @return List of all artists
      */
-    public Observable<List<Artist>> getAllArtists(SortBy sortBy, SortOrder sortOrder) {
+    public Single<List<Artist>> getAllArtists(SortBy sortBy, SortOrder sortOrder) {
         String sortQuery = "";
         switch (sortBy) {
             case NAME:
@@ -70,7 +60,7 @@ public class ArtistsRepository {
         return dataSource.getArtists(null, null, sortQuery);
     }
 
-    public Observable<Artist> getArtist(long id) {
+    public Single<Artist> getArtist(long id) {
         return dataSource.getArtists(MediaStore.Audio.Artists._ID + " = ?",
                 new String[] { String.valueOf(id) },
                 MediaStore.Audio.Artists.DEFAULT_SORT_ORDER)

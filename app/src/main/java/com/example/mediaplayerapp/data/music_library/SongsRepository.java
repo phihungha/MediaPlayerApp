@@ -7,7 +7,7 @@ import com.example.mediaplayerapp.utils.SortOrder;
 
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * Get songs.
@@ -42,9 +42,9 @@ public class SongsRepository {
 
     /**
      * Get all songs from media store.
-     * @return List of all songs
+     * @return List of songs
      */
-    public Observable<List<Song>> getAllSongs(SortBy sortBy, SortOrder sortOrder) {
+    public Single<List<Song>> getAllSongs(SortBy sortBy, SortOrder sortOrder) {
         String sortQuery = "";
         switch (sortBy) {
             case TITLE:
@@ -73,9 +73,9 @@ public class SongsRepository {
     /**
      * Get all songs from an artist.
       * @param artistId Id of the artist
-     * @return List of Song objects
+     * @return List of songs
      */
-    public Observable<List<Song>> getAllSongsFromArtist(long artistId) {
+    public Single<List<Song>> getAllSongsFromArtist(long artistId) {
         return mediaStore.getSongs(MediaStore.Audio.Media.ARTIST_ID + " = ?",
                 new String[] { String.valueOf(artistId) },
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
@@ -84,9 +84,9 @@ public class SongsRepository {
     /**
      * Get all songs from an album.
      * @param albumId Id of the album
-     * @return List of Song objects
+     * @return List of songs
      */
-    public Observable<List<Song>> getAllSongsFromAlbum(long albumId) {
+    public Single<List<Song>> getAllSongsFromAlbum(long albumId) {
         return mediaStore.getSongs(MediaStore.Audio.Media.ALBUM_ID + " = ?",
                 new String[] { String.valueOf(albumId) },
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);

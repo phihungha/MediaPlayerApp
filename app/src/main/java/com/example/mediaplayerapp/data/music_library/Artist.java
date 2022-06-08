@@ -29,5 +29,4 @@ public class Artist {
     public int getNumberOfAlbums() {
         return numberOfAlbums;
     }
-
 }

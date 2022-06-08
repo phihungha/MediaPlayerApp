@@ -9,7 +9,7 @@ import com.example.mediaplayerapp.data.MediaStoreDataSource;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 /**
  * MediaStore data source for albums.
@@ -30,8 +30,8 @@ public class AlbumsMediaStoreDataSource extends MediaStoreDataSource {
      * @param sortOrder Sort order
      * @return List of Album objects
      */
-    public Observable<List<Album>> getAlbums(String selection, String[] selectionArgs, String sortOrder) {
-        return Observable.fromCallable(() -> {
+    public Single<List<Album>> getAlbums(String selection, String[] selectionArgs, String sortOrder) {
+        return Single.fromCallable(() -> {
             List<Album> albums = new ArrayList<>();
 
             String[] projection = new String[]{

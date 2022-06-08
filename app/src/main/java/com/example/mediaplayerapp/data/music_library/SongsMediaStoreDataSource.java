@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Single;
 
 public class SongsMediaStoreDataSource extends MediaStoreDataSource {
 
@@ -31,8 +32,8 @@ public class SongsMediaStoreDataSource extends MediaStoreDataSource {
      * @param sortOrder Sort order
      * @return List of Song objects
      */
-    public Observable<List<Song>> getSongs(String selection, String[] selectionArgs, String sortOrder) {
-        return Observable.fromCallable(() -> {
+    public Single<List<Song>> getSongs(String selection, String[] selectionArgs, String sortOrder) {
+        return Single.fromCallable(() -> {
             List<Song> songs = new ArrayList<>();
 
             String[] projection = new String[]{
