@@ -56,7 +56,8 @@ public class AlbumsRepository {
                     projection,
                     selection,
                     selectionArgs,
-                    sortOrder);
+                    sortOrder
+            );
 
             int idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums._ID);
             int albumColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Albums.ALBUM);

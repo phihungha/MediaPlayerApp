@@ -51,10 +51,12 @@ public class ArtistsRepository {
                     MediaStore.Audio.Artists.NUMBER_OF_TRACKS,
             };
 
-            Cursor cursor = mediaStore.getMediaItems(projection,
+            Cursor cursor = mediaStore.getMediaItems(
+                    projection,
                     selection,
                     selectionArgs,
-                    sortOrder);
+                    sortOrder
+            );
 
             int idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists._ID);
             int artistColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST);

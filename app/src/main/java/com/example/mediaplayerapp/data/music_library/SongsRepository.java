@@ -80,7 +80,8 @@ public class SongsRepository {
                     projection,
                     longFormMediaOnlySelection,
                     selectionArgs,
-                    sortOrder);
+                    sortOrder
+            );
 
             int idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID);
             int displayNameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME);
