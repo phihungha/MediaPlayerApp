@@ -9,6 +9,7 @@ import android.net.Uri;
  * System's MediaStore API data source.
  */
 public class MediaStoreDataSource {
+
     protected Context context;
     protected Uri contentUri;
 
@@ -23,12 +24,12 @@ public class MediaStoreDataSource {
     }
 
     /**
-     * Get cursor to iterate over items from specified query
+     * Get cursor to iterate over items from query
      * @param projection Columns to get
      * @param selection Filter condition
      * @param selectionArgs Filter arguments
      * @param sortOrder Sort order
-     * @return Cursor of media items
+     * @return Cursor to iterate over the media items
      */
     public Cursor getMediaItems(String[] projection,
                                 String selection,
@@ -40,6 +41,18 @@ public class MediaStoreDataSource {
             selection,
             selectionArgs,
             sortOrder);
+    }
+
+    /**
+     * Get cursor to access a media item from its content URI and query.
+     * @param uri Content URI
+     * @param projection Projection
+     * @return Cursor to access the media item
+     */
+    public Cursor getMediaItem(Uri uri, String[] projection) {
+        return context.getContentResolver().query(
+                uri, projection, null, null, null
+        );
     }
 
     public Uri getMediaItemUri(long id) {

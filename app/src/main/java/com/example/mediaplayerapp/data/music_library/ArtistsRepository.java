@@ -1,10 +1,13 @@
 package com.example.mediaplayerapp.data.music_library;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.provider.MediaStore;
 
+import com.example.mediaplayerapp.data.MediaStoreDataSource;
 import com.example.mediaplayerapp.utils.SortOrder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
@@ -20,14 +23,56 @@ public class ArtistsRepository {
         NUMBER_OF_TRACKS
     }
 
-    ArtistsMediaStoreDataSource dataSource;
+    private final MediaStoreDataSource mediaStore;
 
     /**
      * Construct artist repository.
      * @param context Application context
      */
     public ArtistsRepository(Context context) {
-        this.dataSource = new ArtistsMediaStoreDataSource(context);
+        mediaStore = new MediaStoreDataSource(context, MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI);
+    }
+
+    /**
+     * Get artists that satisfy selection conditions
+     * @param selection SQL selection conditions
+     * @param selectionArgs Selection arguments
+     * @param sortOrder Sort order
+     * @return List of Artist objects
+     */
+    public Single<List<Artist>> getArtists(String selection, String[] selectionArgs, String sortOrder) {
+        return Single.fromCallable(() -> {
+            List<Artist> artists = new ArrayList<>();
+
+            String[] projection = new String[]{
+                    MediaStore.Audio.Artists._ID,
+                    MediaStore.Audio.Artists.ARTIST,
+                    MediaStore.Audio.Artists.NUMBER_OF_ALBUMS,
+                    MediaStore.Audio.Artists.NUMBER_OF_TRACKS,
+            };
+
+            Cursor cursor = mediaStore.getMediaItems(projection,
+                    selection,
+                    selectionArgs,
+                    sortOrder);
+
+            int idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists._ID);
+            int artistColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST);
+            int numberOfAlbumsColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_ALBUMS);
+            int numberOfTracksColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_TRACKS);
+
+            if (cursor.moveToFirst()) {
+                do {
+                    artists.add(new Artist(
+                            cursor.getLong(idColumnIndex),
+                            cursor.getString(artistColumnIndex),
+                            cursor.getInt(numberOfAlbumsColumnIndex),
+                            cursor.getInt(numberOfTracksColumnIndex)));
+                } while (cursor.moveToNext());
+                cursor.close();
+            }
+            return artists;
+        });
     }
 
     /**
@@ -57,11 +102,11 @@ public class ArtistsRepository {
                 break;
         }
 
-        return dataSource.getArtists(null, null, sortQuery);
+        return getArtists(null, null, sortQuery);
     }
 
     public Single<Artist> getArtist(long id) {
-        return dataSource.getArtists(MediaStore.Audio.Artists._ID + " = ?",
+        return getArtists(MediaStore.Audio.Artists._ID + " = ?",
                 new String[] { String.valueOf(id) },
                 MediaStore.Audio.Artists.DEFAULT_SORT_ORDER)
                 .map(i -> i.get(0));
