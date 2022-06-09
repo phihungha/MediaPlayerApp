@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="24dp"
-            android:text="@string/add_to_queue"
+            android:text="@string/watch_later"
             android:textColor="@color/black" />
     </LinearLayout>
 

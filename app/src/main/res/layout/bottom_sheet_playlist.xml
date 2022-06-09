@@ -1,100 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/shape_playlist_bottom_sheet_background"
-    android:id="@+id/bs_playlist"
     android:padding="10dp">
 
     <TextView
-        android:id="@+id/tv_playlist_name"
+        android:id="@+id/playlist_bottom_sheet_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textSize="20sp"
-        android:layout_marginBottom="20dp"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"
+        android:text="@string/playlist_name"
         android:textColor="@color/black"
-        />
+        android:textSize="20sp" />
 
     <LinearLayout
-        android:id="@+id/bs_startPlaylist"
+        android:id="@+id/playlist_bottom_sheet_play_all"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:padding="12dp"
         android:background="?attr/selectableItemBackground"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_play_circle_outline_24dp"
-            app:tint="@color/black" />
+            app:tint="@color/black"
+            tools:ignore="ContentDescription" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/play_next"
-            android:layout_marginStart="24dp"
             android:layout_gravity="center_vertical"
-            android:textColor="@color/black"
-            />
+            android:layout_marginStart="24dp"
+            android:text="@string/play_all"
+            android:textColor="@color/black" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/bs_renamePlaylist"
+        android:id="@+id/playlist_bottom_sheet_rename"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:padding="12dp"
         android:background="?attr/selectableItemBackground"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_edit_24dp"
-            app:tint="@color/black" />
+            app:tint="@color/black"
+            android:contentDescription="@string/rename" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/rename"
             android:layout_marginStart="24dp"
             android:layout_gravity="center_vertical"
-            android:textColor="@color/black"
-            />
+            android:textColor="@color/black" />
+
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/bs_deletePlaylist"
+        android:id="@+id/playlist_bottom_sheet_delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:padding="12dp"
         android:background="?attr/selectableItemBackground"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_delete_24dp"
-            app:tint="@color/black" />
+            app:tint="@color/black"
+            android:contentDescription="@string/delete" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/delete"
             android:layout_marginStart="24dp"
             android:layout_gravity="center_vertical"
-            android:textColor="@color/black"
-            />
+            android:textColor="@color/black" />
+
     </LinearLayout>
-
-
-
 
 </LinearLayout>

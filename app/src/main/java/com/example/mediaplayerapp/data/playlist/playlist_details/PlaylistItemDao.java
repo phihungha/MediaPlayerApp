@@ -21,25 +21,25 @@ public interface PlaylistItemDao {
     @Delete
     void delete(PlaylistItem media);
 
-    @Query("DELETE FROM media_table")
+    @Query("DELETE FROM PlaylistItems")
     void deleteAll();
 
-    @Query("DELETE FROM media_table WHERE media_table.MediaUri=:uri")
+    @Query("DELETE FROM PlaylistItems WHERE PlaylistItems.MediaUri=:uri")
     void deleteItemWithUri(String uri);
 
-    @Query("SELECT * FROM media_table WHERE media_table.MediaId= :id ORDER BY OrderSort ASC")
+    @Query("SELECT * FROM PlaylistItems WHERE PlaylistItems.PlaylistItemId= :id ORDER BY OrderSort ASC")
     LiveData<List<PlaylistItem>> getAllPlaylistMediasWithID(int id);
 
-    @Query("SELECT * FROM media_table ORDER BY OrderSort ASC")
+    @Query("SELECT * FROM PlaylistItems ORDER BY OrderSort ASC")
     LiveData<List<PlaylistItem>> getAllPlaylistMedias();
 
-    @Query("DELETE FROM media_table WHERE media_table.MediaId=:id")
+    @Query("DELETE FROM PlaylistItems WHERE PlaylistItems.PlaylistItemId=:id")
     void deleteAllWithID(int id);
 
-    @Query("SELECT COUNT(*) FROM media_table WHERE media_table.MediaId=:id")
+    @Query("SELECT COUNT(*) FROM PlaylistItems WHERE PlaylistItems.PlaylistItemId=:id")
     int getCountPlaylistWithID(int id);
 
-    @Query("SELECT * FROM media_table WHERE media_table.MediaId = :id ORDER BY OrderSort ASC")
+    @Query("SELECT * FROM PlaylistItems WHERE PlaylistItems.PlaylistItemId = :id ORDER BY OrderSort ASC")
     PlaylistItem findByItemId(int id);
 
     @Update
@@ -48,6 +48,6 @@ public interface PlaylistItemDao {
     @Update
     void updateByList(List<PlaylistItem> list);
 
-    @Query("SELECT * FROM media_table WHERE MediaId=:id ORDER BY OrderSort ASC")
+    @Query("SELECT * FROM PlaylistItems WHERE PlaylistItemId=:id ORDER BY OrderSort ASC")
     List<PlaylistItem> getCurrentListWithID(int id);
 }

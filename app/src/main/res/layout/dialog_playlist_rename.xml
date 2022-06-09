@@ -3,26 +3,23 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    >
+    android:padding="16dp">
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:text="@string/delete_playlist_from_device"
+        android:text="@string/rename_playlist"
         android:textSize="24sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        />
+        android:textAppearance="@android:style/TextAppearance.DialogWindowTitle"
+        android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/edt_renamePlaylist"
+    <EditText
+        android:id="@+id/playlist_rename_dialog_new_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_marginTop="12dp"
-        android:hint="@string/message_delete"
+        android:hint="@string/new_playlist_name"
         android:textSize="20sp"
-        android:textColor="@color/black"
-        />
+        android:importantForAutofill="no"
+        android:inputType="textPersonName" />
 </LinearLayout>

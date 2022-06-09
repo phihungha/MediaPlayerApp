@@ -1,24 +1,22 @@
 package com.example.mediaplayerapp.data.playlist.playlist_details;
 
+import android.net.Uri;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
 import java.io.Serializable;
 
-/***
- *  Media class for playlist
- */
-@Entity(tableName = "media_table",
-        primaryKeys = {"MediaId", "MediaUri"}
-       )
+@Entity(tableName = "PlaylistItems",
+        primaryKeys = {"PlaylistItemId", "MediaUri"})
 public class PlaylistItem implements Serializable {
-    @ColumnInfo(name = "MediaId")
+    @ColumnInfo(name = "PlaylistItemId")
     private int id;
 
     @NonNull
     @ColumnInfo(name = "MediaUri")
-    private String mediaUri;
+    private final String mediaUri;
 
     @ColumnInfo(name = "OrderSort")
     private long orderSort;
@@ -27,10 +25,6 @@ public class PlaylistItem implements Serializable {
         this.id = id;
         this.mediaUri = mediaUri;
         this.orderSort = orderSort;
-    }
-
-    public long getOrderSort() {
-        return orderSort;
     }
 
     public void setOrderSort(long orderSort) {
@@ -50,8 +44,11 @@ public class PlaylistItem implements Serializable {
         return mediaUri;
     }
 
-    public void setMediaUri(@NonNull String mediaUri) {
-        this.mediaUri = mediaUri;
+    public Uri getAndroidMediaUri() {
+        return Uri.parse(getMediaUri());
     }
 
+    public long getOrderSort() {
+        return orderSort;
+    }
 }

@@ -8,21 +8,16 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
-        android:text="@string/rename_playlist"
+        android:text="@string/delete_playlist_from_device"
         android:textSize="24sp"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        />
+        android:textAppearance="@android:style/TextAppearance.DialogWindowTitle"
+        android:textStyle="bold" />
 
-    <EditText
-        android:id="@+id/edt_renamePlaylist"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:hint="@string/new_playlist_name"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:importantForAutofill="no"
-        android:inputType="textPersonName" />
+        android:hint="@string/message_delete"
+        android:textSize="20sp" />
+
 </LinearLayout>

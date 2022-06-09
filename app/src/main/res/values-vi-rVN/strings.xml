@@ -33,7 +33,7 @@
     <string name="create_new_playlist">Tạo PlayList</string>
     <string name="enter_playlist_name">Nhập tên PlayList</string>
     <string name="create">Tạo</string>
-    <string name="play_pause_btn" translatable="false">"Tạm dừng "</string>
+    <string name="play_pause_btn" translatable="false">Phát/Tạm dừng</string>
     <string name="skip_next_btn" translatable="false">Chuyển đến bài hát tiếp theo</string>
     <string name="skip_prev_btn">Chuyển đến bài hát trước</string>
     <string name="audio_visualizer_permission_rationale_title">Cần có quyền ghi âm thanh</string>
@@ -108,7 +108,7 @@
     <string name="dialog_video_info_resolution_textview" translatable="false">Độ Phân Giải:</string>
     <string name="queue" translatable="false">Xem sau</string>
     <string name="clear" translatable="false">Xóa</string>
-    <string name="add_to_queue" translatable="false">Thêm vào Xem sau</string>
+    <string name="add_to_watch_later" translatable="false">Thêm vào Xem sau</string>
     <string name="clear_queue_list" translatable="false">Xóa danh sách Xem sau</string>
     <string name="go_to_queue_list" translatable="false">Đi đến danh sách Xem sau</string>
     <string name="favorites">Yêu thích</string>
@@ -119,4 +119,12 @@
     <string name="favorite">Yêu thích</string>
     <string name="numbers_of_item">Số lượng</string>
     <string name="dialog_bottom_video_name">Tên video</string>
+    <string name="item_count">Số lượng</string>
+    <string name="playlist_name">Tên danh sách phát</string>
+    <string name="video_count_postfix">video</string>
+    <string name="song_count_postfix">bài hát</string>
+    <string name="cancel">Hủy</string>
+    <string name="video">Video</string>
+    <string name="music">Nhạc</string>
+    <string name="name_is_empty">Tên trống</string>
 </resources>

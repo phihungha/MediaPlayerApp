@@ -12,7 +12,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
+import com.example.mediaplayerapp.data.playlist.PlaylistRepository;
+import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.BottomSheetSongBinding;
@@ -20,6 +21,7 @@ import com.example.mediaplayerapp.databinding.SongDetailBinding;
 import com.example.mediaplayerapp.ui.playlist.MediaQueueUtil;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.example.mediaplayerapp.utils.MediaUtils;
+import com.example.mediaplayerapp.utils.SortOrder;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
@@ -63,14 +65,16 @@ public class SongBottomSheet extends BottomSheetDialogFragment {
         //**** MUST **** do this before setOnClickListener for optionAddPlaylist, or else the first
         // time user clicks, dialog only shows title, NO ITEMS
         List<Playlist> allMusicPlaylists = new ArrayList<>();
-        playlistViewModel.getAllPlaylists().observe(
-                requireActivity(),
-                playlists -> {
-                    for (Playlist playlist : playlists) {
-                        if (!playlist.isVideo())
-                            allMusicPlaylists.add(playlist);
+        playlistViewModel.getAllPlaylists(PlaylistRepository.SortBy.NAME, SortOrder.ASC)
+                .observe(
+                    requireActivity(),
+                    playlists -> {
+                        for (Playlist playlist : playlists) {
+                            if (!playlist.isVideo())
+                                allMusicPlaylists.add(playlist);
+                        }
                     }
-                });
+                );
 
         binding.bottomSheetAddSongPlaylist.setOnClickListener(view -> {
             PlaylistItemViewModel PlaylistItemViewModel

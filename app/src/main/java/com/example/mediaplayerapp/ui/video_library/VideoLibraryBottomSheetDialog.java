@@ -11,7 +11,8 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
+import com.example.mediaplayerapp.data.playlist.PlaylistRepository;
+import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.data.video_library.Video;
@@ -19,6 +20,7 @@ import com.example.mediaplayerapp.databinding.BottomSheetVideoBinding;
 import com.example.mediaplayerapp.databinding.DialogVideoInfoBinding;
 import com.example.mediaplayerapp.ui.playlist.MediaQueueUtil;
 import com.example.mediaplayerapp.utils.MediaUtils;
+import com.example.mediaplayerapp.utils.SortOrder;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.text.DecimalFormat;
@@ -95,14 +97,16 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
         //**** MUST **** do this before setOnClickListener for optionAddPlaylist, or else the first
         // time user clicks, dialog only shows title, NO ITEMS
         List<Playlist> allVideoPlaylists = new ArrayList<>();
-        playlistViewModel.getAllPlaylists().observe(
-                requireActivity(),
-                playlists -> {
-                    for (Playlist playlist : playlists) {
-                        if (playlist.isVideo())
-                            allVideoPlaylists.add(playlist);
-                    }
-                });
+        playlistViewModel.getAllPlaylists(PlaylistRepository.SortBy.NAME, SortOrder.ASC)
+                .observe(
+                    requireActivity(),
+                        playlists -> {
+                            for (Playlist playlist : playlists) {
+                                if (playlist.isVideo())
+                                    allVideoPlaylists.add(playlist);
+                            }
+                        }
+                 );
 
         LinearLayout optionAddPlaylist = binding.bottomSheetOptionAddPlaylist;
         optionAddPlaylist.setOnClickListener(view1 -> {

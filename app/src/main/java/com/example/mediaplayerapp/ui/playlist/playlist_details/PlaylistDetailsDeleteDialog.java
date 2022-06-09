@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
+import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
@@ -54,7 +54,7 @@ public class PlaylistDetailsDeleteDialog extends AppCompatDialogFragment {
                 .get(PlaylistViewModel.class);
 
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-        View view= requireActivity().getLayoutInflater().inflate(R.layout.dialog_delete_playlist,null);
+        View view= requireActivity().getLayoutInflater().inflate(R.layout.dialog_playlist_delete,null);
 
         builder.setView(view)
                 .setNegativeButton("cancel", (dialogInterface, i) -> {
@@ -63,7 +63,7 @@ public class PlaylistDetailsDeleteDialog extends AppCompatDialogFragment {
                     viewModel.delete(mMedia);
                     Toast.makeText(getActivity(), "Item deleted!", Toast.LENGTH_SHORT).show();
 
-                    playlist.setCount(playlist.getCount()-1);
+                    playlist.setItemCount(playlist.getItemCount()-1);
 
 
                     playlistViewModel.update(playlist);

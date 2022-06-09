@@ -35,7 +35,8 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
+import com.example.mediaplayerapp.data.playlist.PlaylistRepository;
+import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentMusicPlayerControlBinding;
@@ -43,6 +44,7 @@ import com.example.mediaplayerapp.services.MusicPlaybackService;
 import com.example.mediaplayerapp.ui.playlist.MediaQueueUtil;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.example.mediaplayerapp.utils.MediaUtils;
+import com.example.mediaplayerapp.utils.SortOrder;
 import com.google.android.exoplayer2.ui.TimeBar;
 
 import java.util.ArrayList;
@@ -90,7 +92,9 @@ public class MusicPlayerControlFragment extends Fragment {
 
         playlistItemViewModel = new ViewModelProvider(this).get(PlaylistItemViewModel.class);
         PlaylistViewModel playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
-        playlistViewModel.getAllPlaylists().observe(getViewLifecycleOwner(), newPlaylists -> {
+        playlistViewModel
+                .getAllPlaylists(PlaylistRepository.SortBy.NAME, SortOrder.ASC)
+                .observe(getViewLifecycleOwner(), newPlaylists -> {
             playlists.clear();
             playlists.addAll(newPlaylists
                     .stream()

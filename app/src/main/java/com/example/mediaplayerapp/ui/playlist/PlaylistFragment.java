@@ -2,7 +2,6 @@ package com.example.mediaplayerapp.ui.playlist;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -10,9 +9,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.SearchView;
 import android.widget.Toast;
 
@@ -20,129 +16,41 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
-import com.example.mediaplayerapp.databinding.FragmentPlaylistBinding;
-import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
-import com.example.mediaplayerapp.ui.playlist.media_queue.MediaQueueFragment;
-import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
-import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
+import com.example.mediaplayerapp.data.playlist.PlaylistRepository;
+import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
+import com.example.mediaplayerapp.databinding.BottomSheetPlaylistAddBinding;
+import com.example.mediaplayerapp.databinding.FragmentPlaylistsBinding;
+import com.example.mediaplayerapp.utils.SortOrder;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-public class PlaylistFragment extends Fragment implements View.OnClickListener {
-    private FragmentPlaylistBinding binding;
-    private final MediaQueueFragment mediaQueueFragment = new MediaQueueFragment();
-    private PlaylistAdapter adapter;
-    private PlaylistViewModel playlistViewModel;
+public class PlaylistFragment extends Fragment {
 
-    BottomSheetDialog bottomSheetDialog;
+    private PlaylistViewModel viewModel;
+
+    private PlaylistAdapter adapter;
+
+    private BottomSheetDialog bottomSheetDialog;
+    private FragmentPlaylistsBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentPlaylistBinding.inflate(inflater, container, false);
-        playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
-        return binding.getRoot();
-    }
+        binding = FragmentPlaylistsBinding.inflate(inflater, container, false);
+        viewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        setupAddDialog();
+        binding.playlistAddBtn.setOnClickListener(view -> bottomSheetDialog.show());
 
-        adapter = new PlaylistAdapter(new PlaylistAdapter.PlaylistDiff());
-        binding.rcvPlaylists.setAdapter(adapter);
-        playlistViewModel.getAllPlaylists().observe(
-                getViewLifecycleOwner(),
-                playlists -> {
-                    // Update the cached copy of the playlist in the adapter.
-                    adapter.submitList(playlists);
-                }
+        adapter = new PlaylistAdapter(
+                this, new ViewModelProvider(this).get(PlaylistItemViewModel.class)
         );
-        setListenerForAdapter();
-    }
+        binding.playlistList.setAdapter(adapter);
 
-    private void setListenerForAdapter() {
-        binding.layoutItemAddPlaylist.setOnClickListener(this);
-        binding.layoutItemWatchLater.setOnClickListener(this);
-        binding.layoutItemMyFavourite.setOnClickListener(this);
+        loadAllPlaylists(PlaylistRepository.SortBy.NAME, SortOrder.ASC);
 
-        adapter.setContext(requireContext());
-        adapter.setApplication(requireActivity().getApplication());
-        //set click item listener for recyclerview
-        adapter.setListener((v, position) ->
-                Navigation.findNavController(binding.getRoot()).navigate(
-                        PlaylistFragmentDirections
-                        .actionNavigationPlaylistToNavigationPlaylistDetails(
-                                adapter.getPlaylistItemAt(position).getId()
-                        )
-        ));
-
-        //click bottom sheet play item recyclerview
-        adapter.setBSPlayListener((view, position) -> {
-            Playlist playlist = adapter.getPlaylistItemAt(position);
-            Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlist.getId(), 0);
-            if (playlist.isVideo()) {
-                VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
-            } else {
-                MusicPlayerActivity.launchWithUri(requireActivity(), playbackUri);
-            }
-        });
-
-        //click bottom sheet rename item recyclerview
-        adapter.setBSRenameListener((view, position) -> {
-            Playlist playlist = adapter.getPlaylistItemAt(position);
-            PlaylistRenameDialog dialog = PlaylistRenameDialog.newInstance(playlist);
-            dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_RENAME_DIALOG);
-        });
-        //click bottom sheet delete item recyclerview
-        adapter.setBSDeleteListener(((view, position) -> {
-            Playlist playlist = adapter.getPlaylistItemAt(position);
-            PlaylistDeleteDialog dialog = PlaylistDeleteDialog.newInstance(playlist);
-            dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_BS_DELETE_DIALOG);
-        }));
-    }
-
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.layoutItem_addPlaylist:
-                openBottomSheetDialogAddPlaylist();
-                break;
-
-            case R.id.layoutItem_myFavourite:
-                openFavourite();
-                break;
-
-            case R.id.layoutItem_watchLater:
-                openWatchLaterList();
-                break;
-        }
-    }
-
-    private void openFavourite() {
-        Bundle bundle=new Bundle();
-        bundle.putString(PlaylistConstants.TRANS,PlaylistConstants.TRANS_FAVOURITE);
-        mediaQueueFragment.setArguments(bundle);
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, mediaQueueFragment)
-                .addToBackStack(null)
-                .commit();
-    }
-
-    private void openWatchLaterList() {
-        Bundle bundle=new Bundle();
-        bundle.putString(PlaylistConstants.TRANS,PlaylistConstants.TRANS_QUEUE);
-        mediaQueueFragment.setArguments(bundle);
-        getParentFragmentManager().beginTransaction()
-                .replace(R.id.nav_host_fragment_activity_main, mediaQueueFragment)
-                .addToBackStack(null)
-                .commit();
-    }
-
-    private void makeToast(String mess) {
-        Toast.makeText(getActivity(), mess, Toast.LENGTH_SHORT).show();
+        return binding.getRoot();
     }
 
     @Override
@@ -151,46 +59,33 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         binding = null;
     }
 
-    /**
-     * Open BottomSheet Dialog Add playlist
-     */
-    private void openBottomSheetDialogAddPlaylist() {
+    private void setupAddDialog() {
         bottomSheetDialog = new BottomSheetDialog(requireContext(), R.style.BottomSheetTheme);
-        View bsAddView = LayoutInflater.from(getContext()).inflate(
-                R.layout.bottom_sheet_playlist_create,
-                requireActivity().findViewById(R.id.bs_playlist_create)
-        );
-        //set click event here
-        EditText edtName = bsAddView.findViewById(R.id.edt_playlistNameCreate);
-        Button btnCreate = bsAddView.findViewById(R.id.btn_createPlaylist);
-        RadioButton radioAudio = bsAddView.findViewById(R.id.radio_audio);
-        RadioButton radioVideo = bsAddView.findViewById(R.id.radio_video);
-        btnCreate.setOnClickListener(view -> {
-            if (edtName.getText().toString().trim().isEmpty()) {
-                makeToast("Name is empty!");
-            } else if (!radioAudio.isChecked() && !radioVideo.isChecked()) {
-                makeToast("Please check type for playlist!");
-            } else {
-                int idResource;
-                if (!radioAudio.isChecked()) {
-                    idResource = R.drawable.ic_play_video_24dp;
-                } else {
-                    idResource = R.drawable.ic_music_video_24;
-                }
-                Playlist playlist = new Playlist(idResource,
-                        edtName.getText().toString().trim(),
-                        radioVideo.isChecked(),
-                        0
-                );
-                playlistViewModel.insert(playlist);
+        BottomSheetPlaylistAddBinding bottomSheetBinding
+                = BottomSheetPlaylistAddBinding.inflate(
+                        getLayoutInflater(),
+                        requireActivity().findViewById(R.id.bs_playlist_create),
+                    false);
 
+        bottomSheetBinding.playlistAddBottomSheetCreateBtn.setOnClickListener(view -> {
+            String name = bottomSheetBinding.playlistAddBottomSheetName
+                            .getText()
+                            .toString()
+                            .trim();
+
+            if (name.isEmpty())
+                Toast.makeText(requireActivity(), R.string.name_is_empty, Toast.LENGTH_SHORT).show();
+            else {
+                Playlist playlist = new Playlist(
+                         name,
+                         bottomSheetBinding.playlistAddBottomSheetVideo.isChecked(),
+                        0);
+                viewModel.insert(playlist).subscribe();
                 bottomSheetDialog.dismiss();
-                makeToast("Create Playlist Success!");
             }
         });
 
-        bottomSheetDialog.setContentView(bsAddView);
-        bottomSheetDialog.show();
+        bottomSheetDialog.setContentView(bottomSheetBinding.getRoot());
     }
 
     @Override
@@ -213,13 +108,13 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                Searching(s);
+                searchPlaylistsByNameMatching(s);
                 return true;
             }
 
             @Override
             public boolean onQueryTextChange(String s) {
-                Searching(s);
+                searchPlaylistsByNameMatching(s);
                 return true;
             }
         });
@@ -229,45 +124,28 @@ public class PlaylistFragment extends Fragment implements View.OnClickListener {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if(item.getItemId() == R.id.action_sort_playlist_by_title_asc)
-           sortByNameASC();
+           loadAllPlaylists(PlaylistRepository.SortBy.NAME, SortOrder.ASC);
         else if(item.getItemId() == R.id.action_sort_playlist_by_title_desc)
-            sortByNameDESC();
+            loadAllPlaylists(PlaylistRepository.SortBy.NAME, SortOrder.DESC);
         else if(item.getItemId() == R.id.action_sort_playlist_by_number_item_asc)
-            sortByNumberItemASC();
+            loadAllPlaylists(PlaylistRepository.SortBy.ITEM_COUNT, SortOrder.ASC);
         else if(item.getItemId() == R.id.action_sort_playlist_by_number_item_desc)
-            sortByNumberItemDESC();
+            loadAllPlaylists(PlaylistRepository.SortBy.ITEM_COUNT, SortOrder.DESC);
         return true;
     }
 
-    private void sortByNumberItemASC() {
-        playlistViewModel.sortPlaylistByNameASC().observe(
+    private void loadAllPlaylists(PlaylistRepository.SortBy sortBy, SortOrder sortOrder) {
+        viewModel.getAllPlaylists(sortBy, sortOrder).observe(
                 getViewLifecycleOwner(),
-                playlists -> adapter.submitList(playlists));
-    }
-    private void sortByNumberItemDESC() {
-        playlistViewModel.sortPlaylistByNumberItemDESC().observe(
-                getViewLifecycleOwner(),
-                playlists -> adapter.submitList(playlists));
-    }
-    private void sortByNameASC() {
-        playlistViewModel.sortPlaylistByNameASC().observe(
-                getViewLifecycleOwner(),
-                playlists -> adapter.submitList(playlists));
-    }
-    private void sortByNameDESC() {
-        playlistViewModel.sortPlaylistByNameDESC().observe(
-                getViewLifecycleOwner(),
-                playlists -> adapter.submitList(playlists));
+                playlists -> adapter.submitList(playlists)
+        );
     }
 
-    private void Searching(String s) {
-        if (s.equals("")) {
-            playlistViewModel.getAllPlaylists().observe(
-                    getViewLifecycleOwner(),
-                    playlists -> adapter.submitList(playlists)
-            );
-        } else {
-            playlistViewModel.getAllPlaylistSearching(s).observe(
+    private void searchPlaylistsByNameMatching(String searchTerm) {
+        if (searchTerm.equals(""))
+            loadAllPlaylists(PlaylistRepository.SortBy.NAME, SortOrder.ASC);
+        else {
+            viewModel.getPlaylistsByNameMatching(searchTerm).observe(
                     getViewLifecycleOwner(),
                     playlists -> adapter.submitList(playlists)
             );

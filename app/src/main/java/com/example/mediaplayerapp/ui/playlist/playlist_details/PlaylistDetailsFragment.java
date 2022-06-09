@@ -17,7 +17,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -25,21 +24,21 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistDetailsBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
+import com.example.mediaplayerapp.ui.playlist.MediaQueueUtil;
+import com.example.mediaplayerapp.ui.playlist.OnPlaylistItemListChangedListener;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
+import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
-import com.example.mediaplayerapp.ui.playlist.MediaQueueUtil;
+import com.example.mediaplayerapp.utils.MediaMetadataUtils;
 import com.example.mediaplayerapp.utils.MediaUtils;
-import com.example.mediaplayerapp.ui.playlist.OnPlaylistItemListChangedListener;
 import com.example.mediaplayerapp.utils.item_touch.OnStartDragListener;
 import com.example.mediaplayerapp.utils.item_touch.SimpleItemTouchHelperCallback;
 
@@ -95,7 +94,7 @@ public class PlaylistDetailsFragment extends Fragment
         adapter.setContext(requireContext());
 
         currentPlaylistId = PlaylistDetailsFragmentArgs.fromBundle(requireArguments()).getPlaylistId();
-        playlistViewModel.getPlaylistWithID(currentPlaylistId).observe(
+        playlistViewModel.getPlaylist(currentPlaylistId).observe(
                 getViewLifecycleOwner(),
                 newPlaylist -> {
                     playlist = newPlaylist.get(0);
@@ -130,38 +129,26 @@ public class PlaylistDetailsFragment extends Fragment
 
     public void refresh() {
         int count = playlistItemViewModel.getCountPlaylistWithID(currentPlaylistId);
-        playlist.setCount(count);
+        playlist.setItemCount(count);
 
         binding.tvPlaylistDetailsName.setText(playlist.getName());
         binding.tvPlaylistDetailsNumbers.setText(getStringCountText(playlist));
 
         PlaylistItem playlistItem = playlistItemViewModel.findByItemId(currentPlaylistId);
-        if (playlistItem == null) {
-            binding.imgThumbnailPlaylistDetails.setImageResource(playlist.getIdResource());
+
+        if (playlistItem == null)
             return;
-        }
-        if (playlist.isVideo()) {
-            Glide.with(requireContext())
-                    .load(playlistItem.getMediaUri())
-                    .skipMemoryCache(false)
-                    .error(playlist.getIdResource())
-                    .centerCrop()
-                    .into(binding.imgThumbnailPlaylistDetails);
-        } else {
-            Bitmap thumb = MediaUtils.loadThumbnail(requireContext(), Uri.parse(playlistItem.getMediaUri()));
-            if (thumb != null) {
-                binding.imgThumbnailPlaylistDetails.setImageBitmap(thumb);
-            } else {
-                binding.imgThumbnailPlaylistDetails.setImageDrawable(
-                        ContextCompat.getDrawable(requireContext(),
-                                playlist.getIdResource()));
-            }
-        }
+
+        Bitmap thumbnailBitmap = MediaMetadataUtils.getThumbnail(
+                requireContext(),
+                playlistItem.getAndroidMediaUri(),
+                R.drawable.ic_playlist_24dp);
+        binding.imgThumbnailPlaylistDetails.setImageBitmap(thumbnailBitmap);
         playlistViewModel.update(playlist);
     }
 
     private String getStringCountText(Playlist playlist) {
-        int count = playlist.getCount();
+        int count = playlist.getItemCount();
         String textNumber = "Playlist " + count + " ";
 
         if (playlist.isVideo()) {

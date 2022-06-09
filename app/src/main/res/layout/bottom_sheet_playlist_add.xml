@@ -18,24 +18,25 @@
         android:textSize="20sp" />
 
     <LinearLayout
-        android:id="@+id/bs_startPlaylist"
+        android:id="@+id/playlist_bottom_sheet_play_all"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="?attr/selectableItemBackground"
+        android:background="?selectableItemBackground"
         android:orientation="vertical"
         android:padding="12dp">
 
         <EditText
-            android:id="@+id/edt_playlistNameCreate"
+            android:id="@+id/playlist_add_bottom_sheet_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="24dp"
             android:layout_marginEnd="24dp"
             android:hint="@string/enter_playlist_name"
-            android:textColor="@color/black" />
-
+            android:textColor="@color/black"
+            android:importantForAutofill="no"
+            android:inputType="textPersonName" />
 
         <RadioGroup
             android:layout_width="wrap_content"
@@ -43,23 +44,24 @@
             android:layout_marginTop="16dp">
 
             <RadioButton
-                android:id="@+id/radio_video"
+                android:id="@+id/playlist_add_bottom_sheet_video"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Video" />
+                android:checked="true"
+                android:text="@string/video" />
 
             <RadioButton
-                android:id="@+id/radio_audio"
+                android:id="@+id/playlist_add_bottom_sheet_audio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Audio" />
+                android:text="@string/songs" />
         </RadioGroup>
 
         <Button
-            android:id="@+id/btn_createPlaylist"
+            android:id="@+id/playlist_add_bottom_sheet_create_btn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_gravity="end"
             android:layout_marginTop="16dp"
             android:text="@string/create" />
 

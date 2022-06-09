@@ -4,17 +4,12 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.io.Serializable;
-
-@Entity(tableName = "playlist_table")
-public class Playlist implements Serializable {
+@Entity(tableName = "Playlists")
+public class Playlist {
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "PlaylistID")
+    @ColumnInfo(name = "PlaylistId")
     private int id;
-
-    @ColumnInfo(name = "ResourceID")
-    private int idResource;
 
     @ColumnInfo(name = "Name")
     private String name;
@@ -22,22 +17,21 @@ public class Playlist implements Serializable {
     @ColumnInfo(name = "IsVideo")
     private boolean isVideo;
 
-    @ColumnInfo(name = "Count")
-    private int count;
+    @ColumnInfo(name = "ItemCount")
+    private int itemCount;
 
-    public Playlist(int idResource, String name, boolean isVideo, int count) {
-        this.idResource = idResource;
+    public Playlist(String name, boolean isVideo, int itemCount) {
         this.name = name;
         this.isVideo = isVideo;
-        this.count = count;
+        this.itemCount = itemCount;
     }
 
-    public int getCount() {
-        return count;
+    public int getItemCount() {
+        return itemCount;
     }
 
-    public void setCount(int count) {
-        this.count = count;
+    public void setItemCount(int itemCount) {
+        this.itemCount = itemCount;
     }
 
     public int getId() {
@@ -46,14 +40,6 @@ public class Playlist implements Serializable {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getIdResource() {
-        return idResource;
-    }
-
-    public void setIdResource(int idResource) {
-        this.idResource = idResource;
     }
 
     public String getName() {

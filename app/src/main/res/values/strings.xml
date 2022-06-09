@@ -75,9 +75,9 @@
     <string name="duration">Duration</string>
     <string name="file_name">File name</string>
     <string name="sort">Sort by name</string>
-    <string name="add_to_queue">Add to queue</string>
-    <string name="go_to_queue_list">Go to queue list</string>
-    <string name="clear_queue_list">Clear queue list</string>
+    <string name="add_to_watch_later">Watch later</string>
+    <string name="go_to_queue_list">Go to watch later</string>
+    <string name="clear_queue_list">Clear watch later</string>
     <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
     <string name="queue">Queue</string>
     <string name="save_to_playlist">Save to playlist</string>
@@ -146,4 +146,12 @@
     <string name="favorites">Favorites</string>
     <string name="favorite">Favorite</string>
     <string name="more">More</string>
+    <string name="item_count">Item count</string>
+    <string name="playlist_name">Playlist name</string>
+    <string name="video_count_postfix">video(s)</string>
+    <string name="song_count_postfix">song(s)</string>
+    <string name="cancel">Cancel</string>
+    <string name="video">Video</string>
+    <string name="music">Music</string>
+    <string name="name_is_empty">Name is empty!</string>
 </resources>

@@ -9,7 +9,7 @@
         android:id="@+id/navigation_playlist"
         android:name="com.example.mediaplayerapp.ui.playlist.PlaylistFragment"
         android:label="@string/title_playlist"
-        tools:layout="@layout/fragment_playlist" >
+        tools:layout="@layout/fragment_playlists" >
         <action
             android:id="@+id/action_navigation_playlist_to_navigation_playlist_details"
             app:destination="@id/navigation_playlist_details"
