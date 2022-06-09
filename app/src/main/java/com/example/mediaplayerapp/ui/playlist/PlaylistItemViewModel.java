@@ -64,11 +64,6 @@ public class PlaylistItemViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Completable deletePlaylistItem(int itemId) {
-        return playlistItemRepository.deletePlaylistItem(itemId)
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
     public Completable deletePlaylistItem(PlaylistItem item) {
         return playlistItemRepository.deletePlaylistItem(item)
                 .observeOn(AndroidSchedulers.mainThread());

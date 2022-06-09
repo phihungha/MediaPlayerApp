@@ -299,7 +299,7 @@ public class PlaylistItemAdapter
         }
 
         private void deleteItem() {
-            Disposable disposable = viewModel.deletePlaylistItem(playlistItem.getPlaylistId())
+            Disposable disposable = viewModel.deletePlaylistItem(playlistItem)
                     .subscribe(
                             () -> {},
                             e -> MessageUtils.displayError(

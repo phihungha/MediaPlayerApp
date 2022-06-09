@@ -4,6 +4,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -93,8 +94,9 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
                 getViewLifecycleOwner(),
                 newPlaylist -> {
                     playlist = newPlaylist;
+                    updatePlaylistInfoHeader();
                     if (!playlistLoaded) {
-                        setupPlaylistDependentComponents();
+                        setupPlaylistItemRecyclerView();
                         playlistLoaded = true;
                     }
                 }
@@ -105,13 +107,13 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     }
 
     /**
-     * Certain components such as the adapter depends
-     * on fully loaded playlist information. This method
-     * should be called after the first time playlist info
-     * is available.
+     * This method depends on fully loaded playlist information.
+     * This method should only be called when
+     * the playlist variable is not null.
      */
-    private void setupPlaylistDependentComponents() {
-        updatePlaylistInfoHeader();
+    private void setupPlaylistItemRecyclerView() {
+        if (playlist == null)
+            Log.e(LOG_TAG, "Playlist has not been loaded!");
 
         adapter = new PlaylistItemAdapter(
                 this,
