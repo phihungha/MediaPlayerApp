@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueue;
 import com.example.mediaplayerapp.data.playlist.media_queue.MediaQueueViewModel;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
+import com.example.mediaplayerapp.data.playlist.PlaylistItem;
 import com.example.mediaplayerapp.databinding.FragmentVideoQueueBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.playlist.PlaylistConstants;
@@ -115,87 +115,18 @@ public class VideoQueueFragment extends Fragment implements OnStartDragListener,
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.playlist_detail_option_menu, menu);
+        inflater.inflate(R.menu.playlist_details_options_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_sort_by_title_asc_playlist_detail)
-            SortByNameASC();
-        else if (item.getItemId() == R.id.action_sort_by_title_desc_playlist_detail)
-            SortByNameDESC();
-        else if (item.getItemId() == R.id.action_sort_by_duration_asc_playlist_detail)
-            SortByDurationASC();
-        else if (item.getItemId() == R.id.action_sort_by_duration_desc_playlist_detail)
-            SortByDurationDESC();
-        else if (item.getItemId() == R.id.action_show_as_list_playlist_detail)
+        if (item.getItemId() == R.id.action_show_as_list_playlist_detail)
             ShowAsList();
         else if (item.getItemId() == R.id.action_show_as_grid_playlist_detail)
             ShowAsGrid();
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void SortByNameASC() {
-        List<MediaQueue> current = viewModel.getCurrentListVideoWatchLater();
-        current.sort((playlistItem, t1) -> {
-            String name1 = MediaUtils.getMediaNameFromURI(requireContext(), Uri.parse(playlistItem.getMediaUri()));
-            String name2 = MediaUtils.getMediaNameFromURI(requireContext(), Uri.parse(t1.getMediaUri()));
-            return name1.compareTo(name2);
-        });
-
-        for (int i = 0; i < current.size(); i++) {
-            MediaQueue item = current.get(i);
-            item.setOrderSort(i);
-        }
-        viewModel.updateByList(current);
-
-    }
-
-    private void SortByNameDESC() {
-        List<MediaQueue> current = viewModel.getCurrentListVideoWatchLater();
-        current.sort((playlistItem, t1) -> {
-            String name1 = MediaUtils.getMediaNameFromURI(requireContext(), Uri.parse(playlistItem.getMediaUri()));
-            String name2 = MediaUtils.getMediaNameFromURI(requireContext(), Uri.parse(t1.getMediaUri()));
-            return name2.compareTo(name1);
-        });
-
-        for (int i = 0; i < current.size(); i++) {
-            MediaQueue item = current.get(i);
-            item.setOrderSort(i);
-        }
-        viewModel.updateByList(current);
-    }
-
-    private void SortByDurationASC() {
-        List<MediaQueue> current = viewModel.getCurrentListVideoWatchLater();
-        current.sort((playlistItem, t1) -> {
-            Long dur1 = MediaUtils.getDurationFromUri(requireContext(), Uri.parse(playlistItem.getMediaUri()));
-            Long dur2 = MediaUtils.getDurationFromUri(requireContext(), Uri.parse(t1.getMediaUri()));
-            return dur1.compareTo(dur2);
-        });
-
-        for (int i = 0; i < current.size(); i++) {
-            MediaQueue item = current.get(i);
-            item.setOrderSort(i);
-        }
-        viewModel.updateByList(current);
-    }
-
-    private void SortByDurationDESC() {
-        List<MediaQueue> current = viewModel.getCurrentListVideoWatchLater();
-        current.sort((playlistItem, t1) -> {
-            Long dur1 = MediaUtils.getDurationFromUri(requireContext(), Uri.parse(playlistItem.getMediaUri()));
-            Long dur2 = MediaUtils.getDurationFromUri(requireContext(), Uri.parse(t1.getMediaUri()));
-            return dur2.compareTo(dur1);
-        });
-
-        for (int i = 0; i < current.size(); i++) {
-            MediaQueue item = current.get(i);
-            item.setOrderSort(i);
-        }
-        viewModel.updateByList(current);
     }
 
     private void ShowAsList() {

@@ -9,6 +9,7 @@ import java.util.List;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class PlaylistRepository {
@@ -19,11 +20,11 @@ public class PlaylistRepository {
     }
 
     private final PlaylistDao playlistDao;
-    private final PlaylistItemRepository playlistItemRepository;
+    private final PlaylistItemDao playlistItemDao;
 
     public PlaylistRepository(Application application) {
         playlistDao = AppRoomDatabase.getDatabase(application).playlistDao();
-        playlistItemRepository = new PlaylistItemRepository(application);
+        playlistItemDao = AppRoomDatabase.getDatabase(application).playlistItemDao();
     }
 
     public Completable addPlaylist(Playlist playlist) {
@@ -42,14 +43,19 @@ public class PlaylistRepository {
         return playlistDao.updateItemCount(playlistId, newCount).subscribeOn(Schedulers.io());
     }
 
-    public Completable deletePlaylist(int id) {
-        return playlistItemRepository.deleteAllFromPlaylist(id)
-                .andThen(playlistDao.delete(id))
+    public Completable deletePlaylist(int playlistId) {
+        return playlistItemDao.deleteAllFromPlaylist(playlistId)
+                .andThen(playlistDao.delete(playlistId))
                 .subscribeOn(Schedulers.io());
     }
 
-    public Flowable<Playlist> getPlaylist(int id){
-        return playlistDao.get(id);
+    public Flowable<Playlist> getPlaylist(int playlistId){
+        return playlistDao.get(playlistId).subscribeOn(Schedulers.io());
+    }
+
+    public Single<Integer> getPlaylistItemCount(int playlistId){
+        return playlistItemDao.getItemCountOfPlaylist(playlistId)
+                .subscribeOn(Schedulers.io());
     }
 
     public Flowable<List<Playlist>> getPlaylistsByNameMatching(String text) {

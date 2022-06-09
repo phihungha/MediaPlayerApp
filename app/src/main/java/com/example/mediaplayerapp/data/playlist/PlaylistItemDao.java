@@ -1,6 +1,7 @@
 package com.example.mediaplayerapp.data.playlist;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -19,13 +20,16 @@ public interface PlaylistItemDao {
     Completable insert(PlaylistItem item);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    Completable insertMany(List<PlaylistItem> items);
+    Completable insert(List<PlaylistItem> items);
 
     @Update
     Completable update(PlaylistItem item);
 
     @Update
     Completable update(List<PlaylistItem> items);
+
+    @Delete
+    Completable delete(PlaylistItem item);
 
     @Query("DELETE FROM PlaylistItems WHERE PlaylistItemId = :id")
     Completable delete(int id);

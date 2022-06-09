@@ -5,12 +5,13 @@ import android.net.Uri;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
-import java.io.Serializable;
+@Entity(tableName = "PlaylistItems")
+public class PlaylistItem {
 
-@Entity(tableName = "PlaylistItems", primaryKeys = {"PlaylistItemId"})
-public class PlaylistItem implements Serializable {
-
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "PlaylistItemId")
     private int id;
 
@@ -19,7 +20,7 @@ public class PlaylistItem implements Serializable {
 
     @NonNull
     @ColumnInfo(name = "MediaUri")
-    private final String mediaUri;
+    private String mediaUri;
 
     @ColumnInfo(name = "OrderIndex")
     private int orderIndex;
@@ -31,9 +32,11 @@ public class PlaylistItem implements Serializable {
         this.orderIndex = orderIndex;
     }
 
+    @Ignore
     public PlaylistItem(int playlistId, @NonNull String mediaUri) {
         this.playlistId = playlistId;
         this.mediaUri = mediaUri;
+        this.orderIndex = -1;
     }
 
     public void setOrderIndex(int orderIndex) {
@@ -51,6 +54,10 @@ public class PlaylistItem implements Serializable {
     @NonNull
     public String getMediaUri() {
         return mediaUri;
+    }
+
+    public void setMediaUri(@NonNull String mediaUri) {
+        this.mediaUri = mediaUri;
     }
 
     public Uri getAndroidMediaUri() {

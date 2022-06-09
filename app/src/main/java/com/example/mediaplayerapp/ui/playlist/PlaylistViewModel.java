@@ -31,7 +31,8 @@ public class PlaylistViewModel extends AndroidViewModel {
     }
 
     public LiveData<Playlist> getPlaylist(int id) {
-        return LiveDataReactiveStreams.fromPublisher(playlistRepository.getPlaylist(id));
+        return LiveDataReactiveStreams
+                .fromPublisher(playlistRepository.getPlaylist(id));
     }
 
     public LiveData<List<Playlist>> getPlaylistsByNameMatching(String name){

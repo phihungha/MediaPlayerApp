@@ -20,10 +20,8 @@ import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
-import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.disposables.Disposable;
-import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class PlaylistItemViewModel extends AndroidViewModel {
 
@@ -61,11 +59,6 @@ public class PlaylistItemViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Completable updatePlaylistItem(PlaylistItem item) {
-        return playlistItemRepository.updatePlaylistItem(item)
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
     public Completable updatePlaylistItems(List<PlaylistItem> items) {
         return playlistItemRepository.updatePlaylistItems(items)
                 .observeOn(AndroidSchedulers.mainThread());
@@ -73,6 +66,11 @@ public class PlaylistItemViewModel extends AndroidViewModel {
 
     public Completable deletePlaylistItem(int itemId) {
         return playlistItemRepository.deletePlaylistItem(itemId)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Completable deletePlaylistItem(PlaylistItem item) {
+        return playlistItemRepository.deletePlaylistItem(item)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

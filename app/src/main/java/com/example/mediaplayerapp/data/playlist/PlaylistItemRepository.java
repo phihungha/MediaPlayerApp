@@ -5,12 +5,14 @@ import android.app.Application;
 import com.example.mediaplayerapp.data.AppRoomDatabase;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class PlaylistItemRepository {
+
     private final PlaylistItemDao playlistItemDao;
     private final PlaylistRepository playlistRepository;
 
@@ -20,20 +22,26 @@ public class PlaylistItemRepository {
     }
 
     public Completable addPlaylistItem(PlaylistItem item) {
-        item.setPlaylistId(item.getPlaylistId());
-        return playlistItemDao.insert(item)
-                .andThen(updatePlaylistItemCount(item.getPlaylistId()))
-                .subscribeOn(Schedulers.io());
+        int playlistId = item.getPlaylistId();
+        return playlistRepository.getPlaylistItemCount(playlistId)
+                        .flatMapCompletable(i -> {
+                            item.setOrderIndex(i);
+                            return playlistItemDao.insert(item);
+                        })
+                        .andThen(updatePlaylistItemCount(playlistId))
+                        .subscribeOn(Schedulers.io());
     }
 
     public Completable addPlaylistItems(List<PlaylistItem> items) {
-        return playlistItemDao.insertMany(items)
-                .andThen(updatePlaylistItemCount(items.get(0).getPlaylistId()))
+        int playlistId = items.get(0).getPlaylistId();
+        return playlistRepository.getPlaylistItemCount(playlistId)
+                .flatMapCompletable(count -> {
+                    IntStream.range(0, items.size())
+                             .forEach(i -> items.get(i).setOrderIndex(count + i));
+                    return playlistItemDao.insert(items);
+                })
+                .andThen(updatePlaylistItemCount(playlistId))
                 .subscribeOn(Schedulers.io());
-    }
-
-    public Completable updatePlaylistItem(PlaylistItem item) {
-        return playlistItemDao.update(item).subscribeOn(Schedulers.io());
     }
 
     public Completable updatePlaylistItems(List<PlaylistItem> items) {
@@ -50,6 +58,10 @@ public class PlaylistItemRepository {
         return playlistItemDao.delete(itemId).subscribeOn(Schedulers.io());
     }
 
+    public Completable deletePlaylistItem(PlaylistItem item) {
+        return playlistItemDao.delete(item).subscribeOn(Schedulers.io());
+    }
+
     public Flowable<List<PlaylistItem>> getAllItemsOfPlaylist(int playlistId) {
         return playlistItemDao.getAllOfPlaylist(playlistId)
                 .subscribeOn(Schedulers.io());
@@ -57,9 +69,5 @@ public class PlaylistItemRepository {
 
     public Flowable<PlaylistItem> getFirstItemOfPlaylist(int playlistId) {
         return playlistItemDao.getFirstItemOfPlaylist(playlistId).subscribeOn(Schedulers.io());
-    }
-
-    public Completable deleteAllFromPlaylist(int playlistId) {
-        return playlistItemDao.deleteAllFromPlaylist(playlistId).subscribeOn(Schedulers.io());
     }
 }
