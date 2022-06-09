@@ -24,13 +24,14 @@ import com.example.mediaplayerapp.databinding.BottomSheetPlaylistDetailsBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.ui.playlist.dialogs.PlaylistDetailsPropertiesDialog;
+import com.example.mediaplayerapp.ui.special_playlists.MediaQueueUtil;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.example.mediaplayerapp.utils.MediaMetadataUtils;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.example.mediaplayerapp.utils.MessageUtils;
-import com.example.mediaplayerapp.utils.item_touch.ItemTouchHelperAdapter;
-import com.example.mediaplayerapp.utils.item_touch.ItemTouchHelperViewHolder;
+import com.example.mediaplayerapp.utils.item_touch_helper.ItemTouchHelperAdapter;
+import com.example.mediaplayerapp.utils.item_touch_helper.ItemTouchHelperViewHolder;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;

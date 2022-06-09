@@ -1,6 +1,5 @@
 package com.example.mediaplayerapp.ui.music_library.album_tab;
 
-import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -45,7 +44,6 @@ public class AlbumDetailFragment extends Fragment {
         currentAlbumId = AlbumDetailFragmentArgs.fromBundle(requireArguments()).getAlbumId();
     }
 
-    @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

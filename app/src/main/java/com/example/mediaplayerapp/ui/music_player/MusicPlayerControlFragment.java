@@ -41,9 +41,8 @@ import com.example.mediaplayerapp.data.playlist.PlaylistItem;
 import com.example.mediaplayerapp.ui.playlist.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentMusicPlayerControlBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
-import com.example.mediaplayerapp.ui.playlist.MediaQueueUtil;
+import com.example.mediaplayerapp.ui.special_playlists.MediaQueueUtil;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
-import com.example.mediaplayerapp.utils.MediaUtils;
 import com.example.mediaplayerapp.utils.SortOrder;
 import com.google.android.exoplayer2.ui.TimeBar;
 

@@ -23,7 +23,7 @@ public class MediaMetadataUtils {
      */
     public static Bitmap getThumbnail(Context context, Uri uri, @DrawableRes int defaultImageResourceId) {
         try {
-            return context.getApplicationContext()
+            return context
                     .getContentResolver()
                     .loadThumbnail(uri, new Size(800, 800),null);
         } catch (IOException e) {

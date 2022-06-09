@@ -32,7 +32,7 @@ import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.example.mediaplayerapp.utils.MediaMetadataUtils;
 import com.example.mediaplayerapp.utils.MessageUtils;
-import com.example.mediaplayerapp.utils.item_touch.SimpleItemTouchHelperCallback;
+import com.example.mediaplayerapp.utils.item_touch_helper.SimpleItemTouchHelperCallback;
 
 import java.util.List;
 import java.util.stream.Collectors;

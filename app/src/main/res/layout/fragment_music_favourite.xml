@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.playlist.media_queue.music_fav.MusicFavouriteFragment">
+    tools:context=".ui.special_playlists.music_fav.MusicFavouriteFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_music_favourite"

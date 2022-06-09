@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.playlist.media_queue.MediaQueueFragment">
+    tools:context=".ui.special_playlists.MediaQueueFragment">
 
     <TextView
         android:id="@+id/tv_title_media_queue"

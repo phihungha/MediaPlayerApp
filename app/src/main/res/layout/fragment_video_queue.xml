@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.playlist.media_queue.video_queue.VideoQueueFragment">
+    tools:context=".ui.special_playlists.video_queue.VideoQueueFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv_video_queue"

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,7 +19,6 @@ import com.example.mediaplayerapp.data.music_library.Album;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.MusicLibraryFragmentDirections;
 import com.example.mediaplayerapp.utils.MediaMetadataUtils;
-import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -110,7 +110,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumItemVie
     public class AlbumItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private Album currentAlbum;
-        private final ShapeableImageView albumThumbnail;
+        private final ImageView albumThumbnail;
         private final TextView albumName;
         private final TextView albumArtistName;
 
