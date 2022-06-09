@@ -19,7 +19,7 @@ import androidx.core.view.WindowInsetsControllerCompat;
 
 import com.example.mediaplayerapp.data.overview.MediaPlaybackInfo;
 import com.example.mediaplayerapp.data.overview.MediaPlaybackInfoRepository;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemRepository;
+import com.example.mediaplayerapp.data.playlist.PlaylistItemRepository;
 import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.data.video_library.VideosRepository;
 import com.example.mediaplayerapp.databinding.ActivityVideoPlayerBinding;
@@ -219,11 +219,13 @@ public class VideoPlayerActivity extends AppCompatActivity {
     private void loadMediaItemsFromVideoPlaylist(List<String> uriSegments) {
         int playlistId = Integer.parseInt(uriSegments.get(1));
         int playbackStartIndex = Integer.parseInt(uriSegments.get(2));
-        playlistItemRepository.getAllPlaylistMediasWithID(playlistId)
-                .observe(this, playlistItem -> {
+        Disposable disposable = playlistItemRepository.getAllItemsOfPlaylist(playlistId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(playlistItem -> {
                     player.addMediaItems(GetMediaItemsUtils.fromPlaylistItems(playlistItem));
                     player.seekTo(playbackStartIndex, C.TIME_UNSET);
                 });
+        disposables.add(disposable);
     }
 
     /**

@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/playlistDetailsFragment"
-        android:name="com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment"
+        android:name="com.example.mediaplayerapp.ui.playlist.PlaylistDetailsFragment"
         android:label="fragment_playlist_details"
         tools:layout="@layout/fragment_playlist_details" >
         <argument

@@ -23,6 +23,9 @@ public interface PlaylistDao {
     @Query("UPDATE Playlists SET Name = :name WHERE PlaylistId = :id")
     Completable updateName(int id, String name);
 
+    @Query("UPDATE Playlists SET ItemCount = :count WHERE PlaylistId = :id")
+    Completable updateItemCount(int id, int count);
+
     @Delete
     Completable delete(Playlist playlist);
 
@@ -45,5 +48,5 @@ public interface PlaylistDao {
     Flowable<List<Playlist>> getAllSortedByItemCountDesc();
 
     @Query("SELECT * from Playlists WHERE PlaylistId = :id")
-    Flowable<List<Playlist>> get(int id);
+    Flowable<Playlist> get(int id);
 }

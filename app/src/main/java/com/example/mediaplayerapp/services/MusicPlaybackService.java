@@ -24,7 +24,7 @@ import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.music_library.SongsRepository;
 import com.example.mediaplayerapp.data.overview.MediaPlaybackInfo;
 import com.example.mediaplayerapp.data.overview.MediaPlaybackInfoRepository;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemRepository;
+import com.example.mediaplayerapp.data.playlist.PlaylistItemRepository;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.GetMediaItemsUtils;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
@@ -425,11 +425,14 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     private void loadMediaItemsFromPlaylist(Uri uri) {
         int playlistId = Integer.parseInt(uri.getPathSegments().get(1));
         int playbackStartIndex = Integer.parseInt(uri.getPathSegments().get(2));
-        playlistItemRepository.getAllPlaylistMediasWithID(playlistId)
-                        .observeForever(playlistItems -> {
-                            player.addMediaItems(GetMediaItemsUtils.fromPlaylistItems(playlistItems));
-                            player.seekTo(playbackStartIndex, C.TIME_UNSET);
-                        });
+        Disposable disposable =
+                playlistItemRepository.getAllItemsOfPlaylist(playlistId)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(playlistItems -> {
+                        player.addMediaItems(GetMediaItemsUtils.fromPlaylistItems(playlistItems));
+                        player.seekTo(playbackStartIndex, C.TIME_UNSET);
+                    });
+        disposables.add(disposable);
     }
 
     @Override

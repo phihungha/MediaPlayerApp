@@ -91,7 +91,7 @@ public class VideoAdapter
 
         holder.videoClickArea.setOnClickListener(view -> startPlaybackCallback.play(position));
 
-        holder.videoName.setText(displayedVideos.get(position).getName());
+        holder.videoName.setText(displayedVideos.get(position).getTitle());
 
         int duration = displayedVideos.get(position).getDuration();
         String durationFormatted = MediaTimeUtils.getFormattedTimeFromLong(duration);
@@ -126,7 +126,7 @@ public class VideoAdapter
                 } else {
                     String filterPattern = charSequence.toString().toLowerCase().trim();
                     for (Video video : allVideos) {
-                        if (video.getName().toLowerCase().contains(filterPattern))
+                        if (video.getTitle().toLowerCase().contains(filterPattern))
                             filteredVideos.add(video);
                     }
                 }

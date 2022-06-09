@@ -66,7 +66,9 @@ public class SongsRepository {
                     MediaStore.Audio.Media.ALBUM_ARTIST,
                     MediaStore.Audio.Media.GENRE,
                     MediaStore.Audio.Media.DURATION,
-                    MediaStore.Audio.Media.DATE_ADDED
+                    MediaStore.Audio.Media.DATE_ADDED,
+                    MediaStore.Audio.Media.DATA,
+                    MediaStore.Audio.Media.SIZE
             };
 
             String longFormMediaOnlySelection =
@@ -92,6 +94,8 @@ public class SongsRepository {
             int genreColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE);
             int durationColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
             int dateAddedColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED);
+            int dataColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+            int sizeColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE);
 
             int orderIndex = 0;
             if (cursor.moveToFirst()) {
@@ -99,9 +103,10 @@ public class SongsRepository {
                     Uri songUri = mediaStore.getMediaItemUri(cursor.getLong(idColumnIndex));
 
                     String title = cursor.getString(titleColumnIndex);
+                    String fileName = cursor.getString(displayNameColumnIndex);
                     // Use file name if the song doesn't have a title
                     if (title == null)
-                        title = cursor.getString(displayNameColumnIndex);
+                        title = fileName;
 
                     String artist = cursor.getString(artistColumnIndex);
                     // Use album artist name if the song doesn't have artist name
@@ -116,6 +121,9 @@ public class SongsRepository {
                             cursor.getString(genreColumnIndex),
                             cursor.getInt(durationColumnIndex),
                             getZonedDateTimeFromLong(cursor.getLong(dateAddedColumnIndex)),
+                            fileName,
+                            cursor.getString(dataColumnIndex),
+                            cursor.getLong(sizeColumnIndex),
                             orderIndex));
                     orderIndex++;
                 } while (cursor.moveToNext());
@@ -167,7 +175,9 @@ public class SongsRepository {
                     MediaStore.Audio.Media.ALBUM_ARTIST,
                     MediaStore.Audio.Media.GENRE,
                     MediaStore.Audio.Media.DURATION,
-                    MediaStore.Audio.Media.DATE_ADDED
+                    MediaStore.Audio.Media.DATE_ADDED,
+                    MediaStore.Audio.Media.DATA,
+                    MediaStore.Audio.Media.SIZE
             };
 
             Cursor cursor = mediaStore.getMediaItem(uri, projection);
@@ -181,15 +191,18 @@ public class SongsRepository {
             int genreColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE);
             int durationColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
             int dateAddedColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED);
+            int dataColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+            int sizeColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE);
 
             Song song = null;
             if (cursor.moveToFirst()) {
                 Uri songUri = mediaStore.getMediaItemUri(cursor.getLong(idColumnIndex));
 
                 String title = cursor.getString(titleColumnIndex);
+                String fileName = cursor.getString(displayNameColumnIndex);
                 // Use file name if the song doesn't have a title
                 if (title == null)
-                    title = cursor.getString(displayNameColumnIndex);
+                    title = fileName;
 
                 String artist = cursor.getString(artistColumnIndex);
                 // Use album artist name if the song doesn't have artist name
@@ -204,6 +217,9 @@ public class SongsRepository {
                         cursor.getString(genreColumnIndex),
                         cursor.getInt(durationColumnIndex),
                         getZonedDateTimeFromLong(cursor.getLong(dateAddedColumnIndex)),
+                        fileName,
+                        cursor.getString(dataColumnIndex),
+                        cursor.getLong(sizeColumnIndex),
                         0
                 );
                 cursor.close();

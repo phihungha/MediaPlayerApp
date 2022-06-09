@@ -66,7 +66,7 @@
     <string name="rename_playlist">Rename playlist</string>
     <string name="new_playlist_name">New playlist name</string>
     <string name="delete_playlist_from_device">Delete playlist from device?</string>
-    <string name="message_delete">This will be deleted permanently from device.</string>
+    <string name="message_delete">This will be deleted permanently from this device.</string>
     <string name="remove">Remove</string>
     <string name="properties" translatable="false">Properties</string>
     <string name="date">Date</string>
@@ -154,4 +154,7 @@
     <string name="video">Video</string>
     <string name="music">Music</string>
     <string name="name_is_empty">Name is empty!</string>
+    <string name="play">Play</string>
+    <string name="added_to_watch_later">Added to watch later</string>
+    <string name="added_to_favorites">Added to favorites</string>
 </resources>

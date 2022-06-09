@@ -6,12 +6,14 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.example.mediaplayerapp.data.MediaStoreDataSource;
+import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.example.mediaplayerapp.utils.SortOrder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 public class VideosRepository {
 
@@ -51,13 +53,13 @@ public class VideosRepository {
         return Single.fromCallable(() -> {
             List<Video> videoList = new ArrayList<>();
             String[] projection = new String[]{
-                    MediaStore.MediaColumns._ID,
-                    MediaStore.MediaColumns.DISPLAY_NAME,
-                    MediaStore.Video.Media.DURATION,
-                    MediaStore.Video.Media.DATA,
-                    MediaStore.Video.Media.SIZE,
+                    MediaStore.Video.Media._ID,
+                    MediaStore.Video.Media.DISPLAY_NAME,
                     MediaStore.Video.Media.RESOLUTION,
-                    MediaStore.Video.Media.DATE_TAKEN,
+                    MediaStore.Video.Media.DURATION,
+                    MediaStore.Video.Media.DATE_ADDED,
+                    MediaStore.Video.Media.DATA,
+                    MediaStore.Video.Media.SIZE
             };
 
             Cursor cursor = mediaStore.getMediaItems(
@@ -67,25 +69,28 @@ public class VideosRepository {
                     sortOrder
             );
 
-            int idColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
-            int nameColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
-            int pathColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
-            int durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
-            int sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE);
-            int resolutionColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.RESOLUTION);
-            int dateTakenColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_TAKEN);
+            int idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
+            int nameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
+            int resolutionColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.RESOLUTION);
+            int durationColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
+            int dateAddedColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED);
+            int dataColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+            int sizeColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE);
 
             if (cursor.moveToFirst()) {
                 do {
-                    Uri videoUri = mediaStore.getMediaItemUri(cursor.getLong(idColumn));
+                    Uri videoUri = mediaStore.getMediaItemUri(cursor.getLong(idColumnIndex));
+                    String title = cursor.getString(nameColumnIndex);
                     videoList.add(new Video(
                             videoUri,
-                            cursor.getString(nameColumn),
-                            cursor.getInt(durationColumn),
-                            cursor.getString(pathColumn),
-                            cursor.getLong(sizeColumn),
-                            cursor.getString(resolutionColumn),
-                            cursor.getLong(dateTakenColumn)));
+                            title,
+                            cursor.getString(resolutionColumnIndex),
+                            cursor.getInt(durationColumnIndex),
+                            MediaTimeUtils.getZonedDateTimeFromLong(cursor.getLong(dateAddedColumnIndex)),
+                            title,
+                            cursor.getString(dataColumnIndex),
+                            cursor.getLong(sizeColumnIndex),
+                            0));
                 } while (cursor.moveToNext());
                 cursor.close();
             }
@@ -118,5 +123,49 @@ public class VideosRepository {
         }
 
         return getVideos(null, null, sortQuery);
+    }
+
+    public Single<Video> getVideo(Uri uri) {
+        return Single.fromCallable(() -> {
+            String[] projection = new String[]{
+                    MediaStore.Video.Media._ID,
+                    MediaStore.Video.Media.DISPLAY_NAME,
+                    MediaStore.Video.Media.RESOLUTION,
+                    MediaStore.Video.Media.DURATION,
+                    MediaStore.Video.Media.DATE_ADDED,
+                    MediaStore.Video.Media.DATA,
+                    MediaStore.Video.Media.SIZE
+            };
+
+            Cursor cursor = mediaStore.getMediaItem(uri, projection);
+
+            int idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID);
+            int nameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME);
+            int resolutionColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.RESOLUTION);
+            int durationColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION);
+            int dateAddedColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED);
+            int dataColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
+            int sizeColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE);
+
+            Video video = null;
+            if (cursor.moveToFirst()) {
+                Uri videoUri = mediaStore.getMediaItemUri(cursor.getLong(idColumnIndex));
+                String title = cursor.getString(nameColumnIndex);
+                video = new Video(
+                        videoUri,
+                        title,
+                        cursor.getString(resolutionColumnIndex),
+                        cursor.getInt(durationColumnIndex),
+                        MediaTimeUtils.getZonedDateTimeFromLong(cursor.getLong(dateAddedColumnIndex)),
+                        title,
+                        cursor.getString(dataColumnIndex),
+                        cursor.getLong(sizeColumnIndex),
+                        0
+                );
+                cursor.close();
+            }
+
+            return video;
+        }).subscribeOn(Schedulers.io());
     }
 }

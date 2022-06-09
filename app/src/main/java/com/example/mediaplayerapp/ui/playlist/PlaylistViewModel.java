@@ -17,6 +17,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Completable;
 
 public class PlaylistViewModel extends AndroidViewModel {
+
     private final PlaylistRepository playlistRepository;
 
     public PlaylistViewModel(@NonNull Application application) {
@@ -29,7 +30,7 @@ public class PlaylistViewModel extends AndroidViewModel {
                 .fromPublisher(playlistRepository.getAllPlaylists(sortBy, sortOrder));
     }
 
-    public LiveData<List<Playlist>> getPlaylist(int id) {
+    public LiveData<Playlist> getPlaylist(int id) {
         return LiveDataReactiveStreams.fromPublisher(playlistRepository.getPlaylist(id));
     }
 
@@ -50,11 +51,6 @@ public class PlaylistViewModel extends AndroidViewModel {
 
     public Completable renamePlaylist(int playlistId, String newName) {
         return playlistRepository.renamePlaylist(playlistId, newName)
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Completable deletePlaylist(Playlist playlist) {
-        return playlistRepository.deletePlaylist(playlist)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

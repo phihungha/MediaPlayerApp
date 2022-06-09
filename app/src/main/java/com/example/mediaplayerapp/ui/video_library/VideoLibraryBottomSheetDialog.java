@@ -11,22 +11,21 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.data.playlist.Playlist;
+import com.example.mediaplayerapp.data.playlist.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.PlaylistRepository;
-import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.databinding.BottomSheetVideoBinding;
 import com.example.mediaplayerapp.databinding.DialogVideoInfoBinding;
 import com.example.mediaplayerapp.ui.playlist.MediaQueueUtil;
+import com.example.mediaplayerapp.ui.playlist.PlaylistItemViewModel;
+import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
+import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.example.mediaplayerapp.utils.MediaUtils;
 import com.example.mediaplayerapp.utils.SortOrder;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -52,7 +51,7 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
         BottomSheetVideoBinding binding
                 = BottomSheetVideoBinding.inflate(inflater, container, false);
 
-        binding.bottomSheetVideoNameTextview.setText(currentVideo.getName());
+        binding.bottomSheetVideoNameTextview.setText(currentVideo.getTitle());
 
         LinearLayout optionInfo = binding.bottomSheetOptionInfo;
         optionInfo.setOnClickListener(view1 -> {
@@ -60,7 +59,7 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
             DialogVideoInfoBinding videoInfoBinding
                     = DialogVideoInfoBinding.inflate(inflater, container, false);
 
-            videoInfoBinding.dialogVideoInfoVideoNameTextview.setText(currentVideo.getName());
+            videoInfoBinding.dialogVideoInfoVideoNameTextview.setText(currentVideo.getTitle());
 
             int duration = currentVideo.getDuration();
             String durationFormatted = String.format(
@@ -71,7 +70,7 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
             );
             videoInfoBinding.dialogVideoInfoVideoLengthTextview.setText(durationFormatted);
 
-            videoInfoBinding.dialogVideoInfoVideoPathTextview.setText(currentVideo.getPath());
+            videoInfoBinding.dialogVideoInfoVideoPathTextview.setText(currentVideo.getLocation());
 
             videoInfoBinding.dialogVideoInfoVideoSizeTextview
                     .setText(convertFileSize(currentVideo.getSize()));
@@ -79,12 +78,8 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
             videoInfoBinding.dialogVideoInfoVideoResolutionTextview
                     .setText(currentVideo.getResolution());
 
-            SimpleDateFormat formatter = new SimpleDateFormat(
-                    "dd/MM/yyyy - hh:mm a", Locale.US);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTimeInMillis(currentVideo.getDateTaken());
             videoInfoBinding.dialogVideoInfoVideoDateTakenTextview
-                    .setText(formatter.format(calendar.getTime()));
+                    .setText(MediaTimeUtils.getFormattedTimeFromZonedDateTime(currentVideo.getTimeAdded()));
 
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setView(videoInfoBinding.getRoot()).show();
@@ -119,12 +114,12 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
                     .setItems(
                             allVideoPlaylists.stream().map(Playlist::getName).toArray(CharSequence[]::new),
                             (dialogInterface, i) -> {
-                                long order= MediaUtils.generateOrderSort();
-                                PlaylistItem newPlaylistItem = new PlaylistItem(
-                                        allVideoPlaylists.get(i).getId(),
-                                        currentVideo.getUri().toString(),
-                                        order);
-                                PlaylistItemViewModel.insert(newPlaylistItem);
+                                PlaylistItem newPlaylistItem =
+                                        new PlaylistItem(
+                                            allVideoPlaylists.get(i).getId(),
+                                            currentVideo.getUri().toString()
+                                );
+                                PlaylistItemViewModel.addPlaylistItem(newPlaylistItem);
                             })
                     .show();
         });

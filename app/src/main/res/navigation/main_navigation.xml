@@ -54,7 +54,7 @@
 
     <fragment
         android:id="@+id/navigation_playlist_details"
-        android:name="com.example.mediaplayerapp.ui.playlist.playlist_details.PlaylistDetailsFragment"
+        android:name="com.example.mediaplayerapp.ui.playlist.PlaylistDetailsFragment"
         android:label="Playlist details"
         tools:layout="@layout/fragment_playlist_details" >
         <argument

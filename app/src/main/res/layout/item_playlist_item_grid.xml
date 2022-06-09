@@ -24,7 +24,7 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/img_thumb_playlist_detail_grid"
+                android:id="@+id/playlist_details_item_thumbnail"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_centerInParent="true"
@@ -54,7 +54,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_playlist_details_name_grid"
+                    android:id="@+id/playlist_details_item_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
@@ -65,7 +65,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_duration_playlist_detail_grid"
+                    android:id="@+id/playlist_details_item_duration"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/video_duration_placeholder"

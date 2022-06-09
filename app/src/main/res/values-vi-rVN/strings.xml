@@ -127,4 +127,7 @@
     <string name="video">Video</string>
     <string name="music">Nhạc</string>
     <string name="name_is_empty">Tên trống</string>
+    <string name="play">Phát</string>
+    <string name="added_to_watch_later">Đã thêm vào xem sau</string>
+    <string name="added_to_favorites">Đã thêm vào yêu thích</string>
 </resources>

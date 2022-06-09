@@ -19,9 +19,11 @@ public class PlaylistRepository {
     }
 
     private final PlaylistDao playlistDao;
+    private final PlaylistItemRepository playlistItemRepository;
 
     public PlaylistRepository(Application application) {
         playlistDao = AppRoomDatabase.getDatabase(application).playlistDao();
+        playlistItemRepository = new PlaylistItemRepository(application);
     }
 
     public Completable addPlaylist(Playlist playlist) {
@@ -36,15 +38,17 @@ public class PlaylistRepository {
         return playlistDao.updateName(playlistId, newName).subscribeOn(Schedulers.io());
     }
 
-    public Completable deletePlaylist(Playlist playlist) {
-        return playlistDao.delete(playlist).subscribeOn(Schedulers.io());
+    public Completable updatePlaylistItemCount(int playlistId, int newCount) {
+        return playlistDao.updateItemCount(playlistId, newCount).subscribeOn(Schedulers.io());
     }
 
     public Completable deletePlaylist(int id) {
-        return playlistDao.delete(id).subscribeOn(Schedulers.io());
+        return playlistItemRepository.deleteAllFromPlaylist(id)
+                .andThen(playlistDao.delete(id))
+                .subscribeOn(Schedulers.io());
     }
 
-    public Flowable<List<Playlist>> getPlaylist(int id){
+    public Flowable<Playlist> getPlaylist(int id){
         return playlistDao.get(id);
     }
 

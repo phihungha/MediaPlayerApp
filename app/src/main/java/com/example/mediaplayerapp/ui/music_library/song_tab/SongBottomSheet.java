@@ -14,8 +14,8 @@ import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistRepository;
 import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
+import com.example.mediaplayerapp.data.playlist.PlaylistItem;
+import com.example.mediaplayerapp.ui.playlist.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.BottomSheetSongBinding;
 import com.example.mediaplayerapp.databinding.SongDetailBinding;
 import com.example.mediaplayerapp.ui.playlist.MediaQueueUtil;
@@ -86,11 +86,12 @@ public class SongBottomSheet extends BottomSheetDialogFragment {
                     .setItems(
                             allMusicPlaylists.stream().map(Playlist::getName).toArray(CharSequence[]::new),
                             (dialogInterface, i) -> {
-                                PlaylistItem newPlaylistItem = new PlaylistItem(
-                                        allMusicPlaylists.get(i).getId(),
-                                        currentSong.getUri().toString(),
-                                        MediaUtils.generateOrderSort());
-                                PlaylistItemViewModel.insert(newPlaylistItem);
+                                PlaylistItem newPlaylistItem =
+                                        new PlaylistItem(
+                                            allMusicPlaylists.get(i).getId(),
+                                            currentSong.getUri().toString()
+                                        );
+                                PlaylistItemViewModel.addPlaylistItem(newPlaylistItem);
                             })
                     .show();
         });

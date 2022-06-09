@@ -37,8 +37,8 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistRepository;
 import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
+import com.example.mediaplayerapp.data.playlist.PlaylistItem;
+import com.example.mediaplayerapp.ui.playlist.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentMusicPlayerControlBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
 import com.example.mediaplayerapp.ui.playlist.MediaQueueUtil;
@@ -273,11 +273,11 @@ public class MusicPlayerControlFragment extends Fragment {
                 .setItems(
                         playlistOptions,
                         (dialogInterface, i) -> {
-                            PlaylistItem newPlaylistItem = new PlaylistItem(
-                                    playlists.get(i).getId(),
-                                    currentMediaUri,
-                                    MediaUtils.generateOrderSort());
-                            playlistItemViewModel.insert(newPlaylistItem);
+                            PlaylistItem newPlaylistItem
+                                    = new PlaylistItem(
+                                            playlists.get(i).getId(),
+                                            currentMediaUri);
+                            playlistItemViewModel.addPlaylistItem(newPlaylistItem);
                             Toast.makeText(requireActivity(),
                                     "Added to playlist",
                                     Toast.LENGTH_SHORT).show();

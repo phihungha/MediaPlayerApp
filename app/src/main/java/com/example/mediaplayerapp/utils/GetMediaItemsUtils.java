@@ -3,7 +3,7 @@ package com.example.mediaplayerapp.utils;
 import android.net.Uri;
 
 import com.example.mediaplayerapp.data.music_library.Song;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
+import com.example.mediaplayerapp.data.playlist.PlaylistItem;
 import com.example.mediaplayerapp.data.video_library.Video;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.MediaMetadata;

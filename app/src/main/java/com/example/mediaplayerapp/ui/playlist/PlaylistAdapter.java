@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
@@ -16,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItem;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.BottomSheetPlaylistBinding;
 import com.example.mediaplayerapp.databinding.ItemPlaylistBinding;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
@@ -30,14 +27,14 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class PlaylistAdapter extends ListAdapter<Playlist, PlaylistAdapter.ViewHolder> {
 
-    private final FragmentManager fragmentManager;
+    private final Fragment fragment;
     private final Context context;
     private final PlaylistItemViewModel playlistItemViewModel;
 
     protected PlaylistAdapter(Fragment fragment, PlaylistItemViewModel playlistItemViewModel) {
         super(new PlaylistAdapter.PlaylistDiff());
         this.context = fragment.getContext();
-        this.fragmentManager = fragment.getParentFragmentManager();
+        this.fragment = fragment;
         this.playlistItemViewModel = playlistItemViewModel;
     }
 
@@ -114,16 +111,18 @@ public class PlaylistAdapter extends ListAdapter<Playlist, PlaylistAdapter.ViewH
         }
 
         private void setThumbnail() {
-            PlaylistItem playlistItem = playlistItemViewModel.findByItemId(playlist.getId());
+            playlistItemViewModel.getFirstItemOfPlaylist(playlist.getId())
+                    .observe(fragment.getViewLifecycleOwner(),
+                            playlistItem -> {
+                                if (playlistItem == null)
+                                    return;
 
-            if (playlistItem == null)
-                return;
-
-            Bitmap thumbnailBitmap = MediaMetadataUtils.getThumbnail(
-                    context,
-                    playlistItem.getAndroidMediaUri(),
-                    R.drawable.ic_playlist_24dp);
-            binding.playlistThumbnail.setImageBitmap(thumbnailBitmap);
+                                Bitmap thumbnailBitmap = MediaMetadataUtils.getThumbnail(
+                                        context,
+                                        playlistItem.getAndroidMediaUri(),
+                                        R.drawable.ic_playlist_24dp);
+                                binding.playlistThumbnail.setImageBitmap(thumbnailBitmap);
+                    });
         }
 
         private void setItemCount() {
@@ -144,13 +143,14 @@ public class PlaylistAdapter extends ListAdapter<Playlist, PlaylistAdapter.ViewH
         }
 
         private void rename() {
-            PlaylistRenameDialog dialog = PlaylistRenameDialog.newInstance(playlist.getId(), playlist.getName());
-            dialog.show(fragmentManager, null);
+            PlaylistRenameDialog dialog
+                    = PlaylistRenameDialog.newInstance(playlist.getId(), playlist.getName());
+            dialog.show(fragment.getParentFragmentManager(), null);
         }
 
         private void delete() {
             PlaylistDeleteDialog dialog = PlaylistDeleteDialog.newInstance(playlist.getId());
-            dialog.show(fragmentManager, null);
+            dialog.show(fragment.getParentFragmentManager(), null);
         }
 
         private void openDetails() {

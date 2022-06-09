@@ -20,7 +20,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistRepository;
-import com.example.mediaplayerapp.data.playlist.playlist_details.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.BottomSheetPlaylistAddBinding;
 import com.example.mediaplayerapp.databinding.FragmentPlaylistsBinding;
 import com.example.mediaplayerapp.utils.SortOrder;
