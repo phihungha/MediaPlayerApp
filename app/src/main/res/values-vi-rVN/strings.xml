@@ -131,4 +131,7 @@
     <string name="added_to_watch_later">Đã thêm vào xem sau</string>
     <string name="added_to_favorites">Đã thêm vào yêu thích</string>
     <string name="no_playlist_item_to_play">Không có gì để phát! Hãy thêm vài thứ</string>
+    <string name="general">Chung</string>
+    <string name="display_music_visualizer">Hiệu ứng nhạc</string>
+    <string name="resume_previous_position">Phát từ vị trí trước</string>
 </resources>

@@ -3,13 +3,27 @@
 
     <PreferenceCategory
         android:key="general_category"
-        android:title="General">
+        android:title="@string/general">
 
         <ListPreference
             android:title="@string/change_language"
             android:key="language"
             android:entries="@array/language_entries"
             android:entryValues="@array/language_values" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="playback_category"
+        android:title="@string/playback">
+
+        <SwitchPreference
+            android:title="@string/resume_previous_position"
+            android:key="resume_previous_position" />
+
+        <SwitchPreference
+            android:title="@string/display_music_visualizer"
+            android:key="display_music_visualizer" />
 
     </PreferenceCategory>
 
