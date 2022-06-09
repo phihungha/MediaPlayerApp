@@ -78,7 +78,7 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         // again every time this fragment's views are re-created
         mediaPickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.OpenMultipleDocuments(),
-                this::addPickedMediaItemsIntoPlaylist
+                this::addPickedUrisIntoPlaylist
         );
 
         binding.playlistDetailsAddBtn.setOnClickListener(view -> addPlaylistItems());
@@ -205,43 +205,31 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
             mediaPickerLauncher.launch(new String[]{"audio/*"});
     }
 
-    private void addPickedMediaItemsIntoPlaylist(List<Uri> uris) {
+    private void addPickedUrisIntoPlaylist(List<Uri> uris) {
         if (uris.isEmpty())
             return;
 
-        Disposable disposable;
-
-        if (uris.size() == 1) {
-            PlaylistItem newItem = getPlaylistItemFromPickedUri(uris.get(0));
-            disposable = playlistItemViewModel
-                        .addPlaylistItem(newItem)
-                        .subscribe(
-                                () -> {},
-                                e -> MessageUtils.displayError(
-                                        requireContext(),
-                                        LOG_TAG,
-                                        e.getMessage())
-                        );
-        } else {
-            List<PlaylistItem> newItems =
-                    uris.stream()
-                    .map(this::getPlaylistItemFromPickedUri)
-                    .collect(Collectors.toList());
-            disposable = playlistItemViewModel
-                         .addPlaylistItems(newItems)
-                         .subscribe(
-                                 () -> {},
-                                 e -> MessageUtils.displayError(
+        List<PlaylistItem> newItems =
+                uris.stream()
+                .map(this::getPlaylistItemFromMediaUri)
+                .collect(Collectors.toList());
+        Disposable disposable = playlistItemViewModel
+                 .addPlaylistItems(newItems)
+                 .subscribe(
+                         () -> {},
+                         e -> {
+                             String message = e.getMessage();
+                             if (message != null && !message.contains("UNIQUE"))
+                                 MessageUtils.displayError(
                                          requireContext(),
                                          LOG_TAG,
-                                         e.getMessage())
-                         );
-        }
-
+                                         e.getMessage());
+                         }
+                 );
         disposables.add(disposable);
     }
 
-    private PlaylistItem getPlaylistItemFromPickedUri(Uri uri) {
+    private PlaylistItem getPlaylistItemFromMediaUri(Uri uri) {
         return new PlaylistItem(
                 currentPlaylistId,
                 MediaStore.getMediaUri(getContext(), uri).toString()

@@ -6,9 +6,13 @@ import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.Ignore;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "PlaylistItems")
+@Entity(tableName = "PlaylistItems",
+        indices = { @Index(value = {"PlaylistId", "MediaUri"},
+                           unique = true) }
+       )
 public class PlaylistItem {
 
     @PrimaryKey(autoGenerate = true)

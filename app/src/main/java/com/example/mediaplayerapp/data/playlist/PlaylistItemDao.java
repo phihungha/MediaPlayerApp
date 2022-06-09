@@ -3,7 +3,6 @@ package com.example.mediaplayerapp.data.playlist;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
-import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -16,10 +15,10 @@ import io.reactivex.rxjava3.core.Single;
 @Dao
 public interface PlaylistItemDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     Completable insert(PlaylistItem item);
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     Completable insert(List<PlaylistItem> items);
 
     @Update
