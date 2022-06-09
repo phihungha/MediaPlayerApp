@@ -29,24 +29,21 @@ public interface PlaylistDao {
     @Query("DELETE FROM Playlists WHERE PlaylistId = :id")
     Completable delete(int id);
 
-    @Query("DELETE FROM Playlists")
-    Completable deleteAll();
-
     @Query("SELECT * FROM Playlists WHERE Name LIKE '%' || :text || '%'")
-    Flowable<List<Playlist>> getPlaylistsByNameMatching(String text);
+    Flowable<List<Playlist>> getByNameMatching(String text);
 
     @Query("SELECT * FROM Playlists ORDER BY Name ASC")
-    Flowable<List<Playlist>> getAllPlaylistsSortedByNameAsc();
+    Flowable<List<Playlist>> getAllSortedByNameAsc();
 
     @Query("SELECT * FROM Playlists ORDER BY Name DESC")
-    Flowable<List<Playlist>> getAllPlaylistsSortedByNameDesc();
+    Flowable<List<Playlist>> getAllSortedByNameDesc();
 
     @Query("SELECT * FROM Playlists ORDER BY ItemCount ASC")
-    Flowable<List<Playlist>> getAllPlaylistsSortedByItemCountAsc();
+    Flowable<List<Playlist>> getAllSortedByItemCountAsc();
 
     @Query("SELECT * FROM Playlists ORDER BY ItemCount DESC")
-    Flowable<List<Playlist>> getAllPlaylistsSortedByItemCountDesc();
+    Flowable<List<Playlist>> getAllSortedByItemCountDesc();
 
     @Query("SELECT * from Playlists WHERE PlaylistId = :id")
-    Flowable<List<Playlist>> getPlaylist(int id);
+    Flowable<List<Playlist>> get(int id);
 }

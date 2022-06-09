@@ -50,7 +50,7 @@ public class PlaylistRenameDialog extends AppCompatDialogFragment {
                 .setPositiveButton(R.string.rename, (dialogInterface, i) -> {
                     String name= nameEditText.getText().toString().trim();
                     if (!name.isEmpty())
-                        viewModel.updateName(playlistId,
+                        viewModel.renamePlaylist(playlistId,
                                              nameEditText.getText().toString())
                                 .subscribe();
                 });

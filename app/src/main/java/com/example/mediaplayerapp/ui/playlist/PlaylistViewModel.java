@@ -38,27 +38,28 @@ public class PlaylistViewModel extends AndroidViewModel {
                 .fromPublisher(playlistRepository.getPlaylistsByNameMatching(name));
     }
 
-    public Completable insert(Playlist playlist){
-        return playlistRepository.insert(playlist)
+    public Completable insertPlaylist(Playlist playlist){
+        return playlistRepository.addPlaylist(playlist)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Completable update(Playlist playlist){
-        return playlistRepository.update(playlist);
-    }
-
-    public Completable updateName(int playlistId, String newName) {
-        return playlistRepository.updateName(playlistId, newName)
+    public Completable updatePlaylist(Playlist playlist){
+        return playlistRepository.updatePlaylist(playlist)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Completable delete(Playlist playlist) {
-        return playlistRepository.delete(playlist)
+    public Completable renamePlaylist(int playlistId, String newName) {
+        return playlistRepository.renamePlaylist(playlistId, newName)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public Completable delete(int playlistId) {
-        return playlistRepository.delete(playlistId)
+    public Completable deletePlaylist(Playlist playlist) {
+        return playlistRepository.deletePlaylist(playlist)
+                .observeOn(AndroidSchedulers.mainThread());
+    }
+
+    public Completable deletePlaylist(int playlistId) {
+        return playlistRepository.deletePlaylist(playlistId)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 }

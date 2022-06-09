@@ -45,7 +45,7 @@ public class PlaylistDeleteDialog extends AppCompatDialogFragment {
         builder.setView(dialogContent)
                 .setNegativeButton(R.string.cancel, (dialogInterface, i) -> {})
                 .setPositiveButton(R.string.delete,
-                        (dialogInterface, i) -> viewModel.delete(playlistId).subscribe()
+                        (dialogInterface, i) -> viewModel.deletePlaylist(playlistId).subscribe()
                 );
 
         return builder.create();

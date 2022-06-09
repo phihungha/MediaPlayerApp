@@ -80,7 +80,7 @@ public class PlaylistFragment extends Fragment {
                          name,
                          bottomSheetBinding.playlistAddBottomSheetVideo.isChecked(),
                         0);
-                viewModel.insert(playlist).subscribe();
+                viewModel.insertPlaylist(playlist).subscribe();
                 bottomSheetDialog.dismiss();
             }
         });

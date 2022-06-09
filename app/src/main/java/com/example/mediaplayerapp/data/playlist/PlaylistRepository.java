@@ -24,41 +24,41 @@ public class PlaylistRepository {
         playlistDao = AppRoomDatabase.getDatabase(application).playlistDao();
     }
 
-    public Completable insert(Playlist playlist) {
+    public Completable addPlaylist(Playlist playlist) {
         return playlistDao.insert(playlist).subscribeOn(Schedulers.io());
     }
 
-    public Completable update(Playlist playlist) {
+    public Completable updatePlaylist(Playlist playlist) {
         return playlistDao.update(playlist).subscribeOn(Schedulers.io());
     }
 
-    public Completable updateName(int playlistId, String newName) {
+    public Completable renamePlaylist(int playlistId, String newName) {
         return playlistDao.updateName(playlistId, newName).subscribeOn(Schedulers.io());
     }
 
-    public Completable delete(Playlist playlist) {
+    public Completable deletePlaylist(Playlist playlist) {
         return playlistDao.delete(playlist).subscribeOn(Schedulers.io());
     }
 
-    public Completable delete(int id) {
+    public Completable deletePlaylist(int id) {
         return playlistDao.delete(id).subscribeOn(Schedulers.io());
     }
 
     public Flowable<List<Playlist>> getPlaylist(int id){
-        return playlistDao.getPlaylist(id);
+        return playlistDao.get(id);
     }
 
     public Flowable<List<Playlist>> getPlaylistsByNameMatching(String text) {
-        return playlistDao.getPlaylistsByNameMatching(text).subscribeOn(Schedulers.io());
+        return playlistDao.getByNameMatching(text).subscribeOn(Schedulers.io());
     }
 
     public Flowable<List<Playlist>> getAllPlaylists(SortBy sortBy, SortOrder sortOrder) {
         if (sortBy == SortBy.NAME && sortOrder == SortOrder.ASC)
-            return playlistDao.getAllPlaylistsSortedByNameAsc().subscribeOn(Schedulers.io());
+            return playlistDao.getAllSortedByNameAsc().subscribeOn(Schedulers.io());
         if (sortBy == SortBy.NAME && sortOrder == SortOrder.DESC)
-            return playlistDao.getAllPlaylistsSortedByNameDesc().subscribeOn(Schedulers.io());
+            return playlistDao.getAllSortedByNameDesc().subscribeOn(Schedulers.io());
         if (sortBy == SortBy.ITEM_COUNT && sortOrder == SortOrder.ASC)
-            return playlistDao.getAllPlaylistsSortedByItemCountAsc().subscribeOn(Schedulers.io());
-        return playlistDao.getAllPlaylistsSortedByItemCountDesc().subscribeOn(Schedulers.io());
+            return playlistDao.getAllSortedByItemCountAsc().subscribeOn(Schedulers.io());
+        return playlistDao.getAllSortedByItemCountDesc().subscribeOn(Schedulers.io());
     }
 }
