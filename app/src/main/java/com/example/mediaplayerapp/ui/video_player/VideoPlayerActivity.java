@@ -17,7 +17,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
+import androidx.preference.PreferenceManager;
 
+import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playback_history.PlaybackHistoryRepository;
 import com.example.mediaplayerapp.data.playlist.PlaylistItemRepository;
 import com.example.mediaplayerapp.data.video_library.Video;
@@ -34,6 +36,7 @@ import com.google.android.exoplayer2.MediaMetadata;
 import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
@@ -61,7 +64,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
     // cache them.
     private long lastPlaybackPosition = 0;
     private Uri lastMediaUri = Uri.EMPTY;
-    private boolean currentMediaItemStarted = false;
 
     private VideosRepository videoLibraryRepository;
     private PlaylistItemRepository playlistItemRepository;
@@ -155,27 +157,52 @@ public class VideoPlayerActivity extends AppCompatActivity {
         player.addListener(new Player.Listener() {
             @Override
             public void onMediaMetadataChanged(@NonNull MediaMetadata mediaMetadata) {
-                if (mediaMetadata.mediaUri != null)
+                if (mediaMetadata.mediaUri != null) {
                     lastMediaUri = mediaMetadata.mediaUri;
+                    resumeLastPosition(mediaMetadata.mediaUri);
+                }
             }
 
             @Override
             public void onMediaItemTransition(@Nullable MediaItem mediaItem, int reason) {
-                if (currentMediaItemStarted) {
-                    recordHistory();
-                    currentMediaItemStarted = false;
-                }
-                else if (player.getPlaybackState() == Player.STATE_BUFFERING
-                        || player.getPlaybackState() == Player.STATE_IDLE)
-                    currentMediaItemStarted = true;
+                recordHistory();
             }
         });
+    }
+
+    /**
+     * Resume playback at last saved position if there is.
+     * @param mediaUri Media URI
+     */
+    private void resumeLastPosition(Uri mediaUri) {
+        if (!PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getBoolean("resume_last_position", false))
+            return;
+
+        Disposable disposable = playbackHistoryRepository.getLastPlaybackPosition(mediaUri)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(lastPlaybackPosition -> {
+                    if (lastPlaybackPosition != -1)
+                        askToResumeLastPosition(lastPlaybackPosition);
+                });
+        disposables.add(disposable);
+    }
+
+    private void askToResumeLastPosition(long lastPlaybackPosition) {
+        Snackbar.make(binding.getRoot(), R.string.resume_last_playback_position, 5000)
+                .setAction(R.string.yes,
+                        view -> player.seekTo(lastPlaybackPosition))
+                .show();
     }
 
     /**
      * Record current media item and its last playback position into history.
      */
     private void recordHistory() {
+        if (lastPlaybackPosition == 0)
+            return;
+
         long playbackPosition = lastPlaybackPosition;
         if (playbackPosition == player.getDuration())
             playbackPosition = 0;

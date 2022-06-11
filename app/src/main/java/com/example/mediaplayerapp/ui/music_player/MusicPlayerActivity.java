@@ -145,6 +145,10 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 null);
     }
 
+    /**
+     * Resume playback at last saved position if there is.
+     * @param mediaUri Media URI
+     */
     private void resumeLastPosition(Uri mediaUri) {
         if (!PreferenceManager
                 .getDefaultSharedPreferences(this)
