@@ -2,6 +2,7 @@ package com.example.mediaplayerapp.ui.music_player;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -28,6 +29,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.palette.graphics.Palette;
+import androidx.preference.PreferenceManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.MultiTransformation;
@@ -54,12 +56,15 @@ import io.reactivex.rxjava3.disposables.Disposable;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 
-public class MusicPlayerControlFragment extends Fragment {
+public class MusicPlayerControlFragment extends Fragment
+    implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String LOG_TAG = MusicPlayerControlFragment.class.getSimpleName();
     private static final int AUTOSCROLL_DELAY = 4500;
 
     private final CompositeDisposable disposables = new CompositeDisposable();
+
+    private boolean displayMusicVisualizer = false;
 
     private final List<Playlist> playlists = new ArrayList<>();
     private PlaylistItemViewModel playlistItemViewModel;
@@ -72,7 +77,7 @@ public class MusicPlayerControlFragment extends Fragment {
             registerForActivityResult(new ActivityResultContracts.RequestPermission(),
                     isGranted -> {
                         if (isGranted)
-                            bindAudioVisualizerToAudio();
+                            displayMusicVisualizer();
                         else
                             showAudioVisualizerPermissionDeniedNotice();
                     });
@@ -91,6 +96,10 @@ public class MusicPlayerControlFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentMusicPlayerControlBinding.inflate(inflater, container, false);
+
+        displayMusicVisualizer
+                = PreferenceManager.getDefaultSharedPreferences(requireContext())
+                  .getBoolean("display_music_visualizer", false);
 
         playlistItemViewModel = new ViewModelProvider(this).get(PlaylistItemViewModel.class);
         PlaylistViewModel playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
@@ -173,8 +182,8 @@ public class MusicPlayerControlFragment extends Fragment {
     private void setPlaybackState(PlaybackStateCompat playbackState) {
         if (playbackState.getState() == PlaybackStateCompat.STATE_PLAYING) {
             // Bind visualizer to new audio session id if it changes.
-            if (checkAudioVisualizerPermission())
-                bindAudioVisualizerToAudio();
+            if (displayMusicVisualizer)
+                displayMusicVisualizer();
             binding.musicPlayerPlayPauseBtn.setImageLevel(1);
         } else
             binding.musicPlayerPlayPauseBtn.setImageLevel(0);
@@ -298,9 +307,12 @@ public class MusicPlayerControlFragment extends Fragment {
 
     private void openPlaylistEditScreen() {
         ((MusicPlayerActivity) requireActivity()).exitEdgeToEdgeUIMode();
-        Navigation.findNavController(binding.getRoot())
+        if (currentPlaylistId != -1)
+            Navigation.findNavController(binding.getRoot())
                 .navigate(MusicPlayerControlFragmentDirections
                         .actionMusicPlayerControlFragmentToPlaylistDetailsFragment(currentPlaylistId));
+        else
+            MessageUtils.makeShortToast(requireContext(), R.string.you_are_not_playing_from_a_playlist);
     }
 
     private void addToFavorites() {
@@ -403,14 +415,30 @@ public class MusicPlayerControlFragment extends Fragment {
         handler.post(runnable);
     }
 
-    /**
-     * Connect audio visualizer to the current music audio stream.
-     */
-    private void bindAudioVisualizerToAudio() {
-        int audioSessionId = getMediaController()
-                .getExtras()
-                .getInt(MusicPlaybackService.AUDIO_SESSION_ID_KEY);
-        binding.musicPlayerVisualizer.setPlayer(audioSessionId);
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        if (s.equals("display_music_visualizer")) {
+            boolean enableAudioVisualizer
+                    = sharedPreferences.getBoolean("display_music_visualizer", false);
+            if (enableAudioVisualizer)
+                displayMusicVisualizer();
+            else
+                disableAudioVisualizer();
+        }
+    }
+
+    private void displayMusicVisualizer() {
+        if (checkAudioVisualizerPermission()) {
+            int audioSessionId = getMediaController()
+                    .getExtras()
+                    .getInt(MusicPlaybackService.AUDIO_SESSION_ID_KEY);
+            binding.musicPlayerVisualizer.setPlayer(audioSessionId);
+            binding.musicPlayerVisualizer.setEnabled(true);
+        }
+    }
+
+    private void disableAudioVisualizer() {
+        binding.musicPlayerVisualizer.setEnabled(false);
     }
 
     /**

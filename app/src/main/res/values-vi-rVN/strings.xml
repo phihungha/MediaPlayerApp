@@ -140,4 +140,5 @@
     <string name="choose_a_playlist">Chọn danh sách phát</string>
     <string name="added_to_playlist">Đã thêm vào danh sách phát</string>
     <string name="item_already_added">Đã có sẵn</string>
+    <string name="you_are_not_playing_from_a_playlist">Bạn không phát từ một danh sách phát</string>
 </resources>
