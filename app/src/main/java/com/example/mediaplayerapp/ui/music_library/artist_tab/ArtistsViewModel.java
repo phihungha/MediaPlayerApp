@@ -21,8 +21,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class ArtistsViewModel extends AndroidViewModel {
 
     private final CompositeDisposable disposables = new CompositeDisposable();
-
-    private final MutableLiveData<List<Artist>> artists = new MutableLiveData<>();
     private final ArtistsRepository artistsRepository;
 
     public ArtistsViewModel(@NonNull Application application) {
@@ -30,15 +28,12 @@ public class ArtistsViewModel extends AndroidViewModel {
         artistsRepository = new ArtistsRepository(application.getApplicationContext());
     }
 
-    public void loadAllArtists(ArtistsRepository.SortBy sortBy, SortOrder sortOrder) {
+    public LiveData<List<Artist>> getAllArtists(ArtistsRepository.SortBy sortBy, SortOrder sortOrder) {
+        MutableLiveData<List<Artist>> artists = new MutableLiveData<>();
         Disposable disposable = artistsRepository.getAllArtists(sortBy, sortOrder)
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(artists::setValue);
         disposables.add(disposable);
-    }
-
-    public LiveData<List<Artist>> getAllArtists() {
         return artists;
     }
 

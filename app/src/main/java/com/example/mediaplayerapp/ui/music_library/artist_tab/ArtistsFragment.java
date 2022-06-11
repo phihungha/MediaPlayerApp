@@ -68,20 +68,12 @@ public class ArtistsFragment extends Fragment {
         artistAdapter = new ArtistAdapter(getContext());
         binding.artistList.setAdapter(artistAdapter);
 
-        binding.artistsSwipeRefreshContainer.setOnRefreshListener(
-                () -> viewModel.loadAllArtists(currentSortBy, currentSortOrder)
-        );
+        binding.artistsSwipeRefreshContainer.setOnRefreshListener(this::loadAllArtists);
         binding.artistsSwipeRefreshContainer.setColorSchemeResources(R.color.cyan);
 
-        viewModel.getAllArtists().observe(getViewLifecycleOwner(),
-                newArtists ->  {
-                    artistAdapter.updateArtists(newArtists);
-                    binding.artistsSwipeRefreshContainer.setRefreshing(false);
-                });
-
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null)
             restoreInstanceState(savedInstanceState);
-        } else {
+        else {
             setSortMode(ArtistsRepository.SortBy.NAME, SortOrder.ASC);
             currentDisplayMode = DisplayMode.LIST;
             setDisplayModeAsGrid();
@@ -165,9 +157,18 @@ public class ArtistsFragment extends Fragment {
      * @param sortOrder Sort order
      */
     private void setSortMode(ArtistsRepository.SortBy sortBy, SortOrder sortOrder) {
-        viewModel.loadAllArtists(sortBy, sortOrder);
         currentSortBy = sortBy;
         currentSortOrder = sortOrder;
+        loadAllArtists();
+    }
+
+    private void loadAllArtists() {
+        viewModel.getAllArtists(currentSortBy, currentSortOrder).observe(
+                getViewLifecycleOwner(),
+                newArtists ->  {
+                    artistAdapter.updateArtists(newArtists);
+                    binding.artistsSwipeRefreshContainer.setRefreshing(false);
+                });
     }
 
     /**

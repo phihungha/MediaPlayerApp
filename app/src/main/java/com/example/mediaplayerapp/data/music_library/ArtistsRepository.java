@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Get artists.
@@ -83,7 +84,7 @@ public class ArtistsRepository {
                 cursor.close();
             }
             return artists;
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     /**
