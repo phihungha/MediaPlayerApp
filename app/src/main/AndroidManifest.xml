@@ -17,7 +17,7 @@
     <activity
         android:name=".ui.video_player.VideoPlayerActivity"
         android:supportsPictureInPicture="true"
-        android:configChanges="orientation|screenSize|layoutDirection|screenLayout"
+        android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden"
         android:launchMode="singleTask"
         android:theme="@style/Theme.MediaPlayerApp.ImmersivePlayer"
         android:exported="true">
