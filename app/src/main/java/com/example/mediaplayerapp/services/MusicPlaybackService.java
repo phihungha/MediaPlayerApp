@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.ResultReceiver;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.MediaMetadataCompat;
@@ -22,12 +23,12 @@ import androidx.media.MediaBrowserServiceCompat;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.music_library.SongsRepository;
-import com.example.mediaplayerapp.data.overview.MediaPlaybackInfo;
-import com.example.mediaplayerapp.data.overview.MediaPlaybackInfoRepository;
+import com.example.mediaplayerapp.data.playback_history.PlaybackHistoryRepository;
 import com.example.mediaplayerapp.data.playlist.PlaylistItemRepository;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.GetMediaItemsUtils;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
+import com.example.mediaplayerapp.utils.MessageUtils;
 import com.example.mediaplayerapp.utils.SortOrder;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -41,7 +42,6 @@ import com.google.android.exoplayer2.ui.DefaultMediaDescriptionAdapter;
 import com.google.android.exoplayer2.ui.PlayerNotificationManager;
 
 import java.lang.reflect.Array;
-import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -66,12 +66,15 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     private PlayerNotificationManager notificationManager;
     private boolean isForeground = false;
 
+    // These information are not available
+    // on media item transition so we need to
+    // cache them.
+    private long lastPlaybackPosition = 0;
+    private Uri lastMediaUri = Uri.EMPTY;
+
     private SongsRepository songsRepository;
     private PlaylistItemRepository playlistItemRepository;
-    private MediaPlaybackInfoRepository playbackInfoRepository;
-
-    private long lastPlaybackPosition = -1;
-    private Uri currentMediaUri = null;
+    private PlaybackHistoryRepository playbackHistoryRepository;
 
     @Override
     public void onCreate() {
@@ -85,17 +88,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
         songsRepository = new SongsRepository(getApplicationContext());
         playlistItemRepository = new PlaylistItemRepository(getApplication());
-        playbackInfoRepository = new MediaPlaybackInfoRepository(getApplication());
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (player.getCurrentPosition() != 0)
-                    lastPlaybackPosition = player.getCurrentPosition();
-                handler.postDelayed(this, 1000);
-            }
-        }, 1000);
+        playbackHistoryRepository = new PlaybackHistoryRepository(getApplication());
 
         setAudioSessionIdOnMediaSession();
         setupAnalyticsListener();
@@ -103,6 +96,20 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         setupMediaSessionConnector();
         setupNotification();
         mediaSession.setActive(true);
+
+        beginLastPlaybackPositionRecording();
+    }
+
+    private void beginLastPlaybackPositionRecording() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (player.getPlaybackState() == Player.STATE_READY)
+                    lastPlaybackPosition = player.getCurrentPosition();
+                handler.postDelayed(this, 1000);
+            }
+        });
     }
 
     private void setAudioSessionIdOnMediaSession() {
@@ -141,11 +148,11 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                         player.getDuration());
 
                 if (mediaMetadata.mediaUri != null) {
-                    currentMediaUri = mediaMetadata.mediaUri;
                     metadataCompatBuilder.putString(
                             MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
                             mediaMetadata.mediaUri.toString()
                     );
+                    lastMediaUri = mediaMetadata.mediaUri;
                 }
 
                 if (mediaMetadata.artworkUri != null)
@@ -167,30 +174,33 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
             }
 
             @Override
-            public void onPlaybackStateChanged(int playbackState) {
-                if (playbackState == Player.STATE_ENDED && currentMediaUri != null)
-                    playbackInfoRepository.insertOrUpdate(new MediaPlaybackInfo(
-                            currentMediaUri.toString(),
-                            Calendar.getInstance().getTimeInMillis(),
-                            1,
-                            false,
-                            lastPlaybackPosition
-                    ));
-            }
-
-            @Override
             public void onMediaItemTransition(@Nullable MediaItem mediaItem, int reason) {
-                if (currentMediaUri != null) {
-                    playbackInfoRepository.insertOrUpdate(new MediaPlaybackInfo(
-                            currentMediaUri.toString(),
-                            Calendar.getInstance().getTimeInMillis(),
-                            1,
-                            false,
-                            lastPlaybackPosition
-                    ));
-                }
+                Player.Listener.super.onMediaItemTransition(mediaItem, reason);
+                // Don't record history at the start of playback
+                if (player.getPlaybackState() != Player.STATE_ENDED)
+                    recordHistory();
             }
         });
+    }
+
+    /**
+     * Record current media item and its last playback position into history.
+     */
+    private void recordHistory() {
+        long playbackPosition = lastPlaybackPosition;
+        if (playbackPosition == player.getDuration())
+            playbackPosition = 0;
+
+        Disposable disposable =
+                playbackHistoryRepository.recordMusicHistory(lastMediaUri, playbackPosition)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                () -> {},
+                                e -> MessageUtils
+                                    .displayError(getApplicationContext(),
+                                            LOG_TAG,
+                                            e.getMessage()));
+        disposables.add(disposable);
     }
 
     private void putStringIntoMediaMetadataCompat(
