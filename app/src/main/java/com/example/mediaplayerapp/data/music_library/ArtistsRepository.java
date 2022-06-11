@@ -2,6 +2,7 @@ package com.example.mediaplayerapp.data.music_library;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.example.mediaplayerapp.data.MediaStoreDataSource;
@@ -24,6 +25,7 @@ public class ArtistsRepository {
     }
 
     private final MediaStoreDataSource mediaStore;
+    private final SongsRepository songsRepository;
 
     /**
      * Construct artist repository.
@@ -31,6 +33,7 @@ public class ArtistsRepository {
      */
     public ArtistsRepository(Context context) {
         mediaStore = new MediaStoreDataSource(context, MediaStore.Audio.Artists.EXTERNAL_CONTENT_URI);
+        songsRepository = new SongsRepository(context);
     }
 
     /**
@@ -65,11 +68,17 @@ public class ArtistsRepository {
 
             if (cursor.moveToFirst()) {
                 do {
-                    artists.add(new Artist(
-                            cursor.getLong(idColumnIndex),
-                            cursor.getString(artistColumnIndex),
-                            cursor.getInt(numberOfAlbumsColumnIndex),
-                            cursor.getInt(numberOfTracksColumnIndex)));
+                    long artistId = cursor.getLong(idColumnIndex);
+                    songsRepository.getFirstSongFromArtist(artistId)
+                                   .blockingSubscribe(song -> {
+                                        Uri thumbnailUri = song.getUri();
+                                        artists.add(new Artist(
+                                                cursor.getLong(idColumnIndex),
+                                                cursor.getString(artistColumnIndex),
+                                                cursor.getInt(numberOfAlbumsColumnIndex),
+                                                cursor.getInt(numberOfTracksColumnIndex),
+                                                thumbnailUri));
+                                });
                 } while (cursor.moveToNext());
                 cursor.close();
             }

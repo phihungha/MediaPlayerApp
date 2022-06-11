@@ -1,6 +1,5 @@
 package com.example.mediaplayerapp.ui.music_library.album_tab;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,8 +25,6 @@ import com.example.mediaplayerapp.utils.MediaMetadataUtils;
 public class AlbumDetailFragment extends Fragment {
 
     private long currentAlbumId;
-    private Album currentAlbum;
-    private String currentAlbumDuration;
 
     FragmentAlbumDetailBinding binding;
 
@@ -65,17 +62,9 @@ public class AlbumDetailFragment extends Fragment {
 
         binding.albumDetailsPlayAllSongs.setOnClickListener(v -> playAllSongs());
 
-        viewModel.getAlbum().observe(getViewLifecycleOwner(), album -> {
-            currentAlbum = album;
-            binding.albumDetailsName.setText(album.getAlbumName());
-            binding.albumDetailsArtist.setText(album.getArtistName());
-            updateArtwork(album.getUri());
-            updateDescription();
-        });
-        viewModel.getAlbumDuration().observe(getViewLifecycleOwner(), duration -> {
-            currentAlbumDuration = duration;
-            updateDescription();
-        });
+        viewModel.getAlbum().observe(getViewLifecycleOwner(), this::updateHeaderInfo);
+        viewModel.getAlbumDuration().observe(getViewLifecycleOwner(),
+                duration -> binding.albumDetailsTotalDuration.setText(duration));
         viewModel.getAlbumSongs().observe(getViewLifecycleOwner(), adapter::updateSongs);
         viewModel.setCurrentAlbumId(currentAlbumId);
 
@@ -90,11 +79,19 @@ public class AlbumDetailFragment extends Fragment {
         MusicPlayerActivity.launchWithUri(requireActivity(), uri);
     }
 
+    private void updateHeaderInfo(Album album) {
+        binding.albumDetailsName.setText(album.getAlbumName());
+        binding.albumDetailsArtist.setText(album.getArtistName());
+        binding.albumDetailsReleaseYear.setText(String.valueOf(album.getYear()));
+        binding.albumDetailsSongNumber.setText(String.valueOf(album.getNumberOfSongs()));
+        setArtwork(album.getUri());
+    }
+
     /**
      * Update main and small album's artwork.
      * @param uri URI of the album
      */
-    private void updateArtwork(Uri uri) {
+    private void setArtwork(Uri uri) {
         Drawable artwork = MediaMetadataUtils.getThumbnail(
                 requireContext(),
                 uri,
@@ -102,16 +99,5 @@ public class AlbumDetailFragment extends Fragment {
         );
         binding.albumDetailsArtwork.setImageDrawable(artwork);
         binding.albumDetailsSmallArtwork.setImageDrawable(artwork);
-    }
-
-    /**
-     * Update album's description.
-     */
-    private void updateDescription() {
-        String description = currentAlbum.getNumberOfSongs() + " song(s),"
-                    + " total duration: " + currentAlbumDuration;
-        if (currentAlbum.getYear() != 0)
-            description += ", released in: " + currentAlbum.getYear();
-        binding.albumDetailsDescription.setText(description);
     }
 }

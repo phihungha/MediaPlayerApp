@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Get songs.
@@ -131,7 +132,7 @@ public class SongsRepository {
             }
 
             return songs;
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     /**
@@ -226,7 +227,7 @@ public class SongsRepository {
             }
 
             return song;
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     /**
@@ -238,6 +239,15 @@ public class SongsRepository {
         return getSongs(MediaStore.Audio.Media.ARTIST_ID + " = ?",
                 new String[] { String.valueOf(artistId) },
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+    }
+
+    /**
+     * Get first song from an artist for thumbnail display.
+     * @param artistId Id of the artist
+     * @return List of songs
+     */
+    public Single<Song> getFirstSongFromArtist(long artistId) {
+        return getAllSongsFromArtist(artistId).map(i -> i.get(0));
     }
 
     /**

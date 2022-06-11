@@ -1,5 +1,6 @@
 package com.example.mediaplayerapp.ui.music_library.artist_tab;
 
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,11 +13,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.music_library.Artist;
 import com.example.mediaplayerapp.databinding.FragmentArtistDetailBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
+import com.example.mediaplayerapp.utils.MediaMetadataUtils;
 
 public class ArtistDetailFragment extends Fragment {
     private long currentArtistId;
@@ -55,18 +59,26 @@ public class ArtistDetailFragment extends Fragment {
 
         binding.artistDetailsPlayAllSongs.setOnClickListener(v -> playAllSongs());
 
-        viewModel.getArtist().observe(getViewLifecycleOwner(), artist -> {
-            binding.artistDetailsName.setText(artist.getArtistName());
-            String description = "" + artist.getNumberOfSongs()
-                    + " song(s), "
-                    + artist.getNumberOfAlbums()
-                    + " album(s)";
-            binding.artistDetailsDescription.setText(description);
-        });
+        viewModel.getArtist().observe(getViewLifecycleOwner(), this::setHeaderInfo);
         viewModel.getArtistSongs().observe(getViewLifecycleOwner(), adapter::updateSongs);
         viewModel.setCurrentArtistId(currentArtistId);
 
         return binding.getRoot();
+    }
+
+    private void setHeaderInfo(Artist artist) {
+        binding.artistDetailsSongNumber.setText(String.valueOf(artist.getNumberOfSongs()));
+        binding.artistDetailsAlbumNumber.setText(String.valueOf(artist.getNumberOfAlbums()));
+        setArtwork(artist.getThumbnailUri());
+    }
+
+    private void setArtwork(Uri uri) {
+        Drawable artwork = MediaMetadataUtils.getThumbnail(
+                requireContext(),
+                uri,
+                R.drawable.default_album_artwork);
+        binding.artistDetailsArtwork.setImageDrawable(artwork);
+        binding.artistDetailsSmallArtwork.setImageDrawable(artwork);
     }
 
     /**

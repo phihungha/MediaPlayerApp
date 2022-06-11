@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Artist;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.MusicLibraryFragmentDirections;
+import com.example.mediaplayerapp.utils.MediaMetadataUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,11 +26,11 @@ import java.util.stream.Collectors;
 
 @SuppressLint("NotifyDataSetChanged")
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistItemViewHolder> implements Filterable {
-    DisplayMode displayMode = DisplayMode.LIST;
-    Context context;
+    private DisplayMode displayMode = DisplayMode.LIST;
+    private final Context context;
 
-    List<Artist> artists = new ArrayList<>();
-    List<Artist> displayedArtists = new ArrayList<>();
+    private List<Artist> artists = new ArrayList<>();
+    private List<Artist> displayedArtists = new ArrayList<>();
 
     public ArtistAdapter(Context context) {
         this.context = context;
@@ -105,14 +107,16 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistItem
         };
     }
 
-    public static class ArtistItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ArtistItemViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private Artist currentArtist;
+        private final ImageView artistThumbnail;
         private final TextView artistName;
 
         public ArtistItemViewHolder(View itemView) {
             super(itemView);
             artistName = itemView.findViewById(R.id.artist_name);
+            artistThumbnail = itemView.findViewById(R.id.artist_thumbnail);
             itemView.setOnClickListener(this);
         }
 
@@ -130,6 +134,20 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistItem
          */
         private void updateViewsWithCurrentArtist() {
             artistName.setText(currentArtist.getArtistName());
+            updateThumbnailWithCurrentAlbum();
+        }
+
+        /**
+         * Update thumbnail with artist's first song's artwork.
+         */
+        private void updateThumbnailWithCurrentAlbum() {
+            artistThumbnail.setImageDrawable(
+                    MediaMetadataUtils.getThumbnail(
+                            context,
+                            currentArtist.getThumbnailUri(),
+                            R.drawable.default_album_artwork
+                    )
+            );
         }
 
         @Override

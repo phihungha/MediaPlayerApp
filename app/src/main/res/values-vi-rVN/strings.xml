@@ -134,4 +134,7 @@
     <string name="general">Chung</string>
     <string name="display_music_visualizer">Hiệu ứng nhạc</string>
     <string name="resume_previous_position">Phát từ vị trí trước</string>
+    <string name="album_count_postfix">album</string>
+    <string name="total_duration">tổng thời lượng</string>
+    <string name="released_in">ra mắt vào</string>
 </resources>

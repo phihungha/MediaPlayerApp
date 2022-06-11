@@ -98,20 +98,66 @@
                     app:layout_constraintStart_toStartOf="@+id/album_details_name"
                     app:layout_constraintTop_toBottomOf="@+id/album_details_name" />
 
-                <TextView
+                <LinearLayout
                     android:id="@+id/album_details_description"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="1dp"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:text="@string/default_album_details_description"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:textSize="14sp"
+                    android:orientation="horizontal"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/album_details_name"
-                    app:layout_constraintTop_toBottomOf="@+id/album_details_artist" />
+                    app:layout_constraintTop_toBottomOf="@+id/album_details_artist">
+
+                    <TextView
+                        android:id="@+id/album_details_song_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="3dp"
+                        android:text="@string/default_number" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/song_count_postfix" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=", "
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="3dp"
+                        android:text="@string/total_duration" />
+
+                    <TextView
+                        android:id="@+id/album_details_total_duration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="3dp"
+                        android:text="@string/default_playback_time" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=", "
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="3dp"
+                        android:text="@string/released_in" />
+
+                    <TextView
+                        android:id="@+id/album_details_release_year"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/default_year" />
+
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

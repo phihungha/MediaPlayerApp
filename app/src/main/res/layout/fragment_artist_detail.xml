@@ -89,21 +89,49 @@
                     app:layout_constraintStart_toEndOf="@+id/artist_details_small_artwork"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
+                <LinearLayout
                     android:id="@+id/artist_details_description"
-                    android:layout_width="0dp"
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="2dp"
                     android:layout_marginBottom="2dp"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:text="@string/default_artist_details_description"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-                    android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/artist_details_small_artwork"
-                    app:layout_constraintTop_toBottomOf="@+id/artist_details_name" />
+                    app:layout_constraintTop_toBottomOf="@+id/artist_details_name">
+
+                    <TextView
+                        android:id="@+id/artist_details_song_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="3dp"
+                        android:text="@string/default_number" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/song_count_postfix" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=", "
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:id="@+id/artist_details_album_number"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="3dp"
+                        android:text="@string/default_number" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/album_count_postfix" />
+
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

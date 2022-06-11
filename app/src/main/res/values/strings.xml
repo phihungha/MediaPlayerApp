@@ -161,4 +161,9 @@
     <string name="general">General</string>
     <string name="resume_previous_position">Resume previous position</string>
     <string name="display_music_visualizer">Display music visualizer</string>
+    <string name="default_number" translatable="false">0</string>
+    <string name="album_count_postfix">album(s)</string>
+    <string name="total_duration">total duration</string>
+    <string name="released_in">released in</string>
+    <string name="default_year" translatable="false">2021</string>
 </resources>
