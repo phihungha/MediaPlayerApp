@@ -10,29 +10,33 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistItem;
-import com.example.mediaplayerapp.data.playlist.PlaylistRepository;
 import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.databinding.BottomSheetVideoBinding;
 import com.example.mediaplayerapp.databinding.DialogVideoInfoBinding;
-import com.example.mediaplayerapp.ui.special_playlists.MediaQueueUtil;
+import com.example.mediaplayerapp.ui.music_library.song_tab.SongBottomSheet;
 import com.example.mediaplayerapp.ui.playlist.PlaylistItemViewModel;
 import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
+import com.example.mediaplayerapp.ui.special_playlists.MediaQueueUtil;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
-import com.example.mediaplayerapp.utils.SortOrder;
+import com.example.mediaplayerapp.utils.MessageUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+
 public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
 
     private final Video currentVideo;
-
+    private static final String LOG_TAG = SongBottomSheet.class.getSimpleName();
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
     public VideoLibraryBottomSheetDialog(Video video) {
         currentVideo = video;
@@ -49,6 +53,11 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
                              Bundle savedInstanceState) {
         BottomSheetVideoBinding binding
                 = BottomSheetVideoBinding.inflate(inflater, container, false);
+
+        PlaylistViewModel playlistViewModel
+                = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+        PlaylistItemViewModel playlistItemViewModel
+                = new ViewModelProvider(requireActivity()).get(PlaylistItemViewModel.class);
 
         binding.bottomSheetVideoNameTextview.setText(currentVideo.getTitle());
 
@@ -71,9 +80,6 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
 
             videoInfoBinding.dialogVideoInfoVideoPathTextview.setText(currentVideo.getLocation());
 
-            videoInfoBinding.dialogVideoInfoVideoSizeTextview
-                    .setText(convertFileSize(currentVideo.getSize()));
-
             videoInfoBinding.dialogVideoInfoVideoResolutionTextview
                     .setText(currentVideo.getResolution());
 
@@ -84,41 +90,41 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
             builder.setView(videoInfoBinding.getRoot()).show();
         });
 
-        PlaylistViewModel playlistViewModel
-                = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
-
-        // Get all playlists that contain videos
-        //**** MUST **** do this before setOnClickListener for optionAddPlaylist, or else the first
-        // time user clicks, dialog only shows title, NO ITEMS
-        List<Playlist> allVideoPlaylists = new ArrayList<>();
-        playlistViewModel.getAllPlaylists(PlaylistRepository.SortBy.NAME, SortOrder.ASC)
-                .observe(
-                    requireActivity(),
+        List<Playlist> videoPlaylists = new ArrayList<>();
+        playlistViewModel.getAllVideoPlaylists()
+                .observe(requireActivity(),
                         playlists -> {
-                            for (Playlist playlist : playlists) {
-                                if (playlist.isVideo())
-                                    allVideoPlaylists.add(playlist);
-                            }
+                            videoPlaylists.clear();
+                            videoPlaylists.addAll(playlists);
                         }
-                 );
+                );
 
-        LinearLayout optionAddPlaylist = binding.bottomSheetOptionAddPlaylist;
-        optionAddPlaylist.setOnClickListener(view1 -> {
-            PlaylistItemViewModel PlaylistItemViewModel
-                    = new ViewModelProvider(requireActivity()).get(PlaylistItemViewModel.class);
-
+        binding.bottomSheetOptionAddPlaylist.setOnClickListener(view1 -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-            builder
-                    .setTitle("Choose a playlist: ")
+            builder.setTitle(R.string.choose_a_playlist)
                     .setItems(
-                            allVideoPlaylists.stream().map(Playlist::getName).toArray(CharSequence[]::new),
+                            videoPlaylists.stream().map(Playlist::getName).toArray(CharSequence[]::new),
                             (dialogInterface, i) -> {
                                 PlaylistItem newPlaylistItem =
                                         new PlaylistItem(
-                                            allVideoPlaylists.get(i).getId(),
-                                            currentVideo.getUri().toString()
-                                );
-                                PlaylistItemViewModel.addPlaylistItem(newPlaylistItem);
+                                                videoPlaylists.get(i).getId(),
+                                                currentVideo.getUri().toString());
+                                Disposable disposable
+                                        = playlistItemViewModel.addPlaylistItem(newPlaylistItem)
+                                        .subscribe(
+                                                () -> MessageUtils.makeShortToast(requireContext(), R.string.added_to_playlist),
+                                                e -> {
+                                                    String message = e.getMessage();
+                                                    if (message != null && message.contains("UNIQUE"))
+                                                        MessageUtils.makeShortToast(requireContext(), R.string.item_already_added);
+                                                    else
+                                                        MessageUtils.displayError(
+                                                                requireContext(),
+                                                                LOG_TAG,
+                                                                e.getMessage());
+                                                }
+                                        );
+                                disposables.add(disposable);
                             })
                     .show();
         });
@@ -136,19 +142,5 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
                 ));
 
         return binding.getRoot();
-    }
-
-    /**
-     * Convert a file size from type "long" to an easy-to-look "String"
-     *
-     * @param size The file size that needs converting
-     * @return The result string
-     */
-    private String convertFileSize(long size) {
-        if (size <= 0) return "0";
-        final String[] units = new String[]{"B", "kB", "MB", "GB", "TB"};
-        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
-        return new DecimalFormat("#,##0.#")
-                .format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 }

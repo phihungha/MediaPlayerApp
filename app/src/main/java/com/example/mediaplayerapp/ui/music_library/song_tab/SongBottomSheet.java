@@ -10,25 +10,32 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.PlaylistRepository;
-import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.data.playlist.PlaylistItem;
-import com.example.mediaplayerapp.ui.playlist.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.BottomSheetSongBinding;
 import com.example.mediaplayerapp.databinding.SongDetailBinding;
+import com.example.mediaplayerapp.ui.playlist.PlaylistItemViewModel;
+import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.ui.special_playlists.MediaQueueUtil;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
-import com.example.mediaplayerapp.utils.SortOrder;
+import com.example.mediaplayerapp.utils.MessageUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
+
 
 public class SongBottomSheet extends BottomSheetDialogFragment {
+
+    private static final String LOG_TAG = SongBottomSheet.class.getSimpleName();
+    private final CompositeDisposable disposables = new CompositeDisposable();
     private final Song currentSong;
+
     public SongBottomSheet(Song song) {
         currentSong = song;
     }
@@ -45,6 +52,11 @@ public class SongBottomSheet extends BottomSheetDialogFragment {
                 BottomSheetSongBinding.inflate(inflater,container,false);
         binding.bottomSheetSongNameTextview.setText(currentSong.getTitle());
 
+        PlaylistViewModel playlistViewModel
+                = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
+        PlaylistItemViewModel playlistItemViewModel
+                = new ViewModelProvider(requireActivity()).get(PlaylistItemViewModel.class);
+
         LinearLayout SongDetail = binding.bottomSheetSongDetail;
         SongDetail.setOnClickListener(view -> {
             SongDetailBinding songDetailBinding = SongDetailBinding.inflate(inflater,container,false);
@@ -57,40 +69,43 @@ public class SongBottomSheet extends BottomSheetDialogFragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setView(songDetailBinding.getRoot()).show();
         });
-        PlaylistViewModel playlistViewModel
-                = new ViewModelProvider(requireActivity()).get(PlaylistViewModel.class);
 
-        // Get all playlists that contain videos
-        //**** MUST **** do this before setOnClickListener for optionAddPlaylist, or else the first
-        // time user clicks, dialog only shows title, NO ITEMS
-        List<Playlist> allMusicPlaylists = new ArrayList<>();
-        playlistViewModel.getAllPlaylists(PlaylistRepository.SortBy.NAME, SortOrder.ASC)
-                .observe(
-                    requireActivity(),
-                    playlists -> {
-                        for (Playlist playlist : playlists) {
-                            if (!playlist.isVideo())
-                                allMusicPlaylists.add(playlist);
-                        }
-                    }
+        List<Playlist> allSongPlaylists = new ArrayList<>();
+        playlistViewModel.getAllSongPlaylists()
+                .observe(requireActivity(),
+                         playlists -> {
+                             allSongPlaylists.clear();
+                             allSongPlaylists.addAll(playlists);
+                         }
                 );
 
         binding.bottomSheetAddSongPlaylist.setOnClickListener(view -> {
-            PlaylistItemViewModel PlaylistItemViewModel
-                    = new ViewModelProvider(requireActivity()).get(PlaylistItemViewModel.class);
-
             AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
-            builder
-                    .setTitle("Choose a playlist: ")
+            builder.setTitle(R.string.choose_a_playlist)
                     .setItems(
-                            allMusicPlaylists.stream().map(Playlist::getName).toArray(CharSequence[]::new),
+                            allSongPlaylists.stream().map(Playlist::getName).toArray(CharSequence[]::new),
                             (dialogInterface, i) -> {
                                 PlaylistItem newPlaylistItem =
                                         new PlaylistItem(
-                                            allMusicPlaylists.get(i).getId(),
+                                            allSongPlaylists.get(i).getId(),
                                             currentSong.getUri().toString()
                                         );
-                                PlaylistItemViewModel.addPlaylistItem(newPlaylistItem);
+                                Disposable disposable
+                                        = playlistItemViewModel.addPlaylistItem(newPlaylistItem)
+                                        .subscribe(
+                                                () -> MessageUtils.makeShortToast(requireContext(), R.string.added_to_playlist),
+                                                e -> {
+                                                    String message = e.getMessage();
+                                                    if (message != null && message.contains("UNIQUE"))
+                                                        MessageUtils.makeShortToast(requireContext(), R.string.item_already_added);
+                                                    else
+                                                        MessageUtils.displayError(
+                                                                requireContext(),
+                                                                LOG_TAG,
+                                                                e.getMessage());
+                                                }
+                                        );
+                                disposables.add(disposable);
                             })
                     .show();
         });
@@ -110,5 +125,11 @@ public class SongBottomSheet extends BottomSheetDialogFragment {
         );
 
         return binding.getRoot();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposables.dispose();
     }
 }

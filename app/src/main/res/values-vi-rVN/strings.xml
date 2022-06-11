@@ -137,4 +137,7 @@
     <string name="album_count_postfix">album</string>
     <string name="total_duration">tổng thời lượng</string>
     <string name="released_in">ra mắt vào</string>
+    <string name="choose_a_playlist">Chọn danh sách phát</string>
+    <string name="added_to_playlist">Đã thêm vào danh sách phát</string>
+    <string name="item_already_added">Đã có sẵn</string>
 </resources>

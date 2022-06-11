@@ -47,6 +47,12 @@ public interface PlaylistDao {
     @Query("SELECT * FROM Playlists ORDER BY ItemCount DESC")
     Flowable<List<Playlist>> getAllSortedByItemCountDesc();
 
+    @Query("SELECT * FROM Playlists WHERE IsVideo = 0")
+    Flowable<List<Playlist>> getAllSongPlaylists();
+
+    @Query("SELECT * FROM Playlists WHERE IsVideo = 1")
+    Flowable<List<Playlist>> getAllVideoPlaylists();
+
     @Query("SELECT * from Playlists WHERE PlaylistId = :id")
     Flowable<Playlist> get(int id);
 }

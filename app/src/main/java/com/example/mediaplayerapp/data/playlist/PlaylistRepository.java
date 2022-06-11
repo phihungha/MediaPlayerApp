@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
+import kotlinx.coroutines.flow.Flow;
 
 public class PlaylistRepository {
 
@@ -70,5 +71,13 @@ public class PlaylistRepository {
         if (sortBy == SortBy.ITEM_COUNT && sortOrder == SortOrder.ASC)
             return playlistDao.getAllSortedByItemCountAsc().subscribeOn(Schedulers.io());
         return playlistDao.getAllSortedByItemCountDesc().subscribeOn(Schedulers.io());
+    }
+
+    public Flowable<List<Playlist>> getAllSongPlaylists() {
+        return playlistDao.getAllSongPlaylists().subscribeOn(Schedulers.io());
+    }
+
+    public Flowable<List<Playlist>> getAllVideoPlaylists() {
+        return playlistDao.getAllVideoPlaylists().subscribeOn(Schedulers.io());
     }
 }

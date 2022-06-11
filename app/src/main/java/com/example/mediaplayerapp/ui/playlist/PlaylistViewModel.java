@@ -30,6 +30,16 @@ public class PlaylistViewModel extends AndroidViewModel {
                 .fromPublisher(playlistRepository.getAllPlaylists(sortBy, sortOrder));
     }
 
+    public LiveData<List<Playlist>> getAllVideoPlaylists() {
+        return LiveDataReactiveStreams
+                .fromPublisher(playlistRepository.getAllVideoPlaylists());
+    }
+
+    public LiveData<List<Playlist>> getAllSongPlaylists() {
+        return LiveDataReactiveStreams
+                .fromPublisher(playlistRepository.getAllSongPlaylists());
+    }
+
     public LiveData<Playlist> getPlaylist(int id) {
         return LiveDataReactiveStreams
                 .fromPublisher(playlistRepository.getPlaylist(id));
@@ -42,11 +52,6 @@ public class PlaylistViewModel extends AndroidViewModel {
 
     public Completable insertPlaylist(Playlist playlist){
         return playlistRepository.addPlaylist(playlist)
-                .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public Completable updatePlaylist(Playlist playlist){
-        return playlistRepository.updatePlaylist(playlist)
                 .observeOn(AndroidSchedulers.mainThread());
     }
 

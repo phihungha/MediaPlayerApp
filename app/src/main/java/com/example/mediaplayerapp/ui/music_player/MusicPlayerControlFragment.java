@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.media.MediaMetadataCompat;
 import android.support.v4.media.session.MediaControllerCompat;
 import android.support.v4.media.session.PlaybackStateCompat;
@@ -35,21 +36,21 @@ import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playlist.Playlist;
-import com.example.mediaplayerapp.data.playlist.PlaylistRepository;
-import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.data.playlist.PlaylistItem;
-import com.example.mediaplayerapp.ui.playlist.PlaylistItemViewModel;
 import com.example.mediaplayerapp.databinding.FragmentMusicPlayerControlBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
+import com.example.mediaplayerapp.ui.playlist.PlaylistItemViewModel;
+import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.ui.special_playlists.MediaQueueUtil;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
-import com.example.mediaplayerapp.utils.SortOrder;
+import com.example.mediaplayerapp.utils.MessageUtils;
 import com.google.android.exoplayer2.ui.TimeBar;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 import jp.wasabeef.glide.transformations.gpu.BrightnessFilterTransformation;
 
@@ -57,6 +58,8 @@ public class MusicPlayerControlFragment extends Fragment {
 
     private static final String LOG_TAG = MusicPlayerControlFragment.class.getSimpleName();
     private static final int AUTOSCROLL_DELAY = 4500;
+
+    private final CompositeDisposable disposables = new CompositeDisposable();
 
     private final List<Playlist> playlists = new ArrayList<>();
     private PlaylistItemViewModel playlistItemViewModel;
@@ -91,15 +94,12 @@ public class MusicPlayerControlFragment extends Fragment {
 
         playlistItemViewModel = new ViewModelProvider(this).get(PlaylistItemViewModel.class);
         PlaylistViewModel playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
-        playlistViewModel
-                .getAllPlaylists(PlaylistRepository.SortBy.NAME, SortOrder.ASC)
-                .observe(getViewLifecycleOwner(), newPlaylists -> {
-            playlists.clear();
-            playlists.addAll(newPlaylists
-                    .stream()
-                    .filter(Playlist::isVideo)
-                    .collect(Collectors.toList()));
-        });
+        playlistViewModel.getAllSongPlaylists()
+                        .observe(getViewLifecycleOwner(),
+                                newPlaylists -> {
+                            playlists.clear();
+                            playlists.addAll(newPlaylists);
+                        });
 
         beginObservingMediaControllerData();
 
@@ -268,7 +268,7 @@ public class MusicPlayerControlFragment extends Fragment {
                 .toArray(CharSequence[]::new);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity())
-                .setTitle("Choose a playlist")
+                .setTitle(R.string.choose_a_playlist)
                 .setItems(
                         playlistOptions,
                         (dialogInterface, i) -> {
@@ -276,10 +276,22 @@ public class MusicPlayerControlFragment extends Fragment {
                                     = new PlaylistItem(
                                             playlists.get(i).getId(),
                                             currentMediaUri);
-                            playlistItemViewModel.addPlaylistItem(newPlaylistItem);
-                            Toast.makeText(requireActivity(),
-                                    "Added to playlist",
-                                    Toast.LENGTH_SHORT).show();
+                            Disposable disposable
+                                    = playlistItemViewModel.addPlaylistItem(newPlaylistItem)
+                                    .subscribe(
+                                            () -> MessageUtils.makeShortToast(requireContext(), R.string.added_to_playlist),
+                                            e -> {
+                                                String message = e.getMessage();
+                                                if (message != null && message.contains("UNIQUE"))
+                                                    MessageUtils.makeShortToast(requireContext(), R.string.item_already_added);
+                                                else
+                                                    MessageUtils.displayError(
+                                                            requireContext(),
+                                                            LOG_TAG,
+                                                            e.getMessage());
+                                            }
+                                    );
+                            disposables.add(disposable);
                         });
         builder.show();
     }
@@ -372,8 +384,8 @@ public class MusicPlayerControlFragment extends Fragment {
      * Begin updating current playback position and seekbar progress.
      */
     private void startTimeIndicators() {
-        Handler handler = new Handler();
-        requireActivity().runOnUiThread(new Runnable() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        Runnable runnable = new Runnable() {
             @Override
             public void run() {
                 if (getActivity() == null)
@@ -387,7 +399,8 @@ public class MusicPlayerControlFragment extends Fragment {
                 );
                 handler.postDelayed(this, 100);
             }
-        });
+        };
+        handler.post(runnable);
     }
 
     /**
@@ -579,12 +592,8 @@ public class MusicPlayerControlFragment extends Fragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
+        disposables.dispose();
     }
 }
