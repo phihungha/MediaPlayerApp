@@ -1,14 +1,14 @@
-package com.example.mediaplayerapp.data.overview;
+package com.example.mediaplayerapp.data.playback_history;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName = "media_playback_info_table")
-public class MediaPlaybackInfo {
+@Entity(tableName = "PlaylistHistory")
+public class PlaybackHistoryEntry {
 
     @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "MediaPlaybackInfoID")
+    @ColumnInfo(name = "PlaybackHistoryEntryId")
     private int id;
 
     @ColumnInfo(name = "MediaURI")
@@ -26,7 +26,7 @@ public class MediaPlaybackInfo {
     @ColumnInfo(name = "IsVideo")
     private boolean isVideo;
 
-    public MediaPlaybackInfo(String mediaUri, long lastPlaybackTime, int playbackCount, boolean isVideo, long lastPlaybackPosition) {
+    public PlaybackHistoryEntry(String mediaUri, long lastPlaybackTime, int playbackCount, boolean isVideo, long lastPlaybackPosition) {
         this.setLastPlaybackPosition(lastPlaybackPosition);
         this.setMediaUri(mediaUri);
         this.setLastPlaybackTime(lastPlaybackTime);
@@ -56,6 +56,10 @@ public class MediaPlaybackInfo {
 
     public void setPlaybackCount(int playbackCount) {
         this.playbackCount = playbackCount;
+    }
+
+    public void incrementPlaybackCount() {
+        playbackCount++;
     }
 
     public boolean isVideo() {

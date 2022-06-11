@@ -6,15 +6,22 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.mediaplayerapp.data.playback_history.PlaybackHistoryDao;
+import com.example.mediaplayerapp.data.playback_history.PlaybackHistoryEntry;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistDao;
 import com.example.mediaplayerapp.data.playlist.PlaylistItem;
 import com.example.mediaplayerapp.data.playlist.PlaylistItemDao;
 
-@Database(entities = {Playlist.class, PlaylistItem.class}, version = 1, exportSchema = false)
+@Database(entities = {
+        Playlist.class,
+        PlaylistItem.class,
+        PlaybackHistoryEntry.class},
+        version = 1, exportSchema = false)
 public abstract class AppRoomDatabase extends RoomDatabase {
     public abstract PlaylistDao playlistDao();
     public abstract PlaylistItemDao playlistItemDao();
+    public abstract PlaybackHistoryDao playbackHistoryDao();
     private static volatile AppRoomDatabase instance;
 
     public static AppRoomDatabase getDatabase(final Context context) {

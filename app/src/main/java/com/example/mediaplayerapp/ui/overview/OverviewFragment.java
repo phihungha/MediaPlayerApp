@@ -2,6 +2,9 @@ package com.example.mediaplayerapp.ui.overview;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -11,13 +14,39 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.databinding.FragmentOverviewBinding;
+import com.example.mediaplayerapp.utils.MessageUtils;
+
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 public class OverviewFragment extends Fragment {
+
+    public enum MediaType {
+        VIDEO,
+        SONG
+    }
+
+    /**
+     * Indicating whether this recyclerview will use the layout file for item_small or item_big
+     */
+    public enum MediaLayoutType {
+        BIG,
+        SMALL
+    }
+
+    private static final int DEFAULT_MEDIA_SHOWN_COUNT = 8;
+    private static final String LOG_TAG = OverviewFragment.class.getSimpleName();
+
+    private final CompositeDisposable disposables = new CompositeDisposable();
+    private OverviewViewModel overviewViewModel;
+
     private OverviewItemAdapter recentVideosItemAdapter;
     private OverviewItemAdapter mostWatchedVideosItemAdapter;
     private OverviewItemAdapter recentSongsItemAdapter;
     private OverviewItemAdapter mostListenedSongsItemAdapter;
+
     private FragmentOverviewBinding binding;
 
     @Override
@@ -25,6 +54,9 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentOverviewBinding.inflate(inflater, container, false);
+        setHasOptionsMenu(true);
+        
+        overviewViewModel = new ViewModelProvider(requireActivity()).get(OverviewViewModel.class);
 
         // Initialize recent videos recyclerview
         recentVideosItemAdapter
@@ -72,11 +104,6 @@ public class OverviewFragment extends Fragment {
      * A method wrapping around implementation of OverviewViewModel for better readability
      */
     private void implementOverviewViewModel() {
-        OverviewViewModel overviewViewModel
-                = new ViewModelProvider(requireActivity()).get(OverviewViewModel.class);
-
-        int DEFAULT_MEDIA_SHOWN_COUNT = 8;
-
         overviewViewModel.getRecentVideos(DEFAULT_MEDIA_SHOWN_COUNT).observe(
                 requireActivity(),
                 mediaPlaybackInfoList -> recentVideosItemAdapter.submitList(mediaPlaybackInfoList));
@@ -94,16 +121,28 @@ public class OverviewFragment extends Fragment {
                 mediaPlaybackInfoList -> mostListenedSongsItemAdapter.submitList(mediaPlaybackInfoList));
     }
 
-    public enum MediaType {
-        VIDEO,
-        SONG
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.overview_options_menu, menu);
     }
 
-    /**
-     * Indicating whether this recyclerview will use the layout file for item_small or item_big
-     */
-    public enum MediaLayoutType {
-        BIG,
-        SMALL
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.overview_clear_history) {
+            Disposable disposable = overviewViewModel.clearHistory()
+                    .subscribe(
+                        () -> {},
+                        e -> MessageUtils.displayError(requireContext(), LOG_TAG, e.getMessage())
+                    );
+            disposables.add(disposable);
+        }
+        return true;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposables.dispose();
     }
 }

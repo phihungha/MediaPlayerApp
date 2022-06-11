@@ -1,22 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
-
-<!--    <item android:id="@+id/action_search"
-        android:title="@string/search"
-        android:icon="@drawable/ic_search_24dp"
-        app:showAsAction="ifRoom|collapseActionView"
-        app:actionViewClass="android.widget.SearchView"
-        android:iconTint="@color/white"
-        />
-
-    <item android:id="@+id/action_sort"
-        android:title="@string/sort"
-        android:iconTint="@color/white"
-        android:icon="@drawable/ic_sort_24dp"
-        />-->
-
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_search_playlist_main"
         android:title="@string/action_search"
