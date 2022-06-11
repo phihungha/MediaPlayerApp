@@ -72,6 +72,17 @@ public class PlaybackHistoryRepository {
         return recordHistory(mediaUri, true, lastPlaybackPosition);
     }
 
+    public Single<Long> getLastPlaybackPosition(Uri mediaUri) {
+        return getByMediaUri(mediaUri).map(playbackHistoryEntryList -> {
+            long lastPlaybackPosition = -1;
+            if (playbackHistoryEntryList.size() == 1)
+                lastPlaybackPosition = playbackHistoryEntryList
+                                .get(0)
+                                .getLastPlaybackPosition();
+            return lastPlaybackPosition;
+        }).subscribeOn(Schedulers.io());
+    }
+
     public Flowable<List<PlaybackHistoryEntry>> getRecentVideos(int mediaShownCount) {
         return playbackHistoryDao.getRecentVideos(mediaShownCount)
                 .subscribeOn(Schedulers.io());

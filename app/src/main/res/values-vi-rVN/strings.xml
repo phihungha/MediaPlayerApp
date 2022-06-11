@@ -133,7 +133,7 @@
     <string name="no_playlist_item_to_play">Không có gì để phát! Hãy thêm vài thứ</string>
     <string name="general">Chung</string>
     <string name="display_music_visualizer">Hiệu ứng nhạc</string>
-    <string name="resume_previous_position">Phát từ vị trí trước</string>
+    <string name="resume_last_position">Phát từ vị trí cuối</string>
     <string name="album_count_postfix">album</string>
     <string name="total_duration">tổng thời lượng</string>
     <string name="released_in">ra mắt vào</string>
@@ -142,4 +142,6 @@
     <string name="item_already_added">Đã có sẵn</string>
     <string name="you_are_not_playing_from_a_playlist">Bạn không phát từ một danh sách phát</string>
     <string name="clear_history">Xóa lịch sử</string>
+    <string name="resume_last_playback_position">Phát từ vị trí cuối</string>
+    <string name="yes">Có</string>
 </resources>

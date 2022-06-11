@@ -11,7 +11,6 @@ import io.reactivex.rxjava3.core.Completable;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-import kotlinx.coroutines.flow.Flow;
 
 public class PlaylistRepository {
 
@@ -30,10 +29,6 @@ public class PlaylistRepository {
 
     public Completable addPlaylist(Playlist playlist) {
         return playlistDao.insert(playlist).subscribeOn(Schedulers.io());
-    }
-
-    public Completable updatePlaylist(Playlist playlist) {
-        return playlistDao.update(playlist).subscribeOn(Schedulers.io());
     }
 
     public Completable renamePlaylist(int playlistId, String newName) {

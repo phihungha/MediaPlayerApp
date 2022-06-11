@@ -88,10 +88,7 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
             new MediaControllerCompat.Callback() {
                 @Override
                 public void onMetadataChanged(MediaMetadataCompat metadata) {
-                    if (MediaControllerCompat
-                            .getMediaController(activity)
-                            .getPlaybackState()
-                            .getState() == PlaybackStateCompat.STATE_NONE)
+                    if (metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI) == null)
                         return;
 
                     binding.bottomMusicPlayerSongTitle.setText(metadata.getText(MediaMetadataCompat.METADATA_KEY_TITLE));

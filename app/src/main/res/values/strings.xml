@@ -159,7 +159,7 @@
     <string name="added_to_favorites">Added to favorites</string>
     <string name="no_playlist_item_to_play">There is nothing to play! Please add a few items</string>
     <string name="general">General</string>
-    <string name="resume_previous_position">Resume previous position</string>
+    <string name="resume_last_position">Resume last position</string>
     <string name="display_music_visualizer">Display music visualizer</string>
     <string name="default_number" translatable="false">0</string>
     <string name="album_count_postfix">album(s)</string>
@@ -172,4 +172,6 @@
     <string name="item_already_added">Item already added</string>
     <string name="you_are_not_playing_from_a_playlist">You are not playing from a playlist</string>
     <string name="clear_history">Clear history</string>
+    <string name="resume_last_playback_position">Resume last playback position?</string>
+    <string name="yes">Yes</string>
 </resources>

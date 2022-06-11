@@ -18,12 +18,14 @@
         android:title="@string/playback">
 
         <SwitchPreference
-            android:title="@string/resume_previous_position"
-            android:key="resume_previous_position" />
+            android:title="@string/resume_last_position"
+            android:key="resume_last_position"
+            android:defaultValue="true" />
 
         <SwitchPreference
             android:title="@string/display_music_visualizer"
-            android:key="display_music_visualizer" />
+            android:key="display_music_visualizer"
+            android:defaultValue="true" />
 
     </PreferenceCategory>
 

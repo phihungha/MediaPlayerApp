@@ -71,7 +71,6 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     // cache them.
     private long lastPlaybackPosition = 0;
     private Uri lastMediaUri = Uri.EMPTY;
-    private boolean currentMediaItemStarted = false;
 
     private SongsRepository songsRepository;
     private PlaylistItemRepository playlistItemRepository;
@@ -211,7 +210,18 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         player.addListener(new Player.Listener() {
             @Override
                 public void onMediaMetadataChanged(@NonNull MediaMetadata mediaMetadata) {
+                if (player.getDuration() <= 0)
+                    return;
+
                 MediaMetadataCompat.Builder metadataCompatBuilder = new MediaMetadataCompat.Builder();
+
+                if (mediaMetadata.mediaUri != null) {
+                    metadataCompatBuilder.putString(
+                            MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
+                            mediaMetadata.mediaUri.toString());
+                    lastMediaUri = mediaMetadata.mediaUri;
+                }
+
                 putStringIntoMediaMetadataCompat(metadataCompatBuilder,
                         MediaMetadataCompat.METADATA_KEY_TITLE,
                         mediaMetadata.title);
@@ -226,14 +236,6 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                         mediaMetadata.albumTitle);
                 metadataCompatBuilder.putLong(MediaMetadataCompat.METADATA_KEY_DURATION,
                         player.getDuration());
-
-                if (mediaMetadata.mediaUri != null) {
-                    metadataCompatBuilder.putString(
-                            MediaMetadataCompat.METADATA_KEY_MEDIA_URI,
-                            mediaMetadata.mediaUri.toString()
-                    );
-                    lastMediaUri = mediaMetadata.mediaUri;
-                }
 
                 if (mediaMetadata.artworkUri != null)
                     metadataCompatBuilder.putString(
@@ -255,13 +257,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
             @Override
             public void onMediaItemTransition(@Nullable MediaItem mediaItem, int reason) {
-                if (currentMediaItemStarted) {
-                    recordHistory();
-                    currentMediaItemStarted = false;
-                }
-                else if (player.getPlaybackState() == Player.STATE_BUFFERING
-                         || player.getPlaybackState() == Player.STATE_IDLE)
-                    currentMediaItemStarted = true;
+                recordHistory();
             }
         });
     }
@@ -270,6 +266,9 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
      * Record current media item and its last playback position into history.
      */
     private void recordHistory() {
+        if (lastPlaybackPosition == 0)
+            return;
+
         long playbackPosition = lastPlaybackPosition;
         if (playbackPosition == player.getDuration())
             playbackPosition = 0;

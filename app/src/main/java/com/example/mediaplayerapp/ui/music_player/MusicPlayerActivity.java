@@ -21,28 +21,36 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.example.mediaplayerapp.R;
+import com.example.mediaplayerapp.data.playback_history.PlaybackHistoryRepository;
 import com.example.mediaplayerapp.databinding.ActivityMusicPlayerBinding;
 import com.example.mediaplayerapp.services.MusicPlaybackService;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
+import com.google.android.material.snackbar.Snackbar;
+
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.disposables.Disposable;
 
 /**
  * Music player UI.
  */
 public class MusicPlayerActivity extends AppCompatActivity {
 
-    private static final String LOG_TAG = MusicPlayerControlFragment.class.getSimpleName();
+    private static final String LOG_TAG = MusicPlayerActivity.class.getSimpleName();
     public static final String SHUFFLE_MODE_ALL_KEY =
             "com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity.SHUFFLE_MODE_ALL_KEY";
     private static final String SEEK_TO_POSITION_KEY =
             "com.example.mediaplayerapp.ui.video_player.MusicPlayerActivity.SEEK_TO_POSITION_KEY";
 
+    private final CompositeDisposable disposables = new CompositeDisposable();
+
     private MusicPlayerViewModel musicPlayerViewModel;
+    private PlaybackHistoryRepository playbackHistoryRepository;
 
     private MediaBrowserCompat mediaBrowser;
-
-    private boolean firstTimeRun = true;
 
     private final MediaBrowserCompat.ConnectionCallback connectionCallback =
             new MediaBrowserCompat.ConnectionCallback() {
@@ -79,7 +87,7 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     Log.i(LOG_TAG, "Connection to music playback service failed");
                     Toast.makeText(MusicPlayerActivity.this,
                             "Music playback service error!",
-                            Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_SHORT).show();
                 }
             };
 
@@ -87,15 +95,17 @@ public class MusicPlayerActivity extends AppCompatActivity {
             new MediaControllerCompat.Callback() {
                 @Override
                 public void onMetadataChanged(MediaMetadataCompat metadata) {
+                    String mediaUriString = metadata.getString(MediaMetadataCompat.METADATA_KEY_MEDIA_URI);
+                    if (mediaUriString != null)
+                        resumeLastPosition(Uri.parse(mediaUriString));
+                    else
+                        return;
                     musicPlayerViewModel.setCurrentMediaMetadata(metadata);
+                    Log.d(LOG_TAG, "Media metadata updated");
                 }
 
                 @Override
                 public void onPlaybackStateChanged(PlaybackStateCompat state) {
-                    if (firstTimeRun && state.getState() == PlaybackStateCompat.STATE_PLAYING) {
-                        seekToOnFirstSong();
-                        firstTimeRun = false;
-                    }
                     musicPlayerViewModel.setCurrentPlaybackState(state);
                     Log.d(LOG_TAG, "Playback state changed to " + state.getState());
                 }
@@ -118,18 +128,45 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 }
             };
 
+    ActivityMusicPlayerBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityMusicPlayerBinding binding = ActivityMusicPlayerBinding.inflate(getLayoutInflater());
+        binding = ActivityMusicPlayerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         musicPlayerViewModel = new ViewModelProvider(this).get(MusicPlayerViewModel.class);
+        playbackHistoryRepository = new PlaybackHistoryRepository(getApplication());
 
         mediaBrowser = new MediaBrowserCompat(this,
                 new ComponentName(this, MusicPlaybackService.class),
                 connectionCallback,
                 null);
+    }
+
+    private void resumeLastPosition(Uri mediaUri) {
+        if (!PreferenceManager
+                .getDefaultSharedPreferences(this)
+                .getBoolean("resume_last_position", false))
+            return;
+
+        Disposable disposable = playbackHistoryRepository.getLastPlaybackPosition(mediaUri)
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(lastPlaybackPosition -> {
+                        if (lastPlaybackPosition != -1)
+                            askToResumeLastPosition(lastPlaybackPosition);
+                    });
+        disposables.add(disposable);
+    }
+
+    private void askToResumeLastPosition(long lastPlaybackPosition) {
+        Snackbar.make(binding.getRoot(), R.string.resume_last_playback_position, 5000)
+                .setAction(R.string.yes,
+                           view -> getMediaControllerCompat()
+                                   .getTransportControls()
+                                   .seekTo(lastPlaybackPosition))
+                .show();
     }
 
     /**
@@ -220,15 +257,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
                 getMediaControllerCompat()
                         .getTransportControls()
                         .setShuffleMode(PlaybackStateCompat.SHUFFLE_MODE_ALL);
-        }
-    }
-
-    private void seekToOnFirstSong() {
-        Bundle extras = getIntent().getExtras();
-        if (extras != null && extras.getLong(SEEK_TO_POSITION_KEY, -1) != -1) {
-            getMediaControllerCompat()
-                    .getTransportControls()
-                    .seekTo(extras.getLong(SEEK_TO_POSITION_KEY));
         }
     }
 
