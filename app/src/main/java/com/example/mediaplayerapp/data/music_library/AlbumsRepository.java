@@ -67,9 +67,10 @@ public class AlbumsRepository {
 
             if (cursor.moveToFirst()) {
                 do {
+                    long albumId = cursor.getLong(idColumnIndex);
                     albums.add(new Album(
-                            cursor.getLong(idColumnIndex),
-                            mediaStore.getMediaItemUri(cursor.getLong(albumColumnIndex)),
+                            albumId,
+                            mediaStore.getMediaItemUri(albumId),
                             cursor.getString(albumColumnIndex),
                             cursor.getString(artistColumnIndex),
                             cursor.getInt(numberOfSongsColumnIndex),
