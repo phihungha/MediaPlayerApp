@@ -51,8 +51,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
     private final static String LOG_TAG = VideoPlayerActivity.class.getSimpleName();
     private static final String SHUFFLE_MODE_ALL_KEY =
             "com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity.SHUFFLE_MODE_KEY";
-    private static final String SEEK_TO_POSITION_KEY =
-            "com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity.SEEK_TO_POSITION_KEY";
 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
@@ -129,19 +127,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
     }
 
     /**
-     * Sequentially play video(s) specified by an URI with VideoPlayerActivity.
-     * @param context Current context
-     * @param uri URI of the media item to play
-     * @param seekToPosition Position to seek to
-     */
-    public static void launchWithUriAndSeekTo(Context context, Uri uri, long seekToPosition) {
-        Intent playbackIntent = new Intent(context, VideoPlayerActivity.class);
-        playbackIntent.setData(uri);
-        playbackIntent.putExtra(SEEK_TO_POSITION_KEY, seekToPosition);
-        context.startActivity(playbackIntent);
-    }
-
-    /**
      * Randomly play video(s) specified by an URI with VideoPlayerActivity.
      * @param context Current context
      * @param uri URI of the media item to play
@@ -159,7 +144,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
             public void onMediaMetadataChanged(@NonNull MediaMetadata mediaMetadata) {
                 if (mediaMetadata.mediaUri != null) {
                     lastMediaUri = mediaMetadata.mediaUri;
-                    resumeLastPosition(mediaMetadata.mediaUri);
+                    if (!isInPictureInPictureMode())
+                        resumeLastPosition(mediaMetadata.mediaUri);
                 }
             }
 
@@ -235,9 +221,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
             player.setMediaItem(GetMediaItemsUtils.getMediaItemFromUri(uri));
 
         Bundle extras = getIntent().getExtras();
-        if (extras != null)
-            if (extras.getBoolean(SHUFFLE_MODE_ALL_KEY))
-                player.setShuffleModeEnabled(true);
+        if (extras != null && extras.getBoolean(SHUFFLE_MODE_ALL_KEY))
+            player.setShuffleModeEnabled(true);
     }
 
     /**
@@ -362,6 +347,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
     public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
         binding.videoPlayer.setUseController(!isInPictureInPictureMode);
+
     }
 
     @Override

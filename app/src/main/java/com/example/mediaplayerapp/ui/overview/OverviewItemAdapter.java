@@ -105,9 +105,9 @@ public class OverviewItemAdapter
 
         holder.mediaClickArea.setOnClickListener(view -> {
             if (mediaType == OverviewFragment.MediaType.VIDEO)
-                VideoPlayerActivity.launchWithUriAndSeekTo(context, mediaUri, lastPlaybackPosition);
+                VideoPlayerActivity.launchWithUri(context, mediaUri);
             else if (mediaType == OverviewFragment.MediaType.SONG)
-                MusicPlayerActivity.launchWithUriAndSeekTo(context, mediaUri, lastPlaybackPosition);
+                MusicPlayerActivity.launchWithUri(context, mediaUri);
         });
     }
 
