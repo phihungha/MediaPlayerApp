@@ -15,12 +15,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.music_library.Album;
+import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.databinding.FragmentAlbumDetailBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
 import com.example.mediaplayerapp.ui.music_library.song_tab.SongAdapter;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.example.mediaplayerapp.utils.MediaMetadataUtils;
+import com.example.mediaplayerapp.utils.MediaTimeUtils;
+
+import java.util.List;
 
 public class AlbumDetailFragment extends Fragment {
 
@@ -62,11 +66,12 @@ public class AlbumDetailFragment extends Fragment {
 
         binding.albumDetailsPlayAllSongs.setOnClickListener(v -> playAllSongs());
 
-        viewModel.getAlbum().observe(getViewLifecycleOwner(), this::updateHeaderInfo);
-        viewModel.getAlbumDuration().observe(getViewLifecycleOwner(),
-                duration -> binding.albumDetailsTotalDuration.setText(duration));
-        viewModel.getAlbumSongs().observe(getViewLifecycleOwner(), adapter::updateSongs);
-        viewModel.setCurrentAlbumId(currentAlbumId);
+        viewModel.getAlbum(currentAlbumId).observe(getViewLifecycleOwner(), this::setHeaderInfo);
+        viewModel.getAlbumSongs(currentAlbumId).observe(getViewLifecycleOwner(),
+                songs -> {
+            adapter.updateSongs(songs);
+            setTotalDuration(songs);
+        });
 
         return binding.getRoot();
     }
@@ -79,12 +84,18 @@ public class AlbumDetailFragment extends Fragment {
         MusicPlayerActivity.launchWithUri(requireActivity(), uri);
     }
 
-    private void updateHeaderInfo(Album album) {
+    private void setHeaderInfo(Album album) {
         binding.albumDetailsName.setText(album.getAlbumName());
         binding.albumDetailsArtist.setText(album.getArtistName());
-        binding.albumDetailsReleaseYear.setText(String.valueOf(album.getYear()));
+        if (album.getYear() != 0)
+            binding.albumDetailsReleaseYear.setText(String.valueOf(album.getYear()));
         binding.albumDetailsSongNumber.setText(String.valueOf(album.getNumberOfSongs()));
         setArtwork(album.getUri());
+    }
+
+    private void setTotalDuration(List<Song> songs) {
+        long totalDurationLong = songs.stream().mapToLong(Song::getDuration).sum();
+        binding.albumDetailsTotalDuration.setText(MediaTimeUtils.getFormattedTimeFromLong(totalDurationLong));
     }
 
     /**

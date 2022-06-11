@@ -166,4 +166,5 @@
     <string name="total_duration">total duration</string>
     <string name="released_in">released in</string>
     <string name="default_year" translatable="false">2021</string>
+    <string name="n_a" translatable="false">N/A</string>
 </resources>
