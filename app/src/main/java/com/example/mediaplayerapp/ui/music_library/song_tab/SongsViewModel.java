@@ -20,8 +20,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 public class SongsViewModel extends AndroidViewModel {
 
     private final CompositeDisposable disposables = new CompositeDisposable();
-
-    private final MutableLiveData<List<Song>> songs = new MutableLiveData<>();
     private final SongsRepository songsRepository;
 
     public SongsViewModel(Application application) {
@@ -29,15 +27,13 @@ public class SongsViewModel extends AndroidViewModel {
         songsRepository = new SongsRepository(application);
     }
 
-    public void loadAllSongs(SongsRepository.SortBy sortBy, SortOrder sortOrder) {
+    public LiveData<List<Song>> getAllSongs(SongsRepository.SortBy sortBy, SortOrder sortOrder) {
+        MutableLiveData<List<Song>> songs = new MutableLiveData<>();
         Disposable disposable = songsRepository.getAllSongs(sortBy, sortOrder)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(songs::setValue);
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(songs::setValue);
         disposables.add(disposable);
-    }
-
-    public LiveData<List<Song>> getAllSongs() {
         return songs;
     }
 

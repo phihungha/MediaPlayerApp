@@ -75,17 +75,8 @@ public class SongsFragment extends Fragment {
         binding.songList.setAdapter(songAdapter);
         binding.songList.setHasFixedSize(true);
 
-        binding.songsSwipeRefreshContainer.setOnRefreshListener(
-                () -> viewModel.loadAllSongs(currentSortBy, currentSortOrder)
-        );
+        binding.songsSwipeRefreshContainer.setOnRefreshListener(this::loadAllSongs);
         binding.songsSwipeRefreshContainer.setColorSchemeResources(R.color.cyan);
-
-        viewModel.getAllSongs().observe(
-                getViewLifecycleOwner(),
-                newSongs ->  {
-                    songAdapter.updateSongs(newSongs);
-                    binding.songsSwipeRefreshContainer.setRefreshing(false);
-        });
 
         if (savedInstanceState != null) {
             restoreInstanceState(savedInstanceState);
@@ -173,9 +164,18 @@ public class SongsFragment extends Fragment {
      * @param sortOrder Sort order
      */
     private void setSortMode(SongsRepository.SortBy sortBy, SortOrder sortOrder) {
-        viewModel.loadAllSongs(sortBy, sortOrder);
         currentSortBy = sortBy;
         currentSortOrder = sortOrder;
+        loadAllSongs();
+    }
+
+    private void loadAllSongs() {
+        viewModel.getAllSongs(currentSortBy, currentSortOrder).observe(
+                getViewLifecycleOwner(),
+                newArtists ->  {
+                    songAdapter.updateSongs(newArtists);
+                    binding.songsSwipeRefreshContainer.setRefreshing(false);
+                });
     }
 
     /**

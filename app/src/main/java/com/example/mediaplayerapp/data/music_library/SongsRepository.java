@@ -2,6 +2,7 @@ package com.example.mediaplayerapp.data.music_library;
 
 import static com.example.mediaplayerapp.utils.MediaTimeUtils.getZonedDateTimeFromLong;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
@@ -166,68 +167,10 @@ public class SongsRepository {
     }
 
     public Single<Song> getSong(Uri uri) {
-        return Single.fromCallable(() -> {
-            String[] projection = new String[] {
-                    MediaStore.Audio.Media._ID,
-                    MediaStore.Audio.Media.DISPLAY_NAME,
-                    MediaStore.Audio.Media.TITLE,
-                    MediaStore.Audio.Media.ALBUM,
-                    MediaStore.Audio.Media.ARTIST,
-                    MediaStore.Audio.Media.ALBUM_ARTIST,
-                    MediaStore.Audio.Media.GENRE,
-                    MediaStore.Audio.Media.DURATION,
-                    MediaStore.Audio.Media.DATE_ADDED,
-                    MediaStore.Audio.Media.DATA,
-                    MediaStore.Audio.Media.SIZE
-            };
-
-            Cursor cursor = mediaStore.getMediaItem(uri, projection);
-
-            int idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID);
-            int displayNameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME);
-            int titleColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE);
-            int albumColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM);
-            int artistColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST);
-            int albumArtistColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST);
-            int genreColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE);
-            int durationColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
-            int dateAddedColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED);
-            int dataColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
-            int sizeColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.SIZE);
-
-            Song song = null;
-            if (cursor.moveToFirst()) {
-                Uri songUri = mediaStore.getMediaItemUri(cursor.getLong(idColumnIndex));
-
-                String title = cursor.getString(titleColumnIndex);
-                String fileName = cursor.getString(displayNameColumnIndex);
-                // Use file name if the song doesn't have a title
-                if (title == null)
-                    title = fileName;
-
-                String artist = cursor.getString(artistColumnIndex);
-                // Use album artist name if the song doesn't have artist name
-                if (artist == null)
-                    artist = cursor.getString(albumArtistColumnIndex);
-
-                song = new Song(
-                        songUri,
-                        title,
-                        cursor.getString(albumColumnIndex),
-                        artist,
-                        cursor.getString(genreColumnIndex),
-                        cursor.getInt(durationColumnIndex),
-                        getZonedDateTimeFromLong(cursor.getLong(dateAddedColumnIndex)),
-                        fileName,
-                        cursor.getString(dataColumnIndex),
-                        cursor.getLong(sizeColumnIndex),
-                        0
-                );
-                cursor.close();
-            }
-
-            return song;
-        }).subscribeOn(Schedulers.io());
+        return getSongs(MediaStore.Audio.Media._ID + " = ?",
+                new String[] { String.valueOf(ContentUris.parseId(uri)) },
+                MediaStore.Audio.Media.DEFAULT_SORT_ORDER)
+                .map(i -> i.get(0));
     }
 
     /**
