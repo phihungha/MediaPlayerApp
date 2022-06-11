@@ -3,13 +3,15 @@ package com.example.mediaplayerapp.utils;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Size;
 
 import androidx.annotation.DrawableRes;
+import androidx.core.content.ContextCompat;
 
 import java.io.IOException;
 
@@ -21,13 +23,15 @@ public class MediaMetadataUtils {
      * @param uri URI of content
      * @return Bitmap of the thumbnail
      */
-    public static Bitmap getThumbnail(Context context, Uri uri, @DrawableRes int defaultImageResourceId) {
+    public static Drawable getThumbnail(Context context, Uri uri, @DrawableRes int defaultImageResourceId) {
         try {
-            return context
-                    .getContentResolver()
-                    .loadThumbnail(uri, new Size(800, 800),null);
+            Bitmap thumbnailBitmap
+                    = context
+                        .getContentResolver()
+                        .loadThumbnail(uri, new Size(800, 800),null);
+            return new BitmapDrawable(context.getResources(), thumbnailBitmap);
         } catch (IOException e) {
-            return BitmapFactory.decodeResource(context.getResources(), defaultImageResourceId);
+            return ContextCompat.getDrawable(context, defaultImageResourceId);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.example.mediaplayerapp.ui.playlist;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -33,7 +33,7 @@ public class PlaylistAdapter extends ListAdapter<Playlist, PlaylistAdapter.ViewH
 
     protected PlaylistAdapter(Fragment fragment, PlaylistItemViewModel playlistItemViewModel) {
         super(new PlaylistAdapter.PlaylistDiff());
-        this.context = fragment.getContext();
+        this.context = fragment.requireContext();
         this.fragment = fragment;
         this.playlistItemViewModel = playlistItemViewModel;
     }
@@ -113,15 +113,16 @@ public class PlaylistAdapter extends ListAdapter<Playlist, PlaylistAdapter.ViewH
         private void setThumbnail() {
             playlistItemViewModel.getFirstItemOfPlaylist(playlist.getId())
                     .observe(fragment.getViewLifecycleOwner(),
-                            playlistItem -> {
-                                if (playlistItem == null)
-                                    return;
+                             playlistItems -> {
+                                Uri thumbnailUri = Uri.EMPTY;
+                                if (!playlistItems.isEmpty())
+                                    thumbnailUri = playlistItems.get(0).getAndroidMediaUri();
 
-                                Bitmap thumbnailBitmap = MediaMetadataUtils.getThumbnail(
+                                Drawable thumbnail = MediaMetadataUtils.getThumbnail(
                                         context,
-                                        playlistItem.getAndroidMediaUri(),
+                                        thumbnailUri,
                                         R.drawable.ic_playlist_24dp);
-                                binding.playlistThumbnail.setImageBitmap(thumbnailBitmap);
+                                binding.playlistThumbnail.setImageDrawable(thumbnail);
                     });
         }
 

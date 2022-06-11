@@ -1,6 +1,7 @@
 package com.example.mediaplayerapp.ui.music_library.album_tab;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -94,13 +95,13 @@ public class AlbumDetailFragment extends Fragment {
      * @param uri URI of the album
      */
     private void updateArtwork(Uri uri) {
-        Bitmap artwork = MediaMetadataUtils.getThumbnail(
+        Drawable artwork = MediaMetadataUtils.getThumbnail(
                 requireContext(),
                 uri,
                 R.drawable.default_album_artwork
         );
-        binding.albumDetailsArtwork.setImageBitmap(artwork);
-        binding.albumDetailsSmallArtwork.setImageBitmap(artwork);
+        binding.albumDetailsArtwork.setImageDrawable(artwork);
+        binding.albumDetailsSmallArtwork.setImageDrawable(artwork);
     }
 
     /**

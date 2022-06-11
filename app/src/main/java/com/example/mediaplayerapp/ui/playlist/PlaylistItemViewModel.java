@@ -69,7 +69,7 @@ public class PlaylistItemViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread());
     }
 
-    public LiveData<PlaylistItem> getFirstItemOfPlaylist(int id) {
+    public LiveData<List<PlaylistItem>> getFirstItemOfPlaylist(int id) {
         return LiveDataReactiveStreams.fromPublisher(playlistItemRepository.getFirstItemOfPlaylist(id));
     }
 

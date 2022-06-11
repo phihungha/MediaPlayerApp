@@ -2,6 +2,7 @@ package com.example.mediaplayerapp.ui.overview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -83,11 +84,11 @@ public class OverviewItemAdapter
                     .into(holder.mediaThumbnail);
         } else {
             // Somehow, glide doesn't work for songs' cover thumbnail
-            Bitmap thumbnail = MediaMetadataUtils.getThumbnail(
+            Drawable thumbnail = MediaMetadataUtils.getThumbnail(
                     holder.mediaThumbnail.getContext(),
                     Uri.parse(mediaPlaybackInfoList.get(position).getMediaUri()),
                     R.drawable.default_song_artwork);
-            holder.mediaThumbnail.setImageBitmap(thumbnail);
+            holder.mediaThumbnail.setImageDrawable(thumbnail);
         }
 
         MediaPlaybackInfo mediaPlaybackInfo = mediaPlaybackInfoList.get(position);

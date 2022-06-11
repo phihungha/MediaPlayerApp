@@ -144,7 +144,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumItemVie
          * Update item thumbnail with current album's artwork.
          */
         private void updateThumbnailWithCurrentAlbum() {
-            albumThumbnail.setImageBitmap(
+            albumThumbnail.setImageDrawable(
                     MediaMetadataUtils.getThumbnail(
                             context,
                             currentAlbum.getUri(),

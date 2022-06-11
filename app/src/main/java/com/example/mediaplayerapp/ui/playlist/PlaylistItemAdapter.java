@@ -3,6 +3,7 @@ package com.example.mediaplayerapp.ui.playlist;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -270,11 +271,11 @@ public class PlaylistItemAdapter
         }
 
         private void setItemThumbnail() {
-            Bitmap thumbnailBitmap = MediaMetadataUtils.getThumbnail(
+            Drawable thumbnail = MediaMetadataUtils.getThumbnail(
                     context,
                     playlistItem.getAndroidMediaUri(),
                     R.drawable.ic_playlist_24dp);
-            itemThumbnail.setImageBitmap(thumbnailBitmap);
+            itemThumbnail.setImageDrawable(thumbnail);
         }
 
         private void addToFavourite() {

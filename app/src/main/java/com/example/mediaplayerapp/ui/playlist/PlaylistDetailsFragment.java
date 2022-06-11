@@ -1,6 +1,7 @@
 package com.example.mediaplayerapp.ui.playlist;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -141,14 +142,16 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
 
         playlistItemViewModel.getFirstItemOfPlaylist(currentPlaylistId)
                 .observe(getViewLifecycleOwner(),
-                        playlistItem -> {
-                            if (playlistItem == null)
-                                return;
-                            Bitmap thumbnailBitmap = MediaMetadataUtils.getThumbnail(
+                         playlistItems -> {
+                             Uri thumbnailUri = Uri.EMPTY;
+                             if (!playlistItems.isEmpty())
+                                 thumbnailUri = playlistItems.get(0).getAndroidMediaUri();
+
+                            Drawable thumbnail = MediaMetadataUtils.getThumbnail(
                                     requireContext(),
-                                    playlistItem.getAndroidMediaUri(),
+                                    thumbnailUri,
                                     R.drawable.ic_playlist_24dp);
-                            binding.playlistDetailsItemThumbnail.setImageBitmap(thumbnailBitmap);
+                            binding.playlistDetailsItemThumbnail.setImageDrawable(thumbnail);
                         });
     }
 

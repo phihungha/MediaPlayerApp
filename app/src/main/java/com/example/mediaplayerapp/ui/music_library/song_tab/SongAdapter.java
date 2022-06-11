@@ -155,7 +155,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
          * Update item thumbnail with current song's artwork.
          */
         private void updateThumbnailWithCurrentSong() {
-            songThumbnail.setImageBitmap(
+            songThumbnail.setImageDrawable(
                     MediaMetadataUtils.getThumbnail(
                                     context,
                                     currentSong.getUri(),

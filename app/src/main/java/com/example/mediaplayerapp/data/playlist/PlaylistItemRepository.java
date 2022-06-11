@@ -67,7 +67,7 @@ public class PlaylistItemRepository {
                 .subscribeOn(Schedulers.io());
     }
 
-    public Flowable<PlaylistItem> getFirstItemOfPlaylist(int playlistId) {
+    public Flowable<List<PlaylistItem>> getFirstItemOfPlaylist(int playlistId) {
         return playlistItemDao.getFirstItemOfPlaylist(playlistId).subscribeOn(Schedulers.io());
     }
 }

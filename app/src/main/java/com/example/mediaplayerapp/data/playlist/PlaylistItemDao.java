@@ -39,8 +39,8 @@ public interface PlaylistItemDao {
     @Query("SELECT COUNT(*) FROM PlaylistItems WHERE PlaylistId = :playlistId")
     Single<Integer> getItemCountOfPlaylist(int playlistId);
 
-    @Query("SELECT * FROM PlaylistItems WHERE PlaylistId = :playlistId ORDER BY OrderIndex ASC")
-    Flowable<PlaylistItem> getFirstItemOfPlaylist(int playlistId);
+    @Query("SELECT * FROM PlaylistItems WHERE PlaylistId = :playlistId LIMIT 1")
+    Flowable<List<PlaylistItem>> getFirstItemOfPlaylist(int playlistId);
 
     @Query("DELETE FROM PlaylistItems WHERE PlaylistId = :playlistId")
     Completable deleteAllFromPlaylist(int playlistId);
