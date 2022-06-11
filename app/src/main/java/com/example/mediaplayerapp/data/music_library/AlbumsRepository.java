@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Single;
+import io.reactivex.rxjava3.schedulers.Schedulers;
 
 /**
  * Get albums.
@@ -80,7 +81,7 @@ public class AlbumsRepository {
                 cursor.close();
             }
             return albums;
-        });
+        }).subscribeOn(Schedulers.io());
     }
 
     public Single<List<Album>> getAllAlbums(SortBy sortBy, SortOrder sortOrder) {

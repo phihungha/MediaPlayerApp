@@ -68,16 +68,8 @@ public class AlbumsFragment extends Fragment {
         albumAdapter = new AlbumAdapter(requireContext());
         binding.albumList.setAdapter(albumAdapter);
 
-        binding.albumsSwipeRefreshContainer.setOnRefreshListener(
-                () -> viewModel.loadAllAlbums(currentSortBy, currentSortOrder)
-        );
+        binding.albumsSwipeRefreshContainer.setOnRefreshListener(this::loadAllAlbums);
         binding.albumsSwipeRefreshContainer.setColorSchemeResources(R.color.cyan);
-
-        viewModel.getAllAlbums().observe(getViewLifecycleOwner(),
-                newAlbums ->  {
-                    albumAdapter.updateAlbums(newAlbums);
-                    binding.albumsSwipeRefreshContainer.setRefreshing(false);
-                });
 
         if (savedInstanceState != null) {
             restoreInstanceState(savedInstanceState);
@@ -165,9 +157,18 @@ public class AlbumsFragment extends Fragment {
      * @param sortOrder Sort order
      */
     private void setSortMode(AlbumsRepository.SortBy sortBy, SortOrder sortOrder) {
-        viewModel.loadAllAlbums(sortBy, sortOrder);
         currentSortBy = sortBy;
         currentSortOrder = sortOrder;
+        loadAllAlbums();
+    }
+
+    private void loadAllAlbums() {
+        viewModel.getAllAlbums(currentSortBy, currentSortOrder).observe(
+                getViewLifecycleOwner(),
+                newAlbums ->  {
+                    albumAdapter.updateAlbums(newAlbums);
+                    binding.albumsSwipeRefreshContainer.setRefreshing(false);
+                });
     }
 
     /**
