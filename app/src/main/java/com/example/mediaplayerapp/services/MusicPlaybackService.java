@@ -71,6 +71,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
     // cache them.
     private long lastPlaybackPosition = 0;
     private Uri lastMediaUri = Uri.EMPTY;
+    private boolean currentMediaItemStarted = false;
 
     private SongsRepository songsRepository;
     private PlaylistItemRepository playlistItemRepository;
@@ -107,9 +108,88 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
             public void run() {
                 if (player.getPlaybackState() == Player.STATE_READY)
                     lastPlaybackPosition = player.getCurrentPosition();
-                handler.postDelayed(this, 1000);
+                handler.postDelayed(this, 500);
             }
         });
+    }
+
+    /**
+     * Connect media session with player
+     */
+    private void setupMediaSessionConnector() {
+        // Supports playing from uri or search term
+        MediaSessionConnector.PlaybackPreparer playbackPreparer =
+                new MediaSessionConnector.PlaybackPreparer() {
+                    @Override
+                    public long getSupportedPrepareActions() {
+                        return PlaybackStateCompat.ACTION_PREPARE_FROM_URI |
+                                PlaybackStateCompat.ACTION_PLAY_FROM_URI |
+                                PlaybackStateCompat.ACTION_PREPARE_FROM_SEARCH |
+                                PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH;
+                    }
+
+                    @Override
+                    public void onPrepare(boolean playWhenReady) {
+                        player.setPlayWhenReady(playWhenReady);
+                    }
+
+                    @Override
+                    public void onPrepareFromMediaId(@NonNull String mediaId,
+                                                     boolean playWhenReady,
+                                                     @Nullable Bundle extras) {
+
+                    }
+
+                    @Override
+                    public void onPrepareFromSearch(@NonNull String query,
+                                                    boolean playWhenReady,
+                                                    @Nullable Bundle extras) {
+                    }
+
+                    @Override
+                    public void onPrepareFromUri(@NonNull Uri uri, boolean playWhenReady, @Nullable Bundle extras) {
+                        player.clearMediaItems();
+
+                        if (uri.getScheme().equals(GetPlaybackUriUtils.PLAYBACK_URI_SCHEME)) {
+                            if (uri.getPathSegments()
+                                    .get(0).equals(GetPlaybackUriUtils.PLAYLIST_URI_SEGMENT))
+                                loadMediaItemsFromPlaylist(uri);
+                            else
+                                loadMediaItemsFromLibrary(uri);
+                            Log.i(LOG_TAG, "Loaded media from playback URI: " + uri);
+                        } else {
+                            player.setMediaItem(GetMediaItemsUtils.getMediaItemFromUri(uri));
+                            Log.i(LOG_TAG, "Loaded media from URI: " + uri);
+                        }
+
+                        player.setPlayWhenReady(playWhenReady);
+                        player.prepare();
+                        Log.i(LOG_TAG, "ExoPlayer prepared");
+                    }
+
+                    @Override
+                    public boolean onCommand(@NonNull Player player,
+                                             @NonNull String command,
+                                             @Nullable Bundle extras,
+                                             @Nullable ResultReceiver cb) {
+                        return false;
+                    }
+                };
+
+        // Supports navigating media items
+        MediaSessionConnector.QueueNavigator queueNavigator
+                = new TimelineQueueNavigator(mediaSession) {
+            @NonNull
+            @Override
+            public MediaDescriptionCompat getMediaDescription(@NonNull Player player, int windowIndex) {
+                return new MediaDescriptionCompat.Builder().build();
+            }
+        };
+
+        MediaSessionConnector mediaSessionConnector = new MediaSessionConnector(mediaSession);
+        mediaSessionConnector.setPlaybackPreparer(playbackPreparer);
+        mediaSessionConnector.setQueueNavigator(queueNavigator);
+        mediaSessionConnector.setPlayer(player);
     }
 
     private void setAudioSessionIdOnMediaSession() {
@@ -175,10 +255,13 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
             @Override
             public void onMediaItemTransition(@Nullable MediaItem mediaItem, int reason) {
-                Player.Listener.super.onMediaItemTransition(mediaItem, reason);
-                // Don't record history at the start of playback
-                if (player.getPlaybackState() != Player.STATE_ENDED)
+                if (currentMediaItemStarted) {
                     recordHistory();
+                    currentMediaItemStarted = false;
+                }
+                else if (player.getPlaybackState() == Player.STATE_BUFFERING
+                         || player.getPlaybackState() == Player.STATE_IDLE)
+                    currentMediaItemStarted = true;
             }
         });
     }
@@ -196,10 +279,10 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 () -> {},
-                                e -> MessageUtils
-                                    .displayError(getApplicationContext(),
-                                            LOG_TAG,
-                                            e.getMessage()));
+                                e -> MessageUtils.displayError(
+                                        getApplicationContext(),
+                                        LOG_TAG,
+                                        e.getMessage()));
         disposables.add(disposable);
     }
 
@@ -209,85 +292,6 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
             CharSequence value) {
         if (value != null)
             metadataCompat.putString(key, value.toString());
-    }
-
-    /**
-     * Connect media session with player
-     */
-    private void setupMediaSessionConnector() {
-        // Supports playing from uri or search term
-        MediaSessionConnector.PlaybackPreparer playbackPreparer =
-                new MediaSessionConnector.PlaybackPreparer() {
-                    @Override
-                    public long getSupportedPrepareActions() {
-                        return PlaybackStateCompat.ACTION_PREPARE_FROM_URI |
-                                PlaybackStateCompat.ACTION_PLAY_FROM_URI |
-                                PlaybackStateCompat.ACTION_PREPARE_FROM_SEARCH |
-                                PlaybackStateCompat.ACTION_PLAY_FROM_SEARCH;
-                    }
-
-                    @Override
-                    public void onPrepare(boolean playWhenReady) {
-                        player.setPlayWhenReady(playWhenReady);
-                    }
-
-                    @Override
-                    public void onPrepareFromMediaId(@NonNull String mediaId,
-                                                     boolean playWhenReady,
-                                                     @Nullable Bundle extras) {
-
-                    }
-
-                    @Override
-                    public void onPrepareFromSearch(@NonNull String query,
-                                                    boolean playWhenReady,
-                                                    @Nullable Bundle extras) {
-                    }
-
-                    @Override
-                    public void onPrepareFromUri(@NonNull Uri uri, boolean playWhenReady, @Nullable Bundle extras) {
-                        player.clearMediaItems();
-
-                        if (uri.getScheme().equals(GetPlaybackUriUtils.PLAYBACK_URI_SCHEME)) {
-                            if (uri.getPathSegments()
-                                    .get(0).equals(GetPlaybackUriUtils.PLAYLIST_URI_SEGMENT))
-                                loadMediaItemsFromPlaylist(uri);
-                            else
-                                loadMediaItemsFromLibrary(uri);
-                            Log.i(LOG_TAG, "Loaded media from playback URI: " + uri);
-                        } else {
-                            player.setMediaItem(MediaItem.fromUri(uri));
-                            Log.i(LOG_TAG, "Loaded media from URI: " + uri);
-                        }
-
-                        player.setPlayWhenReady(playWhenReady);
-                        player.prepare();
-                        Log.i(LOG_TAG, "ExoPlayer prepared");
-                    }
-
-                    @Override
-                    public boolean onCommand(@NonNull Player player,
-                                             @NonNull String command,
-                                             @Nullable Bundle extras,
-                                             @Nullable ResultReceiver cb) {
-                        return false;
-                    }
-                };
-
-        // Supports navigating media items
-        MediaSessionConnector.QueueNavigator queueNavigator
-                = new TimelineQueueNavigator(mediaSession) {
-            @NonNull
-            @Override
-            public MediaDescriptionCompat getMediaDescription(@NonNull Player player, int windowIndex) {
-                return new MediaDescriptionCompat.Builder().build();
-            }
-        };
-
-        MediaSessionConnector mediaSessionConnector = new MediaSessionConnector(mediaSession);
-        mediaSessionConnector.setPlaybackPreparer(playbackPreparer);
-        mediaSessionConnector.setQueueNavigator(queueNavigator);
-        mediaSessionConnector.setPlayer(player);
     }
 
     /**
@@ -422,9 +426,10 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
         Disposable disposable = songs.subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(newSongs -> {
-                player.addMediaItems(GetMediaItemsUtils.fromLibrarySongs(newSongs));
-                player.seekTo(playbackStartIndex, C.TIME_UNSET);
-            });
+                        player.clearMediaItems();
+                        player.addMediaItems(GetMediaItemsUtils.fromLibrarySongs(newSongs));
+                        player.seekTo(playbackStartIndex, C.TIME_UNSET);
+                    });
         disposables.add(disposable);
     }
 
@@ -439,6 +444,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                 playlistItemRepository.getAllItemsOfPlaylist(playlistId)
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(playlistItems -> {
+                        player.clearMediaItems();
                         player.addMediaItems(GetMediaItemsUtils.fromPlaylistItems(playlistItems));
                         player.seekTo(playbackStartIndex, C.TIME_UNSET);
                     });

@@ -18,7 +18,7 @@ public class GetMediaItemsUtils {
      * @param uri URI
      * @return Exoplayer's MediaItem object
      */
-    private static MediaItem getMediaItemFromUri(Uri uri) {
+    public static MediaItem getMediaItemFromUri(Uri uri) {
         return new MediaItem.Builder()
                 .setUri(uri)
                 .setMediaMetadata(
@@ -55,8 +55,7 @@ public class GetMediaItemsUtils {
      * @param items Playlist's MediaItem objects
      * @return MediaItem objects
      */
-    public static List<MediaItem> fromPlaylistItems(
-            List<PlaylistItem> items) {
+    public static List<MediaItem> fromPlaylistItems(List<PlaylistItem> items) {
         return items.stream()
                 .map(i -> getMediaItemFromUri(Uri.parse(i.getMediaUri())))
                 .collect(Collectors.toList());

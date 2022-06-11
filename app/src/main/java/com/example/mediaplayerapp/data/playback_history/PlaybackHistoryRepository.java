@@ -68,7 +68,7 @@ public class PlaybackHistoryRepository {
         return recordHistory(mediaUri, false, lastPlaybackPosition);
     }
 
-    public Completable recordVideoHistory(Uri mediaUri, int lastPlaybackPosition) {
+    public Completable recordVideoHistory(Uri mediaUri, long lastPlaybackPosition) {
         return recordHistory(mediaUri, true, lastPlaybackPosition);
     }
 

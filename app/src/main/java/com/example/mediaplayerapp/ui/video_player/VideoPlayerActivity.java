@@ -6,9 +6,10 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.media.MediaDescriptionCompat;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,14 +18,14 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
-import com.example.mediaplayerapp.data.overview.MediaPlaybackInfo;
-import com.example.mediaplayerapp.data.overview.MediaPlaybackInfoRepository;
+import com.example.mediaplayerapp.data.playback_history.PlaybackHistoryRepository;
 import com.example.mediaplayerapp.data.playlist.PlaylistItemRepository;
 import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.data.video_library.VideosRepository;
 import com.example.mediaplayerapp.databinding.ActivityVideoPlayerBinding;
 import com.example.mediaplayerapp.utils.GetMediaItemsUtils;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
+import com.example.mediaplayerapp.utils.MessageUtils;
 import com.example.mediaplayerapp.utils.SortOrder;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
@@ -34,7 +35,6 @@ import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.ext.mediasession.MediaSessionConnector;
 import com.google.android.exoplayer2.ext.mediasession.TimelineQueueNavigator;
 
-import java.util.Calendar;
 import java.util.List;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
@@ -56,11 +56,16 @@ public class VideoPlayerActivity extends AppCompatActivity {
     private ExoPlayer player;
     private MediaSessionCompat mediaSession;
 
+    // These information are not available
+    // on media item transition so we need to
+    // cache them.
+    private long lastPlaybackPosition = 0;
+    private Uri lastMediaUri = Uri.EMPTY;
+    private boolean currentMediaItemStarted = false;
+
     private VideosRepository videoLibraryRepository;
     private PlaylistItemRepository playlistItemRepository;
-    private MediaPlaybackInfoRepository playbackInfoRepository;
-
-    private Uri currentMediaUri = null;
+    private PlaybackHistoryRepository playbackHistoryRepository;
 
     ActivityVideoPlayerBinding binding;
 
@@ -72,7 +77,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         videoLibraryRepository = new VideosRepository(getApplication());
         playlistItemRepository = new PlaylistItemRepository(getApplication());
-        playbackInfoRepository = new MediaPlaybackInfoRepository(getApplication());
+        playbackHistoryRepository = new PlaybackHistoryRepository(getApplication());
 
         enterFullScreenMode();
 
@@ -94,6 +99,20 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         loadMediaItemsFromIntent();
         play();
+
+        beginLastPlaybackPositionRecording();
+    }
+
+    private void beginLastPlaybackPositionRecording() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (player.getPlaybackState() == Player.STATE_READY)
+                    lastPlaybackPosition = player.getCurrentPosition();
+                handler.postDelayed(this, 1000);
+            }
+        });
     }
 
     /**
@@ -132,6 +151,47 @@ public class VideoPlayerActivity extends AppCompatActivity {
         context.startActivity(playbackIntent);
     }
 
+    private void setupPlayerEventListener() {
+        player.addListener(new Player.Listener() {
+            @Override
+            public void onMediaMetadataChanged(@NonNull MediaMetadata mediaMetadata) {
+                if (mediaMetadata.mediaUri != null)
+                    lastMediaUri = mediaMetadata.mediaUri;
+            }
+
+            @Override
+            public void onMediaItemTransition(@Nullable MediaItem mediaItem, int reason) {
+                if (currentMediaItemStarted) {
+                    recordHistory();
+                    currentMediaItemStarted = false;
+                }
+                else if (player.getPlaybackState() == Player.STATE_BUFFERING
+                        || player.getPlaybackState() == Player.STATE_IDLE)
+                    currentMediaItemStarted = true;
+            }
+        });
+    }
+
+    /**
+     * Record current media item and its last playback position into history.
+     */
+    private void recordHistory() {
+        long playbackPosition = lastPlaybackPosition;
+        if (playbackPosition == player.getDuration())
+            playbackPosition = 0;
+
+        Disposable disposable =
+                playbackHistoryRepository.recordVideoHistory(lastMediaUri, playbackPosition)
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                () -> {},
+                                e -> MessageUtils.displayError(
+                                        getApplicationContext(),
+                                        LOG_TAG,
+                                        e.getMessage()));
+        disposables.add(disposable);
+    }
+
     /**
      * Load media items from intent into player.
      */
@@ -145,7 +205,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         if (uri.getScheme().equals(GetPlaybackUriUtils.PLAYBACK_URI_SCHEME))
             loadMediaItemsFromPlaybackUri(uri);
         else
-            player.setMediaItem(MediaItem.fromUri(uri));
+            player.setMediaItem(GetMediaItemsUtils.getMediaItemFromUri(uri));
 
         Bundle extras = getIntent().getExtras();
         if (extras != null)
@@ -206,6 +266,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         Disposable disposable = videos.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(newVideos -> {
+                    player.clearMediaItems();
                     player.addMediaItems(GetMediaItemsUtils.fromLibraryVideos(newVideos));
                     player.seekTo(playbackStartIndex, C.TIME_UNSET);
                 });
@@ -222,6 +283,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         Disposable disposable = playlistItemRepository.getAllItemsOfPlaylist(playlistId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(playlistItem -> {
+                    player.clearMediaItems();
                     player.addMediaItems(GetMediaItemsUtils.fromPlaylistItems(playlistItem));
                     player.seekTo(playbackStartIndex, C.TIME_UNSET);
                 });
@@ -252,51 +314,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         // Hide both the status bar and the navigation bar
         windowInsetsController.hide(WindowInsetsCompat.Type.systemBars());
-    }
-
-    private void setupPlayerEventListener() {
-        player.addListener(new Player.Listener() {
-            @Override
-            public void onMediaMetadataChanged(@NonNull MediaMetadata mediaMetadata) {
-                if (mediaMetadata.mediaUri != null)
-                    currentMediaUri = mediaMetadata.mediaUri;
-                else
-                    currentMediaUri = null;
-                Log.d(LOG_TAG, "New media metadata found");
-            }
-
-            @Override
-            public void onPlaybackStateChanged(int playbackState) {
-                if (playbackState == Player.STATE_ENDED && currentMediaUri != null)
-                    playbackInfoRepository.insertOrUpdate(new MediaPlaybackInfo(
-                            currentMediaUri.toString(),
-                            Calendar.getInstance().getTimeInMillis(),
-                            1,
-                            true,
-                            player.getCurrentPosition()
-                    ));
-            }
-
-            @Override
-            public void onMediaItemTransition(@Nullable MediaItem mediaItem, int reason) {
-                if (currentMediaUri != null) {
-                    playbackInfoRepository.insertOrUpdate(new MediaPlaybackInfo(
-                            currentMediaUri.toString(),
-                            Calendar.getInstance().getTimeInMillis(),
-                            1,
-                            true,
-                            player.getCurrentPosition()
-                    ));
-                }
-            }
-        });
-    }
-
-    private void seekToOnFirstVideo() {
-        Bundle extras = getIntent().getExtras();
-        if (extras != null && extras.getLong(SEEK_TO_POSITION_KEY, -1) != -1) {
-            player.seekTo(extras.getLong(SEEK_TO_POSITION_KEY));
-        }
     }
 
     @Override
@@ -331,6 +348,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         super.onStop();
         mediaSession.setActive(false);
         player.pause();
+        recordHistory();
     }
 
     @Override
