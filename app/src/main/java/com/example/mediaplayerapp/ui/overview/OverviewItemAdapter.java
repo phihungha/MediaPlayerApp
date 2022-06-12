@@ -10,6 +10,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelStoreOwner;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +25,9 @@ import com.example.mediaplayerapp.databinding.ItemOverviewSongBigBinding;
 import com.example.mediaplayerapp.databinding.ItemOverviewSongSmallBinding;
 import com.example.mediaplayerapp.databinding.ItemOverviewVideoBigBinding;
 import com.example.mediaplayerapp.databinding.ItemOverviewVideoSmallBinding;
+import com.example.mediaplayerapp.ui.music_library.song_tab.SongsViewModel;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
+import com.example.mediaplayerapp.ui.video_library.VideoLibraryViewModel;
 import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
 import com.example.mediaplayerapp.utils.MediaMetadataUtils;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -36,6 +41,8 @@ public class OverviewItemAdapter
     private final List<PlaybackHistoryEntry> playbackHistoryEntryList;
     private final OverviewFragment.MediaType mediaType;
     private final OverviewFragment.MediaLayoutType mediaLayoutType;
+    private final VideoLibraryViewModel videoLibraryViewModel;
+    private final SongsViewModel songsViewModel;
     private final Context context;
 
     protected OverviewItemAdapter(@NonNull DiffUtil.ItemCallback<PlaybackHistoryEntry> diffCallback,
@@ -47,6 +54,10 @@ public class OverviewItemAdapter
         this.mediaType = mediaType;
         this.mediaLayoutType = mediaLayoutType;
         this.context = context;
+        this.videoLibraryViewModel =
+                new ViewModelProvider((ViewModelStoreOwner) context).get(VideoLibraryViewModel.class);
+        this.songsViewModel =
+                new ViewModelProvider((ViewModelStoreOwner) context).get(SongsViewModel.class);
     }
 
     @NonNull
@@ -94,21 +105,25 @@ public class OverviewItemAdapter
         Uri mediaUri = Uri.parse(playbackHistoryEntry.getMediaUri());
         long lastPlaybackPosition = playbackHistoryEntry.getLastPlaybackPosition();
 
-        String mediaName = MediaMetadataUtils.getDisplayName(context, mediaUri);
-        if (mediaName != null) holder.mediaName.setText(mediaName);
+        if (mediaType == OverviewFragment.MediaType.VIDEO) {
+            videoLibraryViewModel.getVideoMetadata(mediaUri).observe(
+                    (LifecycleOwner) context,
+                    video -> holder.mediaName.setText(video.getTitle()));
 
-        if (mediaType == OverviewFragment.MediaType.SONG) {
-            String mediaArtist = MediaMetadataUtils.getArtistName(context, mediaUri);
-            if (mediaArtist != null)
-                holder.mediaArtist.setText(mediaArtist);
+            holder.mediaClickArea.setOnClickListener(view ->
+                    VideoPlayerActivity.launchWithUri(context, mediaUri));
+
+        } else if (mediaType == OverviewFragment.MediaType.SONG) {
+            songsViewModel.getSongMetadata(mediaUri).observe(
+                    (LifecycleOwner) context,
+                    song -> {
+                        holder.mediaName.setText(song.getTitle());
+                        holder.mediaArtist.setText(song.getArtistName());
+                    });
+
+            holder.mediaClickArea.setOnClickListener(view ->
+                    MusicPlayerActivity.launchWithUri(context, mediaUri));
         }
-
-        holder.mediaClickArea.setOnClickListener(view -> {
-            if (mediaType == OverviewFragment.MediaType.VIDEO)
-                VideoPlayerActivity.launchWithUri(context, mediaUri);
-            else if (mediaType == OverviewFragment.MediaType.SONG)
-                MusicPlayerActivity.launchWithUri(context, mediaUri);
-        });
     }
 
     @Override

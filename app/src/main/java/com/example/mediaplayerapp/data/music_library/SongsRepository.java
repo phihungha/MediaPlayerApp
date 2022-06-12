@@ -5,6 +5,7 @@ import static com.example.mediaplayerapp.utils.MediaTimeUtils.getZonedDateTimeFr
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -22,37 +23,25 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  */
 public class SongsRepository {
 
-    public enum SortBy {
-        TITLE("title"),
-        DURATION("duration"),
-        TIME_ADDED("time_added");
-
-        private final String uriSegmentName;
-
-        SortBy(String uriSegmentName) {
-            this.uriSegmentName = uriSegmentName;
-        }
-
-        public String getUriSegmentName() {
-            return uriSegmentName;
-        }
-    }
-
     private final MediaStoreDataSource mediaStore;
+    private final Context context;
 
     /**
      * Construct song repository.
+     *
      * @param context Application context
      */
     public SongsRepository(Context context) {
         mediaStore = new MediaStoreDataSource(context, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI);
+        this.context = context;
     }
 
     /**
      * Get songs that satisfy selection conditions
-     * @param selection SQL selection conditions
+     *
+     * @param selection     SQL selection conditions
      * @param selectionArgs Selection arguments
-     * @param sortOrder Sort order
+     * @param sortOrder     Sort order
      * @return List of Song objects
      */
     public Single<List<Song>> getSongs(String selection, String[] selectionArgs, String sortOrder) {
@@ -65,8 +54,6 @@ public class SongsRepository {
                     MediaStore.Audio.Media.TITLE,
                     MediaStore.Audio.Media.ALBUM,
                     MediaStore.Audio.Media.ARTIST,
-                    MediaStore.Audio.Media.ALBUM_ARTIST,
-                    MediaStore.Audio.Media.GENRE,
                     MediaStore.Audio.Media.DURATION,
                     MediaStore.Audio.Media.DATE_ADDED,
                     MediaStore.Audio.Media.DATA,
@@ -92,8 +79,7 @@ public class SongsRepository {
             int titleColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE);
             int albumColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM);
             int artistColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST);
-            int albumArtistColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ARTIST);
-            int genreColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.GENRE);
+
             int durationColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION);
             int dateAddedColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATE_ADDED);
             int dataColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
@@ -111,16 +97,17 @@ public class SongsRepository {
                         title = fileName;
 
                     String artist = cursor.getString(artistColumnIndex);
+
                     // Use album artist name if the song doesn't have artist name
                     if (artist == null)
-                        artist = cursor.getString(albumArtistColumnIndex);
+                        artist = getSongStringMetadata(songUri, MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST);
 
                     songs.add(new Song(
                             songUri,
                             title,
                             cursor.getString(albumColumnIndex),
                             artist,
-                            cursor.getString(genreColumnIndex),
+                            getSongStringMetadata(songUri, MediaMetadataRetriever.METADATA_KEY_GENRE),
                             cursor.getInt(durationColumnIndex),
                             getZonedDateTimeFromLong(cursor.getLong(dateAddedColumnIndex)),
                             fileName,
@@ -136,8 +123,16 @@ public class SongsRepository {
         }).subscribeOn(Schedulers.io());
     }
 
+    private String getSongStringMetadata(Uri songUri, int metadataKey)
+    {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(context, songUri);
+        return retriever.extractMetadata(metadataKey);
+    }
+
     /**
      * Get all songs from media store.
+     *
      * @return List of songs
      */
     public Single<List<Song>> getAllSongs(SortBy sortBy, SortOrder sortOrder) {
@@ -168,24 +163,26 @@ public class SongsRepository {
 
     public Single<Song> getSong(Uri uri) {
         return getSongs(MediaStore.Audio.Media._ID + " = ?",
-                new String[] { String.valueOf(ContentUris.parseId(uri)) },
+                new String[]{String.valueOf(ContentUris.parseId(uri))},
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER)
                 .map(i -> i.get(0));
     }
 
     /**
      * Get all songs from an artist.
-      * @param artistId Id of the artist
+     *
+     * @param artistId Id of the artist
      * @return List of songs
      */
     public Single<List<Song>> getAllSongsFromArtist(long artistId) {
         return getSongs(MediaStore.Audio.Media.ARTIST_ID + " = ?",
-                new String[] { String.valueOf(artistId) },
+                new String[]{String.valueOf(artistId)},
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
     }
 
     /**
      * Get first song from an artist for thumbnail display.
+     *
      * @param artistId Id of the artist
      * @return List of songs
      */
@@ -195,12 +192,29 @@ public class SongsRepository {
 
     /**
      * Get all songs from an album.
+     *
      * @param albumId Id of the album
      * @return List of songs
      */
     public Single<List<Song>> getAllSongsFromAlbum(long albumId) {
         return getSongs(MediaStore.Audio.Media.ALBUM_ID + " = ?",
-                new String[] { String.valueOf(albumId) },
+                new String[]{String.valueOf(albumId)},
                 MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+    }
+
+    public enum SortBy {
+        TITLE("title"),
+        DURATION("duration"),
+        TIME_ADDED("time_added");
+
+        private final String uriSegmentName;
+
+        SortBy(String uriSegmentName) {
+            this.uriSegmentName = uriSegmentName;
+        }
+
+        public String getUriSegmentName() {
+            return uriSegmentName;
+        }
     }
 }

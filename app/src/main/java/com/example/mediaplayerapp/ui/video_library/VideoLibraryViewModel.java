@@ -1,8 +1,10 @@
 package com.example.mediaplayerapp.ui.video_library;
 
 import android.app.Application;
+import android.net.Uri;
 
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.mediaplayerapp.data.video_library.Video;
@@ -38,6 +40,15 @@ public class VideoLibraryViewModel extends AndroidViewModel {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(videos::setValue);
         disposables.add(disposable);
+    }
+
+    public LiveData<Video> getVideoMetadata(Uri uri) {
+        MutableLiveData<Video> liveData = new MutableLiveData<>();
+        Disposable disposable = videosRepository.getVideo(uri)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(liveData::setValue);
+        disposables.add(disposable);
+        return liveData;
     }
 
     @Override

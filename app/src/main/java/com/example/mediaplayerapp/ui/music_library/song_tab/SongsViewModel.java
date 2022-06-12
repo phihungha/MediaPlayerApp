@@ -1,6 +1,7 @@
 package com.example.mediaplayerapp.ui.music_library.song_tab;
 
 import android.app.Application;
+import android.net.Uri;
 
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -35,6 +36,15 @@ public class SongsViewModel extends AndroidViewModel {
                 .subscribe(songs::setValue);
         disposables.add(disposable);
         return songs;
+    }
+
+    public LiveData<Song> getSongMetadata(Uri uri) {
+        MutableLiveData<Song> liveData = new MutableLiveData<>();
+        Disposable disposable = songsRepository.getSong(uri)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(liveData::setValue);
+        disposables.add(disposable);
+        return liveData;
     }
 
     @Override
