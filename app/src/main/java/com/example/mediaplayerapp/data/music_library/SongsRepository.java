@@ -74,9 +74,6 @@ public class SongsRepository {
                     sortOrder
             );
 
-            // Need to use MediaMetadataRetriever for compatibility with devices having lower SDK
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-
             int idColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID);
             int displayNameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DISPLAY_NAME);
             int titleColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE);
@@ -101,21 +98,16 @@ public class SongsRepository {
 
                     String artist = cursor.getString(artistColumnIndex);
 
-                    retriever.setDataSource(context, songUri);
-
                     // Use album artist name if the song doesn't have artist name
                     if (artist == null)
-                        artist = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST);
-                    String genre =
-                            retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_GENRE);
-
+                        artist = getSongStringMetadata(songUri, MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST);
 
                     songs.add(new Song(
                             songUri,
                             title,
                             cursor.getString(albumColumnIndex),
                             artist,
-                            genre,
+                            getSongStringMetadata(songUri, MediaMetadataRetriever.METADATA_KEY_GENRE),
                             cursor.getInt(durationColumnIndex),
                             getZonedDateTimeFromLong(cursor.getLong(dateAddedColumnIndex)),
                             fileName,
@@ -129,6 +121,13 @@ public class SongsRepository {
 
             return songs;
         }).subscribeOn(Schedulers.io());
+    }
+
+    private String getSongStringMetadata(Uri songUri, int metadataKey)
+    {
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(context, songUri);
+        return retriever.extractMetadata(metadataKey);
     }
 
     /**
