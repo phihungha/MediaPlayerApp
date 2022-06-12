@@ -1,32 +1,31 @@
 package com.example.mediaplayerapp.ui.special_playlists;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.databinding.FragmentMediaQueueBinding;
+import com.example.mediaplayerapp.databinding.FragmentFavouriteBinding;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-public class MediaQueueFragment extends Fragment {
-    private FragmentMediaQueueBinding binding;
-
-    public MediaQueueFragment() {
+public class FavouriteFragment extends Fragment {
+    private FragmentFavouriteBinding binding;
+    public FavouriteFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentMediaQueueBinding.inflate(inflater, container, false);
+        binding = FragmentFavouriteBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -34,12 +33,12 @@ public class MediaQueueFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        ViewPager2 viewPager = binding.mediaQueueViewpager;
+        ViewPager2 viewPager = binding.favouriteViewpager;
 
-        QueueViewPagerAdapter adapter = new QueueViewPagerAdapter(this);
+        FavouriteViewPagerAdapter adapter = new FavouriteViewPagerAdapter(this);
         viewPager.setAdapter(adapter);
         viewPager.setSaveEnabled(false);
-        new TabLayoutMediator(binding.mediaQueueTabLayout, viewPager,
+        new TabLayoutMediator(binding.favouriteTabLayout, viewPager,
                 (tab, position) -> {
                     switch (position) {
                         case 0:
@@ -50,9 +49,8 @@ public class MediaQueueFragment extends Fragment {
                             break;
                     }
                 }).attach();
-        binding.tvTitleMediaQueue.setText(R.string.watch_later);
+        binding.tvTitleFavourite.setText(R.string.my_favourite);
     }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();

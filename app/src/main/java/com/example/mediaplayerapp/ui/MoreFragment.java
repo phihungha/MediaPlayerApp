@@ -39,7 +39,13 @@ public class MoreFragment extends Fragment {
         binding.moreOpenSettings.setOnClickListener(
                 view -> Navigation.findNavController(view)
                         .navigate(MoreFragmentDirections.actionNavigationMoreToNavigationSettings()));
+        binding.moreOpenWatchLater.setOnClickListener(
+                view -> Navigation.findNavController(view)
+                        .navigate(MoreFragmentDirections.actionNavigationMoreToMediaQueueFragment()));
 
+        binding.moreOpenFavorites.setOnClickListener(
+                view -> Navigation.findNavController(view)
+                        .navigate(MoreFragmentDirections.actionNavigationMoreToFavouriteFragment()));
         return binding.getRoot();
     }
 }
