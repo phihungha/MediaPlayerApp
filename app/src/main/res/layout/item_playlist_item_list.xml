@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="8dp"
-    android:id="@+id/layoutItem_PlaylistDetails"
+    android:id="@+id/layout_item_playlist_detail"
     android:background="?attr/selectableItemBackground">
 
     <androidx.cardview.widget.CardView

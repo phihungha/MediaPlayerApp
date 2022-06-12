@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.special_playlists.MediaQueue;
-import com.example.mediaplayerapp.data.special_playlists.MediaQueueViewModel;
 
 public class MediaQueueDeleteDialog extends AppCompatDialogFragment {
     private MediaQueue mMedia;

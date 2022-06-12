@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.special_playlists.MediaQueue;
-import com.example.mediaplayerapp.data.special_playlists.MediaQueueViewModel;
+import com.example.mediaplayerapp.ui.special_playlists.MediaQueueViewModel;
 import com.example.mediaplayerapp.data.playlist.PlaylistItem;
 import com.example.mediaplayerapp.databinding.FragmentMusicQueueBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
@@ -77,7 +77,6 @@ public class MusicQueueFragment extends Fragment implements OnStartDragListener,
     }
 
     private void setUpRecyclerView(){
-        adapter.setDragStartListener(this);
         adapter.setViewModel(viewModel);
         ItemTouchHelper.Callback callback = new SimpleItemTouchHelperCallback(adapter);
         mItemTouchHelper = new ItemTouchHelper(callback);

@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:id="@+id/layout_item_playlist_detail_grid"
+    android:id="@+id/layout_item_playlist_detail"
     android:background="?attr/selectableItemBackground"
     android:padding="10dp">
 
@@ -75,7 +75,7 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/imgBtn_more_grid"
+                android:id="@+id/playlist_details_item_more_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="-2"

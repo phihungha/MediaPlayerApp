@@ -1,5 +1,7 @@
 package com.example.mediaplayerapp.data.special_playlists;
 
+import android.net.Uri;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -77,4 +79,7 @@ public class MediaQueue implements Serializable {
         this.mediaUri = mediaUri;
     }
 
+    public Uri getAndroidMediaUri() {
+        return Uri.parse(mediaUri);
+    }
 }

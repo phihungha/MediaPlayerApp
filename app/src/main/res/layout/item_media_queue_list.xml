@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="8dp"
-    android:id="@+id/layoutItem_mediaQueue"
+    android:id="@+id/layout_item_queue"
     android:background="?attr/selectableItemBackground"
     >
 
@@ -27,7 +27,7 @@
 
 
             <ImageView
-                android:id="@+id/img_thumbnailMediaQueue"
+                android:id="@+id/img_thumb_queue"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:contentDescription="@string/image_for_thumbnail"
@@ -36,7 +36,7 @@
                 android:scaleType="centerCrop"
                 />
             <TextView
-                android:id="@+id/tv_durationMediaQueue"
+                android:id="@+id/tv_duration_queue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
 
@@ -46,7 +46,7 @@
                 android:textSize="12sp"
                 android:padding="2dp"
 
-                android:layout_gravity="right|bottom"
+                android:layout_gravity="end|bottom"
                 />
         </FrameLayout>
 
@@ -54,7 +54,7 @@
 
 
     <TextView
-        android:id="@+id/tv_nameMediaQueue"
+        android:id="@+id/tv_queue_name"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -69,7 +69,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/imgBtn_Delete_MediaQueue"
+        android:id="@+id/imgBtn_queue_delete"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:contentDescription="@string/add_more"

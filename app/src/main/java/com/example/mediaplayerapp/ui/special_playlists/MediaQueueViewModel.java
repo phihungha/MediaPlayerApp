@@ -1,4 +1,4 @@
-package com.example.mediaplayerapp.data.special_playlists;
+package com.example.mediaplayerapp.ui.special_playlists;
 
 import android.app.Application;
 
@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 
+import com.example.mediaplayerapp.data.special_playlists.MediaQueue;
+import com.example.mediaplayerapp.data.special_playlists.MediaQueueRepository;
 import com.example.mediaplayerapp.ui.special_playlists.PlaylistConstants;
 
 import java.util.List;
