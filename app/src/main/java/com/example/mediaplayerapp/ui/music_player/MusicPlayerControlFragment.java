@@ -113,7 +113,11 @@ public class MusicPlayerControlFragment extends Fragment
         beginObservingMediaControllerData();
 
         setupTransportControls();
-        binding.musicPlayerCloseBtn.setOnClickListener(view -> requireActivity().finishAfterTransition());
+        binding.musicPlayerCloseBtn.setOnClickListener(view -> {
+            if (getMediaController().getPlaybackState().getState() == PlaybackStateCompat.STATE_PAUSED)
+                getMediaController().getTransportControls().stop();
+            requireActivity().finishAfterTransition();
+        });
         binding.musicPlayerMenuBtn.setOnClickListener(view -> openMenu());
         binding.musicPlayerVisualizer.setDensity(70);
 
