@@ -175,4 +175,5 @@
     <string name="resume_last_playback_position">Resume last playback position?</string>
     <string name="yes">Yes</string>
     <string name="delete_all">Delete all</string>
+    <string name="added_to_listen_later">Added to listen later</string>
 </resources>
