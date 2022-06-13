@@ -20,6 +20,7 @@ import com.example.mediaplayerapp.ui.music_library.song_tab.SongBottomSheet;
 import com.example.mediaplayerapp.ui.playlist.PlaylistItemViewModel;
 import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.ui.special_playlists.MediaQueueUtil;
+import com.example.mediaplayerapp.utils.MediaMetadataUtils;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.example.mediaplayerapp.utils.MessageUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -34,8 +35,8 @@ import io.reactivex.rxjava3.disposables.Disposable;
 
 public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
 
-    private final Video currentVideo;
     private static final String LOG_TAG = SongBottomSheet.class.getSimpleName();
+    private final Video currentVideo;
     private final CompositeDisposable disposables = new CompositeDisposable();
 
     public VideoLibraryBottomSheetDialog(Video video) {
@@ -77,6 +78,9 @@ public class VideoLibraryBottomSheetDialog extends BottomSheetDialogFragment {
                     TimeUnit.MILLISECONDS.toSeconds(duration) % 60
             );
             videoInfoBinding.dialogVideoInfoVideoLengthTextview.setText(durationFormatted);
+
+            videoInfoBinding.dialogVideoInfoVideoSizeTextview.setText(
+                    MediaMetadataUtils.getFileSizeInString(currentVideo.getSize()));
 
             videoInfoBinding.dialogVideoInfoVideoPathTextview.setText(currentVideo.getLocation());
 
