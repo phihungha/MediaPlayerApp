@@ -43,8 +43,8 @@ public class PlaybackHistoryRepository {
     private Completable recordHistory(Uri mediaUri, boolean isVideo, long lastPlaybackPosition) {
         return getByMediaUri(mediaUri)
                 .flatMapCompletable(playbackHistoryEntries -> {
-
                     long lastPlaybackTime = Instant.now().toEpochMilli();
+
                     if (playbackHistoryEntries.size() == 1) {
                         PlaybackHistoryEntry entry = playbackHistoryEntries.get(0);
                         entry.incrementPlaybackCount();
