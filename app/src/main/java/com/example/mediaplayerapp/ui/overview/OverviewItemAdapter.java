@@ -93,7 +93,6 @@ public class OverviewItemAdapter
                     .centerCrop()
                     .into(holder.mediaThumbnail);
         } else {
-            // Somehow, glide doesn't work for songs' cover thumbnail
             Drawable thumbnail = MediaMetadataUtils.getThumbnail(
                     holder.mediaThumbnail.getContext(),
                     Uri.parse(playbackHistoryEntryList.get(position).getMediaUri()),
@@ -103,7 +102,6 @@ public class OverviewItemAdapter
 
         PlaybackHistoryEntry playbackHistoryEntry = playbackHistoryEntryList.get(position);
         Uri mediaUri = Uri.parse(playbackHistoryEntry.getMediaUri());
-        long lastPlaybackPosition = playbackHistoryEntry.getLastPlaybackPosition();
 
         if (mediaType == OverviewFragment.MediaType.VIDEO) {
             videoLibraryViewModel.getVideoMetadata(mediaUri).observe(

@@ -15,7 +15,7 @@ import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.playlist.Playlist;
 import com.example.mediaplayerapp.data.playlist.PlaylistItem;
 import com.example.mediaplayerapp.databinding.BottomSheetSongBinding;
-import com.example.mediaplayerapp.databinding.SongDetailBinding;
+import com.example.mediaplayerapp.databinding.FragmentSongDetailsBinding;
 import com.example.mediaplayerapp.ui.playlist.PlaylistItemViewModel;
 import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.ui.special_playlists.MediaQueueUtil;
@@ -59,7 +59,7 @@ public class SongBottomSheet extends BottomSheetDialogFragment {
 
         LinearLayout SongDetail = binding.bottomSheetSongDetail;
         SongDetail.setOnClickListener(view -> {
-            SongDetailBinding songDetailBinding = SongDetailBinding.inflate(inflater,container,false);
+            FragmentSongDetailsBinding songDetailBinding = FragmentSongDetailsBinding.inflate(inflater,container,false);
             songDetailBinding.songInfoTitle.setText(currentSong.getTitle());
             songDetailBinding.songInfoArtist.setText(currentSong.getArtistName());
             songDetailBinding.songInfoAlbum.setText(currentSong.getAlbumName());
