@@ -17,6 +17,11 @@ import com.example.mediaplayerapp.data.special_playlists.MediaQueue;
 
 public class MediaQueueDeleteDialog extends AppCompatDialogFragment {
     private MediaQueue mMedia;
+    private int type;
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public static MediaQueueDeleteDialog newInstance(MediaQueue media) {
         MediaQueueDeleteDialog f = new MediaQueueDeleteDialog();
@@ -57,7 +62,7 @@ public class MediaQueueDeleteDialog extends AppCompatDialogFragment {
                         viewModel.delete(mMedia);
                         Toast.makeText(getActivity(), "Item deleted!", Toast.LENGTH_SHORT).show();
                     } else {
-                        viewModel.deleteAll();
+                        viewModel.deleteAllType(type);
                         Toast.makeText(getActivity(), "All items deleted!", Toast.LENGTH_SHORT).show();
                     }
                 });

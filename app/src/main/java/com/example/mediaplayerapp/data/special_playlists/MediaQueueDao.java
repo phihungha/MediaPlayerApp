@@ -24,6 +24,9 @@ public interface MediaQueueDao {
     @Query("DELETE FROM mediaQueue_table")
     void deleteAll();
 
+    @Query("DELETE FROM mediaQueue_table WHERE Type=:type")
+    void deleteAllType(int type);
+
     @Query("DELETE FROM mediaQueue_table WHERE mediaQueue_table.MediaQueueUri=:uri")
     void deleteItemWithUri(String uri);
 

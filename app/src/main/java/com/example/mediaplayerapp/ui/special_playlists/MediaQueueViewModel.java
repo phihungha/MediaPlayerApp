@@ -60,6 +60,13 @@ public class MediaQueueViewModel extends AndroidViewModel {
     }
 
     /**
+     *  delete All MediaQueue object from database with Uri
+     * */
+    public void deleteAllType(int type){
+        mRepository.deleteAllType(type);
+    }
+
+    /**
      *  get count of MediaQueue object from database
      * */
     public int getCountMediaQueue() {

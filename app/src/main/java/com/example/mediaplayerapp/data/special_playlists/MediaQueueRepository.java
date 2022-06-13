@@ -35,6 +35,10 @@ public class MediaQueueRepository {
         MediaQueueRoomDatabase.databaseWriteExecutor.execute(mMediaQueueDao::deleteAll);
     }
 
+    public void deleteAllType(int type) {
+        MediaQueueRoomDatabase.databaseWriteExecutor.execute(()->mMediaQueueDao.deleteAllType(type));
+    }
+
     public void deleteItemWithUri(String uri){
         MediaQueueRoomDatabase.databaseWriteExecutor.execute(() -> mMediaQueueDao.deleteItemWithUri(uri));
     }

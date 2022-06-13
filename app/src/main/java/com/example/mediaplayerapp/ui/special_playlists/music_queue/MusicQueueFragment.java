@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -111,18 +112,35 @@ public class MusicQueueFragment extends Fragment implements OnStartDragListener,
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.playlist_details_options_menu, menu);
+        inflater.inflate(R.menu.queue_options_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_show_as_list_playlist_detail)
+        if (item.getItemId() == R.id.action_show_as_list_queue)
             ShowAsList();
-        else if (item.getItemId() == R.id.action_show_as_grid_playlist_detail)
+        else if (item.getItemId() == R.id.action_show_as_grid_queue)
             ShowAsGrid();
-
+        else if (item.getItemId()==R.id.action_play_all_queue)
+            PlayAllItem();
+        else if (item.getItemId()==R.id.action_delete_all_queue)
+            DeleteAllItem();
         return super.onOptionsItemSelected(item);
+    }
+
+    private void PlayAllItem(){
+        int type = PlaylistConstants.TYPE_MUSIC_QUEUE;
+        /**
+         * TODO: Play all item
+         * */
+        Toast.makeText(getContext(), "Play all", Toast.LENGTH_SHORT).show();
+    }
+
+    private void DeleteAllItem(){
+        MediaQueueDeleteDialog dialog = new MediaQueueDeleteDialog();
+        dialog.setType(PlaylistConstants.TYPE_MUSIC_QUEUE);
+        dialog.show(getParentFragmentManager(), PlaylistConstants.TAG_DELETE_DIALOG_QUEUE);
     }
 
     private void ShowAsList() {
