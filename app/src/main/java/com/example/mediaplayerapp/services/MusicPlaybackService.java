@@ -25,6 +25,7 @@ import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.music_library.SongsRepository;
 import com.example.mediaplayerapp.data.playback_history.PlaybackHistoryRepository;
 import com.example.mediaplayerapp.data.playlist.PlaylistItemRepository;
+import com.example.mediaplayerapp.data.special_playlists.MediaQueueRepository;
 import com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity;
 import com.example.mediaplayerapp.utils.GetMediaItemsUtils;
 import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
@@ -74,6 +75,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
     private SongsRepository songsRepository;
     private PlaylistItemRepository playlistItemRepository;
+    private MediaQueueRepository specialPlaylistRepository;
     private PlaybackHistoryRepository playbackHistoryRepository;
 
     @Override
@@ -88,6 +90,7 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
         songsRepository = new SongsRepository(getApplicationContext());
         playlistItemRepository = new PlaylistItemRepository(getApplication());
+        specialPlaylistRepository = new MediaQueueRepository(getApplication());
         playbackHistoryRepository = new PlaybackHistoryRepository(getApplication());
 
         setAudioSessionIdOnMediaSession();
@@ -150,9 +153,11 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                         player.clearMediaItems();
 
                         if (uri.getScheme().equals(GetPlaybackUriUtils.PLAYBACK_URI_SCHEME)) {
-                            if (uri.getPathSegments()
-                                    .get(0).equals(GetPlaybackUriUtils.PLAYLIST_URI_SEGMENT))
+                            String listType = uri.getPathSegments().get(0);
+                            if (listType.equals(GetPlaybackUriUtils.PLAYLIST_URI_SEGMENT))
                                 loadMediaItemsFromPlaylist(uri);
+                            else if (listType.equals(GetPlaybackUriUtils.SPECIAL_PLAYLIST_URI_SEGMENT))
+                                loadMediaItemsFromSpecialPlaylists(uri);
                             else
                                 loadMediaItemsFromLibrary(uri);
                             Log.i(LOG_TAG, "Loaded media from playback URI: " + uri);
@@ -448,6 +453,30 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                         player.seekTo(playbackStartIndex, C.TIME_UNSET);
                     });
         disposables.add(disposable);
+    }
+
+    /**
+     * Load music media items from playlist specified by playback URI.
+     * @param uri Playback URI
+     */
+    private void loadMediaItemsFromSpecialPlaylists(Uri uri) {
+        int playbackStartIndex = Integer.parseInt(uri.getPathSegments().get(2));
+        String type = uri.getPathSegments().get(1);
+
+        if (type.equals(GetPlaybackUriUtils.FAVORITES_URI_SEGMENT))
+            specialPlaylistRepository.getAllMusicFavourite()
+                    .observeForever(items -> {
+                        player.clearMediaItems();
+                        player.addMediaItems(GetMediaItemsUtils.fromSpecialPlaylistItems(items));
+                        player.seekTo(playbackStartIndex, C.TIME_UNSET);
+                    });
+        else if (type.equals(GetPlaybackUriUtils.WATCH_LATER_URI_SEGMENT))
+            specialPlaylistRepository.getAllMusicQueue()
+                    .observeForever(items -> {
+                        player.clearMediaItems();
+                        player.addMediaItems(GetMediaItemsUtils.fromSpecialPlaylistItems(items));
+                        player.seekTo(playbackStartIndex, C.TIME_UNSET);
+                    });
     }
 
     @Override

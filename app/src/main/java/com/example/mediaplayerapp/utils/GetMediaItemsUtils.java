@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import com.example.mediaplayerapp.data.music_library.Song;
 import com.example.mediaplayerapp.data.playlist.PlaylistItem;
+import com.example.mediaplayerapp.data.special_playlists.MediaQueue;
 import com.example.mediaplayerapp.data.video_library.Video;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.MediaMetadata;
@@ -51,11 +52,22 @@ public class GetMediaItemsUtils {
     }
 
     /**
-     * Get Exoplayer's MediaItem objects from list of playlist's MediaItem objects.
+     * Get Exoplayer's MediaItem objects from playlist items.
      * @param items Playlist's MediaItem objects
      * @return MediaItem objects
      */
     public static List<MediaItem> fromPlaylistItems(List<PlaylistItem> items) {
+        return items.stream()
+                .map(i -> getMediaItemFromUri(Uri.parse(i.getMediaUri())))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Get Exoplayer's MediaItem objects from special playlists' items.
+     * @param items Playlist's MediaItem objects
+     * @return MediaItem objects
+     */
+    public static List<MediaItem> fromSpecialPlaylistItems(List<MediaQueue> items) {
         return items.stream()
                 .map(i -> getMediaItemFromUri(Uri.parse(i.getMediaUri())))
                 .collect(Collectors.toList());

@@ -42,8 +42,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
     private static final String LOG_TAG = MusicPlayerActivity.class.getSimpleName();
     public static final String SHUFFLE_MODE_ALL_KEY =
             "com.example.mediaplayerapp.ui.music_player.MusicPlayerActivity.SHUFFLE_MODE_ALL_KEY";
-    private static final String SEEK_TO_POSITION_KEY =
-            "com.example.mediaplayerapp.ui.video_player.MusicPlayerActivity.SEEK_TO_POSITION_KEY";
 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
@@ -181,20 +179,6 @@ public class MusicPlayerActivity extends AppCompatActivity {
     public static void launchWithUri(Context context, Uri uri) {
         Intent playbackIntent = new Intent(context, MusicPlayerActivity.class);
         playbackIntent.setData(uri);
-        context.startActivity(playbackIntent);
-    }
-
-    /**
-     * Sequentially play song(s) specified by an URI with MusicPlayerActivity
-     * and seek to specified position on the first song.
-     * @param context Current context
-     * @param uri URI of the media item to play
-     * @param seekToPosition Position to seek to
-     */
-    public static void launchWithUriAndSeekTo(Context context, Uri uri, long seekToPosition) {
-        Intent playbackIntent = new Intent(context, MusicPlayerActivity.class);
-        playbackIntent.setData(uri);
-        playbackIntent.putExtra(SEEK_TO_POSITION_KEY, seekToPosition);
         context.startActivity(playbackIntent);
     }
 
