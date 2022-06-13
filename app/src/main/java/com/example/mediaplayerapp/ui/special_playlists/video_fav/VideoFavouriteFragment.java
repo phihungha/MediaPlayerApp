@@ -1,6 +1,5 @@
 package com.example.mediaplayerapp.ui.special_playlists.video_fav;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -8,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,16 +18,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.special_playlists.MediaQueue;
-import com.example.mediaplayerapp.ui.special_playlists.MediaQueueViewModel;
 import com.example.mediaplayerapp.data.playlist.PlaylistItem;
+import com.example.mediaplayerapp.data.special_playlists.MediaQueue;
 import com.example.mediaplayerapp.databinding.FragmentVideoFavouriteBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
-import com.example.mediaplayerapp.ui.special_playlists.PlaylistConstants;
 import com.example.mediaplayerapp.ui.special_playlists.MediaQueueAdapter;
 import com.example.mediaplayerapp.ui.special_playlists.MediaQueueDeleteDialog;
-import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
+import com.example.mediaplayerapp.ui.special_playlists.MediaQueueViewModel;
 import com.example.mediaplayerapp.ui.special_playlists.OnPlaylistItemListChangedListener;
+import com.example.mediaplayerapp.ui.special_playlists.PlaylistConstants;
+import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
+import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.example.mediaplayerapp.utils.item_touch_helper.OnStartDragListener;
 import com.example.mediaplayerapp.utils.item_touch_helper.SimpleItemTouchHelperCallback;
 
@@ -93,9 +92,7 @@ public class VideoFavouriteFragment extends Fragment implements OnStartDragListe
     }
 
     private void ClickItem(View view, int position) {
-        MediaQueue mediaQueue=adapter.getItemAt(position);
-        Uri playbackUri = Uri.parse(mediaQueue.getMediaUri());
-        VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
+        VideoPlayerActivity.launchWithUri(requireContext(), GetPlaybackUriUtils.forFavorites(position));
     }
 
     private void DeleteItemQueue(View view, int position) {
@@ -130,11 +127,7 @@ public class VideoFavouriteFragment extends Fragment implements OnStartDragListe
     }
 
     private void PlayAllItem(){
-        int type = PlaylistConstants.TYPE_VIDEO_FAVOURITE;
-        /**
-         * TODO: Play all item
-         * */
-        Toast.makeText(getContext(), "Play all", Toast.LENGTH_SHORT).show();
+        VideoPlayerActivity.launchWithUri(requireContext(), GetPlaybackUriUtils.forFavorites(0));
     }
 
     private void DeleteAllItem(){

@@ -1,6 +1,5 @@
 package com.example.mediaplayerapp.ui.special_playlists.video_queue;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,16 +19,17 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mediaplayerapp.R;
-import com.example.mediaplayerapp.data.special_playlists.MediaQueue;
-import com.example.mediaplayerapp.ui.special_playlists.MediaQueueViewModel;
 import com.example.mediaplayerapp.data.playlist.PlaylistItem;
+import com.example.mediaplayerapp.data.special_playlists.MediaQueue;
 import com.example.mediaplayerapp.databinding.FragmentVideoQueueBinding;
 import com.example.mediaplayerapp.ui.DisplayMode;
-import com.example.mediaplayerapp.ui.special_playlists.PlaylistConstants;
 import com.example.mediaplayerapp.ui.special_playlists.MediaQueueAdapter;
 import com.example.mediaplayerapp.ui.special_playlists.MediaQueueDeleteDialog;
-import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
+import com.example.mediaplayerapp.ui.special_playlists.MediaQueueViewModel;
 import com.example.mediaplayerapp.ui.special_playlists.OnPlaylistItemListChangedListener;
+import com.example.mediaplayerapp.ui.special_playlists.PlaylistConstants;
+import com.example.mediaplayerapp.ui.video_player.VideoPlayerActivity;
+import com.example.mediaplayerapp.utils.GetPlaybackUriUtils;
 import com.example.mediaplayerapp.utils.item_touch_helper.OnStartDragListener;
 import com.example.mediaplayerapp.utils.item_touch_helper.SimpleItemTouchHelperCallback;
 
@@ -95,9 +95,7 @@ public class VideoQueueFragment extends Fragment implements OnStartDragListener,
     }
 
     private void ClickItem(View view, int position) {
-        MediaQueue mediaQueue=adapter.getItemAt(position);
-        Uri playbackUri = Uri.parse(mediaQueue.getMediaUri());
-        VideoPlayerActivity.launchWithUri(requireActivity(), playbackUri);
+        VideoPlayerActivity.launchWithUri(requireContext(), GetPlaybackUriUtils.forWatchLater(position));
     }
 
     private void DeleteItemQueue(View view, int position) {
@@ -132,10 +130,7 @@ public class VideoQueueFragment extends Fragment implements OnStartDragListener,
     }
 
     private void PlayAllItem(){
-        int type = PlaylistConstants.TYPE_VIDEO_QUEUE;
-        /**
-         * TODO: Play all item
-         * */
+        VideoPlayerActivity.launchWithUri(requireContext(), GetPlaybackUriUtils.forWatchLater(0));
         Toast.makeText(getContext(), "Play all", Toast.LENGTH_SHORT).show();
     }
 
