@@ -347,7 +347,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
     public void onPictureInPictureModeChanged(boolean isInPictureInPictureMode, Configuration newConfig) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig);
         binding.videoPlayer.setUseController(!isInPictureInPictureMode);
-
     }
 
     @Override

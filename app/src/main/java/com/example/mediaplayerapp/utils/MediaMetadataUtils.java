@@ -1,34 +1,33 @@
 package com.example.mediaplayerapp.utils;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.MediaMetadataRetriever;
 import android.net.Uri;
-import android.provider.MediaStore;
 import android.util.Size;
 
 import androidx.annotation.DrawableRes;
 import androidx.core.content.ContextCompat;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 
 public class MediaMetadataUtils {
 
     /**
      * Get Bitmap thumbnail of a media by its URI.
+     *
      * @param context Application context
-     * @param uri URI of content
+     * @param uri     URI of content
      * @return Bitmap of the thumbnail
      */
     public static Drawable getThumbnail(Context context, Uri uri, @DrawableRes int defaultImageResourceId) {
         try {
             Bitmap thumbnailBitmap
                     = context
-                        .getContentResolver()
-                        .loadThumbnail(uri, new Size(800, 800),null);
+                    .getContentResolver()
+                    .loadThumbnail(uri, new Size(1000, 1000), null);
             return new BitmapDrawable(context.getResources(), thumbnailBitmap);
         } catch (IOException e) {
             return ContextCompat.getDrawable(context, defaultImageResourceId);
@@ -36,79 +35,15 @@ public class MediaMetadataUtils {
     }
 
     /**
-     * Get display name of a media by its URI.
-     * @param context Context
-     * @param uri URI of the media
-     * @return Display name
-     */
-    public static String getDisplayName(Context context, Uri uri) {
-        String displayName = null;
-
-        String[] projection = new String[] {
-                MediaStore.MediaColumns.DISPLAY_NAME,
-                MediaStore.MediaColumns.TITLE
-        };
-
-        Cursor cursor = context.getContentResolver().query(
-                uri,
-                projection,
-                null,
-                null,
-                null);
-        if (cursor != null && cursor.moveToFirst()) {
-            // Prefer using title name in the metadata of
-            // the media over the default display name if possible.
-            int titleColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.TITLE);
-            int displayNameColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME);
-            displayName = cursor.getString(titleColumnIndex);
-            if (displayName == null)
-                displayName = cursor.getString(displayNameColumnIndex);
-            cursor.close();
-        }
-
-        // Get the display name the manual way if media store can't find it.
-        if (displayName == null)
-            displayName = uri.getLastPathSegment();
-
-        return displayName;
-    }
-
-    /**
-     * Get artist name of an audio media by its URI.
+     * Format a file's size into an easy-to-look string format
      *
-     * @param context Context
-     * @param uri URI of the media
-     * @return Artist name
+     * @param size The size of the file
+     * @return The file's size as the formatted string
      */
-    public static String getArtistName(Context context, Uri uri) {
-        String artistName = null;
-
-        String[] projection = new String[] {
-                MediaStore.Audio.Media.ARTIST
-        };
-
-        Cursor cursor = context.getContentResolver().query(
-                uri,
-                projection,
-                null,
-                null,
-                null);
-        if (cursor != null && cursor.moveToFirst()) {
-            int artistColumnIndex = cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST);
-            artistName = cursor.getString(artistColumnIndex);
-            cursor.close();
-        }
-
-        if (artistName != null)
-            return artistName;
-
-        // Use the slower metadata retriever as last resort if the media store cannot
-        // find the artist name.
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(context, uri);
-        artistName = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ARTIST);
-        if (artistName == null)
-            artistName = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_ALBUMARTIST);
-        return artistName;
+    public static String getFileSizeInString(long size) {
+        if (size <= 0) return "0";
+        final String[] units = new String[]{"B", "kB", "MB", "GB", "TB"};
+        int digitGroups = (int) (Math.log10(size) / Math.log10(1024));
+        return new DecimalFormat("#,##0.#").format(size / Math.pow(1024, digitGroups)) + " " + units[digitGroups];
     }
 }

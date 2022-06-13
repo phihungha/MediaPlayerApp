@@ -53,6 +53,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:textColor="#474646"
                 android:id="@+id/video_name_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -63,6 +64,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:textColor="#474646"
                 android:id="@+id/video_duration_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
