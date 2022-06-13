@@ -144,4 +144,5 @@
     <string name="clear_history">Xóa lịch sử</string>
     <string name="resume_last_playback_position">Phát từ vị trí cuối</string>
     <string name="yes">Có</string>
+    <string name="delete_all">Xóa toàn bộ</string>
 </resources>

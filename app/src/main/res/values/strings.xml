@@ -174,4 +174,5 @@
     <string name="clear_history">Clear history</string>
     <string name="resume_last_playback_position">Resume last playback position?</string>
     <string name="yes">Yes</string>
+    <string name="delete_all">Delete all</string>
 </resources>
