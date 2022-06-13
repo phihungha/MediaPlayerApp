@@ -59,6 +59,7 @@
                     android:ellipsize="end"
                     android:singleLine="true"
                     android:text="@string/video_name_placeholder"
+                    android:textColor="#474646"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -67,6 +68,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/video_duration_placeholder"
+                    android:textColor="#474646"
                     android:textSize="13sp" />
 
             </LinearLayout>
