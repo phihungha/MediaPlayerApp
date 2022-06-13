@@ -22,6 +22,7 @@ import androidx.preference.PreferenceManager;
 import com.example.mediaplayerapp.R;
 import com.example.mediaplayerapp.data.playback_history.PlaybackHistoryRepository;
 import com.example.mediaplayerapp.data.playlist.PlaylistItemRepository;
+import com.example.mediaplayerapp.data.special_playlists.MediaQueueRepository;
 import com.example.mediaplayerapp.data.video_library.Video;
 import com.example.mediaplayerapp.data.video_library.VideosRepository;
 import com.example.mediaplayerapp.databinding.ActivityVideoPlayerBinding;
@@ -65,6 +66,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     private VideosRepository videoLibraryRepository;
     private PlaylistItemRepository playlistItemRepository;
+    private MediaQueueRepository specialPlaylistRepository;
     private PlaybackHistoryRepository playbackHistoryRepository;
 
     ActivityVideoPlayerBinding binding;
@@ -77,6 +79,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         videoLibraryRepository = new VideosRepository(getApplication());
         playlistItemRepository = new PlaylistItemRepository(getApplication());
+        specialPlaylistRepository = new MediaQueueRepository(getApplication());
         playbackHistoryRepository = new PlaybackHistoryRepository(getApplication());
 
         enterFullScreenMode();
@@ -136,6 +139,134 @@ public class VideoPlayerActivity extends AppCompatActivity {
         playbackIntent.setData(uri);
         playbackIntent.putExtra(SHUFFLE_MODE_ALL_KEY, true);
         context.startActivity(playbackIntent);
+    }
+
+    /**
+     * Load media items from intent into player.
+     */
+    private void loadMediaItemsFromIntent() {
+        Uri uri = getIntent().getData();
+        if (uri == null)
+            return;
+
+        player.clearMediaItems();
+
+        if (uri.getScheme().equals(GetPlaybackUriUtils.PLAYBACK_URI_SCHEME))
+            loadMediaItemsFromPlaybackUri(uri);
+        else
+            player.setMediaItem(GetMediaItemsUtils.getMediaItemFromUri(uri));
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.getBoolean(SHUFFLE_MODE_ALL_KEY))
+            player.setShuffleModeEnabled(true);
+    }
+
+    /**
+     * Load video media items specified by a playback URI.
+     * @param uri Playback URI
+     */
+    private void loadMediaItemsFromPlaybackUri(Uri uri) {
+        List<String> uriSegments = uri.getPathSegments();
+        String type = uriSegments.get(0);
+
+        switch (type) {
+            case GetPlaybackUriUtils.VIDEO_LIBRARY_URI_SEGMENT:
+                loadMediaItemsFromLibrary(uriSegments);
+                break;
+            case GetPlaybackUriUtils.PLAYLIST_URI_SEGMENT:
+                loadMediaItemsFromPlaylist(uriSegments);
+                break;
+            case GetPlaybackUriUtils.SPECIAL_PLAYLIST_URI_SEGMENT:
+                loadMediaItemsFromSpecialPlaylists(uriSegments);
+                break;
+        }
+    }
+
+    /**
+     * Load media items from the entire video library
+     * with provided sort order in the playback URI.
+     * @param uriSegments Playback URI segments
+     */
+    private void loadMediaItemsFromLibrary(List<String> uriSegments) {
+        String sortByUriSegment = uriSegments.get(1);
+        String sortOrderUriSegment = uriSegments.get(2);
+        int playbackStartIndex = Integer.parseInt(uriSegments.get(3));
+
+        VideosRepository.SortBy sortBy;
+        if (sortByUriSegment.equals(VideosRepository.SortBy.DURATION.getUriSegmentName()))
+            sortBy = VideosRepository.SortBy.DURATION;
+        else if (sortByUriSegment.equals(VideosRepository.SortBy.TIME_ADDED.getUriSegmentName()))
+            sortBy = VideosRepository.SortBy.TIME_ADDED;
+        else
+            sortBy = VideosRepository.SortBy.NAME;
+
+        SortOrder sortOrder;
+        if (sortOrderUriSegment.equals(SortOrder.DESC.getUriSegmentName()))
+            sortOrder = SortOrder.DESC;
+        else
+            sortOrder = SortOrder.ASC;
+
+        asyncLoadMediaItems(
+                videoLibraryRepository.getAllVideos(sortBy, sortOrder),
+                playbackStartIndex
+        );
+    }
+
+    /**
+     * Asynchronously load media items from video library.
+     * @param videos RxJava Single observable that emits a list of videos.
+     * @param playbackStartIndex Index of first media item to play
+     */
+    private void asyncLoadMediaItems(Single<List<Video>> videos, int playbackStartIndex) {
+        Disposable disposable = videos.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(newVideos -> {
+                    player.clearMediaItems();
+                    player.addMediaItems(GetMediaItemsUtils.fromLibraryVideos(newVideos));
+                    player.seekTo(playbackStartIndex, C.TIME_UNSET);
+                });
+        disposables.add(disposable);
+    }
+
+    /**
+     * Load video media items from playlist specified by playback URI.
+     * @param uriSegments Playback URI segments
+     */
+    private void loadMediaItemsFromPlaylist(List<String> uriSegments) {
+        int playlistId = Integer.parseInt(uriSegments.get(1));
+        int playbackStartIndex = Integer.parseInt(uriSegments.get(2));
+        Disposable disposable = playlistItemRepository.getAllItemsOfPlaylist(playlistId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(playlistItem -> {
+                    player.clearMediaItems();
+                    player.addMediaItems(GetMediaItemsUtils.fromPlaylistItems(playlistItem));
+                    player.seekTo(playbackStartIndex, C.TIME_UNSET);
+                });
+        disposables.add(disposable);
+    }
+
+    /**
+     * Load music media items from playlist specified by playback URI.
+     * @param uriSegments URI segments
+     */
+    private void loadMediaItemsFromSpecialPlaylists(List<String> uriSegments) {
+        int playbackStartIndex = Integer.parseInt(uriSegments.get(2));
+        String type = uriSegments.get(1);
+
+        if (type.equals(GetPlaybackUriUtils.FAVORITES_URI_SEGMENT))
+            specialPlaylistRepository.getAllVideoFavourite()
+                    .observeForever(items -> {
+                        player.clearMediaItems();
+                        player.addMediaItems(GetMediaItemsUtils.fromSpecialPlaylistItems(items));
+                        player.seekTo(playbackStartIndex, C.TIME_UNSET);
+                    });
+        else if (type.equals(GetPlaybackUriUtils.WATCH_LATER_URI_SEGMENT))
+            specialPlaylistRepository.getAllVideoQueue()
+                    .observeForever(items -> {
+                        player.clearMediaItems();
+                        player.addMediaItems(GetMediaItemsUtils.fromSpecialPlaylistItems(items));
+                        player.seekTo(playbackStartIndex, C.TIME_UNSET);
+                    });
     }
 
     private void setupPlayerEventListener() {
@@ -202,103 +333,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
                                         getApplicationContext(),
                                         LOG_TAG,
                                         e.getMessage()));
-        disposables.add(disposable);
-    }
-
-    /**
-     * Load media items from intent into player.
-     */
-    private void loadMediaItemsFromIntent() {
-        Uri uri = getIntent().getData();
-        if (uri == null)
-            return;
-
-        player.clearMediaItems();
-
-        if (uri.getScheme().equals(GetPlaybackUriUtils.PLAYBACK_URI_SCHEME))
-            loadMediaItemsFromPlaybackUri(uri);
-        else
-            player.setMediaItem(GetMediaItemsUtils.getMediaItemFromUri(uri));
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null && extras.getBoolean(SHUFFLE_MODE_ALL_KEY))
-            player.setShuffleModeEnabled(true);
-    }
-
-    /**
-     * Load video media items specified by a playback URI.
-     * @param uri Playback URI
-     */
-    private void loadMediaItemsFromPlaybackUri(Uri uri) {
-        List<String> uriSegments = uri.getPathSegments();
-        String type = uriSegments.get(0);
-
-        if (type.equals(GetPlaybackUriUtils.VIDEO_LIBRARY_URI_SEGMENT))
-            loadMediaItemsFromLibrary(uriSegments);
-        else if (type.equals(GetPlaybackUriUtils.PLAYLIST_URI_SEGMENT))
-            loadMediaItemsFromVideoPlaylist(uriSegments);
-    }
-
-    /**
-     * Load media items from the entire video library
-     * with provided sort order in the playback URI.
-     * @param uriSegments Playback URI segments
-     */
-    private void loadMediaItemsFromLibrary(List<String> uriSegments) {
-        String sortByUriSegment = uriSegments.get(1);
-        String sortOrderUriSegment = uriSegments.get(2);
-        int playbackStartIndex = Integer.parseInt(uriSegments.get(3));
-
-        VideosRepository.SortBy sortBy;
-        if (sortByUriSegment.equals(VideosRepository.SortBy.DURATION.getUriSegmentName()))
-            sortBy = VideosRepository.SortBy.DURATION;
-        else if (sortByUriSegment.equals(VideosRepository.SortBy.TIME_ADDED.getUriSegmentName()))
-            sortBy = VideosRepository.SortBy.TIME_ADDED;
-        else
-            sortBy = VideosRepository.SortBy.NAME;
-
-        SortOrder sortOrder;
-        if (sortOrderUriSegment.equals(SortOrder.DESC.getUriSegmentName()))
-            sortOrder = SortOrder.DESC;
-        else
-            sortOrder = SortOrder.ASC;
-
-        asyncLoadMediaItems(
-                videoLibraryRepository.getAllVideos(sortBy, sortOrder),
-                playbackStartIndex
-        );
-    }
-
-    /**
-     * Asynchronously load media items from video library.
-     * @param videos RxJava Single observable that emits a list of videos.
-     * @param playbackStartIndex Index of first media item to play
-     */
-    private void asyncLoadMediaItems(Single<List<Video>> videos, int playbackStartIndex) {
-        Disposable disposable = videos.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(newVideos -> {
-                    player.clearMediaItems();
-                    player.addMediaItems(GetMediaItemsUtils.fromLibraryVideos(newVideos));
-                    player.seekTo(playbackStartIndex, C.TIME_UNSET);
-                });
-        disposables.add(disposable);
-    }
-
-    /**
-     * Load video media items from playlist specified by playback URI.
-     * @param uriSegments Playback URI segments
-     */
-    private void loadMediaItemsFromVideoPlaylist(List<String> uriSegments) {
-        int playlistId = Integer.parseInt(uriSegments.get(1));
-        int playbackStartIndex = Integer.parseInt(uriSegments.get(2));
-        Disposable disposable = playlistItemRepository.getAllItemsOfPlaylist(playlistId)
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(playlistItem -> {
-                    player.clearMediaItems();
-                    player.addMediaItems(GetMediaItemsUtils.fromPlaylistItems(playlistItem));
-                    player.seekTo(playbackStartIndex, C.TIME_UNSET);
-                });
         disposables.add(disposable);
     }
 

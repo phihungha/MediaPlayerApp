@@ -153,13 +153,14 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                         player.clearMediaItems();
 
                         if (uri.getScheme().equals(GetPlaybackUriUtils.PLAYBACK_URI_SCHEME)) {
-                            String listType = uri.getPathSegments().get(0);
+                            List<String> uriSegments = uri.getPathSegments();
+                            String listType = uriSegments.get(0);
                             if (listType.equals(GetPlaybackUriUtils.PLAYLIST_URI_SEGMENT))
-                                loadMediaItemsFromPlaylist(uri);
+                                loadMediaItemsFromPlaylist(uriSegments);
                             else if (listType.equals(GetPlaybackUriUtils.SPECIAL_PLAYLIST_URI_SEGMENT))
-                                loadMediaItemsFromSpecialPlaylists(uri);
+                                loadMediaItemsFromSpecialPlaylists(uriSegments);
                             else
-                                loadMediaItemsFromLibrary(uri);
+                                loadMediaItemsFromLibrary(uriSegments);
                             Log.i(LOG_TAG, "Loaded media from playback URI: " + uri);
                         } else {
                             player.setMediaItem(GetMediaItemsUtils.getMediaItemFromUri(uri));
@@ -347,10 +348,9 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
     /**
      * Load media items specified by the playback URI from system's music library.
-     * @param uri Playback URI
+     * @param uriSegments URI segments
      */
-    private void loadMediaItemsFromLibrary(Uri uri) {
-        List<String> uriSegments = uri.getPathSegments();
+    private void loadMediaItemsFromLibrary(List<String> uriSegments) {
         String libraryType = uriSegments.get(1);
 
         switch (libraryType) {
@@ -439,11 +439,11 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
     /**
      * Load music media items from playlist specified by playback URI.
-     * @param uri Playback URI
+     * @param uriSegments URI segments
      */
-    private void loadMediaItemsFromPlaylist(Uri uri) {
-        int playlistId = Integer.parseInt(uri.getPathSegments().get(1));
-        int playbackStartIndex = Integer.parseInt(uri.getPathSegments().get(2));
+    private void loadMediaItemsFromPlaylist(List<String> uriSegments) {
+        int playlistId = Integer.parseInt(uriSegments.get(1));
+        int playbackStartIndex = Integer.parseInt(uriSegments.get(2));
         Disposable disposable =
                 playlistItemRepository.getAllItemsOfPlaylist(playlistId)
                     .observeOn(AndroidSchedulers.mainThread())
@@ -457,11 +457,11 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
 
     /**
      * Load music media items from playlist specified by playback URI.
-     * @param uri Playback URI
+     * @param uriSegments URI segments
      */
-    private void loadMediaItemsFromSpecialPlaylists(Uri uri) {
-        int playbackStartIndex = Integer.parseInt(uri.getPathSegments().get(2));
-        String type = uri.getPathSegments().get(1);
+    private void loadMediaItemsFromSpecialPlaylists(List<String> uriSegments) {
+        int playbackStartIndex = Integer.parseInt(uriSegments.get(2));
+        String type = uriSegments.get(1);
 
         if (type.equals(GetPlaybackUriUtils.FAVORITES_URI_SEGMENT))
             specialPlaylistRepository.getAllMusicFavourite()
