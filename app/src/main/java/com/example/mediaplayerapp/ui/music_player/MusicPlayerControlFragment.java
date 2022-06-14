@@ -18,7 +18,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -321,14 +320,11 @@ public class MusicPlayerControlFragment extends Fragment
 
     private void addToFavorites() {
         MediaQueueUtil.insertSongToFavourite(requireActivity().getApplication(), currentMediaUri);
-        Toast.makeText(requireActivity(), "Added to favorites!", Toast.LENGTH_SHORT).show();
     }
 
     private void addToWatchLater() {
         MediaQueueUtil.insertSongToWatchLater(requireActivity().getApplication(), currentMediaUri);
-        Toast.makeText(requireActivity(), "Added to favorites!", Toast.LENGTH_SHORT).show();
     }
-
 
     /**
      * Set up transport controls on the UI.
