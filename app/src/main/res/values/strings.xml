@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MediaPlayerApp</string>
+    <string translatable="false" name="app_name">Muvid</string>
     <string name="title_music">Music</string>
     <string name="title_video">Video</string>
     <string name="title_playlist">Playlist</string>

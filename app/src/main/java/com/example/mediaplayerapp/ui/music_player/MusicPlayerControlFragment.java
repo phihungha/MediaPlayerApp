@@ -99,7 +99,7 @@ public class MusicPlayerControlFragment extends Fragment
 
         displayMusicVisualizer
                 = PreferenceManager.getDefaultSharedPreferences(requireContext())
-                  .getBoolean("display_music_visualizer", false);
+                  .getBoolean("display_music_visualizer", true);
 
         playlistItemViewModel = new ViewModelProvider(this).get(PlaylistItemViewModel.class);
         PlaylistViewModel playlistViewModel = new ViewModelProvider(this).get(PlaylistViewModel.class);
@@ -423,7 +423,7 @@ public class MusicPlayerControlFragment extends Fragment
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         if (s.equals("display_music_visualizer")) {
             boolean enableAudioVisualizer
-                    = sharedPreferences.getBoolean("display_music_visualizer", false);
+                    = sharedPreferences.getBoolean("display_music_visualizer", true);
             if (enableAudioVisualizer)
                 displayMusicVisualizer();
             else

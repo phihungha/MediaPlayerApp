@@ -20,7 +20,7 @@
         <SwitchPreference
             android:title="@string/resume_last_position"
             android:key="resume_last_position"
-            android:defaultValue="true" />
+            android:defaultValue="false" />
 
         <SwitchPreference
             android:title="@string/display_music_visualizer"
