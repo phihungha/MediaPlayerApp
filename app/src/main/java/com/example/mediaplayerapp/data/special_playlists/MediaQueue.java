@@ -4,11 +4,13 @@ import android.net.Uri;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
 
-@Entity(tableName = "mediaQueue_table")
+@Entity(tableName = "mediaQueue_table",
+        indices = { @Index(value = {"MediaQueueUri"}, unique = true) })
 public class MediaQueue implements Serializable {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "MediaQueueId")
