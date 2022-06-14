@@ -22,7 +22,11 @@
 
     <item
         android:id="@+id/action_play_all_queue"
-        android:title="@string/play_all" />
+        android:title="@string/play_all"
+        app:showAsAction="ifRoom|collapseActionView"
+        android:iconTint="@color/black"
+        android:icon="@drawable/ic_play_circle_outline_24dp"
+        />
     <item
         android:id="@+id/action_delete_all_queue"
         android:title="@string/delete_all" />
