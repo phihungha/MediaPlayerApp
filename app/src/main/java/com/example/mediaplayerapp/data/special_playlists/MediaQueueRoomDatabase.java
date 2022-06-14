@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {MediaQueue.class}, version = 1, exportSchema = false)
+@Database(entities = {MediaQueue.class}, version = 2, exportSchema = false)
 public abstract class MediaQueueRoomDatabase extends RoomDatabase {
     public abstract MediaQueueDao mediaQueueDao();
 
