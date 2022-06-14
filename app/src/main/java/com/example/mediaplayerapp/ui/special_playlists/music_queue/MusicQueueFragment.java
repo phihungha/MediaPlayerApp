@@ -109,6 +109,7 @@ public class MusicQueueFragment extends Fragment implements OnStartDragListener,
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.queue_options_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }

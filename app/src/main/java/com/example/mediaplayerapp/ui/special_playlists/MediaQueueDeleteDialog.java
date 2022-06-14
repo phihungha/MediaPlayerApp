@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -60,10 +59,8 @@ public class MediaQueueDeleteDialog extends AppCompatDialogFragment {
                 .setPositiveButton("delete", (dialogInterface, i) -> {
                     if (mMedia != null) {
                         viewModel.delete(mMedia);
-                        Toast.makeText(getActivity(), "Item deleted!", Toast.LENGTH_SHORT).show();
                     } else {
                         viewModel.deleteAllType(type);
-                        Toast.makeText(getActivity(), "All items deleted!", Toast.LENGTH_SHORT).show();
                     }
                 });
 

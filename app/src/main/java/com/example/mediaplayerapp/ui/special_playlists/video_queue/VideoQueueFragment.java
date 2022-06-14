@@ -7,7 +7,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -112,6 +111,7 @@ public class VideoQueueFragment extends Fragment implements OnStartDragListener,
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        menu.clear();
         inflater.inflate(R.menu.queue_options_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
@@ -131,7 +131,6 @@ public class VideoQueueFragment extends Fragment implements OnStartDragListener,
 
     private void PlayAllItem(){
         VideoPlayerActivity.launchWithUri(requireContext(), GetPlaybackUriUtils.forWatchLater(0));
-        Toast.makeText(getContext(), "Play all", Toast.LENGTH_SHORT).show();
     }
 
     private void DeleteAllItem(){
