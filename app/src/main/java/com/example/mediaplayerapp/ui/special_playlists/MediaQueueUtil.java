@@ -19,7 +19,6 @@ public class MediaQueueUtil {
         long order= MediaUtils.generateOrderSort();
         MediaQueue mediaQueue = new MediaQueue(uriString, true, PlaylistConstants.TYPE_VIDEO_QUEUE,order);
         viewModel.insert(mediaQueue);
-        Toast.makeText(application, R.string.added_to_watch_later, Toast.LENGTH_SHORT).show();
     }
 
     /** Insert song file to watch later
@@ -32,7 +31,6 @@ public class MediaQueueUtil {
         long order= MediaUtils.generateOrderSort();
         MediaQueue mediaQueue = new MediaQueue(uriString, false, PlaylistConstants.TYPE_MUSIC_QUEUE,order);
         viewModel.insert(mediaQueue);
-        Toast.makeText(application, R.string.added_to_listen_later, Toast.LENGTH_SHORT).show();
     }
 
     /** Insert video file to favourite
@@ -45,7 +43,6 @@ public class MediaQueueUtil {
         long order= MediaUtils.generateOrderSort();
         MediaQueue mediaQueue = new MediaQueue(uriString, true, PlaylistConstants.TYPE_VIDEO_FAVOURITE,order);
         viewModel.insert(mediaQueue);
-        Toast.makeText(application, R.string.added_to_favorites, Toast.LENGTH_SHORT).show();
     }
 
     /** Insert song file to favourite
@@ -58,6 +55,5 @@ public class MediaQueueUtil {
         long order= MediaUtils.generateOrderSort();
         MediaQueue mediaQueue = new MediaQueue(uriString,false, PlaylistConstants.TYPE_MUSIC_FAVOURITE,order);
         viewModel.insert(mediaQueue);
-        Toast.makeText(application, R.string.added_to_favorites, Toast.LENGTH_SHORT).show();
     }
 }
