@@ -1,6 +1,5 @@
 package com.example.mediaplayerapp.ui.playlist;
 
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -212,10 +211,18 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
         if (uris.isEmpty())
             return;
 
-        List<PlaylistItem> newItems =
-                uris.stream()
-                .map(this::getPlaylistItemFromMediaUri)
-                .collect(Collectors.toList());
+        List<PlaylistItem> newItems;
+        try {
+            newItems = uris.stream()
+                           .map(this::getPlaylistItemFromMediaUri)
+                           .collect(Collectors.toList());
+        } catch (RuntimeException err) {
+            Toast.makeText(requireContext(),
+                            "Add items from downloads folder not yet supported",
+                            Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         Disposable disposable = playlistItemViewModel
                  .addPlaylistItems(newItems)
                  .subscribe(
@@ -233,10 +240,8 @@ public class PlaylistDetailsFragment extends Fragment implements View.OnClickLis
     }
 
     private PlaylistItem getPlaylistItemFromMediaUri(Uri uri) {
-        return new PlaylistItem(
-                currentPlaylistId,
-                MediaStore.getMediaUri(getContext(), uri).toString()
-        );
+        String mediaStoreUri = MediaStore.getMediaUri(requireContext(), uri).toString();
+        return new PlaylistItem(currentPlaylistId, mediaStoreUri);
     }
 
     @Override
