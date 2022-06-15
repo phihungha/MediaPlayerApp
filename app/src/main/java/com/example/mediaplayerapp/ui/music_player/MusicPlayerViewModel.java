@@ -51,7 +51,7 @@ public class MusicPlayerViewModel extends AndroidViewModel {
     }
 
     public void setCurrentShuffleMode(int shuffleMode) {
-        currentRepeatMode.setValue(shuffleMode);
+        currentShuffleMode.setValue(shuffleMode);
     }
 
     public LiveData<Integer> getCurrentPlaylistId() {
