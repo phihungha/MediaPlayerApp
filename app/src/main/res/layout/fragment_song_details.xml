@@ -134,4 +134,47 @@
         app:layout_constraintStart_toStartOf="@+id/song_info_artist"
         app:layout_constraintTop_toBottomOf="@+id/song_info_duration"
         tools:ignore="RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/song_info_size"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="left"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/song_info_artist"
+        app:layout_constraintTop_toBottomOf="@+id/song_info_timeadded"
+        tools:ignore="RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/song_info_file_path"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:gravity="left"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.2"
+        app:layout_constraintStart_toStartOf="@+id/song_info_artist"
+        app:layout_constraintTop_toBottomOf="@+id/song_info_size"
+        tools:ignore="RtlHardcoded" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/dialog_video_info_size_textview"
+        app:layout_constraintBaseline_toBaselineOf="@+id/song_info_size"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/dialog_video_info_path_textview"
+        app:layout_constraintBaseline_toBaselineOf="@+id/song_info_file_path"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -19,6 +19,7 @@ import com.example.mediaplayerapp.databinding.FragmentSongDetailsBinding;
 import com.example.mediaplayerapp.ui.playlist.PlaylistItemViewModel;
 import com.example.mediaplayerapp.ui.playlist.PlaylistViewModel;
 import com.example.mediaplayerapp.ui.special_playlists.MediaQueueUtil;
+import com.example.mediaplayerapp.utils.MediaMetadataUtils;
 import com.example.mediaplayerapp.utils.MediaTimeUtils;
 import com.example.mediaplayerapp.utils.MessageUtils;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -66,6 +67,8 @@ public class SongBottomSheet extends BottomSheetDialogFragment {
             songDetailBinding.songInfoGenre.setText(currentSong.getGenre());
             songDetailBinding.songInfoDuration.setText(MediaTimeUtils.getFormattedTimeFromLong(currentSong.getDuration()));
             songDetailBinding.songInfoTimeadded.setText(MediaTimeUtils.getFormattedTimeFromZonedDateTime(currentSong.getTimeAdded()));
+            songDetailBinding.songInfoFilePath.setText(currentSong.getLocation());
+            songDetailBinding.songInfoSize.setText(MediaMetadataUtils.getFileSizeInString(currentSong.getSize()));
             AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
             builder.setView(songDetailBinding.getRoot()).show();
         });

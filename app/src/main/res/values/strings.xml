@@ -73,7 +73,7 @@
     <string name="location">Location</string>
     <string name="file_size">File size</string>
     <string name="duration">Duration</string>
-    <string name="file_name">File name</string>
+    <string name="file_name">File name:</string>
     <string name="sort">Sort by name</string>
     <string name="add_to_watch_later">Watch later</string>
     <string name="go_to_queue_list">Go to watch later</string>
