@@ -64,6 +64,21 @@
                 </menu>
             </item>
 
+            <item
+                android:icon="@drawable/ic_calendar_month_24dp"
+                android:title="@string/time_added"
+                app:iconTint="@color/cyan">
+                <menu>
+                    <item
+                        android:id="@+id/video_library_sort_by_time_added_asc"
+                        android:title="@string/ascending" />
+
+                    <item
+                        android:id="@+id/video_library_sort_by_time_added_desc"
+                        android:title="@string/descending" />
+                </menu>
+            </item>
+
         </menu>
     </item>
 </menu>

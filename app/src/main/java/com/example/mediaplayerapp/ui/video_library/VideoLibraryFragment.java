@@ -139,13 +139,16 @@ public class VideoLibraryFragment extends Fragment {
             setDisplayModeAsGrid();
         } else if (itemId == R.id.video_library_sort_by_title_asc) {
             setSortMode(VideosRepository.SortBy.NAME, SortOrder.ASC);
-
         } else if (itemId == R.id.video_library_sort_by_title_desc) {
             setSortMode(VideosRepository.SortBy.NAME, SortOrder.DESC);
         } else if (itemId == R.id.video_library_sort_by_duration_asc) {
             setSortMode(VideosRepository.SortBy.DURATION, SortOrder.ASC);
         } else if (itemId == R.id.video_library_sort_by_duration_desc) {
             setSortMode(VideosRepository.SortBy.DURATION, SortOrder.DESC);
+        } else if (itemId == R.id.video_library_sort_by_time_added_asc) {
+            setSortMode(VideosRepository.SortBy.TIME_ADDED, SortOrder.ASC);
+        } else if (itemId == R.id.video_library_sort_by_time_added_desc) {
+            setSortMode(VideosRepository.SortBy.TIME_ADDED, SortOrder.DESC);
         }
 
         return super.onOptionsItemSelected(item);
