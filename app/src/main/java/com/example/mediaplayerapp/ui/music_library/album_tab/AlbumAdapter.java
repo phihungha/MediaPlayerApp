@@ -73,13 +73,13 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumItemVie
 
     @Override
     public void onBindViewHolder(@NonNull AlbumItemViewHolder holder, int position) {
-        Album currentAlbum = albums.get(position);
+        Album currentAlbum = displayedAlbums.get(position);
         holder.updateCurrentAlbum(currentAlbum);
     }
 
     @Override
     public int getItemCount() {
-        return albums.size();
+        return displayedAlbums.size();
     }
 
     @Override
@@ -87,13 +87,14 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumItemVie
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
-                List<Album> filteredSongs = albums.stream()
+                String match = charSequence.toString().toLowerCase().trim();
+                List<Album> filteredAlbums = albums.stream()
                         .filter(s -> s.getAlbumName()
                                 .toLowerCase()
-                                .contains(charSequence))
+                                .contains(match))
                         .collect(Collectors.toList());
                 FilterResults filterResults = new FilterResults();
-                filterResults.values= filteredSongs;
+                filterResults.values= filteredAlbums;
                 return filterResults;
             }
 

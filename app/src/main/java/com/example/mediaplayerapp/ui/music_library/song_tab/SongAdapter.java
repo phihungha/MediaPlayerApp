@@ -91,13 +91,14 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongItemViewHo
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
+                String match = charSequence.toString().toLowerCase().trim();
                 List<Song> filteredSongs = songs.stream()
                         .filter(s -> s.getTitle()
                                 .toLowerCase()
-                                .contains(charSequence))
+                                .contains(match))
                         .collect(Collectors.toList());
                 FilterResults filterResults = new FilterResults();
-                filterResults.values= filteredSongs;
+                filterResults.values = filteredSongs;
                 return filterResults;
             }
 

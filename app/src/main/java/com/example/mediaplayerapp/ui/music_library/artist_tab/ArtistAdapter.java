@@ -73,7 +73,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistItem
 
     @Override
     public void onBindViewHolder(@NonNull ArtistItemViewHolder holder, int position) {
-        Artist currentArtist = artists.get(position);
+        Artist currentArtist = displayedArtists.get(position);
         holder.updateCurrentArtist(currentArtist);
     }
 
@@ -87,13 +87,14 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistItem
         return new Filter() {
             @Override
             protected FilterResults performFiltering(CharSequence charSequence) {
-                List<Artist> filteredSongs = artists.stream()
+                String match = charSequence.toString().toLowerCase().trim();
+                List<Artist> filteredArtists = artists.stream()
                         .filter(s -> s.getArtistName()
                                 .toLowerCase()
-                                .contains(charSequence))
+                                .contains(match))
                         .collect(Collectors.toList());
                 FilterResults filterResults = new FilterResults();
-                filterResults.values= filteredSongs;
+                filterResults.values= filteredArtists;
                 return filterResults;
             }
 
@@ -101,7 +102,7 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ArtistItem
             protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
                 // Java can't check generic types
                 //noinspection unchecked
-                displayedArtists = (List<Artist>) filterResults.values;
+                displayedArtists = (List<Artist>)filterResults.values;
                 notifyDataSetChanged();
             }
         };
