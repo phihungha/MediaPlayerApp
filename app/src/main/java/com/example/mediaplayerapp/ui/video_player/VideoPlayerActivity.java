@@ -237,9 +237,9 @@ public class VideoPlayerActivity extends AppCompatActivity {
         int playbackStartIndex = Integer.parseInt(uriSegments.get(2));
         Disposable disposable = playlistItemRepository.getAllItemsOfPlaylist(playlistId)
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(playlistItem -> {
+                .subscribe(playlistItems -> {
                     player.clearMediaItems();
-                    player.addMediaItems(GetMediaItemsUtils.fromPlaylistItems(playlistItem));
+                    player.addMediaItems(GetMediaItemsUtils.fromPlaylistItems(playlistItems));
                     player.seekTo(playbackStartIndex, C.TIME_UNSET);
                 });
         disposables.add(disposable);

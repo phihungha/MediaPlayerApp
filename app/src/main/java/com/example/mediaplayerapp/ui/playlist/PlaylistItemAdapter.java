@@ -312,7 +312,7 @@ public class PlaylistItemAdapter
         }
 
         private void play() {
-            Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlistItem.getId(), playlistItem.getOrderIndex());
+            Uri playbackUri = GetPlaybackUriUtils.forPlaylist(playlistItem.getPlaylistId(), playlistItem.getOrderIndex());
             if (isVideo) {
                 VideoPlayerActivity.launchWithUri(context, playbackUri);
             } else {
