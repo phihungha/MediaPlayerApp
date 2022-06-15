@@ -309,11 +309,12 @@ public class MusicPlayerControlFragment extends Fragment
     }
 
     private void openPlaylistEditScreen() {
-        ((MusicPlayerActivity) requireActivity()).exitEdgeToEdgeUIMode();
-        if (currentPlaylistId != -1)
+        if (currentPlaylistId != -1) {
+            ((MusicPlayerActivity) requireActivity()).exitEdgeToEdgeUIMode();
             Navigation.findNavController(binding.getRoot())
-                .navigate(MusicPlayerControlFragmentDirections
-                        .actionMusicPlayerControlFragmentToPlaylistDetailsFragment(currentPlaylistId));
+                    .navigate(MusicPlayerControlFragmentDirections
+                            .actionMusicPlayerControlFragmentToPlaylistDetailsFragment(currentPlaylistId));
+        }
         else
             MessageUtils.makeShortToast(requireContext(), R.string.you_are_not_playing_from_a_playlist);
     }
