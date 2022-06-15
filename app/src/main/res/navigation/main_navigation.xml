@@ -59,7 +59,8 @@
         tools:layout="@layout/fragment_playlist_details" >
         <argument
             android:name="playlist_id"
-            app:argType="integer" />
+            app:argType="integer"
+            />
     </fragment>
     <fragment
         android:id="@+id/navigation_artist_details"
@@ -100,15 +101,31 @@
         tools:layout="@layout/fragment_more" >
         <action
             android:id="@+id/action_navigation_more_to_navigation_settings"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
             app:destination="@id/navigation_settings" />
         <action
             android:id="@+id/action_navigation_more_to_navigation_playlist"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
             app:destination="@id/navigation_playlist" />
         <action
             android:id="@+id/action_navigation_more_to_mediaQueueFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
             app:destination="@id/mediaQueueFragment" />
         <action
             android:id="@+id/action_navigation_more_to_favouriteFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:exitAnim="@android:anim/slide_out_right"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_left"
             app:destination="@id/favouriteFragment" />
     </fragment>
 
