@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -254,7 +253,7 @@ public class PlaylistItemAdapter
                 viewModel.getSongMetadata(playlistItem.getAndroidMediaUri())
                         .observe(fragment.getViewLifecycleOwner(),
                                  songMetadata -> {
-                                    title = songMetadata.getTitle();
+                                    title = songMetadata.getFileName();
                                     duration = songMetadata.getDuration();
                                     location = songMetadata.getLocation();
                                     setMediaMetadata();
@@ -282,7 +281,6 @@ public class PlaylistItemAdapter
                 MediaQueueUtil.insertVideoToFavourite(application, playlistItem.getMediaUri());
             else
                 MediaQueueUtil.insertSongToFavourite(application, playlistItem.getMediaUri());
-            Toast.makeText(context, R.string.added_to_favorites, Toast.LENGTH_SHORT).show();
         }
 
         private void addToWatchLater() {
@@ -290,7 +288,6 @@ public class PlaylistItemAdapter
                 MediaQueueUtil.insertVideoToWatchLater(application, playlistItem.getMediaUri());
             else
                 MediaQueueUtil.insertSongToWatchLater(application, playlistItem.getMediaUri());
-            Toast.makeText(context, R.string.added_to_watch_later, Toast.LENGTH_SHORT).show();
         }
 
         private void showProperties() {
