@@ -69,9 +69,11 @@ public class MusicPlayerActivity extends AppCompatActivity {
                     if (playbackState != null)
                         controllerCallback.onPlaybackStateChanged(playbackState);
 
-                    musicPlayerViewModel.setEnableTransportControls(true);
-
                     playFromIntent();
+
+                    musicPlayerViewModel.setEnableTransportControls(true);
+                    musicPlayerViewModel.setCurrentShuffleMode(mediaController.getShuffleMode());
+                    musicPlayerViewModel.setCurrentRepeatMode(mediaController.getRepeatMode());
                 }
 
                 @Override

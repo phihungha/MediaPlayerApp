@@ -450,7 +450,10 @@ public class MusicPlaybackService extends MediaBrowserServiceCompat {
                     .subscribe(playlistItems -> {
                         player.clearMediaItems();
                         player.addMediaItems(GetMediaItemsUtils.fromPlaylistItems(playlistItems));
-                        player.seekTo(playbackStartIndex, C.TIME_UNSET);
+                        if (!player.getShuffleModeEnabled())
+                            player.seekTo(playbackStartIndex, C.TIME_UNSET);
+                        else
+                            player.seekToDefaultPosition();
                     });
         disposables.add(disposable);
     }

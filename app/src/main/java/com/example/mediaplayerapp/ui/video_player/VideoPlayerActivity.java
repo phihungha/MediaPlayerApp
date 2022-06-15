@@ -64,6 +64,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
     private long lastPlaybackPosition = 0;
     private Uri lastMediaUri = Uri.EMPTY;
 
+    private boolean isShuffle = false;
+
     private VideosRepository videoLibraryRepository;
     private PlaylistItemRepository playlistItemRepository;
     private MediaQueueRepository specialPlaylistRepository;
@@ -151,14 +153,14 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
         player.clearMediaItems();
 
+        Bundle extras = getIntent().getExtras();
+        if (extras != null && extras.getBoolean(SHUFFLE_MODE_ALL_KEY))
+            isShuffle = true;
+
         if (uri.getScheme().equals(GetPlaybackUriUtils.PLAYBACK_URI_SCHEME))
             loadMediaItemsFromPlaybackUri(uri);
         else
             player.setMediaItem(GetMediaItemsUtils.getMediaItemFromUri(uri));
-
-        Bundle extras = getIntent().getExtras();
-        if (extras != null && extras.getBoolean(SHUFFLE_MODE_ALL_KEY))
-            player.setShuffleModeEnabled(true);
     }
 
     /**
@@ -223,7 +225,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 .subscribe(newVideos -> {
                     player.clearMediaItems();
                     player.addMediaItems(GetMediaItemsUtils.fromLibraryVideos(newVideos));
-                    player.seekTo(playbackStartIndex, C.TIME_UNSET);
+                    if (!isShuffle)
+                        player.seekTo(playbackStartIndex, C.TIME_UNSET);
                 });
         disposables.add(disposable);
     }
@@ -240,7 +243,8 @@ public class VideoPlayerActivity extends AppCompatActivity {
                 .subscribe(playlistItems -> {
                     player.clearMediaItems();
                     player.addMediaItems(GetMediaItemsUtils.fromPlaylistItems(playlistItems));
-                    player.seekTo(playbackStartIndex, C.TIME_UNSET);
+                    if (!isShuffle)
+                        player.seekTo(playbackStartIndex, C.TIME_UNSET);
                 });
         disposables.add(disposable);
     }
@@ -258,14 +262,16 @@ public class VideoPlayerActivity extends AppCompatActivity {
                     .observeForever(items -> {
                         player.clearMediaItems();
                         player.addMediaItems(GetMediaItemsUtils.fromSpecialPlaylistItems(items));
-                        player.seekTo(playbackStartIndex, C.TIME_UNSET);
+                        if (!isShuffle)
+                            player.seekTo(playbackStartIndex, C.TIME_UNSET);
                     });
         else if (type.equals(GetPlaybackUriUtils.WATCH_LATER_URI_SEGMENT))
             specialPlaylistRepository.getAllVideoQueue()
                     .observeForever(items -> {
                         player.clearMediaItems();
                         player.addMediaItems(GetMediaItemsUtils.fromSpecialPlaylistItems(items));
-                        player.seekTo(playbackStartIndex, C.TIME_UNSET);
+                        if (!isShuffle)
+                            player.seekTo(playbackStartIndex, C.TIME_UNSET);
                     });
     }
 
@@ -340,6 +346,9 @@ public class VideoPlayerActivity extends AppCompatActivity {
      * Begin playback of loaded media items.
      */
     private void play() {
+        if (isShuffle)
+            player.setShuffleModeEnabled(true);
+        player.seekToDefaultPosition();
         player.prepare();
         player.play();
     }
