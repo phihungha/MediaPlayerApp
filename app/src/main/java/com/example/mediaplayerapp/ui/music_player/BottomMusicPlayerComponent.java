@@ -282,7 +282,7 @@ public class BottomMusicPlayerComponent implements DefaultLifecycleObserver {
         binding.bottomMusicPlayerSongArtwork.setImageBitmap(artworkBitmap);
         MultiTransformation<Bitmap> multiTransformation = new MultiTransformation<>(
                 new BlurTransformation(6, 5),
-                new BrightnessFilterTransformation(-0.15f));
+                new BrightnessFilterTransformation(-0.3f));
         Glide.with(activity)
                 .load(artworkBitmap)
                 .apply(RequestOptions.bitmapTransform(multiTransformation))

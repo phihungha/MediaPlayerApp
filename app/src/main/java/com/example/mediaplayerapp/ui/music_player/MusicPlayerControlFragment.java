@@ -535,7 +535,7 @@ public class MusicPlayerControlFragment extends Fragment
 
         MultiTransformation<Bitmap> multiTransformation = new MultiTransformation<>(
                 new BlurTransformation(6, 5),
-                new BrightnessFilterTransformation(-0.2f));
+                new BrightnessFilterTransformation(-0.3f));
         Glide.with(this)
                 .load(artworkBitmap)
                 .apply(RequestOptions.bitmapTransform(multiTransformation))
