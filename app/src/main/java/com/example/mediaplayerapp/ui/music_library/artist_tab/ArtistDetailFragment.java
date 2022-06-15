@@ -67,6 +67,7 @@ public class ArtistDetailFragment extends Fragment {
     }
 
     private void setHeaderInfo(Artist artist) {
+        binding.artistDetailsName.setText(artist.getArtistName());
         binding.artistDetailsSongNumber.setText(String.valueOf(artist.getNumberOfSongs()));
         binding.artistDetailsAlbumNumber.setText(String.valueOf(artist.getNumberOfAlbums()));
         setArtwork(artist.getThumbnailUri());
