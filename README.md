@@ -1,4 +1,4 @@
-# Đồ án ứng dụng Media Player cho môn học SE114.M22.PMCL tại UIT.
+# Đồ án ứng dụng Media Player cho môn học SE114 tại UIT.
 
 Thành viên:
 * Hà Phi Hùng
